@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Contents from '../components/Home/Contents';
 import Header from '../components/Home/Header';
@@ -32,7 +32,7 @@ const HomeCompo = styled.div`
 `;
 
 const HomeContainer = () => {
-
+    const {data, loading, error } = useSelector(state=>state.compani2.companies)
     const dispatch = useDispatch();
 
     useEffect(()=>{
