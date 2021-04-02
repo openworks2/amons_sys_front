@@ -14,15 +14,6 @@ const HomeCompo = styled.div`
   min-height: 900px;
 `;
 
-const Sidebar = styled.div`
-  height: 44px;
-  width: 44px;
-  font-size: 30px;
-  color: #ffffff;
-  background-color: #000000;
-  position: fixed;
-`;
-
 const HomeContainer = () => {
   //   const { data, loading, error } = useSelector(
   //     (state) => state.companies.companies
@@ -43,18 +34,8 @@ const HomeContainer = () => {
 
   return (
     <>
-      <Sidebar
-        id="side-menu-button"
-        onClick={() => {
-          sideMenuClickHandler();
-        }}
-      >
-        <HiMenu />
-      </Sidebar>
       <HomeCompo className="Home-component">
-        <div className="top">
-          <Header />
-        </div>
+        <Header sideMenuClickHandler={sideMenuClickHandler} />
         <div className="bottom">
           <div className="bottom-left">
             <SideMenu

@@ -1,35 +1,42 @@
 import React, { useState } from "react";
-import { Icon, Menu, Sidebar } from "semantic-ui-react";
+import { Menu, Sidebar } from "semantic-ui-react";
 import styled from "styled-components";
 
 const SideMenuCompo = styled.div`
-  width: 260px !important;
-  background: #1b1c1d 0% 0% no-repeat padding-box;
   opacity: 1;
+
   .sidemenu {
+    background: #1b1c1d 0% 0% no-repeat padding-box !important;
     width: 260px !important;
+    top: 70px;
   }
-  element.style {
-    padding-top: 70px;
+  .divide-line {
+    border: solid 1px;
+    color: #7c7c7c;
+    width: 93%;
   }
   a.item::before {
     width: 0% !important;
   }
-  .sidemenu-title {
+  a.item.sidemenu-title {
     font-family: "NotoSansCJKkr-Medium";
     font-size: 16px;
-    text-align: left;
+    text-align: left !important;
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
+    padding-top: 14px;
+    padding-bottom: 14px;
   }
-  .item sidemenu-sub-title {
+  a.item.sidemenu-sub-title {
     font-family: "NotoSansCJKkr-Regular";
     font-size: 14px;
-    text-align: left;
-    letter-spacing: 0px;
-    color: #7c7c7c;
-    opacity: 1;
+    text-align: left !important;
+    letter-spacing: 0px !important;
+    color: #7c7c7c !important;
+    opacity: 1 !important;
+    padding-top: 8px;
+    padding-bottom: 10px;
   }
 `;
 
@@ -205,6 +212,7 @@ const SideMenu = ({ callSideMenu, sideMenuClickHandler }) => {
         <Menu.Item as="a" className="sidemenu-sub-title">
           로그인 기록
         </Menu.Item>
+        <hr className="divide-line" />
       </Sidebar>
     </SideMenuCompo>
   );
