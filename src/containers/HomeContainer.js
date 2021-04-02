@@ -17,7 +17,7 @@ const HomeCompo = styled.div`
 const Sidebar = styled.div`
   height: 44px;
   width: 44px;
-  font-size: 30 px;
+  font-size: 30px;
   color: #ffffff;
   background-color: #000000;
   position: fixed;
@@ -33,7 +33,7 @@ const HomeContainer = () => {
   //     dispatch(getCompanies());
   //   }, [dispatch]);
 
-  const [callSideMenu, setCallSideMenu] = React.useState(false);
+  const [callSideMenu, setCallSideMenu] = useState(false);
 
   const sideMenuClickHandler = () => {
     setCallSideMenu(!callSideMenu);
@@ -59,7 +59,7 @@ const HomeContainer = () => {
           <div className="bottom-left">
             <SideMenu
               callSideMenu={callSideMenu}
-              setCallSideMenu={setCallSideMenu}
+              sideMenuClickHandler={sideMenuClickHandler}
             />
           </div>
           <div className="bottom-right">
