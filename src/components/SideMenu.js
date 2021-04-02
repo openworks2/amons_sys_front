@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Menu, Sidebar } from "semantic-ui-react";
 import styled from "styled-components";
 
+import { FaIdCard, FiMonitor } from "react-icons/fa";
+
 const SideMenuCompo = styled.div`
   opacity: 1;
 

@@ -1,71 +1,228 @@
 import React, { useState } from "react";
-import { Grid, Image } from "semantic-ui-react";
+import { Grid, Image, Table } from "semantic-ui-react";
 import styled from "styled-components";
-import { HiMenu } from "react-icons/hi";
+import {
+  FaBars,
+  FaHome,
+  FaSignOutAlt,
+  FaCompressArrowsAlt,
+  FaExpandArrowsAlt,
+  FaVolumeMute,
+  FaList,
+  FaQuestion,
+} from "react-icons/fa";
 
 const HeaderCompo = styled.div`
   position: fixed !important;
+  display: inline-block;
   width: 100%;
-  background: #992313 !important;
-  opacity: 1;
   height: 70px;
-  text-align: center;
-  vertical-align: middle !important;
+  background: #2e2e2e !important;
+  opacity: 1;
   justify-content: center;
+  display: inline-block !important;
+
+  .header-table {
+    background: #2e2e2e 0% 0% no-repeat padding-box;
+    opacity: 1;
+    border-top-width: 0px !important;
+    border-bottom-width: 0px !important;
+    border-left-width: 0px !important;
+    border-right-width: 0px !important;
+    border-radius: 0px;
+  }
+  .company {
+    padding-right: 0px !important;
+  }
+
+  .title {
+    padding-left: 0px !important;
+    color: #ffffff;
+    font-size: 30px;
+    font-family: "NotoSansCJKkr-Regular";
+    text-align: left;
+    letter-spacing: 0px;
+    opacity: 1;
+  }
+
+  .title-highlight {
+    color: #f1592a;
+    font-size: 30px;
+    font-family: "NotoSansCJKkr-Medium";
+    text-align: left;
+    letter-spacing: 0px;
+  }
+
+  .shortcuts {
+    text-align: center !important;
+    font-size: 25px;
+    width: 72.22px;
+    color: #ffffff;
+    border: 0px !important;
+    padding: 4px !important;
+  }
+
+  .iconbox {
+    width: 39px;
+    height: 39px;
+    border-radius: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+    justify-content: center;
+  }
+
+  .iconbox.alert {
+    background: #c23235 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+
+  .iconbox.home {
+    background: #a73b1f 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+
+  .iconbox.dig {
+    background: #686868 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+
+  .iconbox.nomalscreen {
+    background: #5e7827 0% 0% no-repeat padding-box;
+    opacity: 1;
+    padding: 0px;
+  }
+
+  .iconbox.fullscreen {
+    background: #306f4d 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+
+  .iconbox.question {
+    background: #305a70 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+
+  .icon {
+    margin-top: 7px;
+  }
+
+  .shortcut-subtitle {
+    font-size: 12px !important;
+    text-align: center;
+  }
+  .blank {
+    margin-left: 50px;
+  }
 `;
 
 const SidebarButton = styled.div`
-  float: left !important;
-  top: 13px;
-  left: 13px;
-  height: 44px;
-  width: 44px;
   font-size: 30px;
-  text-align: center;
-  vertical-align: center;
-  justify-content: center;
+  height: 44px !important;
+  width: 44px !important;
+  padding-right: 0px !important;
   color: #ffffff;
   background-color: #000000;
-  position: fixed !important;
+
+  .icon {
+    margin-top: 7px;
+    margin-left: 7px;
+  }
+`;
+
+const LogoutButton = styled.div`
+  font-size: 30px;
+  height: 44px;
+  width: 44px;
+  color: #7c7c7c;
+  background-color: #000000;
+  margin-left: 20px;
+  .icon {
+    margin-top: 7px;
+    margin-left: 9px;
+  }
 `;
 
 const Header = ({ sideMenuClickHandler }) => {
   return (
     <HeaderCompo className="header-component">
-      <Grid relaxed>
-        <Grid.Row>
-          <Grid.Column width={1}>
+      <Table celled className="header-table">
+        <Table.Row>
+          <Table.Cell className="sidemenu-button">
             <SidebarButton
               className="side-menu-button"
               onClick={() => {
                 sideMenuClickHandler();
               }}
             >
-              <HiMenu />
+              <FaBars className="icon" />
             </SidebarButton>
-          </Grid.Column>
-          <Grid.Column width={1}>
+          </Table.Cell>
+          <Table.Cell className="company">
             <Image
               src="/header/company-white.png"
               alt="회사명"
               verticalAlign="middle"
               inline="true"
             />
-          </Grid.Column>
-          <Grid.Column width={6}>
-            고속국도 제 14호선 함양-울산선(함양-합천) 건설공사(제4공구)
-          </Grid.Column>
-          <Grid.Column width={1}>
-            <Image src="/header/한화건설-white.png" />
-          </Grid.Column>
-          <Grid.Column width={6}>
-            <Image src="/header/한화건설-white.png" />
-          </Grid.Column>
-          <Grid.Column width={1}>
-            <Image src="/header/한화건설-white.png" />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+          </Table.Cell>
+          <Table.Cell className="title">
+            <span className="title">
+              고속국도 제 14호선 함양-울산선(함양-합천) 건설공사(제4공구)
+              {"    "}
+            </span>
+            <span className="title-highlight">신원3터널</span>
+          </Table.Cell>
+          <Table.Cell className="blank"></Table.Cell>
+
+          <Table.Cell className="shortcuts">
+            <div className="iconbox alert">
+              <FaVolumeMute className="icon" />
+            </div>
+            <div className="shortcut-subtitle">알람음</div>
+          </Table.Cell>
+          <Table.Cell className="shortcuts">
+            <div className="iconbox home">
+              <FaHome className="icon" />
+            </div>
+            <div className="shortcut-subtitle">HOME</div>
+          </Table.Cell>
+          <Table.Cell className="shortcuts">
+            <div className="iconbox dig">
+              <FaList className="icon" />
+            </div>
+            <div className="shortcut-subtitle">굴진율</div>
+          </Table.Cell>
+          <Table.Cell className="shortcuts">
+            <div className="iconbox nomalscreen">
+              <FaCompressArrowsAlt className="icon" />
+            </div>
+            <div className="shortcut-subtitle">일반화면</div>
+          </Table.Cell>
+          <Table.Cell className="shortcuts">
+            <div className="iconbox fullscreen">
+              <FaExpandArrowsAlt className="icon" />
+            </div>
+            <div className="shortcut-subtitle">전체화면</div>
+          </Table.Cell>
+          <Table.Cell className="shortcuts">
+            <div className="iconbox question">
+              <FaQuestion className="icon" />
+            </div>
+            <div className="shortcut-subtitle">도움말</div>
+          </Table.Cell>
+          <Table.Cell className="logout">
+            <LogoutButton
+              className="side-menu-button"
+              onClick={() => {
+                sideMenuClickHandler();
+              }}
+            >
+              <FaSignOutAlt className="icon" />
+            </LogoutButton>
+          </Table.Cell>
+        </Table.Row>
+      </Table>
     </HeaderCompo>
   );
 };

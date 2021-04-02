@@ -14,6 +14,15 @@ const HomeCompo = styled.div`
   min-height: 900px;
 `;
 
+const ContentsCompo = styled.div`
+  position: absolute;
+  padding: 30px;
+  top: 70px !important;
+  left: 260px !important;
+`;
+
+const ContentTitleCompo = styled.div``;
+
 const HomeContainer = () => {
   //   const { data, loading, error } = useSelector(
   //     (state) => state.companies.companies
@@ -26,11 +35,12 @@ const HomeContainer = () => {
 
   const [callSideMenu, setCallSideMenu] = useState(false);
 
-  const sideMenuClickHandler = () => {
+  function sideMenuClickHandler() {
     setCallSideMenu(!callSideMenu);
-    console.log("클릭");
-    console.log(callSideMenu);
-  };
+  }
+
+  const [contentTitle, setContentTitle] = useState("");
+  const [contentTitleIcon, setContentTitleIcon] = useState("");
 
   return (
     <>
@@ -43,9 +53,14 @@ const HomeContainer = () => {
               sideMenuClickHandler={sideMenuClickHandler}
             />
           </div>
-          <div className="bottom-right">
+          <ContentsCompo>
+            <ContentTitleCompo>
+              {/* <{contentTitleIcon} /> */}
+              작업자 관리
+              <hr id="content-title-divide-line" />
+            </ContentTitleCompo>
             <Contents />
-          </div>
+          </ContentsCompo>
         </div>
       </HomeCompo>
     </>
