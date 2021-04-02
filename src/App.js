@@ -1,7 +1,8 @@
 import { Route } from "react-router";
 import MainPage from "./pages/MainPage";
 
-import './App.css';
+import "./App.css";
+import "semantic-ui-css/semantic.min.css";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 

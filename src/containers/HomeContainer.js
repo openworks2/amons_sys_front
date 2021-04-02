@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Contents from "../components/Contents";
@@ -24,19 +24,21 @@ const Sidebar = styled.div`
 `;
 
 const HomeContainer = () => {
-  const { data, loading, error } = useSelector(
-    (state) => state.companies.companies
-  );
-  const dispatch = useDispatch();
+  //   const { data, loading, error } = useSelector(
+  //     (state) => state.companies.companies
+  //   );
+  //   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getCompanies());
-  }, [dispatch]);
+  //   useEffect(() => {
+  //     dispatch(getCompanies());
+  //   }, [dispatch]);
 
   const [callSideMenu, setCallSideMenu] = React.useState(false);
 
   const sideMenuClickHandler = () => {
     setCallSideMenu(!callSideMenu);
+    console.log("클릭");
+    console.log(callSideMenu);
   };
 
   return (
@@ -55,7 +57,10 @@ const HomeContainer = () => {
         </div>
         <div className="bottom">
           <div className="bottom-left">
-            <SideMenu callSideMenu={callSideMenu} />
+            <SideMenu
+              callSideMenu={callSideMenu}
+              setCallSideMenu={setCallSideMenu}
+            />
           </div>
           <div className="bottom-right">
             <Contents />
