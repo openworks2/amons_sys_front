@@ -3,25 +3,24 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Contents from "../components/Contents";
 import Header from "../components/Header";
+import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { getCompanies } from "../modules/companies";
-import { Button } from "semantic-ui-react";
-import { HiMenu } from "react-icons/hi";
 
 const HomeCompo = styled.div`
   height: 100%;
   min-width: 1645px;
   min-height: 900px;
+  background: #f9fafb 0% 0% no-repeat padding-box;
 `;
 
 const ContentsCompo = styled.div`
   position: static;
-  padding-top: 160px !important;
-  padding-left: 260px !important;
-  padding-right: 260px !important;
+  min-width: 1920px !important;
+  padding-top: 96px !important;
+  padding-left: 280px !important;
+  padding-right: 130px;
 `;
-
-const ContentTitleCompo = styled.div``;
 
 const HomeContainer = () => {
   //   const { data, loading, error } = useSelector(
@@ -39,8 +38,7 @@ const HomeContainer = () => {
     setCallSideMenu(!callSideMenu);
   }
 
-  const [contentTitle, setContentTitle] = useState("");
-  const [contentTitleIcon, setContentTitleIcon] = useState("");
+  const [contentTitle, setContentTitle] = useState("소속사 관리");
 
   return (
     <>
@@ -54,11 +52,7 @@ const HomeContainer = () => {
             />
           </div>
           <ContentsCompo>
-            <ContentTitleCompo>
-              {/* <{contentTitleIcon} /> */}
-              작업자 관리
-              <hr id="content-title-divide-line" />
-            </ContentTitleCompo>
+            <ContentTitle contentTitle={contentTitle} />
             <Contents />
           </ContentsCompo>
         </div>

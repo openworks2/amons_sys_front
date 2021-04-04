@@ -2,20 +2,30 @@ import React, { useState } from "react";
 import { Menu, Sidebar } from "semantic-ui-react";
 import styled from "styled-components";
 
-import { FaIdCard, FiMonitor } from "react-icons/fa";
+import { FaIdCard, FaDesktop } from "react-icons/fa";
 
 const SideMenuCompo = styled.div`
   opacity: 1;
 
+  .side-icon {
+    vertical-align: middle;
+    position: absolute;
+    font-size: 17px;
+    left: 210px;
+    top: px;
+  }
   .sidemenu {
     background: #1b1c1d 0% 0% no-repeat padding-box !important;
     width: 260px !important;
     top: 70px;
+    padding-top: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .divide-line {
     border: solid 1px;
     color: #7c7c7c;
-    width: 93%;
+    width: 100%;
   }
   a.item::before {
     width: 0% !important;
@@ -27,8 +37,8 @@ const SideMenuCompo = styled.div`
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding-top: 12px;
+    padding-bottom: 12px;
   }
   a.item.sidemenu-sub-title {
     font-family: "NotoSansCJKkr-Regular";
@@ -64,6 +74,7 @@ const SideMenu = ({ callSideMenu, sideMenuClickHandler }) => {
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
           모니터링
+          <FaDesktop className="side-icon" />
         </Menu.Item>
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
@@ -194,7 +205,7 @@ const SideMenu = ({ callSideMenu, sideMenuClickHandler }) => {
         </Menu.Item>
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
-          계정관리
+          계정관리 <FaIdCard className="side-icon" />
         </Menu.Item>
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
