@@ -15,10 +15,10 @@ const HomeCompo = styled.div`
 `;
 
 const ContentsCompo = styled.div`
-  position: absolute;
-  padding: 30px;
-  top: 70px !important;
-  left: 260px !important;
+  position: static;
+  padding-top: 160px !important;
+  padding-left: 260px !important;
+  padding-right: 260px !important;
 `;
 
 const ContentTitleCompo = styled.div``;

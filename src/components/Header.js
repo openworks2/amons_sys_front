@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Image, Table } from "semantic-ui-react";
+import { Image, Table } from "semantic-ui-react";
 import styled from "styled-components";
 import {
   FaBars,
@@ -14,6 +14,9 @@ import {
 
 const HeaderCompo = styled.div`
   position: fixed !important;
+  margin-bottom: 70px;
+  min-width: 1800px;
+  min-height: 70px;
   display: inline-block;
   width: 100%;
   height: 70px;
@@ -30,6 +33,10 @@ const HeaderCompo = styled.div`
     border-left-width: 0px !important;
     border-right-width: 0px !important;
     border-radius: 0px;
+    @media only screen and (max-width: 767px) {
+      width: 100% !important;
+      display: table-row !important;
+    }
   }
   .company {
     padding-right: 0px !important;
@@ -74,33 +81,27 @@ const HeaderCompo = styled.div`
 
   .iconbox.alert {
     background: #c23235 0% 0% no-repeat padding-box;
-    opacity: 1;
   }
 
   .iconbox.home {
     background: #a73b1f 0% 0% no-repeat padding-box;
-    opacity: 1;
   }
 
   .iconbox.dig {
     background: #686868 0% 0% no-repeat padding-box;
-    opacity: 1;
   }
 
   .iconbox.nomalscreen {
     background: #5e7827 0% 0% no-repeat padding-box;
-    opacity: 1;
     padding: 0px;
   }
 
   .iconbox.fullscreen {
     background: #306f4d 0% 0% no-repeat padding-box;
-    opacity: 1;
   }
 
   .iconbox.question {
     background: #305a70 0% 0% no-repeat padding-box;
-    opacity: 1;
   }
 
   .icon {
@@ -146,7 +147,7 @@ const LogoutButton = styled.div`
 const Header = ({ sideMenuClickHandler }) => {
   return (
     <HeaderCompo className="header-component">
-      <Table celled className="header-table">
+      <Table celled className="header-table" unstackable={true}>
         <Table.Row>
           <Table.Cell className="sidemenu-button">
             <SidebarButton
