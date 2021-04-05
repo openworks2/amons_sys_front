@@ -12,7 +12,6 @@ const SideMenuCompo = styled.div`
     position: absolute;
     font-size: 17px;
     left: 210px;
-    top: px;
   }
   .sidemenu {
     background: #1b1c1d 0% 0% no-repeat padding-box !important;
@@ -52,13 +51,12 @@ const SideMenuCompo = styled.div`
   }
 `;
 
-const SideMenu = ({ callSideMenu, sideMenuClickHandler }) => {
-  const [clickedSideMenu, setClickedSideMenu] = useState("");
-
-  const handleMenuClick = (e, name) => {
-    setClickedSideMenu(name);
-  };
-
+const SideMenu = ({
+  callSideMenu,
+  sideMenuClickHandler,
+  clickedSideMenu,
+  handleMenuClick,
+}) => {
   return (
     <SideMenuCompo className="sidemenu-compo">
       <Sidebar
@@ -66,7 +64,7 @@ const SideMenu = ({ callSideMenu, sideMenuClickHandler }) => {
         animation="overlay"
         icon="labeled"
         inverted
-        onHide={() => sideMenuClickHandler()}
+        onHide={() => sideMenuClickHandler}
         vertical
         visible={callSideMenu}
         className="sidemenu"
@@ -86,7 +84,8 @@ const SideMenu = ({ callSideMenu, sideMenuClickHandler }) => {
           name="logEmergency"
           active={clickedSideMenu === "logEmergency"}
           onClick={(e, name) => {
-            handleMenuClick(e, name);
+            handleMenuClick(name);
+            console.log(clickedSideMenu);
           }}
         >
           알람이력 : 작업자

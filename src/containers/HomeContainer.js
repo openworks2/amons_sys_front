@@ -32,12 +32,19 @@ const HomeContainer = () => {
   //     dispatch(getCompanies());
   //   }, [dispatch]);
 
+  // 사이드바 호출 버튼 핸들러
   const [callSideMenu, setCallSideMenu] = useState(false);
-
   function sideMenuClickHandler() {
     setCallSideMenu(!callSideMenu);
   }
 
+  // 사이드바 클릭 변경 핸들러
+  const [clickedSideMenu, setClickedSideMenu] = useState("");
+  const handleMenuClick = (e, name) => {
+    setClickedSideMenu(name);
+  };
+
+  // 콘텐츠 타이틀 변경 핸들러
   const [contentTitle, setContentTitle] = useState("소속사 관리");
 
   return (
@@ -49,6 +56,8 @@ const HomeContainer = () => {
             <SideMenu
               callSideMenu={callSideMenu}
               sideMenuClickHandler={sideMenuClickHandler}
+              clickedSideMenu={clickedSideMenu}
+              handleMenuClick={handleMenuClick}
             />
           </div>
           <ContentsCompo>
