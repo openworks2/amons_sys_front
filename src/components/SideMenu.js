@@ -6,16 +6,21 @@ import { FaIdCard, FaDesktop } from "react-icons/fa";
 
 const SideMenuCompo = styled.div`
   opacity: 1;
-
+  cursor: default !important;
   //클릭한메뉴
 
   .ui.inverted.menu .active.item {
+    cursor: default !important;
     background: #1b1c1d !important;
     color: #f1592a !important;
   }
   .ui.inverted.menu .active.item:hover {
+    cursor: default !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #f1592a !important;
+  }
+  .ui.vertical.menu .item:before {
     background: #1b1c1d !important;
-    color: #fff !important;
   }
 
   .side-icon {
@@ -23,27 +28,44 @@ const SideMenuCompo = styled.div`
     position: absolute;
     font-size: 17px;
     left: 210px;
+    cursor: default !important;
   }
   .sidemenu {
+    cursor: default !important;
     background: #1b1c1d 0% 0% no-repeat padding-box !important;
     width: 260px !important;
     top: 70px;
     padding-top: 15px;
-    padding-left: 10px;
+    padding-left: 5px;
     padding-right: 10px;
   }
   .divide-line {
-    border: solid 1px;
-    color: #7c7c7c;
+    background: #7c7c7c;
     width: 100%;
+    height: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
   a.item::before {
     width: 0% !important;
+    cursor: default !important;
   }
   a.item.sidemenu-title {
     font-family: "NotoSansCJKkr-Medium";
     font-size: 16px;
     text-align: left !important;
+    cursor: default !important;
+    letter-spacing: 0px;
+    color: #ffffff;
+    opacity: 1;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  b.item.sidemenu-title-non-click {
+    font-family: "NotoSansCJKkr-Medium";
+    font-size: 16px;
+    text-align: left !important;
+    cursor: default !important;
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
@@ -54,6 +76,7 @@ const SideMenuCompo = styled.div`
     font-family: "NotoSansCJKkr-Regular";
     font-size: 14px;
     text-align: left !important;
+    cursor: default !important;
     letter-spacing: 0px !important;
     color: #7c7c7c !important;
     opacity: 1 !important;
@@ -81,7 +104,7 @@ const SideMenu = ({
         className="sidemenu"
       >
         {/* ================================================================ */}
-        <hr className="divide-line" />
+        <div className="divide-line" />
         <Menu.Item
           as="a"
           className="sidemenu-title"
@@ -93,8 +116,8 @@ const SideMenu = ({
           <FaDesktop className="side-icon" />
         </Menu.Item>
         {/* ================================================================ */}
-        <hr className="divide-line" />
-        <Menu.Item as="a" className="sidemenu-title">
+        <div className="divide-line" />
+        <Menu.Item as="b" className="sidemenu-title-non-click" active={false}>
           이력조회
         </Menu.Item>
         <Menu.Item
@@ -134,8 +157,8 @@ const SideMenu = ({
           굴진이력
         </Menu.Item>
         {/* ================================================================ */}
-        <hr className="divide-line" />
-        <Menu.Item as="a" className="sidemenu-title">
+        <div className="divide-line" />
+        <Menu.Item as="b" className="sidemenu-title-non-click" active={false}>
           현장관리
         </Menu.Item>
         <Menu.Item
@@ -175,36 +198,36 @@ const SideMenu = ({
           공정상태 변경
         </Menu.Item>
         {/* ================================================================ */}
-        <hr className="divide-line" />
-        <Menu.Item as="a" className="sidemenu-title">
+        <div className="divide-line" />
+        <Menu.Item as="b" className="sidemenu-title-non-click" active={false}>
           일반관리
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="소속사관리"
-          active={currentMenu === "소속사관리"}
+          name="소속사 관리"
+          active={currentMenu === "소속사 관리"}
           onClick={sideMenuClickHandler}
         >
-          소속사관리
+          소속사 관리
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="작업자관리"
-          active={currentMenu === "작업자관리"}
+          name="작업자 관리"
+          active={currentMenu === "작업자 관리"}
           onClick={sideMenuClickHandler}
         >
-          작업자관리
+          작업자 관리
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="차량관리"
-          active={currentMenu === "차량관리"}
+          name="차량 관리"
+          active={currentMenu === "차량 관리"}
           onClick={sideMenuClickHandler}
         >
-          차량관리
+          차량 관리
         </Menu.Item>
         <Menu.Item
           as="a"
@@ -234,7 +257,7 @@ const SideMenu = ({
           디바이스 관리 : CCTV
         </Menu.Item>
         {/* ================================================================ */}
-        <hr className="divide-line" />
+        <div className="divide-line" />
         <Menu.Item
           as="a"
           className="sidemenu-title"
@@ -245,8 +268,8 @@ const SideMenu = ({
           계정관리 <FaIdCard className="side-icon" />
         </Menu.Item>
         {/* ================================================================ */}
-        <hr className="divide-line" />
-        <Menu.Item as="a" className="sidemenu-title">
+        <div className="divide-line" active={false} />
+        <Menu.Item as="b" className="sidemenu-title-non-click" active={false}>
           기타관리
         </Menu.Item>
         <Menu.Item
@@ -277,7 +300,7 @@ const SideMenu = ({
           로그인 기록
         </Menu.Item>
         {/* ================================================================ */}
-        <hr className="divide-line" />
+        <div className="divide-line" />
       </Sidebar>
     </SideMenuCompo>
   );

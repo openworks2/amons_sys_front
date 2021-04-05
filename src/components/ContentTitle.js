@@ -9,34 +9,46 @@ import {
   FaVolumeMute,
   FaList,
   FaQuestion,
+  FaIdCard,
   FaHardHat,
   FaIdCardAlt,
   FaTruck,
   FaBluetooth,
 } from "react-icons/fa";
-import { Loader } from "semantic-ui-react";
+import { Image } from "semantic-ui-react";
 
 const ContentTitleBoxCompo = styled.div`
   padding: 0;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
   text-align: left;
 
   color: #2e2e2e;
   .content-title-compo {
     font-family: "NotoSansCJKkr-Medium";
-    margin-left: 14px;
+    margin-left: 35px;
     font-size: 24px;
+    vertical-align: middle;
   }
 
   .content-icon-compo {
+    width: 30px;
+    height: 30px;
     font-size: 25px;
+    position: absolute;
   }
 
   .content-title-divide-line {
-    border: solid 1px;
-    top: 130px;
+    background: #000000;
+    margin-top: 12px;
+    height: 1px;
+    top: 125px;
     width: 1623px;
     position: absolute;
+  }
+  .img-icons {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
   }
 `;
 
@@ -74,18 +86,32 @@ const printContentTitleIcon = (currentMenu) => {
     case "디바이스 관리 : 비콘":
       return <FaBluetooth />;
     case "디바이스 관리 : 스캐너":
-      return;
+      return (
+        <Image
+          src="/icons/router.png"
+          alt="스캐너아이콘"
+          className="img-icons"
+          inline={true}
+        />
+      );
     case "디바이스 관리 : CCTV":
-      return;
+      return (
+        <Image
+          src="/icons/cctv.png"
+          alt="CCTV아이콘"
+          className="img-icons"
+          inline={true}
+        />
+      );
     // ============계정관리=============
-    case "":
-      return;
+    case "계정관리":
+      return <FaIdCard />;
     // ============기타관리=============
-    case "":
+    case "환경설정":
       return;
-    case "":
+    case "퇴출관리":
       return;
-    case "":
+    case "로그인 기록":
       return;
     default:
   }
@@ -98,7 +124,7 @@ const ContentTitle = ({ currentMenu }) => {
         {printContentTitleIcon(currentMenu)}
       </span>
       <span className="content-title-compo">{currentMenu}</span>
-      <hr className="content-title-divide-line" />
+      <div className="content-title-divide-line" />
     </ContentTitleBoxCompo>
   );
 };
