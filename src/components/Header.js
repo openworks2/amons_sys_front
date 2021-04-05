@@ -46,7 +46,7 @@ const HeaderCompo = styled.div`
     padding-left: 0px !important;
     color: #ffffff;
     font-size: 30px;
-    font-family: "NotoSansCJKkr-Regular";
+    font-family: "NotoSansKR-Regular";
     text-align: left;
     letter-spacing: 0px;
     opacity: 1;
@@ -55,7 +55,7 @@ const HeaderCompo = styled.div`
   .title-highlight {
     color: #f1592a;
     font-size: 30px;
-    font-family: "NotoSansCJKkr-Medium";
+    font-family: "NotoSansKR-Medium";
     text-align: left;
     letter-spacing: 0px;
   }

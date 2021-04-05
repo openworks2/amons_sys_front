@@ -51,7 +51,7 @@ const SideMenuCompo = styled.div`
     cursor: default !important;
   }
   a.item.sidemenu-title {
-    font-family: "NotoSansCJKkr-Medium";
+    font-family: "NotoSansKR-Medium";
     font-size: 16px;
     text-align: left !important;
     cursor: default !important;
@@ -62,7 +62,7 @@ const SideMenuCompo = styled.div`
     padding-bottom: 12px;
   }
   b.item.sidemenu-title-non-click {
-    font-family: "NotoSansCJKkr-Medium";
+    font-family: "NotoSansKR-Medium";
     font-size: 16px;
     text-align: left !important;
     cursor: default !important;
@@ -73,7 +73,7 @@ const SideMenuCompo = styled.div`
     padding-bottom: 12px;
   }
   a.item.sidemenu-sub-title {
-    font-family: "NotoSansCJKkr-Regular";
+    font-family: "NotoSansKR-Regular";
     font-size: 14px;
     text-align: left !important;
     cursor: default !important;

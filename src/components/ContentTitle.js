@@ -18,21 +18,21 @@ import {
 import { Image } from "semantic-ui-react";
 
 const ContentTitleBoxCompo = styled.div`
-  font-family: "NotoSansCJKkr-Medium";
+  font-family: "NotoSansKR-Medium";
   padding: 0;
   margin-bottom: 32px;
   text-align: left;
 
   color: #2e2e2e;
   .content-title-compo {
-    font-family: "NotoSansCJKkr-Medium";
+    font-family: "NotoSansKR-Medium";
     margin-left: 35px;
     font-size: 24px;
     vertical-align: middle;
   }
 
   .content-icon-compo {
-    font-family: "NotoSansCJKkr-Medium";
+    font-family: "NotoSansKR-Medium";
     width: 30px;
     height: 30px;
     font-size: 25px;
@@ -55,7 +55,7 @@ const ContentTitleBoxCompo = styled.div`
 const printContentTitleIcon = (currentMenu) => {
   switch (currentMenu) {
     case "":
-      return <h1>원하시는 메뉴를 선택해 주세요.</h1>;
+      return <h5>.</h5>;
     case "모니터링":
       return <FaIdCardAlt />;
     // ============이력조회=============
