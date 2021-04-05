@@ -18,6 +18,7 @@ import {
 import { Image } from "semantic-ui-react";
 
 const ContentTitleBoxCompo = styled.div`
+  font-family: "NotoSansCJKkr-Medium";
   padding: 0;
   margin-bottom: 32px;
   text-align: left;
@@ -31,6 +32,7 @@ const ContentTitleBoxCompo = styled.div`
   }
 
   .content-icon-compo {
+    font-family: "NotoSansCJKkr-Medium";
     width: 30px;
     height: 30px;
     font-size: 25px;
@@ -46,8 +48,6 @@ const ContentTitleBoxCompo = styled.div`
     position: absolute;
   }
   .img-icons {
-    width: 25px;
-    height: 25px;
     display: inline-block;
   }
 `;
