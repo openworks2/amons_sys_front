@@ -7,6 +7,17 @@ import { FaIdCard, FaDesktop } from "react-icons/fa";
 const SideMenuCompo = styled.div`
   opacity: 1;
 
+  //클릭한메뉴
+
+  .ui.inverted.menu .active.item {
+    background: #1b1c1d !important;
+    color: #f1592a !important;
+  }
+  .ui.inverted.menu .active.item:hover {
+    background: #1b1c1d !important;
+    color: #fff !important;
+  }
+
   .side-icon {
     vertical-align: middle;
     position: absolute;
@@ -53,9 +64,9 @@ const SideMenuCompo = styled.div`
 
 const SideMenu = ({
   callSideMenu,
+  callSideMenuHandler,
   sideMenuClickHandler,
-  clickedSideMenu,
-  handleMenuClick,
+  currentMenu,
 }) => {
   return (
     <SideMenuCompo className="sidemenu-compo">
@@ -64,16 +75,24 @@ const SideMenu = ({
         animation="overlay"
         icon="labeled"
         inverted
-        onHide={() => sideMenuClickHandler}
+        onHide={() => callSideMenuHandler}
         vertical
         visible={callSideMenu}
         className="sidemenu"
       >
+        {/* ================================================================ */}
         <hr className="divide-line" />
-        <Menu.Item as="a" className="sidemenu-title">
+        <Menu.Item
+          as="a"
+          className="sidemenu-title"
+          name="모니터링"
+          active={currentMenu === "모니터링"}
+          onClick={sideMenuClickHandler}
+        >
           모니터링
           <FaDesktop className="side-icon" />
         </Menu.Item>
+        {/* ================================================================ */}
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
           이력조회
@@ -81,39 +100,40 @@ const SideMenu = ({
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="logEmergency"
-          active={clickedSideMenu === "logEmergency"}
-          onClick={(e, name) => {
-            handleMenuClick(name);
-            console.log(clickedSideMenu);
-          }}
+          name="알람이력 : 작업자"
+          active={currentMenu === "알람이력 : 작업자"}
+          onClick={sideMenuClickHandler}
         >
           알람이력 : 작업자
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="logWorker"
-          active={clickedSideMenu === "logWorker"}
+          name="막장 잔류이력 : 작업자"
+          active={currentMenu === "막장 잔류이력 : 작업자"}
+          onClick={sideMenuClickHandler}
         >
           막장 잔류이력 : 작업자
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="logWorker"
-          active={clickedSideMenu === "logVehicle"}
+          name="막장 잔류이력 : 차량"
+          active={currentMenu === "막장 잔류이력 : 차량"}
+          onClick={sideMenuClickHandler}
         >
           막장 잔류이력 : 차량
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="logDig"
-          active={clickedSideMenu === "logDig"}
+          name="굴진이력"
+          active={currentMenu === "굴진이력"}
+          onClick={sideMenuClickHandler}
         >
           굴진이력
         </Menu.Item>
+        {/* ================================================================ */}
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
           현장관리
@@ -121,35 +141,40 @@ const SideMenu = ({
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoAnnounce"
-          active={clickedSideMenu === "infoAnnounce"}
+          name="공지사항"
+          active={currentMenu === "공지사항"}
+          onClick={sideMenuClickHandler}
         >
           공지사항
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="노선관리"
+          active={currentMenu === "노선관리"}
+          onClick={sideMenuClickHandler}
         >
           노선관리
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="누적 굴진량 입력"
+          active={currentMenu === "누적 굴진량 입력"}
+          onClick={sideMenuClickHandler}
         >
           누적 굴진량 입력
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="공정상태 변경"
+          active={currentMenu === "공정상태 변경"}
+          onClick={sideMenuClickHandler}
         >
           공정상태 변경
         </Menu.Item>
+        {/* ================================================================ */}
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
           일반관리
@@ -157,55 +182,69 @@ const SideMenu = ({
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="소속사관리"
+          active={currentMenu === "소속사관리"}
+          onClick={sideMenuClickHandler}
         >
           소속사관리
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="작업자관리"
+          active={currentMenu === "작업자관리"}
+          onClick={sideMenuClickHandler}
         >
           작업자관리
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="차량관리"
+          active={currentMenu === "차량관리"}
+          onClick={sideMenuClickHandler}
         >
           차량관리
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="디바이스 관리 : 비콘"
+          active={currentMenu === "디바이스 관리 : 비콘"}
+          onClick={sideMenuClickHandler}
         >
           디바이스 관리 : 비콘
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="디바이스 관리 : 스캐너"
+          active={currentMenu === "디바이스 관리 : 스캐너"}
+          onClick={sideMenuClickHandler}
         >
           디바이스 관리 : 스캐너
         </Menu.Item>
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="디바이스 관리 : CCTV"
+          active={currentMenu === "디바이스 관리 : CCTV"}
+          onClick={sideMenuClickHandler}
         >
           디바이스 관리 : CCTV
         </Menu.Item>
+        {/* ================================================================ */}
         <hr className="divide-line" />
-        <Menu.Item as="a" className="sidemenu-title">
+        <Menu.Item
+          as="a"
+          className="sidemenu-title"
+          name="계정관리"
+          active={currentMenu === "계정관리"}
+          onClick={sideMenuClickHandler}
+        >
           계정관리 <FaIdCard className="side-icon" />
         </Menu.Item>
+        {/* ================================================================ */}
         <hr className="divide-line" />
         <Menu.Item as="a" className="sidemenu-title">
           기타관리
@@ -213,17 +252,31 @@ const SideMenu = ({
         <Menu.Item
           as="a"
           className="sidemenu-sub-title"
-          name="infoLocal"
-          active={clickedSideMenu === "infoLocal"}
+          name="환경설정"
+          active={currentMenu === "환경설정"}
+          onClick={sideMenuClickHandler}
         >
           환경설정
         </Menu.Item>
-        <Menu.Item as="a" className="sidemenu-sub-title">
+        <Menu.Item
+          as="a"
+          className="sidemenu-sub-title"
+          name="퇴출관리"
+          active={currentMenu === "퇴출관리"}
+          onClick={sideMenuClickHandler}
+        >
           퇴출관리
         </Menu.Item>
-        <Menu.Item as="a" className="sidemenu-sub-title">
+        <Menu.Item
+          as="a"
+          className="sidemenu-sub-title"
+          name="로그인 기록"
+          active={currentMenu === "로그인 기록"}
+          onClick={sideMenuClickHandler}
+        >
           로그인 기록
         </Menu.Item>
+        {/* ================================================================ */}
         <hr className="divide-line" />
       </Sidebar>
     </SideMenuCompo>

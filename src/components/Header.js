@@ -144,16 +144,16 @@ const LogoutButton = styled.div`
   }
 `;
 
-const Header = ({ sideMenuClickHandler }) => {
+const Header = ({ callSideMenuHandler }) => {
   return (
     <HeaderCompo className="header-component">
       <Table celled className="header-table" unstackable={true}>
-        <Table.Row>
+        <Table.Row selectable={false}>
           <Table.Cell className="sidemenu-button">
             <SidebarButton
               className="side-menu-button"
               onClick={() => {
-                sideMenuClickHandler();
+                callSideMenuHandler();
               }}
             >
               <FaBars className="icon" />
@@ -216,7 +216,7 @@ const Header = ({ sideMenuClickHandler }) => {
             <LogoutButton
               className="side-menu-button"
               onClick={() => {
-                sideMenuClickHandler();
+                callSideMenuHandler();
               }}
             >
               <FaSignOutAlt className="icon" />

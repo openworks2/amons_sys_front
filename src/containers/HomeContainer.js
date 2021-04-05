@@ -34,34 +34,33 @@ const HomeContainer = () => {
 
   // 사이드바 호출 버튼 핸들러
   const [callSideMenu, setCallSideMenu] = useState(false);
-  function sideMenuClickHandler() {
+  function callSideMenuHandler() {
     setCallSideMenu(!callSideMenu);
   }
 
+  // 현재 메뉴 변경 핸들러
+  const [currentMenu, setCurrentMenu] = useState("");
   // 사이드바 클릭 변경 핸들러
-  const [clickedSideMenu, setClickedSideMenu] = useState("");
-  const handleMenuClick = (e, name) => {
-    setClickedSideMenu(name);
+  const sideMenuClickHandler = (e, { name }) => {
+    // 공백 포함 한글 문자열 받기.
+    setCurrentMenu(name);
+    console.log(currentMenu);
   };
-
-  // 콘텐츠 타이틀 변경 핸들러
-  const [contentTitle, setContentTitle] = useState("소속사 관리");
-
   return (
     <>
       <HomeCompo className="Home-component">
-        <Header sideMenuClickHandler={sideMenuClickHandler} />
+        <Header callSideMenuHandler={callSideMenuHandler} />
         <div className="bottom">
           <div className="bottom-left">
             <SideMenu
               callSideMenu={callSideMenu}
+              callSideMenuHandler={callSideMenuHandler}
               sideMenuClickHandler={sideMenuClickHandler}
-              clickedSideMenu={clickedSideMenu}
-              handleMenuClick={handleMenuClick}
+              currentMenu={currentMenu}
             />
           </div>
           <ContentsCompo>
-            <ContentTitle contentTitle={contentTitle} />
+            <ContentTitle currentMenu={currentMenu} />
             <Contents />
           </ContentsCompo>
         </div>
