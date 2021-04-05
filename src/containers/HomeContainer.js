@@ -43,6 +43,7 @@ const HomeContainer = () => {
   const handleMenuClick = (e, name) => {
     setClickedSideMenu(name);
   };
+  // 하이
 
   // 콘텐츠 타이틀 변경 핸들러
   const [contentTitle, setContentTitle] = useState("소속사 관리");
