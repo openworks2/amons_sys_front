@@ -3,6 +3,7 @@ import { Menu, Sidebar } from "semantic-ui-react";
 import styled from "styled-components";
 
 import { FaIdCard, FaDesktop } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const SideMenuCompo = styled.div`
   opacity: 1;
@@ -88,9 +89,13 @@ const SideMenuCompo = styled.div`
 const SideMenu = ({
   callSideMenu,
   callSideMenuHandler,
-  sideMenuClickHandler,
+  changeCurrentMenu,
   currentMenu,
 }) => {
+  const sideMenuClickHandler = (e, { name }) => {
+    changeCurrentMenu(name);
+  };
+
   return (
     <SideMenuCompo className="sidemenu-compo">
       <Sidebar
@@ -202,60 +207,83 @@ const SideMenu = ({
         <Menu.Item as="b" className="sidemenu-title-non-click" active={false}>
           일반관리
         </Menu.Item>
-        <Menu.Item
-          as="a"
-          className="sidemenu-sub-title"
-          name="소속사 관리"
-          active={currentMenu === "소속사 관리"}
-          onClick={sideMenuClickHandler}
-        >
-          소속사 관리
-        </Menu.Item>
-        <Menu.Item
-          as="a"
-          className="sidemenu-sub-title"
-          name="작업자 관리"
-          active={currentMenu === "작업자 관리"}
-          onClick={sideMenuClickHandler}
-        >
-          작업자 관리
-        </Menu.Item>
-        <Menu.Item
-          as="a"
-          className="sidemenu-sub-title"
-          name="차량 관리"
-          active={currentMenu === "차량 관리"}
-          onClick={sideMenuClickHandler}
-        >
-          차량 관리
-        </Menu.Item>
-        <Menu.Item
-          as="a"
-          className="sidemenu-sub-title"
-          name="디바이스 관리 : 비콘"
-          active={currentMenu === "디바이스 관리 : 비콘"}
-          onClick={sideMenuClickHandler}
-        >
-          디바이스 관리 : 비콘
-        </Menu.Item>
-        <Menu.Item
-          as="a"
-          className="sidemenu-sub-title"
-          name="디바이스 관리 : 스캐너"
-          active={currentMenu === "디바이스 관리 : 스캐너"}
-          onClick={sideMenuClickHandler}
-        >
-          디바이스 관리 : 스캐너
-        </Menu.Item>
-        <Menu.Item
-          as="a"
-          className="sidemenu-sub-title"
-          name="디바이스 관리 : CCTV"
-          active={currentMenu === "디바이스 관리 : CCTV"}
-          onClick={sideMenuClickHandler}
-        >
-          디바이스 관리 : CCTV
-        </Menu.Item>
+
+        <Link to="/amons/home/general/company">
+          <Menu.Item
+            as="a"
+            className="sidemenu-sub-title"
+            name="소속사 관리"
+            active={currentMenu === "소속사 관리"}
+            onClick={sideMenuClickHandler}
+            link={true}
+          >
+            소속사 관리
+          </Menu.Item>
+        </Link>
+
+        <Link to="/amons/home/general/worker">
+          <Menu.Item
+            as="a"
+            className="sidemenu-sub-title"
+            name="작업자 관리"
+            active={currentMenu === "작업자 관리"}
+            onClick={sideMenuClickHandler}
+            link={true}
+          >
+            작업자 관리
+          </Menu.Item>
+        </Link>
+
+        <Link to="/amons/home/general/vehicle">
+          <Menu.Item
+            as="a"
+            className="sidemenu-sub-title"
+            name="차량 관리"
+            active={currentMenu === "차량 관리"}
+            onClick={sideMenuClickHandler}
+          >
+            차량 관리
+          </Menu.Item>
+        </Link>
+
+        <Link to="/amons/home/general/beacon">
+          {" "}
+          <Menu.Item
+            as="a"
+            className="sidemenu-sub-title"
+            name="디바이스 관리 : 비콘"
+            active={currentMenu === "디바이스 관리 : 비콘"}
+            onClick={sideMenuClickHandler}
+          >
+            디바이스 관리 : 비콘
+          </Menu.Item>
+        </Link>
+
+        <Link to="/amons/home/general/scanner">
+          {" "}
+          <Menu.Item
+            as="a"
+            className="sidemenu-sub-title"
+            name="디바이스 관리 : 스캐너"
+            active={currentMenu === "디바이스 관리 : 스캐너"}
+            onClick={sideMenuClickHandler}
+          >
+            디바이스 관리 : 스캐너
+          </Menu.Item>
+        </Link>
+
+        <Link to="/amons/home/general/cctv">
+          <Menu.Item
+            as="a"
+            className="sidemenu-sub-title"
+            name="디바이스 관리 : CCTV"
+            active={currentMenu === "디바이스 관리 : CCTV"}
+            onClick={sideMenuClickHandler}
+          >
+            디바이스 관리 : CCTV
+          </Menu.Item>
+        </Link>
+
         {/* ================================================================ */}
         <div className="divide-line" />
         <Menu.Item

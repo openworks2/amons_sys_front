@@ -43,7 +43,7 @@ const CompanyInputCompo = styled.div`
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
-    margin-top: 360px;
+    margin-top: 400px;
   }
 `;
 
@@ -54,15 +54,26 @@ const CompanyInput = () => {
       <Form className="company-input-form-body">
         <Form.Field className="company-input-form co-name">
           <label className="input-form title">소속사</label>
-          <input className="input-form" placeholder="소속사를 입력해 주세요." />
+          <input
+            className="input-form"
+            placeholder="소속사를 입력해 주세요."
+            required={true}
+          />
         </Form.Field>
         <Form.Field className="company-input-form co-sectors">
           <label className="input-form title">업종</label>
-          <input className="input-form" placeholder="업종을 입력해 주세요." />
+          <input
+            className="input-form"
+            placeholder="업종을 입력해 주세요."
+            required={true}
+          />
         </Form.Field>
         <Form.Field className="company-input-form description">
           <label className="input-form title">비고</label>
-          <input className="input-form description" placeholder="비고 입력란" />
+          <textarea
+            className="input-form description"
+            placeholder="비고 입력란"
+          />
         </Form.Field>
         {/* 테이블 로우 클릭했으면 등록이 아니라 수정으로 할 수 있게 삼항연산자 쓸 것 */}
         <Button className="submit-button" type="submit">

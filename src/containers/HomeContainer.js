@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { getCompanies } from "../modules/companies";
+import { Redirect } from "react-router";
 
 const HomeCompo = styled.div`
   height: 100%;
@@ -41,11 +42,19 @@ const HomeContainer = () => {
   // 현재 메뉴 변경 핸들러
   const [currentMenu, setCurrentMenu] = useState("");
   // 사이드바 클릭 변경 핸들러
-  const sideMenuClickHandler = (e, { name }) => {
+  const changeCurrentMenu = (name) => {
     // 공백 포함 한글 문자열 받기.
     setCurrentMenu(name);
-    console.log(currentMenu);
   };
+
+  // // 페이지 이동시 실행하는 초기화 함수
+  // const initClickInfo = () => {
+  //   setClickInfo({ isClicked: false, clickedRow: 0 });
+  // };
+  // const initCurrentMenu = () => {
+  //   setCallSideMenu("");
+  // };
+
   return (
     <>
       <HomeCompo className="Home-component">
@@ -55,13 +64,12 @@ const HomeContainer = () => {
             <SideMenu
               callSideMenu={callSideMenu}
               callSideMenuHandler={callSideMenuHandler}
-              sideMenuClickHandler={sideMenuClickHandler}
+              changeCurrentMenu={changeCurrentMenu}
               currentMenu={currentMenu}
             />
           </div>
           <ContentsCompo>
-            <ContentTitle currentMenu={currentMenu} />
-            <Contents />
+            <Contents currentMenu={currentMenu} />
           </ContentsCompo>
         </div>
       </HomeCompo>
