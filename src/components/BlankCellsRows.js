@@ -4,11 +4,13 @@ import { Table } from "semantic-ui-react";
 const BlankCellsRows = ({ cellCount, rowCount }) => {
   // 빈 TABLE ROW 생성
 
-  const blankCells = [];
-  const blankRows = [];
+  let blankCells = [];
+  let blankRows = [];
 
   for (cellCount; cellCount > 0; cellCount--) {
-    blankCells.push(<Table.Cell></Table.Cell>);
+    blankCells.push(
+      <Table.Cell selectable={false} active={false}></Table.Cell>
+    );
   }
 
   for (rowCount; rowCount > 0; rowCount--) {

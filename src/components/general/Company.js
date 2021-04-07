@@ -11,8 +11,8 @@ const ContentTitleBoxCompo = styled.div`
   padding: 0;
   margin-bottom: 32px;
   text-align: left;
-
   color: #2e2e2e;
+
   .content-title-compo {
     font-family: "NotoSansKR-Medium";
     margin-left: 35px;
@@ -71,20 +71,25 @@ const Company = () => {
 
   // =====================테이블=========================
   // 클릭 관련 {클릭 여부 : boolean, 클릭한 줄}
-  const [clickInfo, setClickInfo] = useState({
-    isClicked: false,
-    clickedRow: 20,
-  });
-  const rowClickHandler = (row) => {
-    if (row === clickInfo.clickedRow) {
-      setClickInfo({
-        isClicked: !clickInfo.isClicked,
-        clickedRow: 20,
-      });
+
+  const [clickState, setClickState] = useState(false);
+  const [clickedRow, setClickedRow] = useState(0);
+
+  const rowClickHandler = (click) => {
+    if (clickState === true) {
+      if (click === clickedRow) {
+        console.log("클릭 취소");
+        setClickState(false);
+      }
     } else {
-      setClickInfo({ isClicked: true, clickedRow: row });
+      console.log("클릭-->" + click);
+      console.log(clickedRow);
+      console.log(clickState);
+      setClickState(true);
+      setClickedRow(click);
     }
   };
+
   // ====================================================
 
   return (
@@ -98,10 +103,14 @@ const Company = () => {
       </ContentTitleBoxCompo>
       <ContentsBodyCompo className="contents-body-compo">
         <span className="input-box">
-          <CompanyInput />
+          <CompanyInput clickState={clickState} clickedRow={clickedRow} />
         </span>
         <span className="table-box">
-          <CompanyTable />
+          <CompanyTable
+            clickState={clickState}
+            clickedRow={clickedRow}
+            rowClickHandler={rowClickHandler}
+          />
         </span>
       </ContentsBodyCompo>
     </>

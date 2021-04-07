@@ -210,7 +210,7 @@ const SideMenu = ({
 
         <Link to="/amons/home/general/company">
           <Menu.Item
-            as="a"
+            // as="a"
             className="sidemenu-sub-title"
             name="소속사 관리"
             active={currentMenu === "소속사 관리"}

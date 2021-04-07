@@ -52,13 +52,32 @@ const CompanyTableCompo = styled.div`
     border: 1px solid #d8d8d8;
     opacity: 1;
   }
+
+  .table-cell {
+    text-align: center !important;
+  }
+  .table-cell.company {
+    text-align: left !important;
+  }
+
+  .ui.table td.active {
+    background: #f9fafb 0% 0% no-repeat padding-box !important;
+    border: 1px solid #d8d8d8 !important;
+    opacity: 1;
+  }
+
+  .ui.selectable.table tr.active:hover {
+    background: #f9fafb 0% 0% no-repeat padding-box !important;
+    border: 1px solid #d8d8d8 !important;
+    opacity: 1;
+  }
 `;
 
-const CompanyTable = ({ clickInfo, rowClickhandler }) => {
+const CompanyTable = ({ clickState, clickedRow, rowClickHandler }) => {
   return (
     <CompanyTableCompo className="company-table-compo">
       <ContentSubTitle subTitle="소속사 목록" />
-      <Table celled padded>
+      <Table celled padded selectable>
         <Table.Header className="table-header">
           <Table.Row className="table-header-row">
             <Table.HeaderCell singleLine className="table-header no" width="1">
@@ -67,21 +86,21 @@ const CompanyTable = ({ clickInfo, rowClickhandler }) => {
             <Table.HeaderCell
               singleLine
               className="table-header company"
-              width="3"
+              width="2"
             >
               소속사
             </Table.HeaderCell>
             <Table.HeaderCell
               singleLine
               className="table-header sector"
-              width="3"
+              width="2"
             >
               업종
             </Table.HeaderCell>
             <Table.HeaderCell
               singleLine
               className="table-header description"
-              width="8"
+              width="10"
             >
               비고
             </Table.HeaderCell>
@@ -96,13 +115,25 @@ const CompanyTable = ({ clickInfo, rowClickhandler }) => {
         </Table.Header>
         {/* ===============================테이블 바디===================================== */}
         <Table.Body className="table-body">
-          <Table.Row className="table-row" selectable>
-            <Table.Cell>1</Table.Cell>
-            <Table.Cell>오픈웍스</Table.Cell>
-            <Table.Cell>협력사</Table.Cell>
-            <Table.Cell>CCTV 업체 입니다</Table.Cell>
-            <Table.Cell>
-              <FaTrash />
+          <Table.Row
+            className="table-row"
+            key={0}
+            active={
+              clickState === true ? (clickedRow === 0 ? true : false) : false
+            }
+            onClick={() => {
+              rowClickHandler(0);
+            }}
+            selectable={true}
+          >
+            <Table.Cell className="table-cell no">1</Table.Cell>
+            <Table.Cell className="table-cell company">오픈웍스</Table.Cell>
+            <Table.Cell className="table-cell sector">협력사</Table.Cell>
+            <Table.Cell className="table-cell description">
+              CCTV 업체 입니다
+            </Table.Cell>
+            <Table.Cell className="table-cell trash-icon">
+              {clickState ? 0 === clickedRow ? <FaTrash /> : <></> : <></>}
             </Table.Cell>
           </Table.Row>
           <BlankCellsRows cellCount={5} rowCount={13} />

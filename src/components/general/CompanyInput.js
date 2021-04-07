@@ -47,40 +47,77 @@ const CompanyInputCompo = styled.div`
   }
 `;
 
-const CompanyInput = () => {
+const CompanyInput = ({ clickState, clickedRow }) => {
   return (
-    <CompanyInputCompo className="company-input-compo">
-      <ContentSubTitle subTitle="소속사 등록" />
-      <Form className="company-input-form-body">
-        <Form.Field className="company-input-form co-name">
-          <label className="input-form title">소속사</label>
-          <input
-            className="input-form"
-            placeholder="소속사를 입력해 주세요."
-            required={true}
-          />
-        </Form.Field>
-        <Form.Field className="company-input-form co-sectors">
-          <label className="input-form title">업종</label>
-          <input
-            className="input-form"
-            placeholder="업종을 입력해 주세요."
-            required={true}
-          />
-        </Form.Field>
-        <Form.Field className="company-input-form description">
-          <label className="input-form title">비고</label>
-          <textarea
-            className="input-form description"
-            placeholder="비고 입력란"
-          />
-        </Form.Field>
-        {/* 테이블 로우 클릭했으면 등록이 아니라 수정으로 할 수 있게 삼항연산자 쓸 것 */}
-        <Button className="submit-button" type="submit">
-          등록
-        </Button>
-      </Form>
-    </CompanyInputCompo>
+    <>
+      {clickState ? (
+        // 클릭 했을 때 : 수정 폼
+        <CompanyInputCompo className="company-input-compo">
+          <ContentSubTitle subTitle="소속사 등록" />
+          <Form className="company-input-form-body">
+            <Form.Field className="company-input-form co-name">
+              <label className="input-form title">소속사</label>
+              <input
+                className="input-form"
+                placeholder="소속사를 입력해 주세요."
+                required={true}
+              />
+            </Form.Field>
+            <Form.Field className="company-input-form co-sectors">
+              <label className="input-form title">업종</label>
+              <input
+                className="input-form"
+                placeholder="업종을 입력해 주세요."
+                required={true}
+              />
+            </Form.Field>
+            <Form.Field className="company-input-form description">
+              <label className="input-form title">비고</label>
+              <textarea
+                className="input-form description"
+                placeholder="비고 입력란"
+              />
+            </Form.Field>
+            <Button className="submit-button" type="submit">
+              수정
+            </Button>
+          </Form>
+        </CompanyInputCompo>
+      ) : (
+        // 클릭 하지 않았을 때 : 입력 폼
+        <CompanyInputCompo className="company-input-compo">
+          <ContentSubTitle subTitle="소속사 등록" />
+          <Form className="company-input-form-body">
+            <Form.Field className="company-input-form co-name">
+              <label className="input-form title">소속사</label>
+              <input
+                className="input-form"
+                placeholder="소속사를 입력해 주세요."
+                required={true}
+              />
+            </Form.Field>
+            <Form.Field className="company-input-form co-sectors">
+              <label className="input-form title">업종</label>
+              <input
+                className="input-form"
+                placeholder="업종을 입력해 주세요."
+                required={true}
+              />
+            </Form.Field>
+            <Form.Field className="company-input-form description">
+              <label className="input-form title">비고</label>
+              <textarea
+                className="input-form description"
+                placeholder="비고 입력란"
+              />
+            </Form.Field>
+            <Button className="submit-button" type="submit">
+              등록
+            </Button>
+          </Form>
+        </CompanyInputCompo>
+      )}
+    </>
   );
 };
 
