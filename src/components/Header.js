@@ -14,6 +14,7 @@ import {
 
 const HeaderCompo = styled.div`
   position: fixed !important;
+  z-index: 1;
   margin-bottom: 70px;
   min-width: 1800px;
   min-height: 70px;

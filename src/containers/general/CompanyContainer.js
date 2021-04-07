@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import CompanyInput from "./CompanyInput";
-import CompanyTable from "./CompanyTable";
+import CompanyInput from "../../components/general/CompanyInput";
+import CompanyTable from "../../components/general/CompanyTable";
 import { Loader } from "semantic-ui-react";
 import { FaIdCardAlt } from "react-icons/fa";
 import { Image } from "semantic-ui-react";
@@ -63,7 +63,7 @@ const ContentsBodyCompo = styled.div`
   }
 `;
 
-const Company = () => {
+const CompanyContatiner = () => {
   // =====================인풋폼=========================
   // 서브밋 버튼
   const submitButtonHandler = (e) => {};
@@ -117,4 +117,4 @@ const Company = () => {
   );
 };
 
-export default Company;
+export default CompanyContatiner;

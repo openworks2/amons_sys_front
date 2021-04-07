@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router";
-import Company from "./general/Company";
+import CompanyContatiner from "../containers/general/CompanyContainer";
 
 const Contents = () => {
   // useEffect(() => {
@@ -8,7 +8,7 @@ const Contents = () => {
   //   //   }, [dispatch]);
   return (
     <>
-      <Route path="/amons/home/general/company" component={Company} />
+      <Route path="/amons/home/general/company" component={CompanyContatiner} />
       <Route path="/amons/home/general/worker" />
       <Route path="/amons/home/general/vehicle" />
       <Route path="/amons/home/general/beacon" />
