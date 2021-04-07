@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import CompanyInput from "../../components/general/CompanyInput";
 import CompanyTable from "../../components/general/CompanyTable";
-import { Loader } from "semantic-ui-react";
+import { Input, Loader } from "semantic-ui-react";
 import { FaIdCardAlt } from "react-icons/fa";
 import { Image } from "semantic-ui-react";
+// 가짜 데이터
+import companydata from "../../fakedata/companydata";
 
 const ContentTitleBoxCompo = styled.div`
   font-family: "NotoSansKR-Medium";
@@ -65,30 +67,58 @@ const ContentsBodyCompo = styled.div`
 
 const CompanyContatiner = () => {
   // =====================인풋폼=========================
+
+  const [inputData, setInputData] = useState({});
+
+  // inputform onchange
+  const onChangeInput = useCallback((formdata) => {
+    const value = formdata.target.value;
+    const name = formdata.target.name;
+
+    setInputData({
+      ...inputData,
+      [name]: value,
+    });
+  });
+
+  // 기능 이동간 inputform state값 초기화
+  const initInputData = useCallback(() => {
+    setInputData({});
+  });
+
   // 서브밋 버튼
-  const submitButtonHandler = (e) => {};
-  // 페이지 네이션
+  const submitButtonHandler = useCallback((e) => {
+    alert("등록완료");
+    e.preventDefault();
+    const newCompany = inputData;
+    companydata.push(newCompany);
+    initInputData();
+  });
 
   // =====================테이블=========================
   // 클릭 관련 {클릭 여부 : boolean, 클릭한 줄}
 
-  const [clickState, setClickState] = useState(false);
-  const [clickedRow, setClickedRow] = useState(0);
+  const [activeItem, setActiveItem] = useState(null);
 
-  const rowClickHandler = (click) => {
-    if (clickState === true) {
-      if (click === clickedRow) {
+  const activeHandler = useCallback((clickedItem) => {
+    if (activeItem !== null) {
+      if (activeItem.no === clickedItem.no) {
         console.log("클릭 취소");
-        setClickState(false);
+        setActiveItem(null);
       }
     } else {
-      console.log("클릭-->" + click);
-      console.log(clickedRow);
-      console.log(clickState);
-      setClickState(true);
-      setClickedRow(click);
+      console.log("클릭-->" + clickedItem);
+
+      setActiveItem({
+        no: clickedItem.target.no,
+        company: clickedItem.target.company,
+        sector: clickedItem.target.sector,
+        description: clickedItem.target.description,
+      });
+      console.log(activeItem);
     }
-  };
+  });
+  // 페이지 네이션
 
   // ====================================================
 
@@ -103,14 +133,10 @@ const CompanyContatiner = () => {
       </ContentTitleBoxCompo>
       <ContentsBodyCompo className="contents-body-compo">
         <span className="input-box">
-          <CompanyInput clickState={clickState} clickedRow={clickedRow} />
+          <CompanyInput activeItem={activeItem} />
         </span>
         <span className="table-box">
-          <CompanyTable
-            clickState={clickState}
-            clickedRow={clickedRow}
-            rowClickHandler={rowClickHandler}
-          />
+          <CompanyTable activeItem={activeItem} activeHandler={activeHandler} />
         </span>
       </ContentsBodyCompo>
     </>

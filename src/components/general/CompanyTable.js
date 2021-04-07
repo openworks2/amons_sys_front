@@ -73,7 +73,7 @@ const CompanyTableCompo = styled.div`
   }
 `;
 
-const CompanyTable = ({ clickState, clickedRow, rowClickHandler }) => {
+const CompanyTable = ({ activeItem, activeHandler }) => {
   return (
     <CompanyTableCompo className="company-table-compo">
       <ContentSubTitle subTitle="소속사 목록" />
@@ -119,21 +119,24 @@ const CompanyTable = ({ clickState, clickedRow, rowClickHandler }) => {
             className="table-row"
             key={0}
             active={
-              clickState === true ? (clickedRow === 0 ? true : false) : false
+              activeItem === true ? (activeItem === 0 ? true : false) : false
             }
-            onClick={() => {
-              rowClickHandler(0);
-            }}
-            selectable={true}
+            onClick={activeHandler}
           >
-            <Table.Cell className="table-cell no">1</Table.Cell>
-            <Table.Cell className="table-cell company">오픈웍스</Table.Cell>
-            <Table.Cell className="table-cell sector">협력사</Table.Cell>
-            <Table.Cell className="table-cell description">
+            <Table.Cell className="table-cell no" name="no">
+              1
+            </Table.Cell>
+            <Table.Cell className="table-cell company" name="company">
+              오픈웍스
+            </Table.Cell>
+            <Table.Cell className="table-cell sector" name="sector">
+              협력사
+            </Table.Cell>
+            <Table.Cell className="table-cell description" name="descrption">
               CCTV 업체 입니다
             </Table.Cell>
             <Table.Cell className="table-cell trash-icon">
-              {clickState ? 0 === clickedRow ? <FaTrash /> : <></> : <></>}
+              {/* {activeItem.no == key ? <FaTrash /> : <></>} */}
             </Table.Cell>
           </Table.Row>
           <BlankCellsRows cellCount={5} rowCount={13} />

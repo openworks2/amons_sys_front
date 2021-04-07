@@ -9,13 +9,19 @@ const BlankCellsRows = ({ cellCount, rowCount }) => {
 
   for (cellCount; cellCount > 0; cellCount--) {
     blankCells.push(
-      <Table.Cell selectable={false} active={false}></Table.Cell>
+      <Table.Cell
+        selectable={false}
+        active={false}
+        key={cellCount}
+      ></Table.Cell>
     );
   }
 
   for (rowCount; rowCount > 0; rowCount--) {
     blankRows.push(
-      <Table.Row className="table-row blank">{[...blankCells]}</Table.Row>
+      <Table.Row className="table-row blank" key={rowCount}>
+        {[...blankCells]}
+      </Table.Row>
     );
   }
   return [...blankRows];
