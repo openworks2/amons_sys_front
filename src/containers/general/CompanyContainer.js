@@ -120,6 +120,9 @@ const CompanyContatiner = () => {
   });
   // 페이지 네이션
 
+  // 삭제
+  const deleteHandler = useCallback(() => {});
+
   // ====================================================
 
   return (

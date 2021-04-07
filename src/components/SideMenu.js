@@ -7,8 +7,6 @@ import { Link } from "react-router-dom";
 
 const SideMenuCompo = styled.div`
   opacity: 1;
-  cursor: default !important;
-  //클릭한메뉴
 
   .ui.inverted.menu .active.item {
     cursor: default !important;
@@ -29,10 +27,8 @@ const SideMenuCompo = styled.div`
     position: absolute;
     font-size: 17px;
     left: 210px;
-    cursor: default !important;
   }
   .sidemenu {
-    cursor: default !important;
     background: #1b1c1d 0% 0% no-repeat padding-box !important;
     width: 260px !important;
     top: 70px;
@@ -49,13 +45,12 @@ const SideMenuCompo = styled.div`
   }
   a.item::before {
     width: 0% !important;
-    cursor: default !important;
   }
   a.item.sidemenu-title {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
     text-align: left !important;
-    cursor: default !important;
+
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
@@ -66,7 +61,7 @@ const SideMenuCompo = styled.div`
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
     text-align: left !important;
-    cursor: default !important;
+
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
@@ -77,7 +72,7 @@ const SideMenuCompo = styled.div`
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
     text-align: left !important;
-    cursor: default !important;
+
     letter-spacing: 0px !important;
     color: #7c7c7c !important;
     opacity: 1 !important;
