@@ -10,17 +10,10 @@ import { Redirect } from "react-router";
 
 const HomeCompo = styled.div`
   height: 100%;
+  width: 100%;
   min-width: 1645px;
   min-height: 900px;
   background: #f9fafb 0% 0% no-repeat padding-box;
-`;
-
-const ContentsCompo = styled.div`
-  position: static;
-  min-width: 1920px !important;
-  padding-top: 96px !important;
-  padding-left: 280px !important;
-  padding-right: 130px;
 `;
 
 const HomeContainer = () => {
@@ -59,19 +52,15 @@ const HomeContainer = () => {
     <>
       <HomeCompo className="Home-component">
         <Header callSideMenuHandler={callSideMenuHandler} />
-        <div className="bottom">
-          <div className="bottom-left">
-            <SideMenu
-              callSideMenu={callSideMenu}
-              callSideMenuHandler={callSideMenuHandler}
-              changeCurrentMenu={changeCurrentMenu}
-              currentMenu={currentMenu}
-            />
-          </div>
-          <ContentsCompo>
-            <Contents currentMenu={currentMenu} />
-          </ContentsCompo>
-        </div>
+        <SideMenu
+          callSideMenu={callSideMenu}
+          callSideMenuHandler={callSideMenuHandler}
+          changeCurrentMenu={changeCurrentMenu}
+          currentMenu={currentMenu}
+        />
+        {/* <ContentsCompo> */}
+        <Contents currentMenu={currentMenu} />
+        {/* </ContentsCompo> */}
       </HomeCompo>
     </>
   );

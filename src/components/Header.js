@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Image, Table } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
+import { Image, Table, Menu } from "semantic-ui-react";
 import styled from "styled-components";
 import {
   FaBars,
@@ -11,6 +12,7 @@ import {
   FaList,
   FaQuestion,
 } from "react-icons/fa";
+import { Link, Redirect } from "react-router-dom";
 
 const HeaderCompo = styled.div`
   position: fixed !important;
@@ -61,13 +63,15 @@ const HeaderCompo = styled.div`
     letter-spacing: 0px;
   }
 
-  .shortcuts {
+  a.shortcuts {
     text-align: center !important;
     font-size: 25px;
     width: 72.22px;
     color: #ffffff;
     border: 0px !important;
     padding: 4px !important;
+    display: inline-block;
+    float: right;
   }
 
   .iconbox {
@@ -78,6 +82,7 @@ const HeaderCompo = styled.div`
     margin-right: auto;
     vertical-align: middle;
     justify-content: center;
+    cursor: pointer !important;
   }
 
   .iconbox.alert {
@@ -112,9 +117,11 @@ const HeaderCompo = styled.div`
   .shortcut-subtitle {
     font-size: 12px !important;
     text-align: center;
+    cursor: pointer !important;
   }
   .blank {
-    margin-left: 50px;
+    margin-right: 50px !important;
+    width: 100px !important;
   }
 `;
 
@@ -125,7 +132,7 @@ const SidebarButton = styled.div`
   padding-right: 0px !important;
   color: #ffffff;
   background-color: #000000;
-
+  cursor: pointer !important;
   .icon {
     margin-top: 7px;
     margin-left: 7px;
@@ -139,6 +146,7 @@ const LogoutButton = styled.div`
   color: #7c7c7c;
   background-color: #000000;
   margin-left: 20px;
+  cursor: pointer !important;
   .icon {
     margin-top: 7px;
     margin-left: 9px;
@@ -177,37 +185,39 @@ const Header = ({ callSideMenuHandler }) => {
           </Table.Cell>
           <Table.Cell className="blank"></Table.Cell>
 
-          <Table.Cell className="shortcuts">
+          <Table.Cell className="shortcuts" as={Link} to="/">
             <div className="iconbox alert">
               <FaVolumeMute className="icon" />
             </div>
             <div className="shortcut-subtitle">알람음</div>
           </Table.Cell>
-          <Table.Cell className="shortcuts">
+          <Table.Cell className="shortcuts" as={Link} to="/">
             <div className="iconbox home">
               <FaHome className="icon" />
             </div>
             <div className="shortcut-subtitle">HOME</div>
           </Table.Cell>
-          <Table.Cell className="shortcuts">
+          <Table.Cell className="shortcuts" as={Link} to="/">
             <div className="iconbox dig">
               <FaList className="icon" />
             </div>
             <div className="shortcut-subtitle">굴진율</div>
           </Table.Cell>
-          <Table.Cell className="shortcuts">
+          <Table.Cell className="shortcuts" as={Link} to="/">
             <div className="iconbox nomalscreen">
               <FaCompressArrowsAlt className="icon" />
             </div>
-            <div className="shortcut-subtitle">일반화면</div>
+            <div className="shortcut-subtitle" as={Link} to="/">
+              일반화면
+            </div>
           </Table.Cell>
-          <Table.Cell className="shortcuts">
+          <Table.Cell className="shortcuts" as={Link} to="/">
             <div className="iconbox fullscreen">
               <FaExpandArrowsAlt className="icon" />
             </div>
             <div className="shortcut-subtitle">전체화면</div>
           </Table.Cell>
-          <Table.Cell className="shortcuts">
+          <Table.Cell className="shortcuts" as={Link} to="/">
             <div className="iconbox question">
               <FaQuestion className="icon" />
             </div>

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ContentSubTitle from "../ContentSubTitle";
 import styled from "styled-components";
-import { Icon, Menu, Table } from "semantic-ui-react";
+import { Button, Icon, Menu, Table, Pagination } from "semantic-ui-react";
 import { FaTrash } from "react-icons/fa";
 import BlankCellsRows from "../BlankCellsRows";
 
@@ -32,6 +32,7 @@ const CompanyTableCompo = styled.div`
   .table-header.description {
   }
   .table-header.trash-icon {
+    color: #7d7d7d;
   }
 
   .table-row {
@@ -47,10 +48,14 @@ const CompanyTableCompo = styled.div`
   .table-row.blank {
     height: 47px !important;
   }
-  .table-pagenation-row {
+  .table-pagination-row {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
     opacity: 1;
+  }
+
+  .pagination-component {
+    float: right;
   }
 
   .table-cell {
@@ -59,21 +64,104 @@ const CompanyTableCompo = styled.div`
   .table-cell.company {
     text-align: left !important;
   }
-
-  .ui.table td.active {
-    background: #f9fafb 0% 0% no-repeat padding-box !important;
-    border: 1px solid #d8d8d8 !important;
-    opacity: 1;
+  .table-cell.trash-icon {
+    padding: 0px !important;
+    color: #7d7d7d;
+    width: 72px !important;
   }
-
-  .ui.selectable.table tr.active:hover {
-    background: #f9fafb 0% 0% no-repeat padding-box !important;
-    border: 1px solid #d8d8d8 !important;
-    opacity: 1;
+  .trash-icon-button {
+    padding: 0px !important;
+    margin: 0px !important;
+    height: 44px !important;
+    width: 72px !important;
+  }
+  .ui.button {
+    background: #f2f2f2 !important;
+  }
+  .ui.button:hover {
+    background: #f2f2f2 !important;
+    border: #f2f2f2 !important;
+  }
+  .ui.table td.active,
+  .ui.table tr.active {
+    background: #f9fafb !important;
+  }
+  .ui.table td.active:hover,
+  .ui.table tr.active:hover {
+    background: #f9fafb !important;
   }
 `;
 
-const CompanyTable = ({ activeItem, activeHandler }) => {
+const CompanyTable = ({
+  deleteHandler,
+  activeHandler,
+  companyData,
+  activePage,
+  onPageChange,
+  selectRow,
+}) => {
+  const itemsPerPage = 14;
+  const totalPages = companyData.length / itemsPerPage;
+
+  const currentData = companyData.slice(
+    (activePage - 1) * itemsPerPage,
+    (activePage - 1) * itemsPerPage + itemsPerPage
+  );
+
+  console.log("sectRow--->", selectRow);
+  const { id, item } = selectRow;
+
+  const blankRowsCount = itemsPerPage - currentData.length;
+
+  const tableRender = () => {
+    return currentData.map((company, index) => {
+      return (
+        <Table.Row
+          className="table-row"
+          key={index}
+          // active={activeItem ? activeItem.no === index : false}
+          active={id === index}
+          onClick={(e) => activeHandler(e, index, currentData[index])}
+        >
+          <Table.Cell className="table-cell no" name="no">
+            {index + 1}
+          </Table.Cell>
+          <Table.Cell className="table-cell company" name="company">
+            {company.co_index}:{company.co_name}
+          </Table.Cell>
+          <Table.Cell className="table-cell sector" name="sector">
+            {company.co_index}:{company.co_sectors}
+          </Table.Cell>
+          <Table.Cell className="table-cell description" name="descrption">
+            {company.co_index}:{company.description}
+          </Table.Cell>
+          <Table.Cell className="table-cell trash-icon">
+            {/* {activeItem && activeItem.no === index && (
+              <Button
+                className="trash-icon-button"
+                onClick={() => {
+                  deleteHandler();
+                }}
+              >
+                <FaTrash />
+              </Button>
+            )} */}
+            {id === index && (
+              <Button
+                className="trash-icon-button"
+                onClick={() => {
+                  deleteHandler();
+                }}
+              >
+                <FaTrash />
+              </Button>
+            )}
+          </Table.Cell>
+        </Table.Row>
+      );
+    });
+  };
+
   return (
     <CompanyTableCompo className="company-table-compo">
       <ContentSubTitle subTitle="소속사 목록" />
@@ -115,51 +203,27 @@ const CompanyTable = ({ activeItem, activeHandler }) => {
         </Table.Header>
         {/* ===============================테이블 바디===================================== */}
         <Table.Body className="table-body">
-          <Table.Row
-            className="table-row"
-            key={0}
-            active={
-              activeItem === true ? (activeItem === 0 ? true : false) : false
-            }
-            onClick={activeHandler}
-          >
-            <Table.Cell className="table-cell no" name="no">
-              1
-            </Table.Cell>
-            <Table.Cell className="table-cell company" name="company">
-              오픈웍스
-            </Table.Cell>
-            <Table.Cell className="table-cell sector" name="sector">
-              협력사
-            </Table.Cell>
-            <Table.Cell className="table-cell description" name="descrption">
-              CCTV 업체 입니다
-            </Table.Cell>
-            <Table.Cell className="table-cell trash-icon">
-              {/* {activeItem.no == key ? <FaTrash /> : <></>} */}
-            </Table.Cell>
-          </Table.Row>
-          <BlankCellsRows cellCount={5} rowCount={13} />
+          {tableRender()}
+          <BlankCellsRows cellCount={5} rowCount={blankRowsCount} />
         </Table.Body>
         {/* =============================테이블 푸터(페이지네이션)============================== */}
-        <Table.Footer>
-          <Table.Row className="table-pagenation-row">
-            <Table.HeaderCell colSpan="5">
-              <Menu floated="right" pagination>
-                <Menu.Item as="a" icon>
-                  <Icon name="chevron left" />
-                </Menu.Item>
-                <Menu.Item as="a">1</Menu.Item>
-                <Menu.Item as="a">2</Menu.Item>
-                <Menu.Item as="a">3</Menu.Item>
-                <Menu.Item as="a">4</Menu.Item>
-                <Menu.Item as="a" icon>
-                  <Icon name="chevron right" />
-                </Menu.Item>
-              </Menu>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
+        {totalPages >= 1 && (
+          <Table.Footer>
+            <Table.Row className="table-pagination-row">
+              <Table.HeaderCell colSpan="5">
+                <Pagination
+                  activePage={activePage}
+                  totalPages={totalPages}
+                  siblingRange={1}
+                  onPageChange={onPageChange}
+                  firstItem={null}
+                  lastItem={null}
+                  className="pagination-component"
+                />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
+        )}
       </Table>
     </CompanyTableCompo>
   );

@@ -8,13 +8,7 @@ const BlankCellsRows = ({ cellCount, rowCount }) => {
   let blankRows = [];
 
   for (cellCount; cellCount > 0; cellCount--) {
-    blankCells.push(
-      <Table.Cell
-        selectable={false}
-        active={false}
-        key={cellCount}
-      ></Table.Cell>
-    );
+    blankCells.push(<Table.Cell key={cellCount}></Table.Cell>);
   }
 
   for (rowCount; rowCount > 0; rowCount--) {

@@ -7,6 +7,12 @@ import { FaIdCardAlt } from "react-icons/fa";
 import { Image } from "semantic-ui-react";
 // 가짜 데이터
 import companydata from "../../fakedata/companydata";
+const ContentsCompo = styled.div`
+  min-width: 1920px !important;
+  padding-left: 280px !important;
+  padding-top: 96px !important;
+  padding-right: 130px;
+`;
 
 const ContentTitleBoxCompo = styled.div`
   font-family: "NotoSansKR-Medium";
@@ -65,68 +71,79 @@ const ContentsBodyCompo = styled.div`
   }
 `;
 
+const initForm = {
+  id: undefined,
+  co_name: "",
+  co_sectors: "",
+  description: "",
+};
+
 const CompanyContatiner = () => {
-  // =====================인풋폼=========================
+  const date = new Date();
+  const [formData, setFormData] = useState(initForm);
+  const [selectRow, setRows] = useState({
+    id: null,
+    item: undefined,
+  });
 
-  const [inputData, setInputData] = useState({});
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    console.log(name);
 
-  // inputform onchange
-  const onChangeInput = useCallback((formdata) => {
-    const value = formdata.target.value;
-    const name = formdata.target.name;
-
-    setInputData({
-      ...inputData,
+    setFormData({
+      ...formData,
       [name]: value,
     });
-  });
+  };
 
-  // 기능 이동간 inputform state값 초기화
-  const initInputData = useCallback(() => {
-    setInputData({});
-  });
+  const activeHandler = (e, id) => {
+    console.log(id);
+    console.log(companyData);
+    const findItem = companyData.find((item) => item.co_id === id);
+    console.log(findItem);
 
-  // 서브밋 버튼
-  const submitButtonHandler = useCallback((e) => {
-    alert("등록완료");
-    e.preventDefault();
-    const newCompany = inputData;
-    companydata.push(newCompany);
-    initInputData();
-  });
+    if (id === selectRow.id) {
+      setRows({
+        id: null,
+        item: undefined,
+      });
+      setFormData(initForm);
+    } else {
+      setRows({
+        id: findItem.co_id,
+        item: findItem,
+      });
+
+      setFormData({
+        formData,
+        id: findItem.co_id,
+        co_name: findItem.co_name,
+        co_sectors: findItem.co_sectors,
+        description: findItem.description,
+      });
+    }
+  };
 
   // =====================테이블=========================
-  // 클릭 관련 {클릭 여부 : boolean, 클릭한 줄}
-
-  const [activeItem, setActiveItem] = useState(null);
-
-  const activeHandler = useCallback((clickedItem) => {
-    if (activeItem !== null) {
-      if (activeItem.no === clickedItem.no) {
-        console.log("클릭 취소");
-        setActiveItem(null);
-      }
-    } else {
-      console.log("클릭-->" + clickedItem);
-
-      setActiveItem({
-        no: clickedItem.target.no,
-        company: clickedItem.target.company,
-        sector: clickedItem.target.sector,
-        description: clickedItem.target.description,
-      });
-      console.log(activeItem);
-    }
-  });
   // 페이지 네이션
+  const [companyData, setCompanyData] = useState(companydata);
+  const [activePage, setActivePage] = useState(1);
 
-  // 삭제
-  const deleteHandler = useCallback(() => {});
+  // 삭제;
+  function deleteItem(element) {
+    if (element.co_id !== selectRow.co_id) {
+      return true;
+    }
+  }
 
-  // ====================================================
+  const deleteHandler = () => {
+    let _companyData = companyData.filter(deleteItem);
+    setCompanyData(_companyData);
+  };
 
   return (
-    <>
+    <ContentsCompo>
       <ContentTitleBoxCompo>
         <span className="content-icon-compo">
           <FaIdCardAlt />
@@ -136,13 +153,19 @@ const CompanyContatiner = () => {
       </ContentTitleBoxCompo>
       <ContentsBodyCompo className="contents-body-compo">
         <span className="input-box">
-          <CompanyInput activeItem={activeItem} />
+          <CompanyInput onChange={onChange} formData={formData} />
         </span>
         <span className="table-box">
-          <CompanyTable activeItem={activeItem} activeHandler={activeHandler} />
+          <CompanyTable
+            deleteHandler={deleteHandler}
+            activeHandler={activeHandler}
+            companyData={companyData}
+            activePage={activePage}
+            selectRow={selectRow}
+          />
         </span>
       </ContentsBodyCompo>
-    </>
+    </ContentsCompo>
   );
 };
 
