@@ -8,7 +8,7 @@ import { Image } from "semantic-ui-react";
 // 가짜 데이터
 import companydata from "../../fakedata/companydata";
 const ContentsCompo = styled.div`
-  min-width: 1920px !important;
+  min-width: 1680px !important;
   padding-left: 280px !important;
   padding-top: 96px !important;
   padding-right: 130px;

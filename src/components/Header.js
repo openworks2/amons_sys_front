@@ -18,7 +18,7 @@ const HeaderCompo = styled.div`
   position: fixed !important;
   z-index: 1;
   margin-bottom: 70px;
-  min-width: 1800px;
+  min-width: 1680px;
   min-height: 70px;
   display: inline-block;
   width: 100%;
@@ -124,10 +124,6 @@ const HeaderCompo = styled.div`
     text-align: center;
     cursor: pointer !important;
   }
-  .blank {
-    margin-right: 50px !important;
-    width: 100px !important;
-  }
 `;
 
 const SidebarButton = styled.div`
@@ -194,8 +190,6 @@ const Header = ({ callSideMenuHandler }) => {
             </span>
             <span className="title-highlight">신원3터널</span>
           </Table.Cell>
-          <Table.Cell className="blank"></Table.Cell>
-
           <Table.Cell className="shortcuts" as={Link} to="/">
             <div className="iconbox alert">
               <FaVolumeMute className="icon" />
