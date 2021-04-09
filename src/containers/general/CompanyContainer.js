@@ -81,22 +81,25 @@ const initForm = {
 const CompanyContatiner = () => {
   const date = new Date();
   const [formData, setFormData] = useState(initForm);
+  // 클릭된 row의 데이터
   const [selectRow, setRows] = useState({
     id: null,
     item: undefined,
   });
-
+  // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     console.log(name);
 
+    // 입력값 state 에 저장
     setFormData({
       ...formData,
       [name]: value,
     });
   };
 
+  // table row 클릭 핸들러
   const activeHandler = (e, id) => {
     console.log(id);
     console.log(companyData);
@@ -124,8 +127,6 @@ const CompanyContatiner = () => {
       });
     }
   };
-
-  // =====================테이블=========================
   // 페이지 네이션
   const [companyData, setCompanyData] = useState(companydata);
   const [activePage, setActivePage] = useState(1);

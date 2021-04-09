@@ -21,17 +21,42 @@ const CardCompo = styled.div`
     opacity: 1;
     display: inline-block;
     margin: 34px;
-  }
-  .a.ui.card:hover {
-    top: 280px;
-    left: 50px;
-    width: 230px;
-    background: #000000 0% 0% no-repeat padding-box !important;
-    border-radius: 4px 4px 0px 0px;
-    opacity: 0.8;
-    opacity: 1;
-    display: inline-block;
-    margin: 34px;
+    .panel {
+      width: 100%;
+      height: 238px;
+      position: absolute;
+      background: #000000;
+      opacity: 0.8;
+      top: 0px;
+      display: none;
+      border-radius: 4px 4px 4px 4px;
+      .hover-box {
+        border: 2px solid #d8d8d8;
+        border-radius: 4px;
+        opacity: 1;
+        width: 110px;
+        height: 36px;
+        z-index: 2;
+        position: absolute;
+        top: 100px;
+        left: 60px;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .hover-text {
+        font-family: "NotoSansKR-Regular";
+        font-size: 16px;
+        text-align: center;
+        color: #ffffff;
+        vertical-align: middle;
+        margin-top: 5px;
+        background-color: rgba(255, 255, 255, 0);
+      }
+    }
+    &:hover {
+      .panel {
+        display: block;
+      }
+    }
   }
 
   .img-box {
@@ -43,6 +68,7 @@ const CardCompo = styled.div`
     border-radius: 4px 4px 0px 0px;
     opacity: 1;
   }
+
   .card-img {
     margin: auto;
     vertical-align: middle;
@@ -74,7 +100,7 @@ const CardCompo = styled.div`
 const HomeShortcut = () => {
   return (
     <CardCompo>
-      <Card as={Link} to="" className="card-component">
+      <Card as={Link} to="/naver" className="card-component">
         <div className="img-box">
           <Image
             src="/main/monitoring.png"
@@ -82,22 +108,40 @@ const HomeShortcut = () => {
             wrapped={false}
           />
         </div>
+        <div className="panel">
+          <div className="hover-box">
+            <p className="hover-text">바로가기</p>
+          </div>
+        </div>
         <Card.Content className="card-title">모니터링</Card.Content>
       </Card>
+
       <Card as={Link} to="" className="card-component">
         <div className="img-box">
           <Image src="/main/sos.png" className="card-img " wrapped={false} />
         </div>
+        <div className="panel">
+          <div className="hover-box">
+            <p className="hover-text">바로가기</p>
+          </div>
+        </div>
         <Card.Content className="card-title">알람이력 : 작업자</Card.Content>
       </Card>
+
       <Card as={Link} to="" className="card-component">
         <div className="img-box">
           <Image src="/main/worker.png" className="card-img " wrapped={false} />
+        </div>
+        <div className="panel">
+          <div className="hover-box">
+            <p className="hover-text">바로가기</p>
+          </div>
         </div>
         <Card.Content className="card-title">
           막장잔류이력 : 작업자
         </Card.Content>
       </Card>
+
       <Card as={Link} to="" className="card-component">
         <div className="img-box">
           <Image
@@ -106,11 +150,23 @@ const HomeShortcut = () => {
             wrapped={false}
           />
         </div>
+        <div className="panel">
+          {" "}
+          <div className="hover-box">
+            <p className="hover-text">바로가기</p>
+          </div>
+        </div>
         <Card.Content className="card-title">막장잔류이력 : 차량</Card.Content>
       </Card>
+
       <Card as={Link} to="" className="card-component">
         <div className="img-box">
           <Image src="/main/drill.png" className="card-img " wrapped={false} />
+        </div>
+        <div className="panel">
+          <div className="hover-box">
+            <p className="hover-text">바로가기</p>
+          </div>
         </div>
         <Card.Content className="card-title">굴진이력</Card.Content>
       </Card>

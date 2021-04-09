@@ -73,6 +73,11 @@ const HeaderCompo = styled.div`
     display: inline-block;
     float: right;
   }
+  a.shortcuts:hover {
+    .icon {
+      color: #72afd2 !important;
+    }
+  }
 
   .iconbox {
     width: 39px;
@@ -136,6 +141,9 @@ const SidebarButton = styled.div`
   .icon {
     margin-top: 7px;
     margin-left: 7px;
+    &:hover {
+      color: #72afd2 !important;
+    }
   }
 `;
 
@@ -150,6 +158,9 @@ const LogoutButton = styled.div`
   .icon {
     margin-top: 7px;
     margin-left: 9px;
+    &:hover {
+      color: #72afd2 !important;
+    }
   }
 `;
 
