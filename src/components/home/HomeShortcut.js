@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const CardCompo = styled.div`
   padding-top: 70px;
-  padding-left: 280px !important;
+  text-align: center;
   width: 100%;
   height: 100%;
   background: #c5c9cf 0% 0% no-repeat padding-box;

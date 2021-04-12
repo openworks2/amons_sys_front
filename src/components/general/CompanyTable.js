@@ -89,6 +89,11 @@ const CompanyTableCompo = styled.div`
   .ui.table tr.active:hover {
     background: #f9fafb !important;
   }
+  trash-icon {
+  }
+  &:hover {
+    color: red !important;
+  }
 `;
 
 const CompanyTable = ({
@@ -145,14 +150,12 @@ const CompanyTable = ({
               </Button>
             )} */}
           {id === index && (
-            <Button
-              className="trash-icon-button"
+            <FaTrash
+              className="trash-icon"
               onClick={() => {
                 deleteHandler();
               }}
-            >
-              <FaTrash />
-            </Button>
+            />
           )}
         </Table.Cell>
       </Table.Row>
@@ -230,6 +233,7 @@ const CompanyTable = ({
                     content: <Icon name="angle right" />,
                     icon: true,
                   }}
+                  active={1 === activePage}
                   className="pagination-component"
                 />
               </Table.HeaderCell>

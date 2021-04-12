@@ -85,7 +85,7 @@ const CompanyContatiner = () => {
   const date = new Date();
   const [formData, setFormData] = useState(initForm);
   // 클릭된 row의 데이터
-  const [selectRow, setRows] = useState({
+  const [selectRow, setSelectRows] = useState({
     id: null,
     item: undefined,
   });
@@ -102,6 +102,21 @@ const CompanyContatiner = () => {
     });
   };
 
+  const initActiveRow = () => {
+    setSelectRows({
+      id: null,
+      item: undefined,
+    });
+  };
+  const initFormData = () => {
+    setFormData({
+      id: undefined,
+      co_name: "",
+      co_sectors: "",
+      description: "",
+    });
+  };
+
   // table row 클릭 핸들러
   const activeHandler = (e, id) => {
     console.log(id);
@@ -110,13 +125,11 @@ const CompanyContatiner = () => {
     console.log(findItem);
 
     if (id === selectRow.id) {
-      setRows({
-        id: null,
-        item: undefined,
-      });
+      initActiveRow();
+      initFormData();
       setFormData(initForm);
     } else {
-      setRows({
+      setSelectRows({
         id: findItem.co_id,
         item: findItem,
       });
@@ -130,6 +143,7 @@ const CompanyContatiner = () => {
       });
     }
   };
+
   // 페이지 네이션
   const [companyData, setCompanyData] = useState(companydata);
 
@@ -146,6 +160,9 @@ const CompanyContatiner = () => {
       ...Prestate,
       activePage: _activePage,
     });
+    // 활성화된 로우 초기화
+    initActiveRow();
+    initFormData();
   };
 
   // 삭제;
@@ -159,6 +176,22 @@ const CompanyContatiner = () => {
     let _companyData = companyData.filter(deleteItem);
     setCompanyData(_companyData);
   };
+
+  // const [fullHeight, setTest] = useState(false);
+  // const resizeHandler = useCallback(() => {
+  //   setTest(!fullHeight);
+  //   setTable({
+  //     ...table,
+  //     itemsPerPage: fullHeight ? 14 : 10,
+  //   });
+  // }, [fullHeight]);
+
+  // useEffect(() => {
+  //   window.addEventListener("resize", resizeHandler);
+  //   return () => {
+  //     window.removeEventListener("resize", resizeHandler);
+  //   };
+  // }, [resizeHandler]);
 
   return (
     <ContentsCompo>
@@ -180,6 +213,7 @@ const CompanyContatiner = () => {
             deleteHandler={deleteHandler}
             onPageChange={onPageChange}
             selectRow={selectRow}
+            // fullHeight={fullHeight}
           />
         </div>
       </ContentsBodyCompo>
