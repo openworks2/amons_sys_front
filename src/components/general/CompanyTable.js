@@ -71,15 +71,16 @@ const CompanyTableCompo = styled.div`
   .trash-icon-button {
     padding: 0px !important;
     margin: 0px !important;
-    height: 44px !important;
-    width: 72px !important;
+    height: 30px !important;
+    width: 30px !important;
   }
   .ui.button {
-    background: #f2f2f2 !important;
+    background: #f9fafb !important;
   }
   .ui.button:hover {
-    background: #f2f2f2 !important;
+    background: #f9fafb !important;
     border: #f2f2f2 !important;
+    color: red !important;
   }
   .ui.table td.active,
   .ui.table tr.active {
@@ -88,11 +89,6 @@ const CompanyTableCompo = styled.div`
   .ui.table td.active:hover,
   .ui.table tr.active:hover {
     background: #f9fafb !important;
-  }
-  trash-icon {
-  }
-  &:hover {
-    color: red !important;
   }
 `;
 
@@ -112,34 +108,37 @@ const CompanyTable = ({
   );
 
   console.log("sectRow--->", selectRow);
-  const { id, item } = selectRow;
+  const { id, item, no } = selectRow;
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
     const tempItems = [...items, ...Array(14 - items.length)];
-    return tempItems.map((company, index) => (
-      <Table.Row
-        className="table-row"
-        key={index}
-        // active={activeItem ? activeItem.no === index : false}
-        active={id === index}
-        onClick={(e) => activeHandler(e, index, tempItems[index])}
-      >
-        <Table.Cell className="table-cell no" name="no">
-          {index + 1 + (activePage - 1) * itemsPerPage}
-        </Table.Cell>
-        <Table.Cell className="table-cell company" name="company">
-          {company && company.co_name}
-        </Table.Cell>
-        <Table.Cell className="table-cell sector" name="sector">
-          {company && company.co_sectors}
-        </Table.Cell>
-        <Table.Cell className="table-cell description" name="descrption">
-          {company && company.description}
-        </Table.Cell>
-        <Table.Cell className="table-cell trash-icon">
-          {/* {activeItem && activeItem.no === index && (
+    return tempItems.map((company, index) => {
+      const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
+
+      return (
+        <Table.Row
+          className="table-row"
+          key={index}
+          active={tableNo === id}
+          onClick={company && ((e) => activeHandler(e, company, tableNo))}
+        >
+          <Table.Cell className="table-cell no" name="no">
+            {company ? tableNo : " "}
+          </Table.Cell>
+          <Table.Cell className="table-cell company" name="company">
+            {company && company.co_name}
+            {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
+          </Table.Cell>
+          <Table.Cell className="table-cell sector" name="sector">
+            {company && company.co_sectors}
+          </Table.Cell>
+          <Table.Cell className="table-cell description" name="descrption">
+            {company && company.description}
+          </Table.Cell>
+          <Table.Cell className="table-cell trash-icon">
+            {tableNo === id + 1 && (
               <Button
                 className="trash-icon-button"
                 onClick={() => {
@@ -148,18 +147,11 @@ const CompanyTable = ({
               >
                 <FaTrash />
               </Button>
-            )} */}
-          {id === index && (
-            <FaTrash
-              className="trash-icon"
-              onClick={() => {
-                deleteHandler();
-              }}
-            />
-          )}
-        </Table.Cell>
-      </Table.Row>
-    ));
+            )}
+          </Table.Cell>
+        </Table.Row>
+      );
+    });
   };
 
   return (

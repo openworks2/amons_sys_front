@@ -74,20 +74,19 @@ const ContentsBodyCompo = styled.div`
   }
 `;
 
-const initForm = {
-  id: undefined,
-  co_name: "",
-  co_sectors: "",
-  description: "",
-};
-
 const CompanyContatiner = () => {
   const date = new Date();
-  const [formData, setFormData] = useState(initForm);
+  const [formData, setFormData] = useState({
+    id: undefined,
+    co_name: "",
+    co_sectors: "",
+    description: "",
+  });
   // 클릭된 row의 데이터
   const [selectRow, setSelectRows] = useState({
     id: null,
     item: undefined,
+    no: null,
   });
   // form onChange Event
   const onChange = (e) => {
@@ -106,6 +105,7 @@ const CompanyContatiner = () => {
     setSelectRows({
       id: null,
       item: undefined,
+      no: null,
     });
   };
   const initFormData = () => {
@@ -118,20 +118,27 @@ const CompanyContatiner = () => {
   };
 
   // table row 클릭 핸들러
-  const activeHandler = (e, id) => {
-    console.log(id);
-    console.log(companyData);
-    const findItem = companyData.find((item) => item.co_id === id);
-    console.log(findItem);
+  const activeHandler = (e, company, selectNo) => {
+    console.log("e");
+    console.log(e);
+    console.log("company");
+    console.log(company);
+    console.log("selectNo");
+    console.log(selectNo);
+    console.log("selectRow");
+    console.log(selectRow);
 
-    if (id === selectRow.id) {
+    let id = company.co_id;
+    const findItem = companyData.find((company) => company.co_id === selectNo);
+    console.log(findItem);
+    if (selectNo === selectRow.id) {
       initActiveRow();
       initFormData();
-      setFormData(initForm);
     } else {
       setSelectRows({
         id: findItem.co_id,
         item: findItem,
+        no: selectNo,
       });
 
       setFormData({
@@ -167,14 +174,27 @@ const CompanyContatiner = () => {
 
   // 삭제;
   function deleteItem(element) {
-    if (element.co_id !== selectRow.co_id) {
+    if (element.co_id !== selectRow.id) {
+      // console.log("판별");
+      // console.log(element.co_id);
+      // console.log(selectRow.co_id);
+      // console.log("살아남음");
       return true;
+    } else {
+      console.log("죽음");
+      console.log(element);
+      console.log("죽음");
     }
   }
 
   const deleteHandler = () => {
+    console.log(companyData);
     let _companyData = companyData.filter(deleteItem);
+    console.log(_companyData);
+    console.log("새로운 배열");
     setCompanyData(_companyData);
+    initActiveRow();
+    initFormData();
   };
 
   // const [fullHeight, setTest] = useState(false);
