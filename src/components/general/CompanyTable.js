@@ -3,7 +3,6 @@ import ContentSubTitle from "../ContentSubTitle";
 import styled from "styled-components";
 import { Button, Icon, Menu, Table, Pagination } from "semantic-ui-react";
 import { FaTrash } from "react-icons/fa";
-import BlankCellsRows from "../BlankCellsRows";
 
 const CompanyTableCompo = styled.div`
   margin-left: 22px;
@@ -93,17 +92,16 @@ const CompanyTableCompo = styled.div`
 `;
 
 const CompanyTable = ({
-  deleteHandler,
+  table,
   activeHandler,
-  companyData,
-  activePage,
+  deleteHandler,
   onPageChange,
   selectRow,
 }) => {
-  const itemsPerPage = 14;
-  const totalPages = companyData.length / itemsPerPage;
+  const { items, activePage, itemsPerPage } = table;
+  const totalPages = Math.ceil(items.length / itemsPerPage, 1);
 
-  const currentData = companyData.slice(
+  const viewItems = items.slice(
     (activePage - 1) * itemsPerPage,
     (activePage - 1) * itemsPerPage + itemsPerPage
   );
@@ -111,32 +109,32 @@ const CompanyTable = ({
   console.log("sectRow--->", selectRow);
   const { id, item } = selectRow;
 
-  const blankRowsCount = itemsPerPage - currentData.length;
-
-  const tableRender = () => {
-    return currentData.map((company, index) => {
-      return (
-        <Table.Row
-          className="table-row"
-          key={index}
-          // active={activeItem ? activeItem.no === index : false}
-          active={id === index}
-          onClick={(e) => activeHandler(e, index, currentData[index])}
-        >
-          <Table.Cell className="table-cell no" name="no">
-            {index + 1}
-          </Table.Cell>
-          <Table.Cell className="table-cell company" name="company">
-            {company.co_index}:{company.co_name}
-          </Table.Cell>
-          <Table.Cell className="table-cell sector" name="sector">
-            {company.co_index}:{company.co_sectors}
-          </Table.Cell>
-          <Table.Cell className="table-cell description" name="descrption">
-            {company.co_index}:{company.description}
-          </Table.Cell>
-          <Table.Cell className="table-cell trash-icon">
-            {/* {activeItem && activeItem.no === index && (
+  // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
+  const tableRender = (items = []) => {
+    // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+    const tempItems = [...items, ...Array(14 - items.length)];
+    return tempItems.map((company, index) => (
+      <Table.Row
+        className="table-row"
+        key={index}
+        // active={activeItem ? activeItem.no === index : false}
+        active={id === index}
+        onClick={(e) => activeHandler(e, index, tempItems[index])}
+      >
+        <Table.Cell className="table-cell no" name="no">
+          {index + 1 + (activePage - 1) * itemsPerPage}
+        </Table.Cell>
+        <Table.Cell className="table-cell company" name="company">
+          {company && company.co_name}
+        </Table.Cell>
+        <Table.Cell className="table-cell sector" name="sector">
+          {company && company.co_sectors}
+        </Table.Cell>
+        <Table.Cell className="table-cell description" name="descrption">
+          {company && company.description}
+        </Table.Cell>
+        <Table.Cell className="table-cell trash-icon">
+          {/* {activeItem && activeItem.no === index && (
               <Button
                 className="trash-icon-button"
                 onClick={() => {
@@ -146,20 +144,19 @@ const CompanyTable = ({
                 <FaTrash />
               </Button>
             )} */}
-            {id === index && (
-              <Button
-                className="trash-icon-button"
-                onClick={() => {
-                  deleteHandler();
-                }}
-              >
-                <FaTrash />
-              </Button>
-            )}
-          </Table.Cell>
-        </Table.Row>
-      );
-    });
+          {id === index && (
+            <Button
+              className="trash-icon-button"
+              onClick={() => {
+                deleteHandler();
+              }}
+            >
+              <FaTrash />
+            </Button>
+          )}
+        </Table.Cell>
+      </Table.Row>
+    ));
   };
 
   return (
@@ -202,22 +199,37 @@ const CompanyTable = ({
           </Table.Row>
         </Table.Header>
         {/* ===============================테이블 바디===================================== */}
-        <Table.Body className="table-body">
-          {tableRender()}
-          <BlankCellsRows cellCount={5} rowCount={blankRowsCount} />
-        </Table.Body>
+        <Table.Body className="table-body">{tableRender(viewItems)}</Table.Body>
         {/* =============================테이블 푸터(페이지네이션)============================== */}
         {totalPages >= 1 && (
           <Table.Footer>
             <Table.Row className="table-pagination-row">
               <Table.HeaderCell colSpan="5">
                 <Pagination
-                  activePage={activePage}
+                  activePage={activePage ? activePage : 0}
                   totalPages={totalPages}
                   siblingRange={1}
                   onPageChange={onPageChange}
-                  firstItem={null}
-                  lastItem={null}
+                  firstItem={
+                    // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
+                    totalPages <= 5 || {
+                      "aria-label": "First item",
+                      content: <Icon name="angle double left" />,
+                      icon: true,
+                    }
+                  }
+                  lastItem={
+                    totalPages <= 5 || {
+                      "aria-label": "Last item",
+                      content: <Icon name="angle double right" />,
+                      icon: true,
+                    }
+                  }
+                  prevItem={{ content: <Icon name="angle left" />, icon: true }}
+                  nextItem={{
+                    content: <Icon name="angle right" />,
+                    icon: true,
+                  }}
                   className="pagination-component"
                 />
               </Table.HeaderCell>

@@ -7,6 +7,7 @@ import { FaIdCardAlt } from "react-icons/fa";
 import { Image } from "semantic-ui-react";
 // 가짜 데이터
 import companydata from "../../fakedata/companydata";
+import { act } from "react-dom/test-utils";
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
   padding-left: 280px !important;
@@ -54,7 +55,8 @@ const ContentsBodyCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
     width: 368px;
-    min-height: 860px;
+    height: 883px;
+    min-height: 683px;
     margin-top: 10px;
     position: absolute;
     padding-top: 22px;
@@ -63,7 +65,8 @@ const ContentsBodyCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
     width: 1236px;
-    min-height: 860px;
+    height: 883px;
+    min-height: 683px;
     margin-top: 10px;
     margin-left: 388px;
     padding-top: 22px;
@@ -129,7 +132,21 @@ const CompanyContatiner = () => {
   };
   // 페이지 네이션
   const [companyData, setCompanyData] = useState(companydata);
-  const [activePage, setActivePage] = useState(1);
+
+  const [table, setTable] = useState({
+    items: companyData, // 전체 리스트
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  const onPageChange = (e, { activePage }) => {
+    let _activePage = Math.ceil(activePage);
+    const Prestate = table;
+    setTable({
+      ...Prestate,
+      activePage: _activePage,
+    });
+  };
 
   // 삭제;
   function deleteItem(element) {
@@ -146,25 +163,25 @@ const CompanyContatiner = () => {
   return (
     <ContentsCompo>
       <ContentTitleBoxCompo>
-        <span className="content-icon-compo">
+        <div className="content-icon-compo">
           <FaIdCardAlt />
-        </span>
+        </div>
         <span className="content-title-compo">소속사 관리</span>
         <div className="content-title-divide-line" />
       </ContentTitleBoxCompo>
       <ContentsBodyCompo className="contents-body-compo">
-        <span className="input-box">
+        <div className="input-box">
           <CompanyInput onChange={onChange} formData={formData} />
-        </span>
-        <span className="table-box">
+        </div>
+        <div className="table-box">
           <CompanyTable
-            deleteHandler={deleteHandler}
+            table={table}
             activeHandler={activeHandler}
-            companyData={companyData}
-            activePage={activePage}
+            deleteHandler={deleteHandler}
+            onPageChange={onPageChange}
             selectRow={selectRow}
           />
-        </span>
+        </div>
       </ContentsBodyCompo>
     </ContentsCompo>
   );

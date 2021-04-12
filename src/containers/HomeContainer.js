@@ -12,7 +12,7 @@ const HomeCompo = styled.div`
   height: 100%;
   width: 100%;
   min-width: 1780px;
-  min-height: 900px;
+  min-height: 700px;
   background: #f9fafb 0% 0% no-repeat padding-box;
 `;
 

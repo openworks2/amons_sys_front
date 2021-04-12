@@ -308,7 +308,17 @@ const SideMenu = ({
           active={currentMenu === "퇴출관리"}
           onClick={sideMenuClickHandler}
         >
-          퇴출관리
+          퇴출관리 : 인원
+        </Menu.Item>
+        <Menu.Item
+          as={Link}
+          to="/amons/home/general/company"
+          className="sidemenu-sub-title"
+          name="퇴출관리"
+          active={currentMenu === "퇴출관리"}
+          onClick={sideMenuClickHandler}
+        >
+          퇴출관리 : 차량
         </Menu.Item>
         <Menu.Item
           as={Link}
