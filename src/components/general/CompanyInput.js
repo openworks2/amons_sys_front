@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ContentSubTitle from "../ContentSubTitle";
 import styled from "styled-components";
 import { Form, Button, Header, Icon, Modal } from "semantic-ui-react";
+import { FaExclamationCircle } from "react-icons/fa";
 
 const CompanyInputCompo = styled.div`
   margin-left: 22px;
@@ -45,18 +46,28 @@ const CompanyInputCompo = styled.div`
     opacity: 1;
     margin-top: 400px;
   }
+  .modify-button {
+    width: 324px;
+    height: 50px;
+    background-color: #f1592f;
+    border: 1px solid #d8d8d8;
+    opacity: 1;
+    letter-spacing: 0px;
+    color: #ffffff;
+    opacity: 1;
+    margin-top: 400px;
+  }
 `;
 
 const CompanyInput = ({
-  activeItem,
-  onChangeInput,
-  submitButtonHandler,
-  modifiButtonHandler,
-  initFormData,
   onChange,
+  submitHandler,
+  updateHandler,
   formData,
+  selectRow,
+  initFormData,
+  initActiveRow,
 }) => {
-  const [submitOpen, setSubmitOpen] = useState(false);
   const [modifyOpen, setModifyOpen] = useState(false);
 
   const { id, co_name, co_sectors, description } = formData;
@@ -64,18 +75,20 @@ const CompanyInput = ({
   return (
     <CompanyInputCompo className="company-input-compo">
       <ContentSubTitle subTitle="소속사 등록" />
-      <Form className="company-input-form-body" onSubmit={"onsubmit"}>
+      <Form
+        className="company-input-form-body"
+        onSubmit={() => {
+          selectRow.item ? updateHandler() : submitHandler();
+        }}
+      >
         <Form.Field className="company-input-form co-name">
           <label className="input-form title">소속사</label>
           <input
             className="input-form"
             id="co_name"
             name="co_name"
-            placeholder={
-              activeItem ? activeItem.co_name : "소속사를 입력해 주세요."
-            }
+            placeholder={"소속사를 입력해 주세요."}
             required={true}
-            // value={activeItem ? activeItem.co_name : ""}
             value={co_name}
             onChange={onChange}
           />
@@ -86,12 +99,8 @@ const CompanyInput = ({
             className="input-form"
             id="co_sectors"
             name="co_sectors"
-            placeholder={
-              activeItem ? activeItem.co_sectors : "업종을 입력해 주세요."
-            }
+            placeholder={"업종을 입력해 주세요."}
             required={true}
-            value={activeItem ? activeItem.co_sectors : ""}
-            // value={activeItem ? activeItem.co_sectors : ""}
             value={co_sectors}
             onChange={onChange}
           />
@@ -102,71 +111,68 @@ const CompanyInput = ({
             className="input-form description"
             id="description"
             name="description"
-            placeholder={activeItem ? activeItem.description : "비고 입력란"}
-            // value={activeItem ? activeItem.description : ""}
+            placeholder={"비고 입력란"}
             value={description}
             onChange={onChange}
           />
         </Form.Field>
-        {activeItem ? (
-          // =================================등록 모달==============================
-          <Modal
-            basic
-            onClose={() => setSubmitOpen(false)}
-            onOpen={() => setSubmitOpen(true)}
-            open={submitOpen}
-            size="tiny"
-            trigger={<Button className="submit-button">수정</Button>}
-          >
-            <Header icon>
-              <Icon name="pencil alternate" />
-              수정하시겠습니까?
-            </Header>
-
-            <Modal.Actions>
-              <Button
-                basic
-                color="red"
-                inverted
-                onClick={() => {
-                  initFormData();
-                  setSubmitOpen(false);
-                }}
-              >
-                <Icon name="remove" /> 취소
-              </Button>
-              <Button
-                color="green"
-                inverted
-                type="submit"
-                onClick={(e) => {
-                  modifiButtonHandler(e);
-                  initFormData();
-                  setSubmitOpen(false);
-                }}
-              >
-                <Icon name="checkmark" /> 수정하기
-              </Button>
-            </Modal.Actions>
-          </Modal>
-        ) : !id ? (
+        {selectRow.item ? (
           <Button
-            className="submit-button"
-            type="submit"
+            className="modify-button"
             onClick={(e) => {
-              submitButtonHandler(e);
-              initFormData();
-              setSubmitOpen(false);
+              e.stopPropagation();
+              // 질문 포인트 type="submit"
+              setModifyOpen(true);
             }}
           >
-            등록
+            수정
           </Button>
         ) : (
           <Button className="submit-button" type="submit">
-            수정
+            등록
           </Button>
         )}
       </Form>
+      <Modal
+        className="confirm-modal"
+        onClose={() => setModifyOpen(false)}
+        onOpen={() => setModifyOpen(true)}
+        open={modifyOpen}
+      >
+        <Modal.Header className="confirm-modal header">수정</Modal.Header>
+        <Modal.Content className="confirm-modal content">
+          <Modal.Description className="confirm-modal description">
+            <FaExclamationCircle className="confirm-modal warning-icon" />
+            <p className="confirm-modal text">
+              입력한 내용으로 수정하시겠습니까?
+            </p>
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions className="confirm-modal actions">
+          <Button
+            className="confirm-modal button confirm"
+            color="blue"
+            content="수정"
+            labelPosition="right"
+            icon="checkmark"
+            // 질문 포인트 type="submit"
+            onClick={() => {
+              setModifyOpen(false);
+            }}
+          />
+          <Button
+            className="confirm-modal button cancel"
+            color="black"
+            onClick={() => {
+              setModifyOpen(false);
+              initFormData();
+              initActiveRow();
+            }}
+          >
+            취소
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </CompanyInputCompo>
   );
 };

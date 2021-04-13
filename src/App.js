@@ -9,15 +9,21 @@ import HomePage from "./pages/HomePage";
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-.ui.modal.transition.visible.active.delete-modal{
+.ui.modal.transition.visible.active.confirm-modal{
       width : 500px;
       height: 24.5em;
       text-align: center;
       align-items: center;
 
-      .minus{
+      .delete-icon{
         font-size : 100px;
         color : #d01919;
+        margin : 20px;
+      }
+
+      .warning-icon{
+        font-size : 100px;
+        color : #5e7827;
         margin : 20px;
       }
       .text{

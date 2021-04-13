@@ -254,25 +254,23 @@ const CompanyTable = ({
       </Table>
       {/* =============================모달============================== */}
       <Modal
-        className="delete-modal"
+        className="confirm-modal"
         onClose={() => setDeleteModalOpen(false)}
         onOpen={() => setDeleteModalOpen(true)}
         open={deleteModalOpen}
       >
-        <Modal.Header className="delete-modal header">삭제</Modal.Header>
-        <Modal.Content className="delete-modal content">
-          <Modal.Description className="delete-modal description">
-            <FaMinusCircle className="delete-modal minus" />
-            <p className="delete-modal text">
-              {console.log("item")}
-              {console.log(item)}
+        <Modal.Header className="confirm-modal header">삭제</Modal.Header>
+        <Modal.Content className="confirm-modal content">
+          <Modal.Description className="confirm-modal description">
+            <FaMinusCircle className="confirm-modal delete-icon" />
+            <p className="confirm-modal text">
               {item && `${item.co_name}`} 소속사를 삭제하시겠습니까?
             </p>
           </Modal.Description>
         </Modal.Content>
-        <Modal.Actions className="delete-modal actions">
+        <Modal.Actions className="confirm-modal actions">
           <Button
-            className="delete-modal button delete"
+            className="confirm-modal button delete"
             color="red"
             content="삭제"
             labelPosition="right"
@@ -283,7 +281,7 @@ const CompanyTable = ({
             }}
           />
           <Button
-            className="delete-modal button cancel"
+            className="confirm-modal button cancel"
             color="black"
             onClick={() => {
               setDeleteModalOpen(false);

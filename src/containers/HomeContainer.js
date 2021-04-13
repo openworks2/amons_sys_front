@@ -54,6 +54,10 @@ const HomeContainer = () => {
   console.log("url");
   console.log(url);
 
+  // let { urllocation } = location;
+  // console.log("urllocation");
+  // console.log(urllocation);
+
   // // 페이지 이동시 실행하는 초기화 함수
   // const initClickInfo = () => {
   //   setClickInfo({ isClicked: false, clickedRow: 0 });

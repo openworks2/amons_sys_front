@@ -101,6 +101,30 @@ const CompanyContatiner = () => {
     });
   };
 
+  // onSubmit
+  const submitHandler = (e) => {
+    console.log("서브밋 호출!");
+    console.log("formData");
+    console.log(formData);
+    let _companyData = companyData.push({ ...formData, created_date: date });
+    console.log(_companyData);
+    setCompanyData(_companyData);
+    alert("등록되었습니다.");
+    initActiveRow();
+    initFormData();
+  };
+  const updateHandler = (e) => {
+    console.log("수정 서브밋 호출!");
+    console.log("formData");
+    console.log(formData);
+    let _companyData = companyData.push({ ...formData, created_date: date });
+    console.log(_companyData);
+    setCompanyData(_companyData);
+    alert("수정되었습니다.");
+    initActiveRow();
+    initFormData();
+  };
+
   const initActiveRow = () => {
     setSelectRow({
       id: null,
@@ -209,7 +233,15 @@ const CompanyContatiner = () => {
       </ContentTitleBoxCompo>
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <CompanyInput onChange={onChange} formData={formData} />
+          <CompanyInput
+            onChange={onChange}
+            formData={formData}
+            submitHandler={submitHandler}
+            updateHandler={updateHandler}
+            selectRow={selectRow}
+            initFormData={initFormData}
+            initActiveRow={initActiveRow}
+          />
         </div>
         <div className="table-box">
           <CompanyTable
