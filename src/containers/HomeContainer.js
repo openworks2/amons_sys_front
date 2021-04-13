@@ -32,12 +32,11 @@ const HomeCompo = styled.div`
 `;
 
 const HomeContainer = () => {
-    const {data, loading, error } = useSelector(state=>state.compani2.companies)
     const dispatch = useDispatch();
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(getCompanies())
-    },[dispatch]);
+    }, [dispatch]);
 
     return (
         <HomeCompo className="Home-component">

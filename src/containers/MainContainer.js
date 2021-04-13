@@ -10,7 +10,7 @@ const MainComo = styled.div`
 const MainContainer = () => {
     return (
         <MainComo className="main-component">
-            <Redirect to="/home" />
+            <Redirect to="/amons/home" />
         </MainComo>
     );
 };
