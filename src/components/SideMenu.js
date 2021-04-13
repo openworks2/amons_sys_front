@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const SideMenuCompo = styled.div`
   opacity: 1;
-
+  overflow: auto;
   .ui.inverted.menu .active.item {
     cursor: default !important;
     background: #1b1c1d !important;

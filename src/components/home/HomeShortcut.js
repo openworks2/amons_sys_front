@@ -13,7 +13,7 @@ const CardCompo = styled.div`
 
   .card-component {
     top: 280px;
-    left: 50px;
+    /* left: 50px; */
     width: 230px;
     background: #ffffff 0% 0% no-repeat padding-box;
     box-shadow: 1px 2px 6px #0e05094d;

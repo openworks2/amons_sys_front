@@ -75,7 +75,7 @@ const CompanyTableCompo = styled.div`
     width: 30px !important;
   }
   .ui.button {
-    background: #ffffff !important;
+    background: #f9fafb !important;
   }
   .ui.button:hover {
     background: #f9fafb !important;
@@ -88,6 +88,10 @@ const CompanyTableCompo = styled.div`
   }
   .ui.table td.active:hover,
   .ui.table tr.active:hover {
+    background: #f9fafb !important;
+  }
+  .ui.table td,
+  .ui.table tr:hover {
     background: #f9fafb !important;
   }
 `;
@@ -108,7 +112,8 @@ const CompanyTable = ({
   );
 
   console.log("sectRow--->", selectRow);
-  const { id, item, no } = selectRow;
+  const { id, item, clickedIndex } = selectRow;
+  console.log("item--->", item);
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
@@ -116,13 +121,14 @@ const CompanyTable = ({
     const tempItems = [...items, ...Array(14 - items.length)];
     return tempItems.map((company, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
-
+      console.log("company");
+      console.log(company);
       return (
         <Table.Row
           className="table-row"
           key={index}
-          active={index === id}
-          onClick={company && ((e) => activeHandler(e, company, index))}
+          active={company && index === clickedIndex}
+          onClick={company && ((e) => activeHandler(e, index, company.co_id))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
@@ -138,7 +144,7 @@ const CompanyTable = ({
             {company && company.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {company && index === id && (
+            {company && id && company.co_id === id && (
               <Button
                 className="trash-icon-button"
                 onClick={() => {

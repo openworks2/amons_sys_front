@@ -118,22 +118,22 @@ const CompanyContatiner = () => {
   };
 
   // table row 클릭 핸들러
-  const activeHandler = (e, company, index) => {
-    console.log("e");
-    console.log(e);
-    console.log("company");
-    console.log(company);
+  const activeHandler = (e, index, selectedId) => {
     console.log("index");
     console.log(index);
     console.log("selectRow");
     console.log(selectRow);
 
-    const findItem = companyData.find((company) => company.co_id === index);
-    console.log(findItem);
     if (index === selectRow.index) {
       initActiveRow();
       initFormData();
     } else {
+      const findItem = companyData.find(
+        (company) => company.co_id === selectedId
+      );
+      console.log("findItem");
+      console.log(findItem);
+
       setSelectRows({
         id: findItem.co_id,
         item: findItem,
@@ -141,7 +141,7 @@ const CompanyContatiner = () => {
       });
 
       setFormData({
-        formData,
+        ...formData,
         id: findItem.co_id,
         co_name: findItem.co_name,
         co_sectors: findItem.co_sectors,
@@ -171,26 +171,12 @@ const CompanyContatiner = () => {
     initFormData();
   };
 
-  // 삭제;
-  function deleteItem(element) {
-    if (element.co_id !== selectRow.id) {
-      // console.log("판별");
-      // console.log(element.co_id);
-      // console.log(selectRow.co_id);
-      // console.log("살아남음");
-      return true;
-    } else {
-      console.log("죽음");
-      console.log(element);
-      console.log("죽음");
-    }
-  }
-
   const deleteHandler = () => {
-    console.log(companyData);
-    let _companyData = companyData.filter(deleteItem);
-    console.log(_companyData);
-    console.log("새로운 배열");
+    let _companyData = companyData.filter((item) => {
+      if (item.co_id !== selectRow.item.co_id) {
+        return item;
+      }
+    });
     setCompanyData(_companyData);
     initActiveRow();
     initFormData();
