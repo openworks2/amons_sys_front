@@ -75,7 +75,7 @@ const CompanyTableCompo = styled.div`
     width: 30px !important;
   }
   .ui.button {
-    background: #f9fafb !important;
+    background: #ffffff !important;
   }
   .ui.button:hover {
     background: #f9fafb !important;
@@ -121,15 +121,15 @@ const CompanyTable = ({
         <Table.Row
           className="table-row"
           key={index}
-          active={tableNo === id}
-          onClick={company && ((e) => activeHandler(e, company, tableNo))}
+          active={index === id}
+          onClick={company && ((e) => activeHandler(e, company, index))}
         >
+          {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {company ? tableNo : " "}
           </Table.Cell>
           <Table.Cell className="table-cell company" name="company">
             {company && company.co_name}
-            {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           </Table.Cell>
           <Table.Cell className="table-cell sector" name="sector">
             {company && company.co_sectors}
@@ -138,7 +138,7 @@ const CompanyTable = ({
             {company && company.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {tableNo === id + 1 && (
+            {company && index === id && (
               <Button
                 className="trash-icon-button"
                 onClick={() => {

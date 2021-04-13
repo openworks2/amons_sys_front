@@ -86,7 +86,7 @@ const CompanyContatiner = () => {
   const [selectRow, setSelectRows] = useState({
     id: null,
     item: undefined,
-    no: null,
+    index: null,
   });
   // form onChange Event
   const onChange = (e) => {
@@ -105,7 +105,7 @@ const CompanyContatiner = () => {
     setSelectRows({
       id: null,
       item: undefined,
-      no: null,
+      index: null,
     });
   };
   const initFormData = () => {
@@ -118,27 +118,26 @@ const CompanyContatiner = () => {
   };
 
   // table row 클릭 핸들러
-  const activeHandler = (e, company, selectNo) => {
+  const activeHandler = (e, company, index) => {
     console.log("e");
     console.log(e);
     console.log("company");
     console.log(company);
-    console.log("selectNo");
-    console.log(selectNo);
+    console.log("index");
+    console.log(index);
     console.log("selectRow");
     console.log(selectRow);
 
-    let id = company.co_id;
-    const findItem = companyData.find((company) => company.co_id === selectNo);
+    const findItem = companyData.find((company) => company.co_id === index);
     console.log(findItem);
-    if (selectNo === selectRow.id) {
+    if (index === selectRow.index) {
       initActiveRow();
       initFormData();
     } else {
       setSelectRows({
         id: findItem.co_id,
         item: findItem,
-        no: selectNo,
+        index: index,
       });
 
       setFormData({
