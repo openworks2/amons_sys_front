@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import ContentSubTitle from "../ContentSubTitle";
 import styled from "styled-components";
-import { Button, Icon, Menu, Table, Pagination } from "semantic-ui-react";
-import { FaTrash } from "react-icons/fa";
+import {
+  Button,
+  Icon,
+  Menu,
+  Table,
+  Pagination,
+  Header,
+  Image,
+  Modal,
+} from "semantic-ui-react";
+import { FaTrash, FaMinusCircle } from "react-icons/fa";
 
 const CompanyTableCompo = styled.div`
   margin-left: 22px;
@@ -90,7 +99,6 @@ const CompanyTableCompo = styled.div`
   .ui.table tr.active:hover {
     background: #f9fafb !important;
   }
-  .ui.table td,
   .ui.table tr:hover {
     background: #f9fafb !important;
   }
@@ -102,7 +110,13 @@ const CompanyTable = ({
   deleteHandler,
   onPageChange,
   selectRow,
+  initFormData,
+  initActiveRow,
 }) => {
+  // 모달
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  // 테이블
   const { items, activePage, itemsPerPage } = table;
   const totalPages = Math.ceil(items.length / itemsPerPage, 1);
 
@@ -111,9 +125,7 @@ const CompanyTable = ({
     (activePage - 1) * itemsPerPage + itemsPerPage
   );
 
-  console.log("sectRow--->", selectRow);
   const { id, item, clickedIndex } = selectRow;
-  console.log("item--->", item);
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
@@ -121,8 +133,6 @@ const CompanyTable = ({
     const tempItems = [...items, ...Array(14 - items.length)];
     return tempItems.map((company, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
-      console.log("company");
-      console.log(company);
       return (
         <Table.Row
           className="table-row"
@@ -147,8 +157,11 @@ const CompanyTable = ({
             {company && id && company.co_id === id && (
               <Button
                 className="trash-icon-button"
-                onClick={() => {
-                  deleteHandler();
+                onClick={(e) => {
+                  // 상위 테이블 로우에 걸어줬던 버튼 떄문에 이벤트 버블링 생긴다.
+                  // 버블링 막고 독립적인 버튼으로 만들어 주기.
+                  e.stopPropagation();
+                  setDeleteModalOpen(true);
                 }}
               >
                 <FaTrash />
@@ -239,6 +252,49 @@ const CompanyTable = ({
           </Table.Footer>
         )}
       </Table>
+      {/* =============================모달============================== */}
+      <Modal
+        className="delete-modal"
+        onClose={() => setDeleteModalOpen(false)}
+        onOpen={() => setDeleteModalOpen(true)}
+        open={deleteModalOpen}
+      >
+        <Modal.Header className="delete-modal header">삭제</Modal.Header>
+        <Modal.Content className="delete-modal content">
+          <Modal.Description className="delete-modal description">
+            <FaMinusCircle className="delete-modal minus" />
+            <p className="delete-modal text">
+              {console.log("item")}
+              {console.log(item)}
+              {item && `${item.co_name}`} 소속사를 삭제하시겠습니까?
+            </p>
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions className="delete-modal actions">
+          <Button
+            className="delete-modal button delete"
+            color="red"
+            content="삭제"
+            labelPosition="right"
+            icon="checkmark"
+            onClick={() => {
+              deleteHandler();
+              setDeleteModalOpen(false);
+            }}
+          />
+          <Button
+            className="delete-modal button cancel"
+            color="black"
+            onClick={() => {
+              setDeleteModalOpen(false);
+              initFormData();
+              initActiveRow();
+            }}
+          >
+            취소
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </CompanyTableCompo>
   );
 };

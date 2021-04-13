@@ -37,8 +37,22 @@ const HomeContainer = () => {
   // 사이드바 클릭 변경 핸들러
   const changeCurrentMenu = (name) => {
     // 공백 포함 한글 문자열 받기.
+    // urlRefresh();
     setCurrentMenu(name);
   };
+
+  // URL 파라미터 받아오기
+  const [currentUrl, setCurrentUrl] = useState("");
+  // const urlRefresh = ({ match }) => {
+  //   console.log("currentUrl prev");
+  //   console.log(currentUrl);
+  //   setCurrentUrl(match.param);
+  //   console.log("currentUrl");
+  //   console.log(currentUrl);
+  // };
+  let url = document.location.href;
+  console.log("url");
+  console.log(url);
 
   // // 페이지 이동시 실행하는 초기화 함수
   // const initClickInfo = () => {

@@ -83,10 +83,10 @@ const CompanyContatiner = () => {
     description: "",
   });
   // 클릭된 row의 데이터
-  const [selectRow, setSelectRows] = useState({
+  const [selectRow, setSelectRow] = useState({
     id: null,
     item: undefined,
-    index: null,
+    clickedIndex: null,
   });
   // form onChange Event
   const onChange = (e) => {
@@ -102,10 +102,10 @@ const CompanyContatiner = () => {
   };
 
   const initActiveRow = () => {
-    setSelectRows({
+    setSelectRow({
       id: null,
       item: undefined,
-      index: null,
+      clickedIndex: null,
     });
   };
   const initFormData = () => {
@@ -124,7 +124,7 @@ const CompanyContatiner = () => {
     console.log("selectRow");
     console.log(selectRow);
 
-    if (index === selectRow.index) {
+    if (index === selectRow.clickedIndex) {
       initActiveRow();
       initFormData();
     } else {
@@ -134,10 +134,10 @@ const CompanyContatiner = () => {
       console.log("findItem");
       console.log(findItem);
 
-      setSelectRows({
+      setSelectRow({
         id: findItem.co_id,
         item: findItem,
-        index: index,
+        clickedIndex: index,
       });
 
       setFormData({
@@ -218,6 +218,8 @@ const CompanyContatiner = () => {
             deleteHandler={deleteHandler}
             onPageChange={onPageChange}
             selectRow={selectRow}
+            initFormData={initFormData}
+            initActiveRow={initActiveRow}
             // fullHeight={fullHeight}
           />
         </div>
