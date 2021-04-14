@@ -43,22 +43,28 @@ const CompanyTableCompo = styled.div`
       width: 200px !important;
     }
     .description {
+      width: 700px !important;
     }
     .trash-icon {
-      width: 50px !important;
+      width: 55px !important;
       color: #7d7d7d;
     }
   }
 
   .table-body {
     padding: 0px !important;
-    .table-body-box {
-      width: 100%;
-      position: relative;
-      margin: 0px !important;
-      padding: 0px !important;
-      overflow: auto;
-      height: 62.2vh !important;
+  }
+  .table-body-box {
+    width: 100% !important;
+    position: relative;
+    margin: 0px !important;
+    padding: 0px !important;
+    overflow: auto;
+    height: 62.2vh !important;
+    /* overflow-y: scroll; */
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      margin: 0px;
     }
   }
 
@@ -72,44 +78,42 @@ const CompanyTableCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
     opacity: 1;
-    height: 4vh;
+    height: 48px !important;
   }
-
   .table-cell {
     text-align: center !important;
     padding-left: 20px !important;
     padding-right: 20px !important;
-    .no {
-      width: 50px !important;
-    }
-    .company {
-      width: 200px !important;
-      text-align: left;
-    }
-    .sector {
-      width: 200px !important;
-    }
-    .description {
-    }
-    .trash-icon {
-      width: 50px !important;
-      color: #7d7d7d;
-    }
+    vertical-align: middle;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
   }
-
-  .table-cell.company {
+  .no {
+    width: 62px !important;
+  }
+  .company {
+    width: 198px !important;
     text-align: left !important;
   }
-  .table-cell.trash-icon {
-    padding: 0px !important;
+  .sector {
+    width: 198px !important;
+  }
+  .description {
+    width: 700px !important;
+  }
+  .trash-icon {
     color: #7d7d7d;
-    width: 50px !important;
+    width: 55px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    margin: 0px !important;
   }
   .trash-icon-button {
     padding: 0px !important;
     margin: 0px !important;
     height: 30px !important;
     width: 30px !important;
+    border: 0px !important;
   }
 
   .table-pagination-row {
@@ -130,6 +134,7 @@ const CompanyTableCompo = styled.div`
     border: #f2f2f2 !important;
     color: red !important;
   }
+
   .ui.table td.active,
   .ui.table tr.active {
     background: #f9fafb !important;
@@ -236,9 +241,9 @@ const CompanyTable = ({
           </Table.Row>
         </Table.Header>
         {/* ===============================테이블 바디===================================== */}
-        <Table.HeaderCell className="table-body" colSpan="16">
+        <Table.Cell className="table-body" colSpan="12">
           <div className="table-body-box">{tableRender(viewItems)}</div>
-        </Table.HeaderCell>
+        </Table.Cell>
         {/* =============================테이블 푸터(페이지네이션)============================== */}
         {totalPages >= 1 && (
           <Table.Footer>
