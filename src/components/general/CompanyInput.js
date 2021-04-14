@@ -44,7 +44,8 @@ const CompanyInputCompo = styled.div`
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
-    margin-top: 400px;
+    position: absolute;
+    top: 68.3vh;
   }
   .modify-button {
     width: 324px;
@@ -54,14 +55,18 @@ const CompanyInputCompo = styled.div`
     opacity: 1;
     letter-spacing: 0px;
     color: #ffffff;
-    opacity: 1;
-    margin-top: 400px;
+    position: absolute;
+    top: 68.3vh;
+  }
+
+  .form-body {
+    overflow: auto;
   }
 `;
 
 const CompanyInput = ({
   onChange,
-  submitHandler,
+  createHandler,
   updateHandler,
   formData,
   selectRow,
@@ -78,50 +83,51 @@ const CompanyInput = ({
       <Form
         className="company-input-form-body"
         onSubmit={() => {
-          selectRow.item ? updateHandler() : submitHandler();
+          !selectRow.item && createHandler();
         }}
       >
-        <Form.Field className="company-input-form co-name">
-          <label className="input-form title">소속사</label>
-          <input
-            className="input-form"
-            id="co_name"
-            name="co_name"
-            placeholder={"소속사를 입력해 주세요."}
-            required={true}
-            value={co_name}
-            onChange={onChange}
-          />
-        </Form.Field>
-        <Form.Field className="company-input-form co-sectors">
-          <label className="input-form title">업종</label>
-          <input
-            className="input-form"
-            id="co_sectors"
-            name="co_sectors"
-            placeholder={"업종을 입력해 주세요."}
-            required={true}
-            value={co_sectors}
-            onChange={onChange}
-          />
-        </Form.Field>
-        <Form.Field className="company-input-form description">
-          <label className="input-form title">비고</label>
-          <textarea
-            className="input-form description"
-            id="description"
-            name="description"
-            placeholder={"비고 입력란"}
-            value={description}
-            onChange={onChange}
-          />
-        </Form.Field>
+        <div className="form-body">
+          <Form.Field className="company-input-form co-name">
+            <label className="input-form title">소속사</label>
+            <input
+              className="input-form"
+              id="co_name"
+              name="co_name"
+              placeholder={"소속사를 입력해 주세요."}
+              required
+              value={co_name}
+              onChange={onChange}
+            />
+          </Form.Field>
+          <Form.Field className="company-input-form co-sectors">
+            <label className="input-form title">업종</label>
+            <input
+              className="input-form"
+              id="co_sectors"
+              name="co_sectors"
+              placeholder={"업종을 입력해 주세요."}
+              required
+              value={co_sectors}
+              onChange={onChange}
+            />
+          </Form.Field>
+          <Form.Field className="company-input-form description">
+            <label className="input-form title">비고</label>
+            <textarea
+              className="input-form description"
+              id="description"
+              name="description"
+              placeholder={"비고 입력란"}
+              value={description}
+              onChange={onChange}
+            />
+          </Form.Field>
+        </div>
         {selectRow.item ? (
           <Button
             className="modify-button"
             onClick={(e) => {
               e.stopPropagation();
-              // 질문 포인트 type="submit"
               setModifyOpen(true);
             }}
           >
@@ -155,8 +161,8 @@ const CompanyInput = ({
             content="수정"
             labelPosition="right"
             icon="checkmark"
-            // 질문 포인트 type="submit"
             onClick={() => {
+              updateHandler();
               setModifyOpen(false);
             }}
           />

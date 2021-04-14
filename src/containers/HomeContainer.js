@@ -12,7 +12,7 @@ const HomeCompo = styled.div`
   height: 100%;
   width: 100%;
   min-width: 1780px;
-  min-height: 800px;
+  min-height: 900px;
   background: #f9fafb 0% 0% no-repeat padding-box;
 `;
 
@@ -57,14 +57,6 @@ const HomeContainer = () => {
   // let { urllocation } = location;
   // console.log("urllocation");
   // console.log(urllocation);
-
-  // // 페이지 이동시 실행하는 초기화 함수
-  // const initClickInfo = () => {
-  //   setClickInfo({ isClicked: false, clickedRow: 0 });
-  // };
-  // const initCurrentMenu = () => {
-  //   setCallSideMenu("");
-  // };
 
   return (
     <>

@@ -55,7 +55,7 @@ const ContentsBodyCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
     width: 368px;
-    height: 883px;
+    height: 82.5vh;
     min-height: 683px;
     margin-top: 10px;
     position: absolute;
@@ -65,7 +65,7 @@ const ContentsBodyCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
     width: 1236px;
-    height: 883px;
+    height: 82.5vh;
     min-height: 683px;
     margin-top: 10px;
     margin-left: 388px;
@@ -102,11 +102,13 @@ const CompanyContatiner = () => {
   };
 
   // onSubmit
-  const submitHandler = (e) => {
+  const createHandler = (e) => {
     console.log("서브밋 호출!");
     console.log("formData");
     console.log(formData);
-    let _companyData = companyData.push({ ...formData, created_date: date });
+    let item = { ...formData, created_date: date };
+    let _companyData = companyData;
+    _companyData.push(item);
     console.log(_companyData);
     setCompanyData(_companyData);
     alert("등록되었습니다.");
@@ -117,7 +119,9 @@ const CompanyContatiner = () => {
     console.log("수정 서브밋 호출!");
     console.log("formData");
     console.log(formData);
-    let _companyData = companyData.push({ ...formData, created_date: date });
+    let item = { ...formData, modified_date: date };
+    let _companyData = companyData;
+    _companyData.push(item);
     console.log(_companyData);
     setCompanyData(_companyData);
     alert("수정되었습니다.");
@@ -236,7 +240,7 @@ const CompanyContatiner = () => {
           <CompanyInput
             onChange={onChange}
             formData={formData}
-            submitHandler={submitHandler}
+            createHandler={createHandler}
             updateHandler={updateHandler}
             selectRow={selectRow}
             initFormData={initFormData}

@@ -6,8 +6,10 @@ import { FaIdCard, FaDesktop } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const SideMenuCompo = styled.div`
-  opacity: 1;
-  overflow: auto;
+  position: fixed;
+  overflow-y: scroll;
+  height: 100%;
+
   .ui.inverted.menu .active.item {
     cursor: default !important;
     background: #1b1c1d !important;
@@ -28,13 +30,18 @@ const SideMenuCompo = styled.div`
     font-size: 17px;
     left: 210px;
   }
+  .ui.inverted.vertical.labeled.icon.ui.overlay.left.visible.sidebar.sidemenu.menu {
+    height: 94% !important;
+  }
   .sidemenu {
     background: #1b1c1d 0% 0% no-repeat padding-box !important;
     width: 260px !important;
-    top: 70px;
+    margin-top: 70px !important;
     padding-top: 15px;
     padding-left: 5px;
     padding-right: 10px;
+    height: 1000px !important;
+    overflow: auto !important;
   }
   .divide-line {
     background: #7c7c7c;
@@ -50,7 +57,6 @@ const SideMenuCompo = styled.div`
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
     text-align: left !important;
-
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
@@ -72,7 +78,6 @@ const SideMenuCompo = styled.div`
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
     text-align: left !important;
-
     letter-spacing: 0px !important;
     color: #7c7c7c !important;
     opacity: 1 !important;

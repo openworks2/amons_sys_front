@@ -10,6 +10,7 @@ import {
   Header,
   Image,
   Modal,
+  Tab,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle } from "react-icons/fa";
 
@@ -28,22 +29,41 @@ const CompanyTableCompo = styled.div`
     opacity: 1;
     text-align: center;
     height: 47px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    .no {
+      width: 50px !important;
+    }
+    .company {
+      width: 200px !important;
+      text-align: left;
+    }
+    .sector {
+      width: 200px !important;
+    }
+    .description {
+    }
+    .trash-icon {
+      width: 50px !important;
+      color: #7d7d7d;
+    }
   }
 
-  .table-header.no {
-  }
-  .table-header.company {
-    text-align: left;
-  }
-  .table-header.sector {
-  }
-  .table-header.description {
-  }
-  .table-header.trash-icon {
-    color: #7d7d7d;
+  .table-body {
+    padding: 0px !important;
+    .table-body-box {
+      width: 100%;
+      position: relative;
+      margin: 0px !important;
+      padding: 0px !important;
+      overflow: auto;
+      height: 62.2vh !important;
+    }
   }
 
   .table-row {
+    width: 100% !important;
     font-size: 14px;
     font-family: "NotoSansKR-Regular";
     letter-spacing: 0px;
@@ -52,10 +72,46 @@ const CompanyTableCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
     opacity: 1;
+    height: 4vh;
   }
-  .table-row.blank {
-    height: 47px !important;
+
+  .table-cell {
+    text-align: center !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    .no {
+      width: 50px !important;
+    }
+    .company {
+      width: 200px !important;
+      text-align: left;
+    }
+    .sector {
+      width: 200px !important;
+    }
+    .description {
+    }
+    .trash-icon {
+      width: 50px !important;
+      color: #7d7d7d;
+    }
   }
+
+  .table-cell.company {
+    text-align: left !important;
+  }
+  .table-cell.trash-icon {
+    padding: 0px !important;
+    color: #7d7d7d;
+    width: 50px !important;
+  }
+  .trash-icon-button {
+    padding: 0px !important;
+    margin: 0px !important;
+    height: 30px !important;
+    width: 30px !important;
+  }
+
   .table-pagination-row {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
@@ -66,23 +122,6 @@ const CompanyTableCompo = styled.div`
     float: right;
   }
 
-  .table-cell {
-    text-align: center !important;
-  }
-  .table-cell.company {
-    text-align: left !important;
-  }
-  .table-cell.trash-icon {
-    padding: 0px !important;
-    color: #7d7d7d;
-    width: 72px !important;
-  }
-  .trash-icon-button {
-    padding: 0px !important;
-    margin: 0px !important;
-    height: 30px !important;
-    width: 30px !important;
-  }
   .ui.button {
     background: #f9fafb !important;
   }
@@ -179,41 +218,27 @@ const CompanyTable = ({
       <Table celled padded selectable>
         <Table.Header className="table-header">
           <Table.Row className="table-header-row">
-            <Table.HeaderCell singleLine className="table-header no" width="1">
+            <Table.HeaderCell singleLine className="table-header no">
               NO
             </Table.HeaderCell>
-            <Table.HeaderCell
-              singleLine
-              className="table-header company"
-              width="2"
-            >
+            <Table.HeaderCell singleLine className="table-header company">
               소속사
             </Table.HeaderCell>
-            <Table.HeaderCell
-              singleLine
-              className="table-header sector"
-              width="2"
-            >
+            <Table.HeaderCell singleLine className="table-header sector">
               업종
             </Table.HeaderCell>
-            <Table.HeaderCell
-              singleLine
-              className="table-header description"
-              width="10"
-            >
+            <Table.HeaderCell singleLine className="table-header description">
               비고
             </Table.HeaderCell>
-            <Table.HeaderCell
-              singleLine
-              className="table-header trash-icon"
-              width="1"
-            >
+            <Table.HeaderCell singleLine className="table-header trash-icon">
               <FaTrash />
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         {/* ===============================테이블 바디===================================== */}
-        <Table.Body className="table-body">{tableRender(viewItems)}</Table.Body>
+        <Table.HeaderCell className="table-body" colSpan="16">
+          <div className="table-body-box">{tableRender(viewItems)}</div>
+        </Table.HeaderCell>
         {/* =============================테이블 푸터(페이지네이션)============================== */}
         {totalPages >= 1 && (
           <Table.Footer>
