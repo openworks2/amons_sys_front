@@ -10,14 +10,14 @@ const CardCompo = styled.div`
   height: 100%;
   background: #c5c9cf 0% 0% no-repeat padding-box;
   opacity: 1;
+  overflow: auto;
 
   .card-component {
     top: 280px;
-    /* left: 50px; */
     width: 230px;
     background: #ffffff 0% 0% no-repeat padding-box;
     box-shadow: 1px 2px 6px #0e05094d;
-    border-radius: 0px 0px 4px 4px;
+    border-radius: 4px !important;
     opacity: 1;
     display: inline-block;
     margin: 34px;
@@ -29,7 +29,7 @@ const CardCompo = styled.div`
       opacity: 0.8;
       top: 0px;
       display: none;
-      border-radius: 4px 4px 4px 4px;
+      border-radius: 0px 0px 4px 4px !important;
       .hover-box {
         border: 2px solid #d8d8d8;
         border-radius: 4px;
@@ -65,7 +65,7 @@ const CardCompo = styled.div`
     line-height: 237px;
     text-align: center;
     background: #2e2e2e 0% 0% no-repeat padding-box;
-    border-radius: 4px 4px 0px 0px;
+    border-radius: 4px !important;
     opacity: 1;
   }
 
@@ -94,6 +94,11 @@ const CardCompo = styled.div`
     justify-content: center !important;
     color: #2e2e2e;
     opacity: 0.87;
+  }
+  .expendSideMenu {
+    width: 2650px;
+    height: 100%;
+    position: absolute;
   }
 `;
 

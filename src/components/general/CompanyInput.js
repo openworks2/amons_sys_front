@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ContentSubTitle from "../ContentSubTitle";
 import styled from "styled-components";
 import { Form, Button, Header, Icon, Modal } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
@@ -62,6 +61,16 @@ const CompanyInputCompo = styled.div`
   .form-body {
     overflow: auto;
   }
+  .subtitle {
+    font-family: "NotoSansKR-Medium";
+    font-size: 16px;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #7c7c7c;
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+  }
 `;
 
 const CompanyInput = ({
@@ -79,7 +88,7 @@ const CompanyInput = ({
 
   return (
     <CompanyInputCompo className="company-input-compo">
-      <ContentSubTitle subTitle="소속사 등록" />
+      <p className="subtitle">소속사 등록</p>
       <Form
         className="company-input-form-body"
         onSubmit={() => {

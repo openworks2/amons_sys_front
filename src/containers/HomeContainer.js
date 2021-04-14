@@ -5,27 +5,18 @@ import Contents from "../components/Contents";
 import Header from "../components/Header";
 import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
-import { getCompanies } from "../modules/companies";
 import { Redirect } from "react-router";
 
 const HomeCompo = styled.div`
   height: 100%;
   width: 100%;
-  min-width: 1780px;
+  min-width: 1680px;
   min-height: 900px;
   background: #f9fafb 0% 0% no-repeat padding-box;
+  overflow: auto;
 `;
 
 const HomeContainer = () => {
-  //   const { data, loading, error } = useSelector(
-  //     (state) => state.companies.companies
-  //   );
-  //   const dispatch = useDispatch();
-
-  //   useEffect(() => {
-  //     dispatch(getCompanies());
-  //   }, [dispatch]);
-
   // 사이드바 호출 버튼 핸들러
   const [callSideMenu, setCallSideMenu] = useState(false);
   function callSideMenuHandler() {
@@ -68,9 +59,8 @@ const HomeContainer = () => {
           changeCurrentMenu={changeCurrentMenu}
           currentMenu={currentMenu}
         />
-        {/* <ContentsCompo> */}
+
         <Contents currentMenu={currentMenu} />
-        {/* </ContentsCompo> */}
       </HomeCompo>
     </>
   );

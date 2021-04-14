@@ -6,10 +6,6 @@ import { FaIdCard, FaDesktop } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const SideMenuCompo = styled.div`
-  position: fixed;
-  overflow-y: scroll;
-  height: 100%;
-
   .ui.inverted.menu .active.item {
     cursor: default !important;
     background: #1b1c1d !important;
@@ -42,6 +38,9 @@ const SideMenuCompo = styled.div`
     padding-right: 10px;
     height: 1000px !important;
     overflow: auto !important;
+    &::-webkit-scrollbar {
+      display: none !important;
+    }
   }
   .divide-line {
     background: #7c7c7c;

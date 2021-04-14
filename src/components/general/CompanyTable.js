@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ContentSubTitle from "../ContentSubTitle";
+
 import styled from "styled-components";
 import {
   Button,
@@ -40,14 +40,25 @@ const CompanyTableCompo = styled.div`
       text-align: left;
     }
     .sector {
-      width: 200px !important;
+      width: 201.5px !important;
+    }
+    @media screen and (max-height: 937px) {
+      .trash-icon {
+        width: 204px !important;
+      }
     }
     .description {
       width: 700px !important;
     }
+
     .trash-icon {
       width: 55px !important;
       color: #7d7d7d;
+    }
+    @media screen and (max-height: 937px) {
+      .trash-icon {
+        width: 65px !important;
+      }
     }
   }
 
@@ -146,6 +157,16 @@ const CompanyTableCompo = styled.div`
   .ui.table tr:hover {
     background: #f9fafb !important;
   }
+  .subtitle {
+    font-family: "NotoSansKR-Medium";
+    font-size: 16px;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #7c7c7c;
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+  }
 `;
 
 const CompanyTable = ({
@@ -219,7 +240,7 @@ const CompanyTable = ({
 
   return (
     <CompanyTableCompo className="company-table-compo">
-      <ContentSubTitle subTitle="소속사 목록" />
+      <p className="subtitle">소속사 등록</p>
       <Table celled padded selectable>
         <Table.Header className="table-header">
           <Table.Row className="table-header-row">

@@ -8,6 +8,9 @@ import { Image } from "semantic-ui-react";
 // 가짜 데이터
 import companydata from "../../fakedata/companydata";
 import { act } from "react-dom/test-utils";
+import { useDispatch, useSelector } from "react-redux";
+import { getCompanies } from "../../modules/companies";
+
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
   padding-left: 280px !important;
@@ -75,6 +78,28 @@ const ContentsBodyCompo = styled.div`
 `;
 
 const CompanyContatiner = () => {
+  // const { data, loading, error } = useSelector((state) => {
+  //   return state.companies.companies;
+  // });
+  // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(getCompanies());
+  // }, [dispatch]);
+
+  const { data, loading, error } = useSelector(
+    (state) => state.companies.companies
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCompanies());
+  }, [dispatch]);
+
+  console.log(data);
+  console.log(loading);
+  console.log(error);
+
   const date = new Date();
   const [formData, setFormData] = useState({
     id: undefined,
