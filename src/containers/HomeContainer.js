@@ -17,29 +17,6 @@ const HomeCompo = styled.div`
 `;
 
 const HomeContainer = () => {
-<<<<<<< HEAD
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getCompanies())
-    }, [dispatch]);
-
-    return (
-        <HomeCompo className="Home-component">
-            <div className="top">
-                <Header />
-            </div>
-            <div className="bottom">
-                <div className="bottom-left">
-                    <SideMenu />
-                </div>
-                <div className="bottom-right">
-                    <Contents />
-                </div>
-            </div>
-        </HomeCompo>
-    );
-=======
   //   const { data, loading, error } = useSelector(
   //     (state) => state.companies.companies
   //   );
@@ -97,7 +74,6 @@ const HomeContainer = () => {
       </HomeCompo>
     </>
   );
->>>>>>> admin_dev
 };
 
 export default HomeContainer;

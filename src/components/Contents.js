@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router";
-import CompanyContatiner from "../containers/general/CompanyContainer";
-import HomeShortcut from "../components/home/HomeShortcut";
+import HomeShortcut from "./Home/HomeShortcut";
+// import CompanyContatiner from "./general/CompanyContainer";
+// import HomeShortcut from "./home/HomeShortcut";
 
 const Contents = () => {
   // useEffect(() => {
@@ -10,7 +11,7 @@ const Contents = () => {
   return (
     <>
       <Route path="/amons/home/" component={HomeShortcut} exact />
-      <Route path="/amons/home/general/company" component={CompanyContatiner} />
+      {/* <Route path="/amons/home/general/company" component={CompanyContatiner} /> */}
       <Route path="/amons/home/general/worker" />
       <Route path="/amons/home/general/vehicle" />
       <Route path="/amons/home/general/beacon" />

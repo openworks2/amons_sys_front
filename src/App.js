@@ -40,11 +40,7 @@ function App() {
       <Route path="/" component={MainPage} exact />
       <Route path="/amons/signin" component={LoginPage} />
       <Route path="/amons/home" component={HomePage} />
-<<<<<<< HEAD
-    </div>
-=======
     </>
->>>>>>> admin_dev
   );
 }
 
