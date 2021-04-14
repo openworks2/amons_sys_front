@@ -1,16 +1,18 @@
-import React, { createRef, useCallback, useEffect, useRef, useState } from 'react';
+import React, {useCallback, useEffect, useState } from 'react';
 import { Button, Form, Input } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css'
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginAsync, loginCheckAsync, setLogindInfoAsync } from '../modules/login';
+import { loginAsync } from '../modules/login';
 import storage from '../lib/starage';
 import { Redirect } from 'react-router';
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
+
+
 
 const LoginCompo = styled.div`
     width: 100%;
     height: 100%;
-    /* min-width:500px; */
     min-height:817px;
     .header-compo{
         font-family: "NotoSansKR-Medium";
@@ -154,7 +156,7 @@ const LoginContainer = () => {
     useEffect(() => {
         initialUserInfo()
 
-    }, []);
+    }, [user]);
 
 
     const dispatch = useDispatch();
@@ -183,7 +185,7 @@ const LoginContainer = () => {
         dispatch(loginAsync(reqData))
     }
 
-    if (user) return <Redirect to="/amons/monitor" />
+    if (storage.get("user")) return <Redirect to="/amons/home" />
 
     return (
         <LoginCompo className="login-container">

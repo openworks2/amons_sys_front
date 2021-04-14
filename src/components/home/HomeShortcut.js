@@ -21,6 +21,7 @@ const CardCompo = styled.div`
     opacity: 1;
     display: inline-block;
     margin: 34px;
+    border-radius: 15px;
     .panel {
       width: 100%;
       height: 238px;
@@ -97,10 +98,10 @@ const CardCompo = styled.div`
   }
 `;
 
-const HomeShortcut = () => {
+const HomeShortcut = ({ openFullScreenMode }) => {
   return (
     <CardCompo>
-      <Card as={Link} to="/naver" className="card-component">
+      <Card as={Link} to="/amons/home/monitor" className="card-component" onMouseDown={openFullScreenMode}>
         <div className="img-box">
           <Image
             src="/main/monitoring.png"
@@ -113,7 +114,7 @@ const HomeShortcut = () => {
             <p className="hover-text">바로가기</p>
           </div>
         </div>
-        <Card.Content className="card-title">모니터링</Card.Content>
+        <Card.Content className="card-title" >모니터링</Card.Content>
       </Card>
 
       <Card as={Link} to="" className="card-component">

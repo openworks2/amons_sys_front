@@ -8,6 +8,10 @@ import SideMenu from "../components/SideMenu";
 import { getCompanies } from "../modules/companies";
 import { Redirect } from "react-router";
 
+
+
+
+
 const HomeCompo = styled.div`
   height: 100%;
   width: 100%;
@@ -17,14 +21,16 @@ const HomeCompo = styled.div`
 `;
 
 const HomeContainer = () => {
-  //   const { data, loading, error } = useSelector(
-  //     (state) => state.companies.companies
-  //   );
-  //   const dispatch = useDispatch();
 
-  //   useEffect(() => {
-  //     dispatch(getCompanies());
-  //   }, [dispatch]);
+  // 전체화면 설정
+  const openFullScreenMode = () => {
+
+    var docV = document.documentElement;
+    console.log('-->', docV)
+    docV.webkitRequestFullscreen();
+
+  }
+
 
   // 사이드바 호출 버튼 핸들러
   const [callSideMenu, setCallSideMenu] = useState(false);
@@ -58,21 +64,23 @@ const HomeContainer = () => {
   // console.log("urllocation");
   // console.log(urllocation);
 
+  useEffect(() => {
+  }, [])
+
   return (
-    <>
-      <HomeCompo className="Home-component">
-        <Header callSideMenuHandler={callSideMenuHandler} />
-        <SideMenu
-          callSideMenu={callSideMenu}
-          callSideMenuHandler={callSideMenuHandler}
-          changeCurrentMenu={changeCurrentMenu}
-          currentMenu={currentMenu}
-        />
-        {/* <ContentsCompo> */}
-        <Contents currentMenu={currentMenu} />
-        {/* </ContentsCompo> */}
-      </HomeCompo>
-    </>
+    <HomeCompo className="Home-component">
+      <Header callSideMenuHandler={callSideMenuHandler} />
+      <SideMenu
+        callSideMenu={callSideMenu}
+        callSideMenuHandler={callSideMenuHandler}
+        changeCurrentMenu={changeCurrentMenu}
+        currentMenu={currentMenu}
+        openFullScreenMode={openFullScreenMode}
+      />
+      {/* <ContentsCompo> */}
+      <Contents currentMenu={currentMenu} />
+      {/* </ContentsCompo> */}
+    </HomeCompo>
   );
 };
 
