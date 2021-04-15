@@ -171,6 +171,7 @@ const CompanyTableCompo = styled.div`
 
 const CompanyTable = ({
   table,
+  data,
   activeHandler,
   deleteHandler,
   onPageChange,
@@ -183,9 +184,12 @@ const CompanyTable = ({
 
   // 테이블
   const { items, activePage, itemsPerPage } = table;
-  const totalPages = Math.ceil(items.length / itemsPerPage, 1);
-
-  const viewItems = items.slice(
+  console.log("00.items--->", items);
+  const _items = items.length === 0 ? data : items;
+  console.log("items--->", items.length);
+  console.log("data--->", data);
+  const totalPages = Math.ceil(_items.length / itemsPerPage, 1);
+  const viewItems = _items.slice(
     (activePage - 1) * itemsPerPage,
     (activePage - 1) * itemsPerPage + itemsPerPage
   );

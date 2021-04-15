@@ -17,16 +17,15 @@ import { Link, Redirect } from "react-router-dom";
 const HeaderCompo = styled.div`
   position: fixed !important;
   z-index: 1;
-  margin-bottom: 70px;
+
   min-width: 1680px;
   min-height: 70px;
-  display: inline-block;
   width: 100%;
   height: 70px;
   background: #2e2e2e !important;
   opacity: 1;
   justify-content: center;
-  display: inline-block !important;
+  display: block !important;
 
   .header-table {
     background: #2e2e2e 0% 0% no-repeat padding-box;

@@ -2,32 +2,33 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import CompanyInput from "../../components/general/CompanyInput";
 import CompanyTable from "../../components/general/CompanyTable";
-import { Input, Loader } from "semantic-ui-react";
+import { Input, Loader, Dimmer, Image, Segment } from "semantic-ui-react";
 import { FaIdCardAlt } from "react-icons/fa";
-import { Image } from "semantic-ui-react";
-// 가짜 데이터
-import companydata from "../../fakedata/companydata";
 import { act } from "react-dom/test-utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getCompanies } from "../../modules/companies";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
+  min-height: 856px;
+  height: 100%;
   padding-left: 280px !important;
-  padding-top: 96px !important;
+  padding-top: 85px !important;
   padding-right: 130px;
+  background-color: red;
+  position: block;
 `;
 
 const ContentTitleBoxCompo = styled.div`
   font-family: "NotoSansKR-Medium";
   padding: 0;
-  margin-bottom: 32px;
   text-align: left;
   color: #2e2e2e;
+  position: relative;
 
   .content-title-compo {
     font-family: "NotoSansKR-Medium";
-    margin-left: 35px;
+    margin-left: 15px;
     font-size: 24px;
     vertical-align: middle;
   }
@@ -37,32 +38,43 @@ const ContentTitleBoxCompo = styled.div`
     width: 30px;
     height: 30px;
     font-size: 25px;
-    position: absolute;
+    padding: 5px;
+    display: inline-block;
+    vertical-align: middle;
   }
 
+  .img-icons {
+    display: inline-block;
+    vertical-align: middle;
+  }
   .content-title-divide-line {
     background: #000000;
     margin-top: 12px;
     height: 1px;
-    top: 125px;
     width: 1623px;
-    position: absolute;
-  }
-  .img-icons {
-    display: inline-block;
+    margin-bottom: 20px;
   }
 `;
 
 const ContentsBodyCompo = styled.div`
+  min-width: 1630px !important;
+  min-height: 780px !important;
+  width: 100%;
+  overflow: auto;
+  background-color: green;
+  margin: 0px;
+  padding: 0px;
   .input-box {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
     width: 368px;
     height: 82.5vh;
     min-height: 683px;
-    margin-top: 10px;
-    position: absolute;
+    /* position: absolute; */
     padding-top: 22px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: blue;
   }
   .table-box {
     background: #ffffff 0% 0% no-repeat padding-box;
@@ -70,23 +82,20 @@ const ContentsBodyCompo = styled.div`
     width: 1236px;
     height: 82.5vh;
     min-height: 683px;
-    margin-top: 10px;
-    margin-left: 388px;
+    margin-left: 20px;
     padding-top: 22px;
-    position: absolute;
+    /* position: absolute; */
+    vertical-align: top;
+    display: inline-block;
+    background-color: yellow;
   }
 `;
 
+const OnLoading = styled.div`
+  width: 100%;
+`;
+
 const CompanyContatiner = () => {
-  // const { data, loading, error } = useSelector((state) => {
-  //   return state.companies.companies;
-  // });
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(getCompanies());
-  // }, [dispatch]);
-
   const { data, loading, error } = useSelector(
     (state) => state.companies.companies
   );
@@ -94,11 +103,28 @@ const CompanyContatiner = () => {
 
   useEffect(() => {
     dispatch(getCompanies());
+    // console.log("******************************************");
+    // console.log("dispatch");
+    // console.log("data");
+    // console.log(data);
+    // setTable({ ...table, items: data });
+    // console.log("table.items");
+    // console.log(table);
+    // console.log("******************************************");
+    // setTable({
+    //   ...table,
+    //   items: data,
+    // });
   }, [dispatch]);
 
+  console.log("=====================================");
+  console.log("data");
   console.log(data);
+  console.log("loading");
   console.log(loading);
+  console.log("error");
   console.log(error);
+  console.log("=====================================");
 
   const date = new Date();
   const [formData, setFormData] = useState({
@@ -132,10 +158,10 @@ const CompanyContatiner = () => {
     console.log("formData");
     console.log(formData);
     let item = { ...formData, created_date: date };
-    let _companyData = companyData;
+    let _companyData = data;
     _companyData.push(item);
     console.log(_companyData);
-    setCompanyData(_companyData);
+    // setCompanyData(_companyData);
     alert("등록되었습니다.");
     initActiveRow();
     initFormData();
@@ -145,10 +171,10 @@ const CompanyContatiner = () => {
     console.log("formData");
     console.log(formData);
     let item = { ...formData, modified_date: date };
-    let _companyData = companyData;
+    let _companyData = data;
     _companyData.push(item);
     console.log(_companyData);
-    setCompanyData(_companyData);
+    // setCompanyData(_companyData);
     alert("수정되었습니다.");
     initActiveRow();
     initFormData();
@@ -181,9 +207,7 @@ const CompanyContatiner = () => {
       initActiveRow();
       initFormData();
     } else {
-      const findItem = companyData.find(
-        (company) => company.co_id === selectedId
-      );
+      const findItem = data.find((company) => company.co_id === selectedId);
       console.log("findItem");
       console.log(findItem);
 
@@ -204,10 +228,8 @@ const CompanyContatiner = () => {
   };
 
   // 페이지 네이션
-  const [companyData, setCompanyData] = useState(companydata);
-
   const [table, setTable] = useState({
-    items: companyData, // 전체 리스트
+    items: [], // 전체 리스트
     activePage: 1, // 현재 페이지
     itemsPerPage: 14, // 페이지 당 item 수
   });
@@ -225,12 +247,12 @@ const CompanyContatiner = () => {
   };
 
   const deleteHandler = () => {
-    let _companyData = companyData.filter((item) => {
+    let _data = data.filter((item) => {
       if (item.co_id !== selectRow.item.co_id) {
         return item;
       }
     });
-    setCompanyData(_companyData);
+    // setCompanyData(_companyData);
     initActiveRow();
     initFormData();
   };
@@ -251,9 +273,28 @@ const CompanyContatiner = () => {
   //   };
   // }, [resizeHandler]);
 
+  if (loading) {
+    return (
+      <OnLoading className="onLoading">
+        <Loader
+          active
+          size="large"
+          content="소속사 정보를 가져오는 중입니다."
+        />
+        <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
+      </OnLoading>
+    );
+  }
+  if (error) {
+    return <div>통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.</div>;
+  }
+  if (!data) {
+    return null;
+  }
+
   return (
-    <ContentsCompo>
-      <ContentTitleBoxCompo>
+    <ContentsCompo className="contents-compo">
+      <ContentTitleBoxCompo className="content-title-box-compo">
         <div className="content-icon-compo">
           <FaIdCardAlt />
         </div>
@@ -263,6 +304,7 @@ const CompanyContatiner = () => {
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
           <CompanyInput
+            className="company-input-box"
             onChange={onChange}
             formData={formData}
             createHandler={createHandler}
@@ -273,16 +315,20 @@ const CompanyContatiner = () => {
           />
         </div>
         <div className="table-box">
-          <CompanyTable
-            table={table}
-            activeHandler={activeHandler}
-            deleteHandler={deleteHandler}
-            onPageChange={onPageChange}
-            selectRow={selectRow}
-            initFormData={initFormData}
-            initActiveRow={initActiveRow}
-            // fullHeight={fullHeight}
-          />
+          {data && (
+            <CompanyTable
+              className="company-table-box"
+              table={table}
+              data={data}
+              activeHandler={activeHandler}
+              deleteHandler={deleteHandler}
+              onPageChange={onPageChange}
+              selectRow={selectRow}
+              initFormData={initFormData}
+              initActiveRow={initActiveRow}
+              // fullHeight={fullHeight}
+            />
+          )}
         </div>
       </ContentsBodyCompo>
     </ContentsCompo>
