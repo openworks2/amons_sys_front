@@ -171,6 +171,11 @@ const CompanyInput = ({
             labelPosition="right"
             icon="checkmark"
             onClick={(e) => {
+              console.log("----------->>>>>>>>");
+              console.log("id");
+              console.log(id);
+              console.log("formData");
+              console.log(formData);
               updateHandler(e, id);
               setModifyOpen(false);
             }}
