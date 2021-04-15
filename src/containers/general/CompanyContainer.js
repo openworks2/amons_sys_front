@@ -6,7 +6,7 @@ import { Input, Loader, Dimmer, Image, Segment } from "semantic-ui-react";
 import { FaIdCardAlt } from "react-icons/fa";
 import { act } from "react-dom/test-utils";
 import { useDispatch, useSelector } from "react-redux";
-import { getCompanies } from "../../modules/companies";
+import { getCompanies, postCompany, putCompany, deleteCompany } from "../../modules/companies";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -15,7 +15,6 @@ const ContentsCompo = styled.div`
   padding-left: 280px !important;
   padding-top: 85px !important;
   padding-right: 130px;
-  background-color: red;
   position: block;
 `;
 
@@ -61,7 +60,6 @@ const ContentsBodyCompo = styled.div`
   min-height: 780px !important;
   width: 100%;
   overflow: auto;
-  background-color: green;
   margin: 0px;
   padding: 0px;
   .input-box {
@@ -74,7 +72,6 @@ const ContentsBodyCompo = styled.div`
     padding-top: 22px;
     display: inline-block;
     vertical-align: top;
-    background-color: blue;
   }
   .table-box {
     background: #ffffff 0% 0% no-repeat padding-box;
@@ -87,7 +84,6 @@ const ContentsBodyCompo = styled.div`
     /* position: absolute; */
     vertical-align: top;
     display: inline-block;
-    background-color: yellow;
   }
 `;
 
@@ -103,18 +99,6 @@ const CompanyContatiner = () => {
 
   useEffect(() => {
     dispatch(getCompanies());
-    // console.log("******************************************");
-    // console.log("dispatch");
-    // console.log("data");
-    // console.log(data);
-    // setTable({ ...table, items: data });
-    // console.log("table.items");
-    // console.log(table);
-    // console.log("******************************************");
-    // setTable({
-    //   ...table,
-    //   items: data,
-    // });
   }, [dispatch]);
 
   console.log("=====================================");
@@ -154,27 +138,25 @@ const CompanyContatiner = () => {
 
   // onSubmit
   const createHandler = (e) => {
+    e.preventDefault();
     console.log("서브밋 호출!");
-    console.log("formData");
-    console.log(formData);
-    let item = { ...formData, created_date: date };
-    let _companyData = data;
-    _companyData.push(item);
-    console.log(_companyData);
-    // setCompanyData(_companyData);
-    alert("등록되었습니다.");
-    initActiveRow();
-    initFormData();
-  };
-  const updateHandler = (e) => {
-    console.log("수정 서브밋 호출!");
-    console.log("formData");
-    console.log(formData);
-    let item = { ...formData, modified_date: date };
-    let _companyData = data;
-    _companyData.push(item);
-    console.log(_companyData);
-    // setCompanyData(_companyData);
+    // console.log("formData");
+    // console.log(formData);
+    let randomNum = Math.ceil(Math.random()*1000);
+    let newCompany = { ...formData,
+      co_index : "COP"+randomNum,
+      created_date: date };
+      
+      dispatch(postCompany(newCompany))
+      alert("등록되었습니다.");
+      initActiveRow();
+      initFormData();
+    };
+    const updateHandler = (e,id) => {
+      e.preventDefault();
+      console.log("수정 서브밋 호출!");
+      let modifyItem = { ...formData, modified_date: date };
+      dispatch(putCompany(id, modifyItem));
     alert("수정되었습니다.");
     initActiveRow();
     initFormData();
@@ -228,17 +210,17 @@ const CompanyContatiner = () => {
   };
 
   // 페이지 네이션
-  const [table, setTable] = useState({
-    items: [], // 전체 리스트
+  const [pageInfo, setPageInfo] = useState({
     activePage: 1, // 현재 페이지
     itemsPerPage: 14, // 페이지 당 item 수
   });
 
   const onPageChange = (e, { activePage }) => {
+    e.preventDefault();
     let _activePage = Math.ceil(activePage);
-    const Prestate = table;
-    setTable({
-      ...Prestate,
+    const PreState = pageInfo;
+    setPageInfo({
+      ...PreState,
       activePage: _activePage,
     });
     // 활성화된 로우 초기화
@@ -246,13 +228,9 @@ const CompanyContatiner = () => {
     initFormData();
   };
 
-  const deleteHandler = () => {
-    let _data = data.filter((item) => {
-      if (item.co_id !== selectRow.item.co_id) {
-        return item;
-      }
-    });
-    // setCompanyData(_companyData);
+  const deleteHandler = (e, co_id) => {
+    e.preventDefault();
+    dispatch(deleteCompany(co_id));
     initActiveRow();
     initFormData();
   };
@@ -318,7 +296,7 @@ const CompanyContatiner = () => {
           {data && (
             <CompanyTable
               className="company-table-box"
-              table={table}
+              pageInfo={pageInfo}
               data={data}
               activeHandler={activeHandler}
               deleteHandler={deleteHandler}

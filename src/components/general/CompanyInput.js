@@ -91,8 +91,8 @@ const CompanyInput = ({
       <p className="subtitle">소속사 등록</p>
       <Form
         className="company-input-form-body"
-        onSubmit={() => {
-          !selectRow.item && createHandler();
+        onSubmit={(e) => {
+          !selectRow.item && createHandler(e);
         }}
       >
         <div className="form-body">
@@ -170,8 +170,8 @@ const CompanyInput = ({
             content="수정"
             labelPosition="right"
             icon="checkmark"
-            onClick={() => {
-              updateHandler();
+            onClick={(e) => {
+              updateHandler(e, id);
               setModifyOpen(false);
             }}
           />

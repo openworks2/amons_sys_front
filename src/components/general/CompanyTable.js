@@ -4,13 +4,9 @@ import styled from "styled-components";
 import {
   Button,
   Icon,
-  Menu,
   Table,
   Pagination,
-  Header,
-  Image,
   Modal,
-  Tab,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle } from "react-icons/fa";
 
@@ -170,7 +166,7 @@ const CompanyTableCompo = styled.div`
 `;
 
 const CompanyTable = ({
-  table,
+  pageInfo,
   data,
   activeHandler,
   deleteHandler,
@@ -183,13 +179,10 @@ const CompanyTable = ({
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 테이블
-  const { items, activePage, itemsPerPage } = table;
-  console.log("00.items--->", items);
-  const _items = items.length === 0 ? data : items;
-  console.log("items--->", items.length);
+  const { activePage, itemsPerPage } = pageInfo;
   console.log("data--->", data);
-  const totalPages = Math.ceil(_items.length / itemsPerPage, 1);
-  const viewItems = _items.slice(
+  const totalPages = Math.ceil(data.length / itemsPerPage, 1);
+  const viewItems = data.slice(
     (activePage - 1) * itemsPerPage,
     (activePage - 1) * itemsPerPage + itemsPerPage
   );
@@ -330,8 +323,8 @@ const CompanyTable = ({
             content="삭제"
             labelPosition="right"
             icon="checkmark"
-            onClick={() => {
-              deleteHandler();
+            onClick={(e) => {
+              deleteHandler(e, id);
               setDeleteModalOpen(false);
             }}
           />
