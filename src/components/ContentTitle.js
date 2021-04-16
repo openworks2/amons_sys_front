@@ -9,11 +9,16 @@ import {
   FaVolumeMute,
   FaList,
   FaQuestion,
+  FaBullhorn,
+  FaRoad,
   FaIdCard,
   FaHardHat,
   FaIdCardAlt,
   FaTruck,
   FaBluetooth,
+  FaDoorOpen,
+  FaCog,
+  FaHistory,
 } from "react-icons/fa";
 import { Image } from "semantic-ui-react";
 
@@ -38,15 +43,19 @@ const ContentTitleBoxCompo = styled.div`
     font-family: "NotoSansKR-Medium";
     width: 30px;
     height: 30px;
-    font-size: 25px;
+    font-size: 24px;
     padding: 5px;
     display: inline-block;
     vertical-align: middle;
   }
 
   .img-icons {
+    width : 25px;
+    height : 25px;
+    margin-top : 2px;
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
+    object-fit: cover;
   }
   .content-title-divide-line {
     background: #000000;
@@ -64,34 +73,55 @@ const ContentTitle = ({ currentUrl }) => {
   const printContentTitle = (currentUrl) => {
     switch (currentUrl) {
       case "monitering":
-        title = "모니터링";
-        return <FaIdCardAlt />;
+        title = "";
+        return ;
       // ============이력조회=============
       case "emergencylog":
         title ="알람이력: 작업자";
-        return <FaIdCardAlt />;
+        return <FaHardHat />;
       case "workerlog":
         title ="막장 잔류이력 : 작업자";
-        return <FaIdCardAlt />;
+        return <FaHardHat />;
       case "vehiclelog":
         title ="막장 잔류이력 : 차량";
-        return <FaIdCardAlt />;
+        return <FaTruck />;
       case "diglog":
          title= "굴진이력"
-        return <FaIdCardAlt />;
+        return  (<Image
+          src="/icons/dig.svg"
+          alt="굴진아이콘"
+          className="img-icons"
+          inline={true}
+          wrapped={false}
+          ui={false}
+          />);
         // ============현장관리=============
       case "announce":
         title="공지사항";
-        return <FaIdCardAlt />;
+        return <FaBullhorn />;
       case "local":
         title="노선관리";
-        return <FaIdCardAlt />;
+        return <FaRoad />;
       case "dig":
         title="누적 굴진량 입력";
-        return <FaIdCardAlt />;
+        return  (<Image
+        src="/icons/dig.svg"
+        alt="굴진아이콘"
+        className="img-icons"
+        inline={true}
+        wrapped={false}
+        ui={false}
+        />);
       case "state":
         title= "공정상태 변경";
-        return <FaIdCardAlt />;
+        return (<Image
+          src="/icons/state.svg"
+          alt="상태아이콘"
+          className="img-icons"
+          inline={true}
+          wrapped={false}
+          ui={false}
+          />);
         // ============일반관리=============
       case "company":
         title= "소속사 관리";
@@ -113,6 +143,8 @@ const ContentTitle = ({ currentUrl }) => {
           alt="스캐너아이콘"
           className="img-icons"
           inline={true}
+          wrapped={false}
+          ui={false}
           />
           );
       case "cctv":
@@ -123,25 +155,27 @@ const ContentTitle = ({ currentUrl }) => {
           alt="CCTV아이콘"
           className="img-icons"
           inline={true}
+          wrapped={false}
+          ui={false}
           />
           );
       // ============계정관리=============
       case "account":
         title= "계정관리";
         return <FaIdCard />;
-      // ============기타관리=============
+        // ============기타관리=============
       case "settings":
         title= "환경설정";
-        return;
+        return <FaCog />;
       case "kickworker":
         title= "퇴출관리 : 작업자";
-        return;
+        return <FaDoorOpen />;
       case "kickvehicle":
         title= "퇴출관리 : 차량";
-        return;
+        return <FaDoorOpen />;
       case "loginlog":
         title= "로그인 기록";
-        return;
+        return <FaHistory />;
       default:
     }
   };

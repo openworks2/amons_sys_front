@@ -44,7 +44,10 @@ const HomeContainer = () => {
           callSideMenuHandler={callSideMenuHandler}
           currentUrl={currentUrl}
         />
-         <ContentTitle currentUrl={currentUrl}></ContentTitle>
+         {currentUrl
+         &&currentUrl!=="home"
+         && currentUrl!=="monitering" 
+         && <ContentTitle currentUrl={currentUrl}></ContentTitle>}
         <Contents/>
       </HomeCompo>
     </>
