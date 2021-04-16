@@ -2,73 +2,35 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import CompanyInput from "../../components/general/CompanyInput";
 import CompanyTable from "../../components/general/CompanyTable";
-import { Input, Loader, Dimmer, Image, Segment } from "semantic-ui-react";
+import { Loader, Image } from "semantic-ui-react";
 import { FaIdCardAlt } from "react-icons/fa";
-import { act } from "react-dom/test-utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getCompanies, postCompany, putCompany, deleteCompany } from "../../modules/companies";
+import ContentTitle from "../../components/ContentTitle";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
-  min-height: 856px;
-  height: 100%;
+  min-height: 756px;
+  height: 84%;
   padding-left: 280px !important;
-  padding-top: 85px !important;
   padding-right: 130px;
-  position: block;
-`;
-
-const ContentTitleBoxCompo = styled.div`
-  font-family: "NotoSansKR-Medium";
-  padding: 0;
-  text-align: left;
-  color: #2e2e2e;
   position: relative;
-
-  .content-title-compo {
-    font-family: "NotoSansKR-Medium";
-    margin-left: 15px;
-    font-size: 24px;
-    vertical-align: middle;
-  }
-
-  .content-icon-compo {
-    font-family: "NotoSansKR-Medium";
-    width: 30px;
-    height: 30px;
-    font-size: 25px;
-    padding: 5px;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .img-icons {
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .content-title-divide-line {
-    background: #000000;
-    margin-top: 12px;
-    height: 1px;
-    width: 1623px;
-    margin-bottom: 20px;
-  }
 `;
 
-const ContentsBodyCompo = styled.div`
+ const ContentsBodyCompo = styled.div`
   min-width: 1630px !important;
-  min-height: 780px !important;
+  min-height: 720px !important;
   width: 100%;
   overflow: auto;
   margin: 0px;
   padding: 0px;
+  position : relative;
   .input-box {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
     width: 368px;
     height: 82.5vh;
     min-height: 683px;
-    /* position: absolute; */
     padding-top: 22px;
     display: inline-block;
     vertical-align: top;
@@ -81,15 +43,15 @@ const ContentsBodyCompo = styled.div`
     min-height: 683px;
     margin-left: 20px;
     padding-top: 22px;
-    /* position: absolute; */
-    vertical-align: top;
     display: inline-block;
+    vertical-align: top;
   }
 `;
 
 const OnLoading = styled.div`
   width: 100%;
 `;
+// ***********************************Logic Area*****************************************
 
 const CompanyContatiner = () => {
   const { data, loading, error } = useSelector(
@@ -111,24 +73,26 @@ const CompanyContatiner = () => {
   console.log("=====================================");
 
   const date = new Date();
+
   const [formData, setFormData] = useState({
-    id: undefined,
+    co_id : undefined,
+    co_index: undefined,
     co_name: "",
     co_sectors: "",
     description: "",
   });
   // 클릭된 row의 데이터
-  const [selectRow, setSelectRow] = useState({
-    id: null,
-    item: undefined,
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
     clickedIndex: null,
   });
   // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(name);
-
+    console.log("formData");
+    console.log(formData);
     // 입력값 state 에 저장
     setFormData({
       ...formData,
@@ -136,42 +100,17 @@ const CompanyContatiner = () => {
     });
   };
 
-  // onSubmit
-  const createHandler = (e) => {
-    e.preventDefault();
-    console.log("서브밋 호출!");
-    // console.log("formData");
-    // console.log(formData);
-    let randomNum = Math.ceil(Math.random()*1000);
-    let newCompany = { ...formData,
-      co_index : "COP"+randomNum,
-      created_date: date };
-      
-      dispatch(postCompany(newCompany))
-      alert("등록되었습니다.");
-      initActiveRow();
-      initFormData();
-    };
-    const updateHandler = (e,id) => {
-      e.preventDefault();
-      console.log("수정 서브밋 호출!");
-      let modifyItem = { ...formData, modified_date: date };
-      dispatch(putCompany(id, modifyItem));
-    alert("수정되었습니다.");
-    initActiveRow();
-    initFormData();
-  };
-
   const initActiveRow = () => {
-    setSelectRow({
-      id: null,
-      item: undefined,
+    setSelectedRow({
+      selectedId: null,
+      selectedItem: undefined,
       clickedIndex: null,
     });
   };
   const initFormData = () => {
     setFormData({
-      id: undefined,
+      co_id : undefined,
+      co_index: undefined,
       co_name: "",
       co_sectors: "",
       description: "",
@@ -180,12 +119,14 @@ const CompanyContatiner = () => {
 
   // table row 클릭 핸들러
   const activeHandler = (e, index, selectedId) => {
-    console.log("index");
-    console.log(index);
-    console.log("selectRow");
-    console.log(selectRow);
+    console.log("*************클릭*************");
+    // console.log("index");
+    // console.log(index);
+    // console.log("selectedRow");
+    // console.log(selectedRow);
+    // console.log("*************클릭*************");
 
-    if (index === selectRow.clickedIndex) {
+    if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
     } else {
@@ -193,15 +134,16 @@ const CompanyContatiner = () => {
       console.log("findItem");
       console.log(findItem);
 
-      setSelectRow({
-        id: findItem.co_id,
-        item: findItem,
+      setSelectedRow({
+        selectedId: findItem.co_id,
+        selectedItem: findItem,
         clickedIndex: index,
       });
 
       setFormData({
         ...formData,
-        id: findItem.co_id,
+        co_id: findItem.co_id,
+        co_index : findItem.co_index,
         co_name: findItem.co_name,
         co_sectors: findItem.co_sectors,
         description: findItem.description,
@@ -228,28 +170,30 @@ const CompanyContatiner = () => {
     initFormData();
   };
 
-  const deleteHandler = (e, co_id) => {
+  // CREATE
+  const createHandler = (e) => {
     e.preventDefault();
-    dispatch(deleteCompany(co_id));
+    let newCompany = { ...formData,}
+      dispatch(postCompany(newCompany))
+      initActiveRow();
+      initFormData();
+    };
+
+  // UPDATE
+    const updateHandler = (e, selectedId) => {
+      let modifyItem = { ...formData};
+      console.log("modifyItem")
+      console.log(modifyItem)
+      dispatch(putCompany(selectedId, modifyItem));
     initActiveRow();
     initFormData();
   };
 
-  // const [fullHeight, setTest] = useState(false);
-  // const resizeHandler = useCallback(() => {
-  //   setTest(!fullHeight);
-  //   setTable({
-  //     ...table,
-  //     itemsPerPage: fullHeight ? 14 : 10,
-  //   });
-  // }, [fullHeight]);
-
-  // useEffect(() => {
-  //   window.addEventListener("resize", resizeHandler);
-  //   return () => {
-  //     window.removeEventListener("resize", resizeHandler);
-  //   };
-  // }, [resizeHandler]);
+  const deleteHandler = (e, co_id) => {
+    dispatch(deleteCompany(co_id));
+    initActiveRow();
+    initFormData();
+  };
 
   if (loading) {
     return (
@@ -272,13 +216,6 @@ const CompanyContatiner = () => {
 
   return (
     <ContentsCompo className="contents-compo">
-      <ContentTitleBoxCompo className="content-title-box-compo">
-        <div className="content-icon-compo">
-          <FaIdCardAlt />
-        </div>
-        <span className="content-title-compo">소속사 관리</span>
-        <div className="content-title-divide-line" />
-      </ContentTitleBoxCompo>
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
           <CompanyInput
@@ -287,7 +224,7 @@ const CompanyContatiner = () => {
             formData={formData}
             createHandler={createHandler}
             updateHandler={updateHandler}
-            selectRow={selectRow}
+            selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
           />
@@ -301,7 +238,7 @@ const CompanyContatiner = () => {
               activeHandler={activeHandler}
               deleteHandler={deleteHandler}
               onPageChange={onPageChange}
-              selectRow={selectRow}
+              selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
               // fullHeight={fullHeight}

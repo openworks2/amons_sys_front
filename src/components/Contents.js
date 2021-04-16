@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Route } from "react-router";
 import CompanyContatiner from "../containers/general/CompanyContainer";
 import HomeShortcut from "../components/home/HomeShortcut";
+import ContentTitle from "../components/ContentTitle";
 
 const Contents = () => {
-  // useEffect(() => {
-  //   //     dispatch(getCompanies());
-  //   //   }, [dispatch]);
   return (
     <>
       <Route path="/amons/home/" component={HomeShortcut} exact />

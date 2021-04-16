@@ -9,31 +9,37 @@ const CompanyInputCompo = styled.div`
   margin-top: 5px;
   margin-bottom: 18px;
 
-  .company-input-form-body {
-    margin-top: 29px;
+  .subtitle {
+    font-family: "NotoSansKR-Medium";
+    font-size: 16px;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #7c7c7c;
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
   }
 
+  .company-input-form-body {
+    margin-top: 29px;
+    .form-body {
+    overflow: auto;
+  }
+
+  }
   .input-form {
     font-family: "NotoSansKR-Regular";
-    font-size: 14px;
+    font-size: 54px;
     text-align: left;
     letter-spacing: 0px;
     color: #929292;
     opacity: 1;
-  }
-
-  .input-form.title {
-    font-family: "NotoSansKR-Medium";
-    font-size: 14px;
-    text-align: left;
-    letter-spacing: 0px;
-    color: #2e2e2e;
-    opacity: 1;
-  }
+   }
 
   .input-form.description {
     height: 105px !important;
   }
+  
   .submit-button {
     width: 324px;
     height: 50px;
@@ -46,6 +52,7 @@ const CompanyInputCompo = styled.div`
     position: absolute;
     top: 68.3vh;
   }
+
   .modify-button {
     width: 324px;
     height: 50px;
@@ -57,20 +64,6 @@ const CompanyInputCompo = styled.div`
     position: absolute;
     top: 68.3vh;
   }
-
-  .form-body {
-    overflow: auto;
-  }
-  .subtitle {
-    font-family: "NotoSansKR-Medium";
-    font-size: 16px;
-    text-align: left;
-    letter-spacing: 0px;
-    color: #7c7c7c;
-    opacity: 1;
-    margin: 0px;
-    padding: 0px;
-  }
 `;
 
 const CompanyInput = ({
@@ -78,13 +71,13 @@ const CompanyInput = ({
   createHandler,
   updateHandler,
   formData,
-  selectRow,
+  selectedRow,
   initFormData,
   initActiveRow,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
-
-  const { id, co_name, co_sectors, description } = formData;
+  const {selectedId, selectedItem, clickedIndex} = selectedRow;
+  const { co_id, co_index, co_name, co_sectors, description } = formData;
 
   return (
     <CompanyInputCompo className="company-input-compo">
@@ -92,7 +85,7 @@ const CompanyInput = ({
       <Form
         className="company-input-form-body"
         onSubmit={(e) => {
-          !selectRow.item && createHandler(e);
+          !selectedItem && createHandler(e);
         }}
       >
         <div className="form-body">
@@ -132,7 +125,7 @@ const CompanyInput = ({
             />
           </Form.Field>
         </div>
-        {selectRow.item ? (
+        {selectedItem ? (
           <Button
             className="modify-button"
             onClick={(e) => {
@@ -171,13 +164,14 @@ const CompanyInput = ({
             labelPosition="right"
             icon="checkmark"
             onClick={(e) => {
-              console.log("----------->>>>>>>>");
-              console.log("id");
-              console.log(id);
+              console.log("****************수정********************");
+              console.log("selectedId");
+              console.log(selectedId);
               console.log("formData");
               console.log(formData);
-              updateHandler(e, id);
+              updateHandler(e, selectedId);
               setModifyOpen(false);
+              console.log("****************수정********************");
             }}
           />
           <Button

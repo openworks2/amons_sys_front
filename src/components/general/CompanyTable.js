@@ -24,135 +24,119 @@ const CompanyTableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    height: 47px !important;
     padding-left: 20px !important;
     padding-right: 20px !important;
-
-    .no {
-      width: 50px !important;
+    &.no {
+      width: 50px ;
     }
-    .company {
-      width: 200px !important;
+    &.company {
+      width: 201px ;
       text-align: left;
     }
-    .sector {
-      width: 201.5px !important;
+    &.sector {
+      width: 201px ;
     }
-    @media screen and (max-height: 937px) {
-      .trash-icon {
-        width: 204px !important;
-      }
+    &.description {
+      width: 699px ;
     }
-    .description {
-      width: 700px !important;
-    }
-
-    .trash-icon {
-      width: 55px !important;
+    &.trash-icon {
+      width: 55px !important ;
       color: #7d7d7d;
     }
     @media screen and (max-height: 937px) {
-      .trash-icon {
-        width: 65px !important;
+    &.trash-icon {
+        width: 63px !important;
       }
     }
   }
 
   .table-body {
-    padding: 0px !important;
-  }
-  .table-body-box {
-    width: 100% !important;
-    position: relative;
-    margin: 0px !important;
-    padding: 0px !important;
-    overflow: auto;
-    height: 62.2vh !important;
-    /* overflow-y: scroll; */
-    &::-webkit-scrollbar {
-      -webkit-appearance: none;
-      margin: 0px;
+      margin: 0px !important;
+      padding: 0px !important;
+      .table-body-box {
+      width: 100% !important;
+      position: relative;
+      overflow: auto;
+      height: 62.2vh ;
+      /* overflow-y: scroll; */
+      &::-webkit-scrollbar {
+        -webkit-appearance: none;
+        margin: 0px;
+      }
+      .table-row {
+        font-size: 14px;
+        font-family: "NotoSansKR-Regular";
+        letter-spacing: 0px;
+        color: #7c7c7c;
+        background: #ffffff 0% 0% no-repeat padding-box;
+        border: 1px solid #d8d8d8;
+        opacity: 1;
+        height: 48px;
+        .table-cell {
+          text-align: center;
+          padding-top: 0px ;
+          padding-bottom: 0px ;
+          padding-left: 20px ;
+          padding-right: 20px ;
+          vertical-align: middle;
+          &.no {
+          width: 62px;
+          }
+          &.company {
+            width: 198px ;
+            text-align: left !important;
+          }
+          &.sector {
+            width: 198px ;
+          }
+          &.description {
+            width: 700px ;
+          }
+          &.trash-icon {
+            color: #7d7d7d;
+               width: 55px !important ;
+            margin: 0px ;
+            padding: 0px ;
+          }
+          &.trash-icon-button {
+            height: 25px ;
+            width: 25px ;
+            border: 0px ;
+          }
+        }
+      }
     }
   }
-
-  .table-row {
-    width: 100% !important;
-    font-size: 14px;
-    font-family: "NotoSansKR-Regular";
-    letter-spacing: 0px;
-    color: #7c7c7c;
-    opacity: 1;
-    background: #ffffff 0% 0% no-repeat padding-box;
-    border: 1px solid #d8d8d8;
-    opacity: 1;
-    height: 48px !important;
-  }
-  .table-cell {
-    text-align: center !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-    vertical-align: middle;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-  }
-  .no {
-    width: 62px !important;
-  }
-  .company {
-    width: 198px !important;
-    text-align: left !important;
-  }
-  .sector {
-    width: 198px !important;
-  }
-  .description {
-    width: 700px !important;
-  }
-  .trash-icon {
-    color: #7d7d7d;
-    width: 55px !important;
-    margin: 0px !important;
-    padding: 0px !important;
-    margin: 0px !important;
-  }
-  .trash-icon-button {
-    padding: 0px !important;
-    margin: 0px !important;
-    height: 30px !important;
-    width: 30px !important;
-    border: 0px !important;
-  }
+ 
 
   .table-pagination-row {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
     opacity: 1;
-  }
-
-  .pagination-component {
+    .pagination-component {
     float: right;
+    }
   }
 
   .ui.button {
     background: #f9fafb !important;
-  }
-  .ui.button:hover {
+    margin: 0px !important;
+    padding: 0px !important;
+    &:hover {
     background: #f9fafb !important;
     border: #f2f2f2 !important;
     color: red !important;
+  }
   }
 
   .ui.table td.active,
   .ui.table tr.active {
     background: #f9fafb !important;
-  }
-  .ui.table td.active:hover,
-  .ui.table tr.active:hover {
+    &:hover {
     background: #f9fafb !important;
+    }
   }
-  .ui.table tr:hover {
-    background: #f9fafb !important;
-  }
+  
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -171,11 +155,12 @@ const CompanyTable = ({
   activeHandler,
   deleteHandler,
   onPageChange,
-  selectRow,
+  selectedRow,
   initFormData,
   initActiveRow,
 }) => {
-  // 모달
+
+  // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 테이블
@@ -187,7 +172,7 @@ const CompanyTable = ({
     (activePage - 1) * itemsPerPage + itemsPerPage
   );
 
-  const { id, item, clickedIndex } = selectRow;
+  const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
@@ -216,7 +201,7 @@ const CompanyTable = ({
             {company && company.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {company && id && company.co_id === id && (
+            {company && selectedId && company.co_id === selectedId && (
               <Button
                 className="trash-icon-button"
                 onClick={(e) => {
@@ -264,7 +249,7 @@ const CompanyTable = ({
         </Table.Cell>
         {/* =============================테이블 푸터(페이지네이션)============================== */}
         {totalPages >= 1 && (
-          <Table.Footer>
+          <Table.Footer className="table-footer">
             <Table.Row className="table-pagination-row">
               <Table.HeaderCell colSpan="5">
                 <Pagination
@@ -312,7 +297,7 @@ const CompanyTable = ({
           <Modal.Description className="confirm-modal description">
             <FaMinusCircle className="confirm-modal delete-icon" />
             <p className="confirm-modal text">
-              {item && `${item.co_name}`} 소속사를 삭제하시겠습니까?
+              {selectedItem && `${selectedItem.co_name}`} 소속사를 삭제하시겠습니까?
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -324,7 +309,7 @@ const CompanyTable = ({
             labelPosition="right"
             icon="checkmark"
             onClick={(e) => {
-              deleteHandler(e, id);
+              deleteHandler(e, selectedId);
               setDeleteModalOpen(false);
             }}
           />

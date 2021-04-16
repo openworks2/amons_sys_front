@@ -88,12 +88,9 @@ const SideMenuCompo = styled.div`
 const SideMenu = ({
   callSideMenu,
   callSideMenuHandler,
-  changeCurrentMenu,
-  currentMenu,
+  currentUrl,
 }) => {
-  const sideMenuClickHandler = (e, { name }) => {
-    changeCurrentMenu(name);
-  };
+
 
   return (
     <SideMenuCompo className="sidemenu-compo">
@@ -111,11 +108,10 @@ const SideMenu = ({
         <div className="divide-line" />
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/monitering"
           className="sidemenu-title"
-          name="모니터링"
-          active={currentMenu === "모니터링"}
-          onClick={sideMenuClickHandler}
+          name="monitering"
+          active={currentUrl === "monitering"}
         >
           모니터링
           <FaDesktop className="side-icon" />
@@ -127,41 +123,37 @@ const SideMenu = ({
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/log/emergencylog"
           className="sidemenu-sub-title"
-          name="알람이력 : 작업자"
-          active={currentMenu === "알람이력 : 작업자"}
-          onClick={sideMenuClickHandler}
+          name="emergencylog"
+          active={currentUrl === "emergencylog"}
         >
           알람이력 : 작업자
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/log/workerlog"
           className="sidemenu-sub-title"
-          name="막장 잔류이력 : 작업자"
-          active={currentMenu === "막장 잔류이력 : 작업자"}
-          onClick={sideMenuClickHandler}
+          name="workerlog"
+          active={currentUrl === "workerlog"}
         >
           막장 잔류이력 : 작업자
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/log/vehiclelog"
           className="sidemenu-sub-title"
-          name="막장 잔류이력 : 차량"
-          active={currentMenu === "막장 잔류이력 : 차량"}
-          onClick={sideMenuClickHandler}
+          name="vehiclelog"
+          active={currentUrl === "vehiclelog"}
         >
           막장 잔류이력 : 차량
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/log/diglog"
           className="sidemenu-sub-title"
-          name="굴진이력"
-          active={currentMenu === "굴진이력"}
-          onClick={sideMenuClickHandler}
+          name="diglog"
+          active={currentUrl === "diglog"}
         >
           굴진이력
         </Menu.Item>
@@ -172,41 +164,38 @@ const SideMenu = ({
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/field/announce"
           className="sidemenu-sub-title"
-          name="공지사항"
-          active={currentMenu === "공지사항"}
-          onClick={sideMenuClickHandler}
+          name="announce"
+          active={currentUrl === "announce"}
         >
           공지사항
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/field/local"
           className="sidemenu-sub-title"
-          name="노선관리"
-          active={currentMenu === "노선관리"}
-          onClick={sideMenuClickHandler}
+          name="local"
+          active={currentUrl === "local"}
         >
           노선관리
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/field/dig"
           className="sidemenu-sub-title"
-          name="누적 굴진량 입력"
-          active={currentMenu === "누적 굴진량 입력"}
-          onClick={sideMenuClickHandler}
+          name="dig"
+          active={currentUrl === "dig"}
         >
           누적 굴진량 입력
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/field/state"
           className="sidemenu-sub-title"
-          name="공정상태 변경"
-          active={currentMenu === "공정상태 변경"}
-          onClick={sideMenuClickHandler}
+          name="state"
+          active={currentUrl === "state"}
+       
         >
           공정상태 변경
         </Menu.Item>
@@ -219,9 +208,9 @@ const SideMenu = ({
           as={Link}
           to="/amons/home/general/company"
           className="sidemenu-sub-title"
-          name="소속사 관리"
-          active={currentMenu === "소속사 관리"}
-          onClick={sideMenuClickHandler}
+          name="company"
+          active={currentUrl === "company"}
+          
           link={true}
         >
           소속사 관리
@@ -230,9 +219,9 @@ const SideMenu = ({
           as={Link}
           to="/amons/home/general/worker"
           className="sidemenu-sub-title"
-          name="작업자 관리"
-          active={currentMenu === "작업자 관리"}
-          onClick={sideMenuClickHandler}
+          name="worker"
+          active={currentUrl === "worker"}
+          
           link={true}
         >
           작업자 관리
@@ -241,19 +230,19 @@ const SideMenu = ({
           as={Link}
           to="/amons/home/general/vehicle"
           className="sidemenu-sub-title"
-          name="차량 관리"
-          active={currentMenu === "차량 관리"}
-          onClick={sideMenuClickHandler}
+          name="vehicle"
+          active={currentUrl === "vehicle"}
+         
         >
           차량 관리
-        </Menu.Item>{" "}
+        </Menu.Item>
         <Menu.Item
           as={Link}
           to="/amons/home/general/beacon"
           className="sidemenu-sub-title"
-          name="디바이스 관리 : 비콘"
-          active={currentMenu === "디바이스 관리 : 비콘"}
-          onClick={sideMenuClickHandler}
+          name="beacon"
+          active={currentUrl === "beacon"}
+         
         >
           디바이스 관리 : 비콘
         </Menu.Item>
@@ -261,9 +250,9 @@ const SideMenu = ({
           as={Link}
           to="/amons/home/general/scanner"
           className="sidemenu-sub-title"
-          name="디바이스 관리 : 스캐너"
-          active={currentMenu === "디바이스 관리 : 스캐너"}
-          onClick={sideMenuClickHandler}
+          name="scanner"
+          active={currentUrl === "scanner"}
+          
         >
           디바이스 관리 : 스캐너
         </Menu.Item>
@@ -271,9 +260,9 @@ const SideMenu = ({
           as={Link}
           to="/amons/home/general/cctv"
           className="sidemenu-sub-title"
-          name="디바이스 관리 : CCTV"
-          active={currentMenu === "디바이스 관리 : CCTV"}
-          onClick={sideMenuClickHandler}
+          name="cctv"
+          active={currentUrl === "cctv"}
+          
         >
           디바이스 관리 : CCTV
         </Menu.Item>
@@ -281,11 +270,11 @@ const SideMenu = ({
         <div className="divide-line" />
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/account"
           className="sidemenu-title"
-          name="계정관리"
-          active={currentMenu === "계정관리"}
-          onClick={sideMenuClickHandler}
+          name="account"
+          active={currentUrl === "account"}
+       
         >
           계정관리 <FaIdCard className="side-icon" />
         </Menu.Item>
@@ -296,41 +285,39 @@ const SideMenu = ({
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/ect/settings"
           className="sidemenu-sub-title"
-          name="환경설정"
-          active={currentMenu === "환경설정"}
-          onClick={sideMenuClickHandler}
+          name="settings"
+          active={currentUrl === "settings"}
+   
         >
           환경설정
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/ect/kickworker"
           className="sidemenu-sub-title"
-          name="퇴출관리"
-          active={currentMenu === "퇴출관리"}
-          onClick={sideMenuClickHandler}
+          name="kickworker"
+          active={currentUrl === "kickworker"}
+        
         >
-          퇴출관리 : 인원
+          퇴출관리 : 작업자
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/ect/kickvehicle"
           className="sidemenu-sub-title"
-          name="퇴출관리"
-          active={currentMenu === "퇴출관리"}
-          onClick={sideMenuClickHandler}
+          name="kickvehicle"
+          active={currentUrl === "kickvehicle"}
         >
           퇴출관리 : 차량
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/general/company"
+          to="/amons/home/ect/loginlog"
           className="sidemenu-sub-title"
-          name="로그인 기록"
-          active={currentMenu === "로그인 기록"}
-          onClick={sideMenuClickHandler}
+          name="loginlog"
+          active={currentUrl === "loginlog"}
         >
           로그인 기록
         </Menu.Item>

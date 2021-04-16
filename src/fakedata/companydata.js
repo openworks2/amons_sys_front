@@ -1,3 +1,21 @@
+  // const [fullHeight, setTest] = useState(false);
+  // const resizeHandler = useCallback(() => {
+  //   setTest(!fullHeight);
+  //   setTable({
+  //     ...table,
+  //     itemsPerPage: fullHeight ? 14 : 10,
+  //   });
+  // }, [fullHeight]);
+
+  // useEffect(() => {
+  //   window.addEventListener("resize", resizeHandler);
+  //   return () => {
+  //     window.removeEventListener("resize", resizeHandler);
+  //   };
+  // }, [resizeHandler]);
+
+
+  // 동훈 주임님 리사이즈 코드
 const companydata = [
   {
     co_id: 19,
