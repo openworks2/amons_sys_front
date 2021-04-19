@@ -101,7 +101,7 @@ const CardCompo = styled.div`
 const HomeShortcut = ({ openFullScreenMode }) => {
   return (
     <CardCompo>
-      <Card as={Link} to="/amons/home/monitor" className="card-component" onMouseDown={openFullScreenMode}>
+      <Card as={Link} to="/amons/home/monitor" className="card-component" >
         <div className="img-box">
           <Image
             src="/main/monitoring.png"
@@ -109,7 +109,7 @@ const HomeShortcut = ({ openFullScreenMode }) => {
             wrapped={false}
           />
         </div>
-        <div className="panel">
+        <div className="panel" onClick={openFullScreenMode}>
           <div className="hover-box">
             <p className="hover-text">바로가기</p>
           </div>

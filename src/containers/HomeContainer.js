@@ -24,7 +24,7 @@ const HomeContainer = () => {
 
   // 전체화면 설정
   const openFullScreenMode = () => {
-
+    console.log(2134234)
     var docV = document.documentElement;
     console.log('-->', docV)
     docV.webkitRequestFullscreen();
@@ -75,10 +75,9 @@ const HomeContainer = () => {
         callSideMenuHandler={callSideMenuHandler}
         changeCurrentMenu={changeCurrentMenu}
         currentMenu={currentMenu}
-        openFullScreenMode={openFullScreenMode}
       />
       {/* <ContentsCompo> */}
-      <Contents currentMenu={currentMenu} />
+      <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} />
       {/* </ContentsCompo> */}
     </HomeCompo>
   );
