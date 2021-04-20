@@ -72,7 +72,7 @@ const getCompaniesReducer = handleAsyncActions(
   "companies",
   true
 );
-const getCompanyReducer = handleAsyncActionsById(GET_COMPANY, "company", true);
+const getCompanyReducer = handleAsyncActionsById(GET_COMPANY, "companies", true);
 const postCompanyReducer = handleAsyncActionsOfPost(
   POST_COMPANY,
   "companies",
@@ -81,6 +81,7 @@ const postCompanyReducer = handleAsyncActionsOfPost(
 const putCompanyReducer = handleAsyncActionsOfPut(
   PUT_COMPANY,
   "companies",
+  'co_index',
   true
 );
 
@@ -113,7 +114,8 @@ export default function companies(state = initialState, action) {
       };
     case DELETE_COMPANY_SUCCESS:
       const items = state.companies.data;
-      const filterData = items.filter((item) => item.id !== action.payload.id);
+      const _id = parseInt(action.payload.param);
+      const filterData = items.filter((item) => item.co_id !== _id);
       return {
         ...state,
         companies: {

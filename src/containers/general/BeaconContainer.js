@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import CompanyInput from "../../components/general/CompanyInput";
-import CompanyTable from "../../components/general/CompanyTable";
+import BeaconInput from "../../components/general/BeaconInput";
+import BeaconTable from "../../components/general/BeaconTable";
 import { Loader, Image } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCompanies, postCompany, putCompany, deleteCompany } from "../../modules/companies";
+import { getBeacons, postBeacon, deleteBeacon, putBeacon } from "../../modules/beacons";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -22,8 +22,7 @@ const ContentsCompo = styled.div`
   overflow: auto;
   margin: 0px;
   padding: 0px;
-  /* position : relative; */
-
+  position : relative;
   .input-box {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
@@ -41,7 +40,7 @@ const ContentsCompo = styled.div`
     height: 82.5vh;
     min-height: 683px;
     margin-left: 20px;
-    padding-top: 22px;
+    padding-top: 10px;
     display: inline-block;
     vertical-align: top;
   }
@@ -58,30 +57,22 @@ margin-top : 40vh;
 
 const CompanyContatiner = () => {
   const { data, loading, error } = useSelector(
-    (state) => state.companies.companies
+    (state) => state.beacons.beacons
   );
 
-  const { tableData, setTableData } = useState({});
+  const [addressError, setAddressError] = useState(undefined);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCompanies());
+    dispatch(getBeacons());
   }, [dispatch]);
 
   const [formData, setFormData] = useState({
-    co_id : undefined,
-    co_index: undefined,
-    co_name: "",
-    co_sectors: "",
+    bc_address: "",
     description: "",
   });
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
+
   // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;
@@ -90,8 +81,15 @@ const CompanyContatiner = () => {
     setFormData({
       ...formData,
       [name]: value,
-    });
+    });   
   };
+
+  // 클릭된 row의 데이터
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
 
   const initActiveRow = () => {
     setSelectedRow({
@@ -102,34 +100,31 @@ const CompanyContatiner = () => {
   };
   const initFormData = () => {
     setFormData({
-      co_id : undefined,
-      co_index: undefined,
-      co_name: "",
-      co_sectors: "",
+      bc_address: "",
       description: "",
     });
   };
 
   // table row 클릭 핸들러
   const activeHandler = (e, index, selectedId) => {
+
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
     } else {
-      const findItem = data.find((company) => company.co_id === selectedId);
+      const findItem = data.find((beacon) => beacon.bc_id === selectedId);
 
       setSelectedRow({
-        selectedId: findItem.co_id,
+        selectedId: findItem.bc_id,
         selectedItem: findItem,
         clickedIndex: index,
       });
 
       setFormData({
         ...formData,
-        co_id: findItem.co_id,
-        co_index : findItem.co_index,
-        co_name: findItem.co_name,
-        co_sectors: findItem.co_sectors,
+        bc_id: findItem.bc_id,
+        bc_index : findItem.bc_index,
+        bc_address: findItem.bc_address,
         description: findItem.description,
       });
     }
@@ -157,51 +152,85 @@ const CompanyContatiner = () => {
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
-    let newCompany = { ...formData,}
-      dispatch(postCompany(newCompany))
-      initActiveRow();
-      initFormData();
-    };
+
+    let _bc_address = formData.bc_address.replace(/\:/g,'');
+    _bc_address = _bc_address.substring(0,10); // 입력된 글자수 10자리 맞추기
+     if(_bc_address.length!==10){ // 자리수 유효성 검사
+      setAddressError({
+        content: '비콘 번호 10자리를 모두 입력해주세요.'});
+      setTimeout(()=>{setAddressError(undefined)},1350)
+    } else if(data.find((item)=>item.bc_address===_bc_address)){ // 중복 유효성 검사
+      setAddressError({
+       content: '이미 동일한 주소의 비콘이 있습니다.'});
+     setTimeout(()=>{setAddressError(undefined)},1350);
+   }else{ // 성공
+     let newBeacon = { ...formData, bc_address : _bc_address}
+     dispatch(postBeacon(newBeacon));
+     initActiveRow();
+     initFormData();
+   }
+};
 
   // UPDATE
     const updateHandler = (e) => {
-      let modifyItem = { ...formData};
-      dispatch(putCompany(modifyItem.co_index, modifyItem));
+      let _bc_address = formData.bc_address.replace(/\:/g,'');
+      _bc_address = _bc_address.substring(0,10); // 입력된 글자수 10자리 맞추기
+
+      let filteredData = data.filter((item)=>item.bc_id!==formData.bc_id); 
+      // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
+
+      if(_bc_address.length!==10){ // 자리수 유효성 검사
+        setAddressError({
+          content: '비콘 번호 10자리를 모두 입력해주세요.'});
+          setTimeout(()=>{setAddressError(undefined)},1350)
+      } else if(filteredData.find((item)=>item.bc_address===_bc_address)){ //중복 유효성 검사
+        // 중복 에러
+         setAddressError({
+          content: '이미 동일한 주소의 비콘이 있습니다.'});
+        setTimeout(()=>{setAddressError(undefined)},1350);
+      }else{ // 성공
+        let newBeacon = { ...formData, bc_address : _bc_address}
+        dispatch(putBeacon(newBeacon.bc_index, newBeacon));
+        initActiveRow();
+        initFormData();
+      }
+  };
+
+  // DELETE
+  const deleteHandler = (e, bc_id) => {
+    dispatch(deleteBeacon(bc_id));
     initActiveRow();
     initFormData();
   };
 
-  const deleteHandler = (e, co_id) => {
-    dispatch(deleteCompany(co_id));
-    initActiveRow();
-    initFormData();
-  };
   if (error) {
     return <ErrMsg className="err-msg">통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.</ErrMsg>;
   }
   if (!data) {
-    return <ErrMsg className="err-msg">새로고침 버튼을 눌러보세요.</ErrMsg>;;
+    return <ErrMsg className="err-msg">새로고침 버튼을 눌러보세요.</ErrMsg>;
   }
 
   return (
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <CompanyInput
-            className="company-input-box"
+          <BeaconInput
+            className="beacon-input-box"
             onChange={onChange}
             formData={formData}
+            // splitedAddress={splitedAddress}
             createHandler={createHandler}
             updateHandler={updateHandler}
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
+            addressError={addressError}
           />
         </div>
         <div className="table-box">
           {data && (
-            <CompanyTable
-              className="company-table-box"
+            <BeaconTable
+              className="beacon-table-box"
               pageInfo={pageInfo}
               data={data}
               activeHandler={activeHandler}
@@ -210,8 +239,6 @@ const CompanyContatiner = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
-              // fullHeight={fullHeight}
- 
             />
           )}
         </div>

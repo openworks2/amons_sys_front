@@ -20,21 +20,22 @@ const CompanyInputCompo = styled.div`
     padding: 0px;
   }
 
-  .company-input-form-body {
+  .input-form-body {
     margin-top: 29px;
     .resizable-area {
     overflow: auto;
-  }
-
-  }
-  .input-form {
+    .input-form {
     font-family: "NotoSansKR-Regular";
-    font-size: 24px;
+    font-size: 14px;
     text-align: left;
     letter-spacing: 0px;
     color: #929292;
     opacity: 1;
    }
+  }
+
+  }
+  
 
   .input-form.description {
     height: 105px !important;
@@ -80,47 +81,60 @@ const CompanyInput = ({
   const { co_id, co_index, co_name, co_sectors, description } = formData;
 
   return (
-    <CompanyInputCompo className="company-input-compo">
-      <p className="subtitle">소속사 등록</p>
+    <CompanyInputCompo className="input-compo">
+      <p className="subtitle">작업자 등록</p>
       <Form
-        className="company-input-form-body"
+        className="input-form-body"
         onSubmit={(e) => {
           !selectedItem && createHandler(e);
         }}
       >
         <div className="resizable-area">
-          <Form.Field className="company-input-form co-name">
-            <label className="input-form title">소속사</label>
+          <Form.Field className="input-form">
+            <label className="input-form title">직위</label>
             <input
-              className="input-form"
+              className="input-form company"
               id="co_name"
               name="co_name"
-              placeholder={"소속사를 입력해 주세요."}
+              placeholder={"직위를 입력해주세요."}
               required
               value={co_name}
               onChange={onChange}
             />
           </Form.Field>
-          <Form.Field className="company-input-form co-sectors">
-            <label className="input-form title">업종</label>
+          <Form.Field className="input-form">
+            <label className="input-form title">이름</label>
             <input
-              className="input-form"
-              id="co_sectors"
-              name="co_sectors"
-              placeholder={"업종을 입력해 주세요."}
+              className="input-form company"
+              id="co_name"
+              name="co_name"
+              placeholder={"이름을 입력해주세요."}
               required
-              value={co_sectors}
+              value={co_name}
               onChange={onChange}
             />
           </Form.Field>
-          <Form.Field className="company-input-form description">
-            <label className="input-form title">비고</label>
-            <textarea
-              className="input-form description"
-              id="description"
-              name="description"
-              placeholder={"비고 입력란"}
-              value={description}
+          <Form.Field className="input-form">
+            <label className="input-form title">핸드폰</label>
+            <input
+              className="input-form company"
+              id="co_name"
+              name="co_name"
+              placeholder={"번호를 입력해주세요."}
+              required
+              value={co_name}
+              onChange={onChange}
+            />
+          </Form.Field>
+          <Form.Field className="input-form">
+            <label className="input-form title">국적</label>
+            <input
+              className="input-form company"
+              id="co_name"
+              name="co_name"
+              placeholder={"국적을 입력해 주세요."}
+              required
+              value={co_name}
               onChange={onChange}
             />
           </Form.Field>
@@ -164,8 +178,14 @@ const CompanyInput = ({
             labelPosition="right"
             icon="checkmark"
             onClick={(e) => {
+              console.log("****************수정********************");
+              console.log("selectedId");
+              console.log(selectedId);
+              console.log("formData");
+              console.log(formData);
               updateHandler(e, selectedId);
               setModifyOpen(false);
+              console.log("****************수정********************");
             }}
           />
           <Button

@@ -24,8 +24,8 @@ const CompanyTableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
     &.no {
       width: 50px ;
     }
@@ -76,18 +76,18 @@ const CompanyTableCompo = styled.div`
           text-align: center;
           padding-top: 0px ;
           padding-bottom: 0px ;
-          padding-left: 15px ;
-          padding-right: 15px ;
+          padding-left: 20px ;
+          padding-right: 20px ;
           vertical-align: middle;
           &.no {
-          width: 52px;
+          width: 62px;
           }
           &.company {
-            width: 200px ;
+            width: 198px ;
             text-align: left !important;
           }
           &.sector {
-            width: 200px ;
+            width: 198px ;
           }
           &.description {
             width: 700px ;
@@ -177,7 +177,7 @@ const CompanyTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
-    const tempItems = [...items, ...Array(itemsPerPage - items.length)];
+    const tempItems = [...items, ...Array(14 - items.length)];
     return tempItems.map((company, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
       return (
@@ -222,7 +222,7 @@ const CompanyTable = ({
 
   return (
     <CompanyTableCompo className="company-table-compo">
-      <p className="subtitle">소속사 목록</p>
+      <p className="subtitle">소속사 등록</p>
       <Table celled padded selectable>
         <Table.Header className="table-header">
           <Table.Row className="table-header-row">

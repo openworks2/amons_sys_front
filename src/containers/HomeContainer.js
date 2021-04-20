@@ -29,9 +29,7 @@ const HomeContainer = () => {
     const url = document.location.href;
     const splitUrl = url.split("/");
     const location = splitUrl[splitUrl.length-1];
-    console.log("location"+location);
     setCurrentUrl(location);
-    console.log("currentUrl =====>"+currentUrl);
   })
 
 

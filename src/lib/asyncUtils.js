@@ -83,10 +83,14 @@ export const createPromiseThunkOfPut = (
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
 
   return (param, data) => async (dispatch) => {
+    console.log('data-->',data);
     const id = idSelector(param);
     dispatch({ type, meta: id });
     try {
       const payload = await promiseCreator(param, data);
+      console.log('id-->',id)
+      console.log('payload-->', payload)
+      console.log('SUCCESS-->', payload)
       dispatch({ type: SUCCESS, payload, meta: id });
     } catch (e) {
       dispatch({
@@ -208,10 +212,12 @@ export const handleAsyncActionsOfPost = (type, key, keepData) => {
 /**
  * @description Item 수정- 리듀서
  */
-export const handleAsyncActionsOfPut = (type, key, keepData) => {
+export const handleAsyncActionsOfPut = (type, key, index, keepData) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
+  console.log('PUT!!!')
+
+  console.log('>>>>>>>>>>key->', key)
   return (state, action) => {
-    const id = action.meta;
     switch (action.type) {
       case type:
         return {
@@ -219,13 +225,15 @@ export const handleAsyncActionsOfPut = (type, key, keepData) => {
           [key]: reducerUtils.loading(keepData ? state[key].data : null),
         };
       case SUCCESS:
+        console.log('state->',state)
+        console.log('payload->',action.payload)
         return {
           ...state,
           [key]: {
             loading: false,
-            data: state[key].data.map((item) =>
-              item[id] === action.payload[id] ? action.payload : item
-            ),
+            data: state[key].data.map((item) =>{
+              return item[index] === action.payload[index] ? action.payload : item;
+            }),
             error: null,
           },
         };

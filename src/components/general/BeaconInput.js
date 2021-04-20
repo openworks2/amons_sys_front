@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Form, Button, Header, Icon, Modal } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 
-const CompanyInputCompo = styled.div`
+const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
   margin-top: 5px;
@@ -20,22 +20,32 @@ const CompanyInputCompo = styled.div`
     padding: 0px;
   }
 
-  .company-input-form-body {
+  .input-form-body {
     margin-top: 29px;
     .resizable-area {
     overflow: auto;
-  }
-
-  }
-  .input-form {
+    .input-form {
     font-family: "NotoSansKR-Regular";
-    font-size: 24px;
+    font-size: 14px;
     text-align: left;
     letter-spacing: 0px;
     color: #929292;
     opacity: 1;
+      &.title{
+      color: #2E2E2E;
+      }
+     }
    }
+  }
 
+  .ui.form .required.field>label:after{
+        content : ''!important;
+ }
+.ui.form .field .prompt.label {
+  position : absolute;
+  top : 55px;
+  left : 100px;
+}
   .input-form.description {
     height: 105px !important;
   }
@@ -66,7 +76,7 @@ const CompanyInputCompo = styled.div`
   }
 `;
 
-const CompanyInput = ({
+const BeaconInput = ({
   onChange,
   createHandler,
   updateHandler,
@@ -74,45 +84,54 @@ const CompanyInput = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  addressError
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const {selectedId, selectedItem, clickedIndex} = selectedRow;
-  const { co_id, co_index, co_name, co_sectors, description } = formData;
+  const { bc_address, description } = formData;
 
+  const splitByColonInput = (str) =>{
+    let _str = str.replace(/\:/g,'');
+
+    if(_str.length>10){
+      return str.substring(0,14);
+    }
+
+    let length = _str.length;
+    let point = _str.length % 2;
+    let splitedStr = "";
+    splitedStr = _str.substring (0, point);
+    while(point < length){
+      if (splitedStr != "") splitedStr+= ":";
+      splitedStr += _str.substring(point, point + 2);
+      point += 2;
+    }
+    return splitedStr;
+  }
+  
   return (
-    <CompanyInputCompo className="company-input-compo">
-      <p className="subtitle">소속사 등록</p>
+    <InputCompo className="input-compo">
+      <p className="subtitle">비콘 등록</p>
       <Form
-        className="company-input-form-body"
+        className="input-form-body"
         onSubmit={(e) => {
           !selectedItem && createHandler(e);
         }}
       >
         <div className="resizable-area">
-          <Form.Field className="company-input-form co-name">
-            <label className="input-form title">소속사</label>
-            <input
-              className="input-form"
-              id="co_name"
-              name="co_name"
-              placeholder={"소속사를 입력해 주세요."}
+          <Form.Input
+              className="input-form"       
+              error={addressError}
+              label="MAC 주소"
+              className="input-form address"
+              id="bc_address"
+              name="bc_address"
+              placeholder={"__:__:__:__:__:__"}
               required
-              value={co_name}
+              value={
+                splitByColonInput(bc_address).toUpperCase().replace(/[^a-z|^A-Z|^0-9]*$/g, "")}
               onChange={onChange}
-            />
-          </Form.Field>
-          <Form.Field className="company-input-form co-sectors">
-            <label className="input-form title">업종</label>
-            <input
-              className="input-form"
-              id="co_sectors"
-              name="co_sectors"
-              placeholder={"업종을 입력해 주세요."}
-              required
-              value={co_sectors}
-              onChange={onChange}
-            />
-          </Form.Field>
+          />
           <Form.Field className="company-input-form description">
             <label className="input-form title">비고</label>
             <textarea
@@ -181,8 +200,8 @@ const CompanyInput = ({
           </Button>
         </Modal.Actions>
       </Modal>
-    </CompanyInputCompo>
+    </InputCompo>
   );
 };
 
-export default CompanyInput;
+export default BeaconInput;
