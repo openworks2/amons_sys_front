@@ -23,9 +23,8 @@ const CompanyInputCompo = styled.div`
   .company-input-form-body {
     margin-top: 29px;
     .resizable-area {
-    overflow: auto;
-  }
-
+      overflow: auto;
+    }
   }
   .input-form {
     font-family: "NotoSansKR-Regular";
@@ -34,12 +33,12 @@ const CompanyInputCompo = styled.div`
     letter-spacing: 0px;
     color: #929292;
     opacity: 1;
-   }
+  }
 
   .input-form.description {
     height: 105px !important;
   }
-  
+
   .submit-button {
     width: 324px;
     height: 50px;
@@ -76,7 +75,7 @@ const CompanyInput = ({
   initActiveRow,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
-  const {selectedId, selectedItem, clickedIndex} = selectedRow;
+  const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const { co_id, co_index, co_name, co_sectors, description } = formData;
 
   return (

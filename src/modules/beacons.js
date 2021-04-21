@@ -7,7 +7,7 @@ import {
   createPromiseThunkOfPost,
   handleAsyncActionsOfPost,
   createPromiseThunkOfPut,
-  handleAsyncActionsOfPut
+  handleAsyncActionsOfPut,
 } from "../lib/asyncUtils";
 
 const GET_BEACONS = "beacon/GET_BEACONS";
@@ -30,122 +30,135 @@ const DELETE_BEACON = "beacon/DELETE_BEACON";
 const DELETE_BEACON_SUCCESS = "beacon/DELETE_BEACON_SUCCESS";
 const DELETE_BEACON_ERROR = "beacon/DELETE_BEACON_ERROR";
 
-const CLEAR_BEACON = "beacon/CLEAR_BEACON"
+const GET_UNUSED_BEACONS = "beacon/GET_UNUSED_BEACONS";
+const GET_UNUSED_BEACONS_SUCCESS = "beacon/GET_UNUSED_BEACONS_SUCCESS";
+const GET_UNUSED_BEACONS_ERROR = "beacon/GET_UNUSED_BEACONS_ERROR";
+
+const CLEAR_BEACON = "beacon/CLEAR_BEACON";
 
 export const getBeacons = createPromiseThunk(
   GET_BEACONS,
-  beaconsAPI.getBeacons,
+  beaconsAPI.getBeacons
 );
-    
+
 export const getBeacon = handleAsyncActionsById(
   GET_BEACON,
-  beaconsAPI.getBeaconById,
+  beaconsAPI.getBeaconById
 );
 
 export const postBeacon = createPromiseThunkOfPost(
   POST_BEACON,
-  beaconsAPI.postBeacon,
+  beaconsAPI.postBeacon
 );
 
 export const putBeacon = createPromiseThunkOfPut(
   PUT_BEACON,
-  beaconsAPI.putBeacon,
+  beaconsAPI.putBeacon
 );
 
-export const deleteBeacon = (id) => async(dispatch)=>{
+export const getUnUsedBeacons = createPromiseThunk(
+  GET_UNUSED_BEACONS,
+  beaconsAPI.getUnUsedBeacons
+);
+
+export const deleteBeacon = (id) => async (dispatch) => {
   // 요청시작
-  dispatch({type : DELETE_BEACON});
-  try{
+  dispatch({ type: DELETE_BEACON });
+  try {
     //API 호출
     const payload = await beaconsAPI.deleteBeacon(id);
     //요청성공
-    dispatch({type: DELETE_BEACON_SUCCESS, payload});
-  }catch(e){
-    dispatch({type : DELETE_BEACON_ERROR, error :e });
+    dispatch({ type: DELETE_BEACON_SUCCESS, payload });
+  } catch (e) {
+    dispatch({ type: DELETE_BEACON_ERROR, error: e });
   }
 };
 
 const initialState = {
-  beacons : reducerUtils.initial(),
-  beacon : {},
-}
+  beacons: reducerUtils.initial(),
+  beacon: {},
+};
 
-const getBeaconsReducer = handleAsyncActions(
-  GET_BEACONS,
-  "beacons",
-   true);
-const getBeaconReducer = handleAsyncActionsById(
-  GET_BEACON,
-  "beacons", 
-  true);
+const getBeaconsReducer = handleAsyncActions(GET_BEACONS, "beacons", true);
+const getBeaconReducer = handleAsyncActionsById(GET_BEACON, "beacons", true);
 const postBeaconReducer = handleAsyncActionsOfPost(
   POST_BEACON,
   "beacons",
-  true);
+  true
+);
 
-  const putBeaconReducer = handleAsyncActionsOfPut(
-    PUT_BEACON,
-    "beacons",
-    'bc_index',
-    true
-  );
-  
+const putBeaconReducer = handleAsyncActionsOfPut(
+  PUT_BEACON,
+  "beacons",
+  "bc_index",
+  true
+);
 
-export default function beacons(state = initialState, action){
-  switch(action.type){
-    case GET_BEACONS :
-    case GET_BEACONS_SUCCESS :
-    case GET_BEACONS_ERROR : 
+const getUnUsedBeaconsReducer = handleAsyncActions(
+  GET_UNUSED_BEACONS,
+  "beacons",
+  true
+);
+
+export default function beacons(state = initialState, action) {
+  switch (action.type) {
+    case GET_BEACONS:
+    case GET_BEACONS_SUCCESS:
+    case GET_BEACONS_ERROR:
       return getBeaconsReducer(state, action);
-    case GET_BEACON :
-    case GET_BEACON_SUCCESS :
-    case GET_BEACON_ERROR : 
+    case GET_BEACON:
+    case GET_BEACON_SUCCESS:
+    case GET_BEACON_ERROR:
       return getBeaconReducer(state, action);
-    case POST_BEACON :
-    case POST_BEACON_SUCCESS :
-    case POST_BEACON_ERROR :
-      return postBeaconReducer(state,action);
-    case PUT_BEACON :
-    case PUT_BEACON_SUCCESS :
-    case PUT_BEACON_ERROR :
+    case POST_BEACON:
+    case POST_BEACON_SUCCESS:
+    case POST_BEACON_ERROR:
+      return postBeaconReducer(state, action);
+    case PUT_BEACON:
+    case PUT_BEACON_SUCCESS:
+    case PUT_BEACON_ERROR:
       return putBeaconReducer(state, action);
-    case DELETE_BEACON :
+    case DELETE_BEACON:
       return {
         ...state,
-        beacons : {
+        beacons: {
           ...state.beacons,
-          loading : true,
+          loading: true,
           error: null,
         },
       };
-    case DELETE_BEACON_SUCCESS :
+    case DELETE_BEACON_SUCCESS:
       const items = state.beacons.data;
       const _id = parseInt(action.payload.param);
-      const filterData = items.filter((item)=>item.bc_id !== _id );
-      return{
+      const filterData = items.filter((item) => item.bc_id !== _id);
+      return {
         ...state,
-        beacons : {
+        beacons: {
           ...state.beacons,
-          loading : false,
-          data : filterData,
-          error : null,
+          loading: false,
+          data: filterData,
+          error: null,
         },
       };
-    case DELETE_BEACON_ERROR :
-      return{
+    case DELETE_BEACON_ERROR:
+      return {
         ...state,
-        beacons : {
+        beacons: {
           ...state.beacons,
-          loading : false,
-          error :action.error,
+          loading: false,
+          error: action.error,
         },
       };
     case CLEAR_BEACON:
-      return{
+      return {
         ...state,
-        beacon : {},
+        beacon: {},
       };
-      default: 
-        return state;
+    case GET_UNUSED_BEACONS:
+    case GET_UNUSED_BEACONS_SUCCESS:
+    case GET_UNUSED_BEACONS_ERROR:
+      return getUnUsedBeaconsReducer(state, action);
+    default:
+      return state;
   }
 }

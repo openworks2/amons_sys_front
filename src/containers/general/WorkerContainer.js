@@ -5,7 +5,12 @@ import WorkerTable from "../../components/general/WorkerTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getBeacons } from "../../modules/beacons";
 import { getCompanies } from "../../modules/companies";
-import { getWorkers, postWorker, deleteWorker, putWorker } from "../../modules/workers";
+import {
+  getWorkers,
+  postWorker,
+  deleteWorker,
+  putWorker,
+} from "../../modules/workers";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -16,19 +21,19 @@ const ContentsCompo = styled.div`
   position: relative;
 `;
 
- const ContentsBodyCompo = styled.div`
+const ContentsBodyCompo = styled.div`
   min-width: 1630px !important;
   min-height: 720px !important;
   width: 100%;
   overflow: auto;
   margin: 0px;
   padding: 0px;
-  position : relative;
+  position: relative;
   &::-webkit-scrollbar {
-        -webkit-appearance: none;
-        margin: 0px;
-        display: none;
-      }
+    -webkit-appearance: none;
+    margin: 0px;
+    display: none;
+  }
 
   .input-box {
     background: #ffffff 0% 0% no-repeat padding-box;
@@ -54,24 +59,20 @@ const ContentsCompo = styled.div`
 `;
 
 const ErrMsg = styled.div`
-text-align:center;
-color: green;
-vertical-align : middle;
-font-size : 24px;
-margin-top : 40vh;
+  text-align: center;
+  color: green;
+  vertical-align: middle;
+  font-size: 24px;
+  margin-top: 40vh;
 `;
-// ***********************************Logic Area***************************************** 
+// ***********************************Logic Area*****************************************
 
 const WorkerContatiner = () => {
   const { data, loading, error } = useSelector(
     (state) => state.workers.workers
   );
-  const { companyData, companyLoading, companyError } = useSelector(
-    (state) => state.companies.companies
-  );
-  const { beaconData, beaconLoading, beaconError } = useSelector(
-    (state) => state.beacons.beacons
-  );
+  const companyData = useSelector((state) => state.companies.companies.data);
+  const beaconData = useSelector((state) => state.beacons.beacons.data);
 
   console.log("*&*&*&*&*&*&*&*&*&^&*^&*^&*^&*^&*^&*^&*^&*&*^&*^&*");
   console.log("state");
@@ -85,6 +86,33 @@ const WorkerContatiner = () => {
   console.log("state");
   console.log("*&*&*&*&*&*&*&*&*&^&*^&*^&*^&*^&*^&*^&*^&*&*^&*^&*");
 
+  const [companyList, setCompanyList] = useState([]);
+  const [unUsedBeaconList, setunUsedBeaconList] = useState([]);
+
+  const makeCompanyList = (data = []) => {
+    let _companyList = [];
+    data.map((item, index) => {
+      _companyList.push({
+        key: index,
+        text: item.co_name,
+        value: item.co_index,
+      });
+    });
+    setCompanyList(..._companyList);
+  };
+
+  const makeBeaconList = (data = []) => {
+    let _companyList = [];
+    data.map((item, index) => {
+      _companyList.push({
+        key: index,
+        text: item.co_name,
+        value: item.co_index,
+      });
+    });
+    setCompanyList(..._companyList);
+  };
+
   const [addressError, setAddressError] = useState(undefined);
 
   const dispatch = useDispatch();
@@ -93,7 +121,10 @@ const WorkerContatiner = () => {
     dispatch(getBeacons());
     dispatch(getCompanies());
     dispatch(getWorkers());
+    makeCompanyList(companyData);
   }, [dispatch]);
+
+  useEffect(() => {});
 
   const [formData, setFormData] = useState({
     bc_address: "",
@@ -108,7 +139,7 @@ const WorkerContatiner = () => {
     setFormData({
       ...formData,
       [name]: value,
-    });   
+    });
   };
 
   // 클릭된 row의 데이터
@@ -134,7 +165,6 @@ const WorkerContatiner = () => {
 
   // table row 클릭 핸들러
   const activeHandler = (e, index, selectedId) => {
-
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
@@ -150,7 +180,7 @@ const WorkerContatiner = () => {
       setFormData({
         ...formData,
         bc_id: findItem.bc_id,
-        bc_index : findItem.bc_index,
+        bc_index: findItem.bc_index,
         bc_address: findItem.bc_address,
         description: findItem.description,
       });
@@ -180,47 +210,65 @@ const WorkerContatiner = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    let _bc_address = formData.bc_address.replace(/\:/g,'');
-    _bc_address = _bc_address.substring(0,10); // 입력된 글자수 10자리 맞추기
-     if(_bc_address.length!==10){ // 자리수 유효성 검사
+    let _bc_address = formData.bc_address.replace(/\:/g, "");
+    _bc_address = _bc_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
+    if (_bc_address.length !== 10) {
+      // 자리수 유효성 검사
       setAddressError({
-        content: '비콘 번호 10자리를 모두 입력해주세요.'});
-      setTimeout(()=>{setAddressError(undefined)},1350)
-    } else if(data.find((item)=>item.bc_address===_bc_address)){ // 중복 유효성 검사
+        content: "비콘 번호 10자리를 모두 입력해주세요.",
+      });
+      setTimeout(() => {
+        setAddressError(undefined);
+      }, 1350);
+    } else if (data.find((item) => item.bc_address === _bc_address)) {
+      // 중복 유효성 검사
       setAddressError({
-       content: '이미 동일한 주소의 비콘이 있습니다.'});
-     setTimeout(()=>{setAddressError(undefined)},1350);
-   }else{ // 성공
-     let newBeacon = { ...formData, bc_address : _bc_address}
-     dispatch(postWorker(newBeacon));
-     initActiveRow();
-     initFormData();
-   }
-};
+        content: "이미 동일한 주소의 비콘이 있습니다.",
+      });
+      setTimeout(() => {
+        setAddressError(undefined);
+      }, 1350);
+    } else {
+      // 성공
+      let newBeacon = { ...formData, bc_address: _bc_address };
+      dispatch(postWorker(newBeacon));
+      initActiveRow();
+      initFormData();
+    }
+  };
 
   // UPDATE
-    const updateHandler = (e) => {
-      let _bc_address = formData.bc_address.replace(/\:/g,'');
-      _bc_address = _bc_address.substring(0,10); // 입력된 글자수 10자리 맞추기
+  const updateHandler = (e) => {
+    let _bc_address = formData.bc_address.replace(/\:/g, "");
+    _bc_address = _bc_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
 
-      let filteredData = data.filter((item)=>item.bc_id!==formData.bc_id); 
-      // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
+    let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
+    // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
 
-      if(_bc_address.length!==10){ // 자리수 유효성 검사
-        setAddressError({
-          content: '비콘 번호 10자리를 모두 입력해주세요.'});
-          setTimeout(()=>{setAddressError(undefined)},1350)
-      } else if(filteredData.find((item)=>item.bc_address===_bc_address)){ //중복 유효성 검사
-        // 중복 에러
-         setAddressError({
-          content: '이미 동일한 주소의 비콘이 있습니다.'});
-        setTimeout(()=>{setAddressError(undefined)},1350);
-      }else{ // 성공
-        let newBeacon = { ...formData, bc_address : _bc_address}
-        dispatch(putWorker(newBeacon.bc_index, newBeacon));
-        initActiveRow();
-        initFormData();
-      }
+    if (_bc_address.length !== 10) {
+      // 자리수 유효성 검사
+      setAddressError({
+        content: "비콘 번호 10자리를 모두 입력해주세요.",
+      });
+      setTimeout(() => {
+        setAddressError(undefined);
+      }, 1350);
+    } else if (filteredData.find((item) => item.bc_address === _bc_address)) {
+      //중복 유효성 검사
+      // 중복 에러
+      setAddressError({
+        content: "이미 동일한 주소의 비콘이 있습니다.",
+      });
+      setTimeout(() => {
+        setAddressError(undefined);
+      }, 1350);
+    } else {
+      // 성공
+      let newBeacon = { ...formData, bc_address: _bc_address };
+      dispatch(putWorker(newBeacon.bc_index, newBeacon));
+      initActiveRow();
+      initFormData();
+    }
   };
 
   // DELETE
@@ -231,7 +279,11 @@ const WorkerContatiner = () => {
   };
 
   if (error) {
-    return <ErrMsg className="err-msg">통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.</ErrMsg>;
+    return (
+      <ErrMsg className="err-msg">
+        통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.
+      </ErrMsg>
+    );
   }
 
   return (

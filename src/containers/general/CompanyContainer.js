@@ -3,7 +3,12 @@ import styled from "styled-components";
 import CompanyInput from "../../components/general/CompanyInput";
 import CompanyTable from "../../components/general/CompanyTable";
 import { useDispatch, useSelector } from "react-redux";
-import { getCompanies, postCompany, putCompany, deleteCompany } from "../../modules/companies";
+import {
+  getCompanies,
+  postCompany,
+  putCompany,
+  deleteCompany,
+} from "../../modules/companies";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -12,10 +17,9 @@ const ContentsCompo = styled.div`
   padding-left: 280px !important;
   padding-right: 130px;
   position: relative;
-
 `;
 
- const ContentsBodyCompo = styled.div`
+const ContentsBodyCompo = styled.div`
   min-width: 1630px !important;
   min-height: 720px !important;
   width: 100%;
@@ -23,10 +27,10 @@ const ContentsCompo = styled.div`
   margin: 0px;
   padding: 0px;
   &::-webkit-scrollbar {
-        -webkit-appearance: none;
-        margin: 0px;
-        display: none;
-      }
+    -webkit-appearance: none;
+    margin: 0px;
+    display: none;
+  }
 
   .input-box {
     background: #ffffff 0% 0% no-repeat padding-box;
@@ -52,11 +56,11 @@ const ContentsCompo = styled.div`
 `;
 
 const ErrMsg = styled.div`
-text-align:center;
-color: green;
-vertical-align : middle;
-font-size : 24px;
-margin-top : 40vh;
+  text-align: center;
+  color: green;
+  vertical-align: middle;
+  font-size: 24px;
+  margin-top: 40vh;
 `;
 // ***********************************Logic Area*****************************************
 
@@ -72,7 +76,7 @@ const CompanyContatiner = () => {
   }, [dispatch]);
 
   const [formData, setFormData] = useState({
-    co_id : undefined,
+    co_id: undefined,
     co_index: undefined,
     co_name: "",
     co_sectors: "",
@@ -104,7 +108,7 @@ const CompanyContatiner = () => {
   };
   const initFormData = () => {
     setFormData({
-      co_id : undefined,
+      co_id: undefined,
       co_index: undefined,
       co_name: "",
       co_sectors: "",
@@ -129,7 +133,7 @@ const CompanyContatiner = () => {
       setFormData({
         ...formData,
         co_id: findItem.co_id,
-        co_index : findItem.co_index,
+        co_index: findItem.co_index,
         co_name: findItem.co_name,
         co_sectors: findItem.co_sectors,
         description: findItem.description,
@@ -159,16 +163,16 @@ const CompanyContatiner = () => {
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
-    let newCompany = { ...formData,}
-      dispatch(postCompany(newCompany))
-      initActiveRow();
-      initFormData();
-    };
+    let newCompany = { ...formData };
+    dispatch(postCompany(newCompany));
+    initActiveRow();
+    initFormData();
+  };
 
   // UPDATE
-    const updateHandler = (e) => {
-      let modifyItem = { ...formData};
-      dispatch(putCompany(modifyItem.co_index, modifyItem));
+  const updateHandler = (e) => {
+    let modifyItem = { ...formData };
+    dispatch(putCompany(modifyItem.co_index, modifyItem));
     initActiveRow();
     initFormData();
   };
@@ -179,7 +183,11 @@ const CompanyContatiner = () => {
     initFormData();
   };
   if (error) {
-    return <ErrMsg className="err-msg">통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.</ErrMsg>;
+    return (
+      <ErrMsg className="err-msg">
+        통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.
+      </ErrMsg>
+    );
   }
 
   return (
@@ -210,7 +218,6 @@ const CompanyContatiner = () => {
               initFormData={initFormData}
               initActiveRow={initActiveRow}
               // fullHeight={fullHeight}
- 
             />
           )}
         </div>

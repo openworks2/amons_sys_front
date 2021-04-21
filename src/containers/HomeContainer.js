@@ -25,13 +25,12 @@ const HomeContainer = () => {
   // URL 파라미터 받아오기
   const [currentUrl, setCurrentUrl] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     const url = document.location.href;
     const splitUrl = url.split("/");
-    const location = splitUrl[splitUrl.length-1];
+    const location = splitUrl[splitUrl.length - 1];
     setCurrentUrl(location);
-  })
-
+  });
 
   return (
     <>
@@ -42,11 +41,10 @@ const HomeContainer = () => {
           callSideMenuHandler={callSideMenuHandler}
           currentUrl={currentUrl}
         />
-         {currentUrl
-         &&currentUrl!=="home"
-         && currentUrl!=="monitering" 
-         && <ContentTitle currentUrl={currentUrl}></ContentTitle>}
-        <Contents/>
+        {currentUrl && currentUrl !== "home" && currentUrl !== "monitering" && (
+          <ContentTitle currentUrl={currentUrl}></ContentTitle>
+        )}
+        <Contents />
       </HomeCompo>
     </>
   );

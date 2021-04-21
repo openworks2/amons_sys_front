@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Form, Button,  Modal } from "semantic-ui-react";
+import { Form, Button, Modal } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 
 const InputCompo = styled.div`
@@ -23,33 +23,33 @@ const InputCompo = styled.div`
   .input-form-body {
     margin-top: 29px;
     .resizable-area {
-    overflow: auto;
-    .input-form {
-    font-family: "NotoSansKR-Regular";
-    font-size: 14px;
-    text-align: left;
-    letter-spacing: 0px;
-    color: #929292;
-    opacity: 1;
-      &.title{
-      color: #2E2E2E;
+      overflow: auto;
+      .input-form {
+        font-family: "NotoSansKR-Regular";
+        font-size: 14px;
+        text-align: left;
+        letter-spacing: 0px;
+        color: #929292;
+        opacity: 1;
+        &.title {
+          color: #2e2e2e;
+        }
       }
-     }
-   }
+    }
   }
 
-.ui.form .required.field>label:after{
-  content : ''!important;
- }
-.ui.form .field .prompt.label {
-  position : absolute;
-  top : 55px;
-  left : 100px;
-}
+  .ui.form .required.field > label:after {
+    content: "" !important;
+  }
+  .ui.form .field .prompt.label {
+    position: absolute;
+    top: 55px;
+    left: 100px;
+  }
   .input-form.description {
     height: 105px !important;
   }
-  
+
   .submit-button {
     width: 324px;
     height: 50px;
@@ -84,31 +84,31 @@ const BeaconInput = ({
   selectedRow,
   initFormData,
   initActiveRow,
-  addressError
+  addressError,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
-  const {selectedId, selectedItem, clickedIndex} = selectedRow;
+  const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const { bc_address, description } = formData;
 
-  const splitByColonInput = (str) =>{
-    let _str = str.replace(/\:/g,'');
+  const splitByColonInput = (str) => {
+    let _str = str.replace(/\:/g, "");
 
-    if(_str.length>10){
-      return str.substring(0,14);
+    if (_str.length > 10) {
+      return str.substring(0, 14);
     }
 
     let length = _str.length;
     let point = _str.length % 2;
     let splitedStr = "";
-    splitedStr = _str.substring (0, point);
-    while(point < length){
-      if (splitedStr != "") splitedStr+= ":";
+    splitedStr = _str.substring(0, point);
+    while (point < length) {
+      if (splitedStr != "") splitedStr += ":";
       splitedStr += _str.substring(point, point + 2);
       point += 2;
     }
     return splitedStr;
-  }
-  
+  };
+
   return (
     <InputCompo className="input-compo">
       <p className="subtitle">비콘 등록</p>
@@ -120,17 +120,18 @@ const BeaconInput = ({
       >
         <div className="resizable-area">
           <Form.Input
-              className="input-form"       
-              error={addressError}
-              label="MAC 주소"
-              className="input-form address"
-              id="bc_address"
-              name="bc_address"
-              placeholder={"__:__:__:__:__:__"}
-              required
-              value={
-                splitByColonInput(bc_address).toUpperCase().replace(/[^a-z|^A-Z|^0-9]*$/g, "")}
-              onChange={onChange}
+            className="input-form"
+            error={addressError}
+            label="MAC 주소"
+            className="input-form address"
+            id="bc_address"
+            name="bc_address"
+            placeholder={"__:__:__:__:__:__"}
+            required
+            value={splitByColonInput(bc_address)
+              .toUpperCase()
+              .replace(/[^a-z|^A-Z|^0-9]*$/g, "")}
+            onChange={onChange}
           />
           <Form.Field className="company-input-form description">
             <label className="input-form title">비고</label>

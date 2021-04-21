@@ -85,13 +85,7 @@ const SideMenuCompo = styled.div`
   }
 `;
 
-const SideMenu = ({
-  callSideMenu,
-  callSideMenuHandler,
-  currentUrl,
-}) => {
-
-
+const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
   return (
     <SideMenuCompo className="sidemenu-compo">
       <Sidebar
@@ -195,7 +189,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="state"
           active={currentUrl === "state"}
-       
         >
           공정상태 변경
         </Menu.Item>
@@ -210,7 +203,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="company"
           active={currentUrl === "company"}
-          
           link={true}
         >
           소속사 관리
@@ -221,7 +213,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="worker"
           active={currentUrl === "worker"}
-          
           link={true}
         >
           작업자 관리
@@ -232,7 +223,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="vehicle"
           active={currentUrl === "vehicle"}
-         
         >
           차량 관리
         </Menu.Item>
@@ -242,7 +232,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="beacon"
           active={currentUrl === "beacon"}
-         
         >
           디바이스 관리 : 비콘
         </Menu.Item>
@@ -252,7 +241,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="scanner"
           active={currentUrl === "scanner"}
-          
         >
           디바이스 관리 : 스캐너
         </Menu.Item>
@@ -262,7 +250,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="cctv"
           active={currentUrl === "cctv"}
-          
         >
           디바이스 관리 : CCTV
         </Menu.Item>
@@ -274,7 +261,6 @@ const SideMenu = ({
           className="sidemenu-title"
           name="account"
           active={currentUrl === "account"}
-       
         >
           계정관리 <FaIdCard className="side-icon" />
         </Menu.Item>
@@ -289,7 +275,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="settings"
           active={currentUrl === "settings"}
-   
         >
           환경설정
         </Menu.Item>
@@ -299,7 +284,6 @@ const SideMenu = ({
           className="sidemenu-sub-title"
           name="kickworker"
           active={currentUrl === "kickworker"}
-        
         >
           퇴출관리 : 작업자
         </Menu.Item>

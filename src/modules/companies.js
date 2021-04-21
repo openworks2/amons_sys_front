@@ -74,8 +74,9 @@ const getCompaniesReducer = handleAsyncActions(
 );
 const getCompanyReducer = handleAsyncActionsById(
   GET_COMPANY,
-   "companies",
-    true);
+  "companies",
+  true
+);
 const postCompanyReducer = handleAsyncActionsOfPost(
   POST_COMPANY,
   "companies",
@@ -84,7 +85,7 @@ const postCompanyReducer = handleAsyncActionsOfPost(
 const putCompanyReducer = handleAsyncActionsOfPut(
   PUT_COMPANY,
   "companies",
-  'co_index',
+  "co_index",
   true
 );
 

@@ -7,7 +7,7 @@ import WorkerContainer from "../containers/general/WorkerContainer";
 import BeaconContainer from "../containers/general/BeaconContainer";
 // import ScannerContainer from "../containers/general/ScannerContainer";
 // import CctvContainer from "../containers/general/CctvContainer";
-// 
+//
 import HomeShortcut from "../components/home/HomeShortcut";
 import ContentTitle from "../components/ContentTitle";
 
@@ -17,9 +17,9 @@ const Contents = () => {
       <Route path="/amons/home/" component={HomeShortcut} exact />
       {/* *****************************general 일반관리****************************** */}
       <Route path="/amons/home/general/company" component={CompanyContatiner} />
-      <Route path="/amons/home/general/worker" component={WorkerContainer}/>
+      <Route path="/amons/home/general/worker" component={WorkerContainer} />
       {/* <Route path="/amons/home/general/vehicle" component={VehicleContainer}/> */}
-      <Route path="/amons/home/general/beacon" component={BeaconContainer}/>
+      <Route path="/amons/home/general/beacon" component={BeaconContainer} />
       {/* <Route path="/amons/home/general/scanner" component={ScannerContainer}/> */}
       {/* <Route path="/amons/home/general/cctv" component={CctvContainer}/> */}
     </>

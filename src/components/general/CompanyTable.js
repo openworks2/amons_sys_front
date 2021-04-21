@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 
 import styled from "styled-components";
-import {
-  Button,
-  Icon,
-  Table,
-  Pagination,
-  Modal,
-} from "semantic-ui-react";
+import { Button, Icon, Table, Pagination, Modal } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle } from "react-icons/fa";
 
 const CompanyTableCompo = styled.div`
@@ -26,36 +20,36 @@ const CompanyTableCompo = styled.div`
     padding-left: 15px !important;
     padding-right: 15px !important;
     &.no {
-      width: 50px ;
+      width: 50px;
     }
     &.company {
-      width: 201px ;
+      width: 201px;
       text-align: left;
     }
     &.sector {
-      width: 201px ;
+      width: 201px;
     }
     &.description {
-      width: 699px ;
+      width: 699px;
     }
     &.trash-icon {
       width: 55px !important ;
       color: #7d7d7d;
     }
     @media screen and (max-height: 937px) {
-    &.trash-icon {
+      &.trash-icon {
         width: 63px !important;
       }
     }
   }
 
   .table-body {
-      margin: 0px !important;
-      padding: 0px !important;
-      .table-body-box {
+    margin: 0px !important;
+    padding: 0px !important;
+    .table-body-box {
       width: 100% !important;
       overflow: auto;
-      height: 62.2vh ;
+      height: 62.2vh;
       /* overflow-y: scroll; */
       &::-webkit-scrollbar {
         -webkit-appearance: none;
@@ -72,34 +66,34 @@ const CompanyTableCompo = styled.div`
         height: 48px;
         .table-cell {
           text-align: center;
-          padding-top: 0px ;
-          padding-bottom: 0px ;
-          padding-left: 15px ;
-          padding-right: 15px ;
+          padding-top: 0px;
+          padding-bottom: 0px;
+          padding-left: 15px;
+          padding-right: 15px;
           vertical-align: middle;
           &.no {
-          width: 52px;
+            width: 52px;
           }
           &.company {
-            width: 200px ;
+            width: 200px;
             text-align: left !important;
           }
           &.sector {
-            width: 200px ;
+            width: 200px;
           }
           &.description {
-            width: 700px ;
+            width: 700px;
           }
           &.trash-icon {
             color: #7d7d7d;
-               width: 55px !important ;
-            margin: 0px ;
-            padding: 0px ;
+            width: 55px !important ;
+            margin: 0px;
+            padding: 0px;
           }
           &.trash-icon-button {
-            height: 25px ;
-            width: 25px ;
-            border: 0px ;
+            height: 25px;
+            width: 25px;
+            border: 0px;
           }
         }
       }
@@ -111,7 +105,7 @@ const CompanyTableCompo = styled.div`
     border: 1px solid #d8d8d8;
     opacity: 1;
     .pagination-component {
-    float: right;
+      float: right;
     }
   }
 
@@ -120,20 +114,20 @@ const CompanyTableCompo = styled.div`
     margin: 0px !important;
     padding: 0px !important;
     &:hover {
-    background: #f9fafb !important;
-    border: #f2f2f2 !important;
-    color: red !important;
-  }
+      background: #f9fafb !important;
+      border: #f2f2f2 !important;
+      color: red !important;
+    }
   }
 
   .ui.table td.active,
   .ui.table tr.active {
     background: #f9fafb !important;
     &:hover {
-    background: #f9fafb !important;
+      background: #f9fafb !important;
     }
   }
-  
+
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -156,7 +150,6 @@ const CompanyTable = ({
   initFormData,
   initActiveRow,
 }) => {
-
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -294,7 +287,8 @@ const CompanyTable = ({
           <Modal.Description className="confirm-modal description">
             <FaMinusCircle className="confirm-modal delete-icon" />
             <p className="confirm-modal text">
-              {selectedItem && `${selectedItem.co_name}`} 소속사를 삭제하시겠습니까?
+              {selectedItem && `${selectedItem.co_name}`} 소속사를
+              삭제하시겠습니까?
             </p>
           </Modal.Description>
         </Modal.Content>

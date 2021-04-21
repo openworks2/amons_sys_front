@@ -21,15 +21,17 @@ export const postBeacon = async (data) => {
 // 데이터 수정을 위한 put 비동기 함수
 export const putBeacon = async (index, data) => {
   const response = await axios.put(`/api/beacon/beacons/${index}`, data);
-  console.log("*************************************************************");
-  console.log("response");
-  console.log(response);
-  console.log("*************************************************************");
   return response.data;
 };
 
 // ID로 데이터 삭제를 위한 DELTE 비동기 함수
 export const deleteBeacon = async (id) => {
   const response = await axios.delete(`/api/beacon/beacons/${id}`);
+  return response.data;
+};
+
+// 미사용 비콘 조회를 위한 get 비동기 함수
+export const getUnUsedBeacons = async () => {
+  const response = await axios.get("/api/beacon/unused");
   return response.data;
 };
