@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Form, Button, Header, Icon, Modal } from "semantic-ui-react";
+import { Form, Button,  Modal } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 
 const InputCompo = styled.div`
@@ -38,8 +38,8 @@ const InputCompo = styled.div`
    }
   }
 
-  .ui.form .required.field>label:after{
-        content : ''!important;
+.ui.form .required.field>label:after{
+  content : ''!important;
  }
 .ui.form .field .prompt.label {
   position : absolute;

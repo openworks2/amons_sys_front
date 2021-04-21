@@ -15,7 +15,6 @@ const CompanyTableCompo = styled.div`
   margin-right: 22px;
   margin-top: 5px;
   margin-bottom: 18px;
-
   .table-header {
     font-size: 14px;
     font-family: "NotoSansKR-Medium";
@@ -55,7 +54,6 @@ const CompanyTableCompo = styled.div`
       padding: 0px !important;
       .table-body-box {
       width: 100% !important;
-      position: relative;
       overflow: auto;
       height: 62.2vh ;
       /* overflow-y: scroll; */
@@ -107,7 +105,6 @@ const CompanyTableCompo = styled.div`
       }
     }
   }
- 
 
   .table-pagination-row {
     background: #ffffff 0% 0% no-repeat padding-box;

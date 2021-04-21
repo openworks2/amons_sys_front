@@ -23,6 +23,12 @@ const ContentsCompo = styled.div`
   margin: 0px;
   padding: 0px;
   position : relative;
+  &::-webkit-scrollbar {
+        -webkit-appearance: none;
+        margin: 0px;
+        display: none;
+      }
+
   .input-box {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
@@ -205,9 +211,6 @@ const CompanyContatiner = () => {
 
   if (error) {
     return <ErrMsg className="err-msg">통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.</ErrMsg>;
-  }
-  if (!data) {
-    return <ErrMsg className="err-msg">새로고침 버튼을 눌러보세요.</ErrMsg>;
   }
 
   return (

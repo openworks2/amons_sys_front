@@ -34,23 +34,23 @@ const TableCompo = styled.div`
       width: 51px;
     }
     &.address {
-      width: 206px ;
+      width: 205px ;
       text-align: left;
     }
     &.index {
-      width: 80px ;
+      width: 81px ;
     }
     &.used-type {
-      width: 180px ;
+      width: 181.5px ;
     }
     &.battery-remain {
-      width: 118px ;
+      width: 120px ;
     }
     &.battery-time {
-      width: 180px ;
+      width: 178px ;
     }
     &.description {
-      width: 335px ;
+      width: 333.5px;
     }
     &.trash-icon {
       width: 55px !important ;
@@ -176,6 +176,13 @@ const SearchCompo=styled.div`
 padding: 0px;
 margin-left: 20px;
 display : block;
+font-family : "NotoSansKR-Regular";
+font-size : 13px;
+
+  .ui.input>input {
+    display :block;
+    width : 310px;
+  }
   .search-box{
     height: 40px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -184,12 +191,26 @@ display : block;
   .dropdown{
     display : block;
     width : 123px;
-
   }
   .ui.basic.button.dropdown{
     background: #F2F2F2 0% 0% no-repeat padding-box !important;
     opacity: 1;
+    font-size : 13px;
   }
+  .ui.dropdown>.dropdown.icon:before {
+    font-size : 20px;
+    position : absolute;
+    left : 10px;
+    top : -5px !important;
+    color: #2E2E2E !important;
+    opacity: 0.8;
+    }
+  .ui.icon.input>i.icon{
+    color: #3D3D3D 0% 0% no-repeat padding-box;
+    opacity: 0.8;
+    font-size : 15px;
+  }
+
 `
 
 const BeaconTable = ({
@@ -304,7 +325,7 @@ const BeaconTable = ({
     actionPosition="left"
     icon='search'
     iconPosition='right'
-    placeholder='Search...'
+    placeholder='작업자 이름 또는 차량 종류를 검색해 주세요.'
   />
   </SearchCompo>
     <TableCompo className="company-table-compo">
@@ -340,7 +361,7 @@ const BeaconTable = ({
         </Table.Header>
         {/* ===============================테이블 바디===================================== */}
         <Table.Cell className="table-body" colSpan="12">
-          <div className="resizable-table-body">{tableRender(viewItems)}</div>
+          <div className="resizable-table-body" as={Table}>{tableRender(viewItems)}</div>
         </Table.Cell>
         {/* =============================테이블 푸터(페이지네이션)============================== */}
         {totalPages >= 1 && (

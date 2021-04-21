@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Form, Button, Header, Icon, Modal } from "semantic-ui-react";
+import { Form, Button, Modal } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 
 const CompanyInputCompo = styled.div`

@@ -24,7 +24,7 @@ import { Image } from "semantic-ui-react";
 
 const ContentTitleBoxCompo = styled.div`
   padding-left: 280px;
-  padding-top: 85px;
+  padding-top: 9.3vh;
   padding-right: 130px;
   font-family: "NotoSansKR-Medium";
   text-align: left;
