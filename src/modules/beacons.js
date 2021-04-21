@@ -108,7 +108,6 @@ export default function beacons(state = initialState, action){
     case PUT_BEACON :
     case PUT_BEACON_SUCCESS :
     case PUT_BEACON_ERROR :
-      console.log('PUT!!!')
       return putBeaconReducer(state, action);
     case DELETE_BEACON :
       return {

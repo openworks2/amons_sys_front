@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import BeaconInput from "../../components/general/BeaconInput";
 import BeaconTable from "../../components/general/BeaconTable";
-import { Loader, Image } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import { getBeacons, postBeacon, deleteBeacon, putBeacon } from "../../modules/beacons";
 
@@ -61,7 +60,7 @@ margin-top : 40vh;
 `;
 // ***********************************Logic Area*****************************************
 
-const CompanyContatiner = () => {
+const WorkerContatiner = () => {
   const { data, loading, error } = useSelector(
     (state) => state.beacons.beacons
   );
@@ -250,4 +249,4 @@ const CompanyContatiner = () => {
   );
 };
 
-export default CompanyContatiner;
+export default WorkerContatiner;

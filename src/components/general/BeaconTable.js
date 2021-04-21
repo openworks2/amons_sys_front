@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import styled from "styled-components";
 import {
   Button,
@@ -210,8 +209,7 @@ font-size : 13px;
     opacity: 0.8;
     font-size : 15px;
   }
-
-`
+`;
 
 const BeaconTable = ({
   pageInfo,
@@ -251,7 +249,7 @@ const BeaconTable = ({
 
     splitedStr = str.substring (0, point);
     while(point < length){
-      if (splitedStr != "") splitedStr+= ":";
+      if (splitedStr !== "") splitedStr+= ":";
       splitedStr += str.substring(point, point + 2);
       point += 2;
     }

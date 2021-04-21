@@ -72,7 +72,10 @@ const getCompaniesReducer = handleAsyncActions(
   "companies",
   true
 );
-const getCompanyReducer = handleAsyncActionsById(GET_COMPANY, "companies", true);
+const getCompanyReducer = handleAsyncActionsById(
+  GET_COMPANY,
+   "companies",
+    true);
 const postCompanyReducer = handleAsyncActionsOfPost(
   POST_COMPANY,
   "companies",
