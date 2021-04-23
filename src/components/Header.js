@@ -1,245 +1,234 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import { Image, Table, Menu } from "semantic-ui-react";
+import { Image } from "semantic-ui-react";
 import styled from "styled-components";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
-  FaBars,
-  FaHome,
-  FaSignOutAlt,
-  FaCompressArrowsAlt,
-  FaExpandArrowsAlt,
-  FaVolumeMute,
-  FaList,
-  FaQuestion,
-} from "react-icons/fa";
-import { Link, Redirect } from "react-router-dom";
+  faBars,
+  faVolumeSlash,
+  faHomeAlt,
+  faDigging,
+  faCompressArrowsAlt,
+  faExpandArrowsAlt,
+  faQuestion,
+  faSignOutAlt
+} from "@fortawesome/pro-solid-svg-icons"
 
 const HeaderCompo = styled.div`
   position: fixed !important;
   z-index: 1;
   margin-bottom: 70px;
-  min-width: 1680px;
+  min-width: 1920px;
   min-height: 70px;
-  display: inline-block;
   width: 100%;
   height: 70px;
-  background: #2e2e2e !important;
+  background: #2e2e2e;
   opacity: 1;
-  justify-content: center;
-  display: inline-block !important;
+  display: flex;
+  .left-area{
+      height: 100%;
+      width: 63%;
+      display: flex;
+      .sidemenu-button-box{
+        width: 6.15%;
+        height: 100%;
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        .sidemenu-button{
+          width: 44px;
+          height: 44px;   
+          background-color:#000000;
+          color:#FFFFFF;
+          display: flex;
+          justify-content:center;
+          align-items: center;
+          font-size: 15px;
+          &:hover{
+            cursor: pointer;
+          }
+        }
+      }
+      .monitor-title-box{
+        width: 93.85%;
+        height: 100%;
+        padding-left: 16px;
+        display: flex;
+        align-items: center;
+        #site-name{
+          color: #FFFFFF;
+          font-size: 30px;
+          font-family:"NotoSansKR-Regular";
+          margin-left: 23px;
+          margin-left: 23px;
+        }
+        #tunnel-name{
+          color: #F1592A;
+          font-size: 30px;
+          font-family:"NotoSansKR-Regular";
+          margin-left: 5px;
+        }
+      }
+  }
+  .right-area{
+    height: 100%;
+    width: 37%;
+    display:flex;
+    justify-content: flex-end;
+    .shortcut-button-list{
+        height: 100%;
+        width: 56%;
+        display:flex;
+        align-items:center;
+        margin-right:20px;
+        display: flex;
+        align-items: center;
+        .shortcut-button-box{
+          width: 45px;
+          height: 83%;
+          &:nth-child(n+2){
+            margin-left: 24px;
+          }
+          .shortcut-button{
+            height: 39px;
+            width: 39px;
+            border-radius: 47%;
+            color: #FFFFFF;
+            font-size: 17px;
+            margin-left: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &:hover{
+              cursor: pointer;
+              color: #72afd2;
+            }
+            &.alarm{
+              background-color: #C23235;
+            }
+            &.home{
+              background-color: #A73B1F;
+            }
+            &.drill{
+              background-color: #686868;
+            }
+            &.general-screen{
+              background-color: #8FC31F;
+              /* opacity: 0.5; */
+            }
+            &.full-screen{
+              background-color: #32B16C;
+              /* opacity: 0.5; */
+            }
+            &.question{
+              background-color: #305A70;
+            }
+          }
+        }
+        .button-name{
+          color: #FFFFFF;
+          font-family:"NotoSansKR-Regular";
+          font-size:12px;
+          text-align: center;
+        }
 
-  .header-table {
-    background: #2e2e2e 0% 0% no-repeat padding-box;
-    opacity: 1;
-    border-top-width: 0px !important;
-    border-bottom-width: 0px !important;
-    border-left-width: 0px !important;
-    border-right-width: 0px !important;
-    border-radius: 0px;
-    @media only screen and (max-width: 767px) {
-      width: 100% !important;
-      display: table-row !important;
+    }
+    .logout-button-box{
+      height: 100%;
+        width:9.95%;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        .logout-button{
+          width: 44px;
+          height: 44px;
+          background-color:#000000;
+          font-size: 21px;
+          display:flex;
+          justify-content: center;
+          align-items: center;
+          &:hover{
+            cursor: pointer;
+            color: #72afd2;
+          }
+          svg{
+            color:#FFFFFF;
+            opacity: 0.7
+          }
+        }
     }
   }
-  .company {
-    padding-right: 0px !important;
-  }
 
-  .title {
-    padding-left: 0px !important;
-    color: #ffffff;
-    font-size: 30px;
-    font-family: "NotoSansKR-Regular";
-    text-align: left;
-    letter-spacing: 0px;
-    opacity: 1;
-  }
-
-  .title-highlight {
-    color: #f1592a;
-    font-size: 30px;
-    font-family: "NotoSansKR-Medium";
-    text-align: left;
-    letter-spacing: 0px;
-  }
-
-  a.shortcuts {
-    text-align: center !important;
-    font-size: 25px;
-    width: 72.22px;
-    color: #ffffff;
-    border: 0px !important;
-    padding: 4px !important;
-    display: inline-block;
-    float: right;
-  }
-  a.shortcuts:hover {
-    .icon {
-      color: #72afd2 !important;
-    }
-  }
-
-  .iconbox {
-    width: 39px;
-    height: 39px;
-    border-radius: 50px;
-    margin-left: auto;
-    margin-right: auto;
-    vertical-align: middle;
-    justify-content: center;
-    cursor: pointer !important;
-  }
-
-  .iconbox.alert {
-    background: #c23235 0% 0% no-repeat padding-box;
-  }
-
-  .iconbox.home {
-    background: #a73b1f 0% 0% no-repeat padding-box;
-  }
-
-  .iconbox.dig {
-    background: #686868 0% 0% no-repeat padding-box;
-  }
-
-  .iconbox.nomalscreen {
-    background: #5e7827 0% 0% no-repeat padding-box;
-    padding: 0px;
-  }
-
-  .iconbox.fullscreen {
-    background: #306f4d 0% 0% no-repeat padding-box;
-  }
-
-  .iconbox.question {
-    background: #305a70 0% 0% no-repeat padding-box;
-  }
-
-  .icon {
-    margin-top: 7px;
-  }
-
-  .shortcut-subtitle {
-    font-size: 12px !important;
-    text-align: center;
-    cursor: pointer !important;
-  }
 `;
 
-const SidebarButton = styled.div`
-  font-size: 30px;
-  height: 44px !important;
-  width: 44px !important;
-  padding-right: 0px !important;
-  color: #ffffff;
-  background-color: #000000;
-  cursor: pointer !important;
-  .icon {
-    margin-top: 7px;
-    margin-left: 7px;
-    &:hover {
-      color: #72afd2 !important;
-    }
-  }
-`;
 
-const LogoutButton = styled.div`
-  font-size: 30px;
-  height: 44px;
-  width: 44px;
-  color: #7c7c7c;
-  background-color: #000000;
-  margin-left: 20px;
-  cursor: pointer !important;
-  .icon {
-    margin-top: 7px;
-    margin-left: 9px;
-    &:hover {
-      color: #72afd2 !important;
-    }
-  }
-`;
 
-const Header = ({ callSideMenuHandler }) => {
+const Header = ({ callSideMenuHandler, setRatePanelHandler }) => {
   return (
     <HeaderCompo className="header-component">
-      <Table celled className="header-table" unstackable={true}>
-        <Table.Row selectable={false}>
-          <Table.Cell className="sidemenu-button">
-            <SidebarButton
-              className="side-menu-button"
-              onClick={() => {
-                callSideMenuHandler();
-              }}
-            >
-              <FaBars className="icon" />
-            </SidebarButton>
-          </Table.Cell>
-          <Table.Cell className="company">
-            <Image
-              src="/header/company-white.png"
-              alt="회사명"
-              verticalAlign="middle"
-              inline="true"
-            />
-          </Table.Cell>
-          <Table.Cell className="title">
-            <span className="title">
-              고속국도 제 14호선 함양-울산선(함양-합천) 건설공사(제4공구)
-              {"    "}
-            </span>
-            <span className="title-highlight">신원3터널</span>
-          </Table.Cell>
-          <Table.Cell className="shortcuts" as={Link} to="/">
-            <div className="iconbox alert">
-              <FaVolumeMute className="icon" />
+      <div className="left-area">
+        <div className="sidemenu-button-box">
+          <div className="sidemenu-button" onClick={callSideMenuHandler}>
+            <FontAwesomeIcon icon={faBars} />
+          </div>
+        </div>
+        <div className="monitor-title-box">
+          <Image
+            src="/header/company-white.png"
+            alt="회사명"
+            verticalAlign="middle"
+            inline="true"
+          />
+          <span id="site-name">고속국도 제 14호선 함양-울산선(함양-합천) 건설공사(제4공구)</span>
+          <span id="tunnel-name">신원3터널</span>
+        </div>
+      </div>
+      <div className="right-area">
+        <div className="shortcut-button-list">
+          <div className="shortcut-button-box">
+            <div className="shortcut-button alarm">
+              <FontAwesomeIcon icon={faVolumeSlash} />
             </div>
-            <div className="shortcut-subtitle">알람음</div>
-          </Table.Cell>
-          <Table.Cell className="shortcuts" as={Link} to="/">
-            <div className="iconbox home">
-              <FaHome className="icon" />
+            <div className="button-name">알림음</div>
+          </div>
+          <div className="shortcut-button-box">
+            <div className="shortcut-button home">
+              <FontAwesomeIcon icon={faHomeAlt} />
             </div>
-            <div className="shortcut-subtitle">HOME</div>
-          </Table.Cell>
-          <Table.Cell className="shortcuts" as={Link} to="/">
-            <div className="iconbox dig">
-              <FaList className="icon" />
+            <div className="button-name">HOME</div>
+          </div>
+          <div className="shortcut-button-box">
+            <div className="shortcut-button drill" onClick={setRatePanelHandler}>
+              <FontAwesomeIcon icon={faDigging} />
             </div>
-            <div className="shortcut-subtitle">굴진율</div>
-          </Table.Cell>
-          <Table.Cell className="shortcuts" as={Link} to="/">
-            <div className="iconbox nomalscreen">
-              <FaCompressArrowsAlt className="icon" />
+            <div className="button-name">굴진율</div>
+          </div>
+          <div className="shortcut-button-box">
+            <div className="shortcut-button general-screen">
+              <FontAwesomeIcon icon={faCompressArrowsAlt} />
             </div>
-            <div className="shortcut-subtitle" as={Link} to="/">
-              일반화면
+            <div className="button-name">일반화면</div>
+          </div>
+          <div className="shortcut-button-box">
+            <div className="shortcut-button full-screen">
+              <FontAwesomeIcon icon={faExpandArrowsAlt} />
             </div>
-          </Table.Cell>
-          <Table.Cell className="shortcuts" as={Link} to="/">
-            <div className="iconbox fullscreen">
-              <FaExpandArrowsAlt className="icon" />
+            <div className="button-name">전체화면</div>
+          </div>
+          <div className="shortcut-button-box question">
+            <div className="shortcut-button question">
+              <FontAwesomeIcon icon={faQuestion} />
             </div>
-            <div className="shortcut-subtitle">전체화면</div>
-          </Table.Cell>
-          <Table.Cell className="shortcuts" as={Link} to="/">
-            <div className="iconbox question">
-              <FaQuestion className="icon" />
-            </div>
-            <div className="shortcut-subtitle">도움말</div>
-          </Table.Cell>
-          <Table.Cell className="logout">
-            <LogoutButton
-              className="side-menu-button"
-              onClick={() => {
-                callSideMenuHandler();
-              }}
-            >
-              <FaSignOutAlt className="icon" />
-            </LogoutButton>
-          </Table.Cell>
-        </Table.Row>
-      </Table>
+            <div className="button-name">도움말</div>
+          </div>
+        </div>
+        <div className="logout-button-box">
+          <div className="logout-button">
+            <FontAwesomeIcon icon={faSignOutAlt} />
+          </div>
+        </div>
+      </div>
     </HeaderCompo>
   );
 };

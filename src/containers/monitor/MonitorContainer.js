@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import CctvCompo from '../../components/monitor/CctvComponent';
+import DrillMapComponent from '../../components/monitor/DrillMapComponent';
 import NoticeCompo from '../../components/monitor/Notice';
 import StatusInfo from '../../components/monitor/StatusInfo';
 
@@ -31,7 +32,6 @@ const BodyCompo = styled.div`
         .left-center-box{
             width: 100%;
             height: 17.8em;
-            background: darkgray;
             margin-top: 10px;
         }
         .left-bottom-box{
@@ -72,20 +72,31 @@ const BodyCompo = styled.div`
             .top-cctv{
                 width: 100%;
                 height: 49.4%;
-                background-color:aliceblue;
                 margin-bottom: 11px;
             }
             .bottom-cctv{
                 width: 100%;
                 height: 49.4%;
-                background-color:beige;
+                background-color:#000000;
             }
         }
     }
 `;
 
 
-const MonitorContainer = () => {
+const MonitorContainer = ({ ratePanelOpen }) => {
+    const [ctrlPanel, setOpenPanel] = useState(null);
+
+    const openCtrlPanel = (id) => {
+
+        if (ctrlPanel === id) {
+            setOpenPanel(null);
+        } else {
+            console.log(id)
+            setOpenPanel(id)
+        }
+    }
+
     return (
         <MonitorCompo className="monitor-component">
             <TopCompo className="top-component" />
@@ -95,7 +106,7 @@ const MonitorContainer = () => {
                         <StatusInfo />
                     </div>
                     <div className="left-center-box drill-map-box">
-
+                        <DrillMapComponent ratePanelOpen={ratePanelOpen}/>
                     </div>
                     <div className="left-bottom-box map-box">
 
@@ -108,10 +119,10 @@ const MonitorContainer = () => {
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                <CctvCompo />
+                                <CctvCompo way="right" id="loc001" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
                             </div>
                             <div className="bottom-cctv">
-                                <CctvCompo />
+                                <CctvCompo way="right" id="loc002" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
                             </div>
                         </div>
                     </div>
@@ -120,10 +131,10 @@ const MonitorContainer = () => {
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                <CctvCompo />
+                                <CctvCompo way="left" id="loc003" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
                             </div>
                             <div className="bottom-cctv">
-                                <CctvCompo />
+                                <CctvCompo way="left" id="loc004" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
                             </div>
                         </div>
                     </div>

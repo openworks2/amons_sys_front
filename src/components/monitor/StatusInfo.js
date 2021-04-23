@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { faHardHat, faTruck, faChartArea } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faDigging, faUserHardHat, faTruck } from "@fortawesome/pro-duotone-svg-icons"
 
 const StatusInfoCompo = styled.div`
     width: 100%;
@@ -23,7 +23,7 @@ const StatusInfoCompo = styled.div`
             font-family:"NanumSquareR";
             padding-top: 12px;
             padding-bottom: 12px;
-            padding-left: 13px;
+            padding-left: 22px;
             .icon{
                 font-size:18px;
                 margin-right: 10px;
@@ -45,10 +45,60 @@ const StatusInfoCompo = styled.div`
             width: 100%;
             height: 69%;
             font-family:"NanumSquareEB";
-            font-size: 60px;
             color: #FFFFFF;
-            padding-right: 28px;
-            text-align: end;
+            /* padding-right: 28px; */
+            /* text-align: end; */
+            display: flex;
+            .bottom-left {
+                width: 50%;
+                height: 100%;
+                padding-left: 29px;
+            }
+            .bottom-right {
+                width: 50%;
+                height: 100%;
+                font-size: 60px;
+                display: flex;
+                justify-content: flex-end;
+                padding-right: 22px;
+                &.progress-bottom-right{
+                    display:block;
+                    /* padding-bottom: 9.5px; */
+                }
+            }
+            p{
+                height: 100%;
+                display: flex;
+                align-items: center;
+                /* padding-right: 0px; */
+                padding-bottom: 31px;
+                &.icon{
+                    font-size: 35px;
+                    padding-bottom: 20px;
+                    &.worker-icon{
+                        color: #B97012;
+                    }
+                    &.vehicle-icon{
+                        color: #3C8DBC;
+                    }
+                    &.progress-icon{
+                        color: #CE3F3F;
+                    }
+                }
+            }
+            .value {
+                font-family:"NanumSquareEB";
+                font-size: 60px;
+                color: #FFFFFF;
+            }
+            .unit {
+                font-family:"NanumSquareR";
+                font-size: 24px;
+                color:#FFFFFF;
+                margin-top: 20px;
+                margin-left: 3px;
+            }
+
             &.progress-bottom{
                 .progress-unit{
                     font-family:"NanumSquareR";
@@ -58,6 +108,9 @@ const StatusInfoCompo = styled.div`
                     &.progress-info-top {
                         margin-bottom: 0px;
                         height: 78%;
+                        display: flex;
+                        justify-content: flex-end;
+                        padding-bottom: 15px;
                     }
                     &.progress-info-bottom {
                         font-family:"NanumSquareR";
@@ -82,36 +135,54 @@ const StatusInfo = () => {
             <i class="fas fa-hard-hat"></i>
             <div className="status-box">
                 <div className="top-contents worker-count-top">
-                    <span className="icon"><FontAwesomeIcon icon={faHardHat} /></span>
                     <span className="box-title">총 잔류인원</span>
                 </div>
                 <div className="bottom-contents">
-                    <p className="worker-count">12</p>
+                    <div className="bottom-left">
+                        <p className="icon worker-icon"><FontAwesomeIcon icon={faUserHardHat} /></p>
+                    </div>
+                    <div className="bottom-right">
+                        <p className="count-box worker-count">
+                            <span className="value" id="worker-value">12</span>
+                            <span className="unit" id="worker-unit">명</span>
+                        </p>
+                    </div>
                 </div>
             </div>
             <div className="status-box">
                 <div className="top-contents vehicle-count-top">
-                    <span className="icon"><FontAwesomeIcon icon={faTruck} /></span>
                     <span className="box-title">총 잔류차량</span>
                 </div>
                 <div className="bottom-contents">
-                    <p className="vehicle-count">12</p>
+                    <div className="bottom-left">
+                        <p className="icon vehicle-icon"><FontAwesomeIcon icon={faTruck} /></p>
+                    </div>
+                    <div className="bottom-right">
+                        <p className="count-box vehicle-count">
+                            <span className="value" id="vehicle-value">12</span>
+                            <span className="unit" id="vehicle-unit">대</span>
+                        </p>
+                    </div>
                 </div>
             </div>
             <div className="status-box">
                 <div className="top-contents progress-status-top">
-                    <span className="icon"><FontAwesomeIcon icon={faChartArea} /></span>
                     <span className="box-title">총 굴진현황</span>
                 </div>
                 <div className="bottom-contents progress-bottom">
-                    <p className="progress-info-top">
-                        <span className="progress-value">18</span>
-                        <span className="progress-unit">%</span>
-                    </p>
-                    <p className="progress-info-bottom">
-                        <span className="progress-current-value">1,233</span>/
+                    <div className="bottom-left">
+                        <p className="icon progress-icon"><FontAwesomeIcon icon={faDigging} /></p>
+                    </div>
+                    <div className="bottom-right progress-bottom-right">
+                        <p className="count-box progress-info-top">
+                            <span className="progress-value">18</span>
+                            <span className="unit" id="progress-unit">%</span>
+                        </p>
+                        <p className="progress-info-bottom">
+                            <span className="progress-current-value">1,233</span>/
                         <span className="progress-total-vlaue">6,738m</span>
-                    </p>
+                        </p>
+                    </div>
                 </div>
             </div>
         </StatusInfoCompo>

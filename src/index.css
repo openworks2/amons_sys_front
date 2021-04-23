@@ -24,6 +24,14 @@
   font-family: "NanumSquareEB";
   src: url("./fonts/Nanumsquare/NanumSquare_acEB.ttf");
 }
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("./fonts/Nanumsquare/NanumSquare_acB.ttf");
+}
+@font-face {
+  font-family: "NanumSquareL";
+  src: url("./fonts/Nanumsquare/NanumSquare_acL.ttf");
+}
 
 body {
   margin: 0;

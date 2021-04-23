@@ -64,12 +64,20 @@ const HomeContainer = () => {
   // console.log("urllocation");
   // console.log(urllocation);
 
+  // target-DrillRatePanel.js
+  const [ratePanelOpen, setPanelOpen] = useState(false);
+
+  const setRatePanelHandler= ()=>{
+    setPanelOpen(!ratePanelOpen)
+  }
+
+
   useEffect(() => {
   }, [])
 
   return (
     <HomeCompo className="Home-component">
-      <Header callSideMenuHandler={callSideMenuHandler} />
+      <Header callSideMenuHandler={callSideMenuHandler} setRatePanelHandler={setRatePanelHandler} />
       <SideMenu
         callSideMenu={callSideMenu}
         callSideMenuHandler={callSideMenuHandler}
@@ -77,7 +85,7 @@ const HomeContainer = () => {
         currentMenu={currentMenu}
       />
       {/* <ContentsCompo> */}
-      <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} />
+      <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} ratePanelOpen={ratePanelOpen} />
       {/* </ContentsCompo> */}
     </HomeCompo>
   );
