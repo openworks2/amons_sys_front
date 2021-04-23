@@ -36,7 +36,7 @@ export const getCompanies = createPromiseThunk(
   GET_COMPANIES,
   companiesAPI.getCompanies
 );
-export const getCompany = createPromiseThunk(
+export const getCompany = handleAsyncActionsById(
   GET_COMPANY,
   companiesAPI.getCompanyById
 );
@@ -72,11 +72,7 @@ const getCompaniesReducer = handleAsyncActions(
   "companies",
   true
 );
-const getCompanyReducer = handleAsyncActionsById(
-  GET_COMPANY,
-  "companies",
-  true
-);
+const getCompanyReducer = handleAsyncActionsById(GET_COMPANY, "company", true);
 const postCompanyReducer = handleAsyncActionsOfPost(
   POST_COMPANY,
   "companies",

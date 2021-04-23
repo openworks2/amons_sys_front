@@ -71,7 +71,7 @@ const initialState = {
 };
 
 const getWorkersReducer = handleAsyncActions(GET_WORKERS, "workers", true);
-const getWorkerReducer = handleAsyncActionsById(GET_WORKER, "workers", true);
+const getWorkerReducer = handleAsyncActionsById(GET_WORKER, "worker", true);
 const postWorkerReducer = handleAsyncActionsOfPost(
   POST_WORKER,
   "workers",

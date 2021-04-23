@@ -264,10 +264,27 @@ const WorkerTable = ({
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  // 검색 기능
+  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
+  const [categorieIndex, setCategorieIndex] = useState("");
+  const [categorieName, setCategorieName] = useState("all");
+  const [searchValue, setSearchValue] = useState("");
+  const [currentData, setCurrentData] = useState([]);
+
+  useEffect(() => {
+    const _data = data;
+    if (categorieIndex === "all") {
+      setCurrentData(_data);
+    } else if (categorieIndex === "company") {
+    }
+  }, [data, categorieIndex]);
+
+  const onSearch = () => {};
+
   // 테이블
   const { activePage, itemsPerPage } = pageInfo;
-  const totalPages = Math.ceil(data.length / itemsPerPage, 1);
-  const viewItems = data.slice(
+  const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
+  const viewItems = currentData.slice(
     (activePage - 1) * itemsPerPage,
     (activePage - 1) * itemsPerPage + itemsPerPage
   );
@@ -298,9 +315,12 @@ const WorkerTable = ({
   };
 
   const bloodReturn = (type, group) => {
+    let _type = parseInt(type);
+    let _group = parseInt(group);
+
     let typeStr = "";
     let groupStr = "";
-    switch (type) {
+    switch (_type) {
       case 0:
         typeStr = "A";
         break;
@@ -316,7 +336,7 @@ const WorkerTable = ({
       default:
         typeStr = "error";
     }
-    switch (group) {
+    switch (_group) {
       case 0:
         groupStr = "Rh+";
         break;
@@ -324,7 +344,7 @@ const WorkerTable = ({
         groupStr = "Rh-";
         break;
       default:
-        groupStr = "Rh+";
+        groupStr = "error";
     }
     return typeStr + " " + groupStr;
   };

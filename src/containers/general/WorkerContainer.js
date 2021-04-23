@@ -11,6 +11,7 @@ import {
   deleteWorker,
   putWorker,
 } from "../../modules/workers";
+import axios from "axios";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -74,8 +75,6 @@ const WorkerContatiner = () => {
   const companyData = useSelector((state) => state.companies.companies.data);
   const unUsedBeaconData = useSelector((state) => state.beacons.beacons.data);
 
-  const [addressError, setAddressError] = useState(undefined);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -91,7 +90,7 @@ const WorkerContatiner = () => {
     wk_phone: "",
     wk_position: "",
     wk_nation: "",
-    wk_birth: "",
+    wk_birth: "1980.01.01",
     wk_blood_type: "",
     wk_blood_group: "0",
     wk_sms_yn: false,
@@ -126,7 +125,7 @@ const WorkerContatiner = () => {
     let splitedStr = "";
     splitedStr = _str.substring(0, point);
     while (point < length) {
-      if (splitedStr != "") splitedStr += ":";
+      if (splitedStr !== "") splitedStr += ":";
       splitedStr += _str.substring(point, point + 2);
       point += 2;
     }
@@ -225,11 +224,38 @@ const WorkerContatiner = () => {
   };
 
   const onChangeDate = (date) => {
+    if (data) {
+      setFormData({
+        ...formData,
+        wk_birth: getFormatDate(date),
+      });
+    }
+  };
+
+  // 사진 업로드
+
+  const [imageUrl, setImageUrl] = useState("");
+  const onFileUpload = (event) => {
+    event.preventDefault();
+    console.log("실행!@#!#@!@#@!#!@");
+    let file = event.target.files[0];
+    let formData = new FormData();
+    formData.append("file", file);
+    setImageUrl(file);
+    console.log("imageUrl");
+    console.log(imageUrl);
+    console.log("imageUrl");
+    console.log("imageUrl");
+    console.log(imageUrl);
+    console.log(imageUrl);
+  };
+
+  useEffect(() => {
     setFormData({
       ...formData,
-      wk_birth: getFormatDate(date),
+      wk_image_path: imageUrl,
     });
-  };
+  }, [imageUrl]);
 
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
@@ -254,13 +280,15 @@ const WorkerContatiner = () => {
       wk_phone: "",
       wk_position: "",
       wk_nation: "",
-      wk_birth: "",
+      wk_birth: "1980.01.01",
       wk_blood_type: null,
       wk_blood_group: "0",
       wk_sms_yn: false,
       wk_image_path: "",
       co_index: null,
+      co_name: null,
       bc_index: null,
+      bc_address: null,
     });
   };
 
@@ -324,69 +352,71 @@ const WorkerContatiner = () => {
     initFormData();
   };
 
+  const today = new Date();
+
+  const [companyError, setCompanyError] = useState(undefined);
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
-    // 들어가면 안되는 데이터 제외
-    //
-    // 폼 조건
-    // 나이 0~100
-    //
-    // if (_bc_address.length !== 10) {
-    //   // 자리수 유효성 검사
-    //   setAddressError({
-    //     content: "비콘 번호 10자리를 모두 입력해주세요.",
-    //   });
-    //   setTimeout(() => {
-    //     setAddressError(undefined);
-    //   }, 1350);
-    // } else if (data.find((item) => item.bc_address === _bc_address)) {
-    //   // 중복 유효성 검사
-    //   setAddressError({
-    //     content: "이미 동일한 주소의 비콘이 있습니다.",
-    //   });
-    //   setTimeout(() => {
-    //     setAddressError(undefined);
-    //   }, 1350);
-    // } else {
-    // 성공
-    let newBeacon = { ...formData };
-    dispatch(postWorker(newBeacon));
-    initActiveRow();
-    initFormData();
-    // }
+    const calAge = (birth) => {
+      let currentYear = today.getFullYear();
+      let age = currentYear - birth.substring(0, 4) + 1;
+      return age;
+    };
+
+    let age = calAge(formData.wk_birth);
+
+    if (age > 100 || age < 17) {
+      setFormData({
+        ...formData,
+        wk_birth: "1980.01.01",
+      });
+    } else if (!formData.co_index) {
+      setCompanyError({
+        content: "소속사를 선택해 주세요.",
+        pointing: "below",
+      });
+      setTimeout(() => {
+        setCompanyError(undefined);
+      }, 1500);
+    } else {
+      let newWorker = { ...formData };
+      dispatch(postWorker(newWorker));
+      initActiveRow();
+      initFormData();
+    }
   };
 
   // UPDATE
   const updateHandler = (e) => {
-    let _bc_address = formData.bc_address.replace(/\:/g, "");
-    _bc_address = _bc_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
-
-    let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
+    // let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
     // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
 
-    if (_bc_address.length !== 10) {
-      // 자리수 유효성 검사
-      setAddressError({
-        content: "비콘 번호 10자리를 모두 입력해주세요.",
+    const calAge = (birth) => {
+      let currentYear = today.getFullYear();
+      let age = currentYear - formData.wk_birth.substring(0, 4) + 1;
+      return age;
+    };
+
+    let age = calAge(formData.wk_birth);
+
+    if (age > 100 || age < 17) {
+      setFormData({
+        ...formData,
+        wk_birth: "1980.01.01",
+      });
+    } else if (!formData.co_index) {
+      setCompanyError({
+        content: "소속사를 선택해 주세요.",
+        pointing: "below",
       });
       setTimeout(() => {
-        setAddressError(undefined);
-      }, 1350);
-    } else if (filteredData.find((item) => item.bc_address === _bc_address)) {
-      //중복 유효성 검사
-      // 중복 에러
-      setAddressError({
-        content: "이미 동일한 주소의 비콘이 있습니다.",
-      });
-      setTimeout(() => {
-        setAddressError(undefined);
-      }, 1350);
+        setCompanyError(undefined);
+      }, 1500);
     } else {
-      // 성공
-      let newBeacon = { ...formData, bc_address: _bc_address };
-      dispatch(putWorker(newBeacon.bc_index, newBeacon));
+      let newWorker = { ...formData };
+      dispatch(putWorker(newWorker.wk_index, newWorker));
       initActiveRow();
       initFormData();
     }
@@ -416,6 +446,7 @@ const WorkerContatiner = () => {
             onChange={onChange}
             onSelectChange={onSelectChange}
             onChangeDate={onChangeDate}
+            onFileUpload={onFileUpload}
             formData={formData}
             createHandler={createHandler}
             updateHandler={updateHandler}
@@ -424,6 +455,7 @@ const WorkerContatiner = () => {
             initActiveRow={initActiveRow}
             companyList={companyList}
             unUsedBeaconList={unUsedBeaconList}
+            companyError={companyError}
           />
         </div>
         <div className="table-box">

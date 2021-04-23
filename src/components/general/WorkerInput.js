@@ -239,6 +239,11 @@ const InputCompo = styled.div`
   .input-form.description {
     height: 105px !important;
   }
+  .ui.form .field .prompt.label {
+    position: absolute;
+    top: -25px;
+    left: 150px;
+  }
 
   .submit-button {
     width: 324px;
@@ -282,6 +287,7 @@ const WorkerInput = ({
   onChange,
   onSelectChange,
   onChangeDate,
+  onFileUpload,
   createHandler,
   updateHandler,
   formData,
@@ -290,6 +296,7 @@ const WorkerInput = ({
   initActiveRow,
   companyList,
   unUsedBeaconList,
+  companyError,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -394,9 +401,9 @@ const WorkerInput = ({
             label="소속사"
             options={companyList}
             onChange={(e, value) => onSelectChange(e, value)}
-            placeholder={
-              co_index && co_name ? co_name : "소속사를 선택해주세요."
-            }
+            placeholder="소속사를 선택해주세요."
+            value={formData.co_index}
+            error={companyError}
             required
             scrolling
           />
@@ -467,6 +474,7 @@ const WorkerInput = ({
                   }
                   placeholder="생년월일을 입력해주세요."
                   onChange={(date) => onChangeDate(date)}
+                  required
                 />
               </div>
             </div>
@@ -485,6 +493,7 @@ const WorkerInput = ({
               placeholder={
                 wk_blood_type ? bloodtypeReturn(wk_blood_type) : "혈액형 선택"
               }
+              value={formData.wk_blood_type}
               onChange={(e, value) => onSelectChange(e, value)}
               required
             />
@@ -496,9 +505,8 @@ const WorkerInput = ({
               name="wk_blood_group"
               control={Select}
               options={bloodGroup}
-              placeholder={
-                wk_blood_group ? bloodgroupReturn(wk_blood_group) : "Rh+"
-              }
+              placeholder={"Rh+"}
+              value={formData.wk_blood_group}
               onChange={(e, value) => onSelectChange(e, value)}
               required
             />
@@ -519,34 +527,39 @@ const WorkerInput = ({
             label="비콘 사용 정보"
             options={unUsedBeaconList}
             placeholder={
-              !bc_index
-                ? "할당할 비콘을 선택해 주세요."
-                : !bc_address
-                ? "할당할 비콘을 선택해 주세요."
-                : splitByColon(bc_address)
+              formData.wk_id
+                ? !formData.bc_index && "할당없음"
+                : "할당할 비콘을 선택해 주세요."
             }
             name="bc_index"
             onChange={(e, value) => onSelectChange(e, value)}
+            value={formData.bc_index}
             scrolling
             required
           />
-          <Form.Field className="input-form photo">
+          <Form.Field
+            className="input-form photo"
+            method="post"
+            enctype="multipart/form-data"
+          >
             <div className="form-title">사진</div>
-            <div
+            <Input
+              type="file"
+              accept="image/jpg,jpge,png,gif"
               className="photo-box"
-              onClick={() => {
-                alert("hi");
+              onChange={(e) => {
+                onFileUpload(e);
               }}
+              placeholder="사진을 등록해 주세요.(jpg, png, gif)"
+              // value={wk_image_path && wk_image_path}
             >
-              <div className="icon-box">
+              {/* <div className="icon-box">
                 <FaImage className="photo-icon" />
               </div>
-              <div className="photo-description">
-                {wk_image_path
-                  ? wk_image_path
-                  : "사진을 등록해 주세요.(jpg, png, gif)"}
-              </div>
-            </div>
+                <div className="photo-description">
+                  {}
+                </div> */}
+            </Input>
           </Form.Field>
         </div>
         {selectedItem ? (

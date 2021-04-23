@@ -80,7 +80,7 @@ const initialState = {
 };
 
 const getBeaconsReducer = handleAsyncActions(GET_BEACONS, "beacons", true);
-const getBeaconReducer = handleAsyncActionsById(GET_BEACON, "beacons", true);
+const getBeaconReducer = handleAsyncActionsById(GET_BEACON, "beacon", true);
 const postBeaconReducer = handleAsyncActionsOfPost(
   POST_BEACON,
   "beacons",

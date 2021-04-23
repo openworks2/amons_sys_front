@@ -284,7 +284,7 @@ const BeaconTable = ({
             {item && item.bc_id}
           </Table.Cell>
           <Table.Cell className="table-cell used-type" name="used-type">
-            {item && item.bc_used_type}
+            {!item ? "" : item.bc_used_type === 1 ? item.wk_name : item.vh_name}
           </Table.Cell>
           <Table.Cell
             className="table-cell battery-remain"
