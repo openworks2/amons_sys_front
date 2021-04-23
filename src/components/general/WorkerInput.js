@@ -1,12 +1,19 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Form, Button, Select, Checkbox, Modal } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import styled, { css } from "styled-components";
+import NumberFormat from "react-number-format";
+import {
+  Form,
+  Button,
+  Select,
+  Checkbox,
+  Modal,
+  Dropdown,
+  Input,
+} from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
-
 import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
-
 import DatePicker, { registerLocale } from "react-datepicker";
-import "../react-datepicker.css";
+import "../../react-datepicker.css";
 import ko from "date-fns/locale/ko";
 registerLocale("ko", ko);
 
@@ -18,6 +25,16 @@ const InputCompo = styled.div`
   }
   margin-top: 5px;
   margin-bottom: 18px;
+
+  ${(props) =>
+    props.selectedState &&
+    css`
+      // drop 선택
+      .ui.default.dropdown:not(.button) > .text,
+      .ui.dropdown:not(.button) > .default.text {
+        color: #2f2f2f;
+      }
+    `};
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -33,6 +50,10 @@ const InputCompo = styled.div`
   .input-form-body {
     margin-top: 20px;
     .resizable-area {
+      height: 738px;
+      @media screen and (max-height: 937px) {
+        height: 68vh;
+      }
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 10px !important;
@@ -46,7 +67,6 @@ const InputCompo = styled.div`
         border-radius: 10px;
         box-shadow: inset 0px 0px 5px white;
       }
-      /* background-color : red; */
       overflow: auto;
       @media screen and (max-height: 937px) {
         height: 67.5vh;
@@ -61,8 +81,143 @@ const InputCompo = styled.div`
         &.title {
           color: #2e2e2e;
         }
+        &.phone-sms-area {
+          height: 65px;
+          width: 322px;
+          display: inline-block;
+          .sms-area {
+            display: inline-block;
+            margin-left: 30px;
+            vertical-align: top;
+          }
+          .sms-checkbox {
+            vertical-align: middle;
+            margin-top: 16px;
+            margin-left: 35px;
+          }
+          .phone-area {
+            display: inline-block;
+            .phone {
+              color: black;
+              width: 180px !important;
+            }
+          }
+        }
+        &.birth-area {
+          height: 70px;
+          width: 322px;
+          margin-top: 5px;
+          .birth-box {
+            border: solid 1px;
+            border-radius: 4px;
+            background: #ffffff 0% 0% no-repeat padding-box;
+            border: 1px solid #d8d8d8;
+            border-radius: 4px;
+            opacity: 1;
+            height: 38px;
+            margin-top: 5px;
+            .cal-icon {
+              margin-top: 4px;
+              margin-left: 15px;
+              color: #2e2e2e;
+              display: inline-block;
+              font-size: 15px;
+              vertical-align: middle;
+            }
+            .date-picker-box {
+              .birth {
+                vertical-align: middle;
+                padding-left: 17px;
+                width: 213px !important;
+                margin-top: 5px;
+                border: 0px;
+                height: 25px;
+                color: black;
+              }
+              vertical-align: middle;
+              display: inline-block;
+            }
+          }
+        }
+        &.blood-area {
+          width: 322px;
+          height: 60px;
+          margin-bottom: 10px;
+          .bloodtype {
+            margin-top: 5px;
+            width: 170px;
+            display: inline-block;
+          }
+          .bloodgroup {
+            margin-left: 32px;
+            display: inline-block;
+            width: 120px;
+          }
+        }
       }
     }
+  }
+  .photo {
+    .photo-box {
+      cursor: pointer;
+      border: solid 1px;
+      border-radius: 4px;
+      background: #ffffff 0% 0% no-repeat padding-box;
+      border: 1px solid #d8d8d8;
+      border-radius: 4px;
+      opacity: 1;
+      height: 38px;
+      margin-top: 5px;
+      .icon-box {
+        background-color: #2e2e2e;
+        display: inline-block;
+        height: 37px;
+        border-radius: 5px;
+        .photo-icon {
+          font-size: 20px;
+          margin-left: 9px;
+          margin-right: 9px;
+          margin-top: 7px;
+          color: #ffffff;
+        }
+      }
+      .photo-description {
+        display: inline-block;
+        margin: 0px;
+        padding-bottom: 12px;
+        vertical-align: middle;
+        margin-left: 10px;
+        text-align: left;
+        letter-spacing: 0px;
+        color: #d8d8d8;
+        opacity: 1;
+      }
+    }
+  }
+
+  .label,
+  .field > label,
+  .form-title {
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    letter-spacing: 0px;
+    opacity: 1;
+    font-weight: initial !important;
+    &.phone {
+      margin-bottom: 5px;
+    }
+  }
+  // 드롭다운 버튼
+  .ui.dropdown > .dropdown.icon,
+  &:before,
+  &:after {
+    top: 22px;
+    right: 27px;
+    font-size: 20px;
+    color: #2e2e2e !important;
+    opacity: 0.8;
+    padding: 0px;
   }
 
   .ui.form .required.field > label:after {
@@ -72,6 +227,14 @@ const InputCompo = styled.div`
     position: absolute;
     top: 55px;
     left: 100px;
+  }
+
+  .ui.checkbox input:checked ~ label:after {
+    background-color: #2e2e2e;
+    border-radius: 4px;
+    border-color: #929292;
+    color: #ffffff;
+    font-size: 12px;
   }
   .input-form.description {
     height: 105px !important;
@@ -87,7 +250,10 @@ const InputCompo = styled.div`
     color: #ffffff;
     opacity: 1;
     position: absolute;
-    top: 68.3vh;
+    top: 70vh;
+    @media screen and (max-height: 937px) {
+      top: 68vh;
+    }
   }
 
   .modify-button {
@@ -99,19 +265,31 @@ const InputCompo = styled.div`
     letter-spacing: 0px;
     color: #ffffff;
     position: absolute;
-    top: 68.3vh;
+    top: 70vh;
+    @media screen and (max-height: 937px) {
+      top: 68vh;
+    }
+  }
+`;
+
+const SelectedStateCompo = styled.div`
+  .divider.default.text {
+    color: #2f2f2f;
   }
 `;
 
 const WorkerInput = ({
   onChange,
+  onSelectChange,
+  onChangeDate,
   createHandler,
   updateHandler,
   formData,
   selectedRow,
   initFormData,
   initActiveRow,
-  addressError,
+  companyList,
+  unUsedBeaconList,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -125,18 +303,14 @@ const WorkerInput = ({
     wk_nation,
     wk_blood_type,
     wk_blood_group,
+    wk_sms_yn,
     wk_image_path,
     co_index,
     bc_index,
+    co_name,
+    bc_address,
   } = formData;
-  const [startDate, setStartDate] = useState(new Date());
-
-  const options = [
-    { key: "a", text: "A", value: "0" },
-    { key: "b", text: "B", value: "1" },
-    { key: "o", text: "O", value: "2" },
-    { key: "ab", text: "AB", value: "3" },
-  ];
+  const [selectDate, setSelectDate] = useState(new Date());
 
   const bloodType = [
     { key: "a", text: "A", value: "0" },
@@ -146,32 +320,65 @@ const WorkerInput = ({
   ];
 
   const bloodGroup = [
-    { key: "+", text: "RH+", value: "0" },
-    { key: "-", text: "RH-", value: "1" },
+    { key: "+", text: "Rh+", value: "0" },
+    { key: "-", text: "Rh-", value: "1" },
   ];
 
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 10) {
-      return str.substring(0, 14);
-    }
-
-    let length = _str.length;
-    let point = _str.length % 2;
+  const splitByColon = (str = "") => {
+    let length = str.length;
+    let point = str.length % 2;
     let splitedStr = "";
-    splitedStr = _str.substring(0, point);
+
+    splitedStr = str.substring(0, point);
     while (point < length) {
-      if (splitedStr != "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += str.substring(point, point + 2);
       point += 2;
     }
+
     return splitedStr;
   };
 
+  const bloodtypeReturn = (type) => {
+    let typeStr = "";
+    switch (type) {
+      case 0:
+        typeStr = "A";
+        break;
+      case 1:
+        typeStr = "B";
+        break;
+      case 2:
+        typeStr = "O";
+        break;
+      case 3:
+        typeStr = "AB";
+        break;
+      default:
+        typeStr = "error";
+    }
+
+    return typeStr;
+  };
+
+  const bloodgroupReturn = (group) => {
+    let groupStr = "";
+    switch (group) {
+      case 0:
+        groupStr = "Rh+";
+        break;
+      case 1:
+        groupStr = "Rh-";
+        break;
+      default:
+        groupStr = "Rh+";
+    }
+    return groupStr;
+  };
+
   return (
-    <InputCompo className="input-compo">
-      <p className="subtitle">비콘 등록</p>
+    <InputCompo className="input-compo" selectedState={wk_id}>
+      <p className="subtitle">작업자 등록</p>
       <Form
         className="input-form-body"
         onSubmit={(e) => {
@@ -180,113 +387,165 @@ const WorkerInput = ({
       >
         <div className="resizable-area">
           <Form.Field
-            className="input-form"
+            className="input-form company"
+            id="co_index"
+            name="co_index"
             control={Select}
             label="소속사"
-            options={options}
-            placeholder="소속사를 선택해주세요."
+            options={companyList}
+            onChange={(e, value) => onSelectChange(e, value)}
+            placeholder={
+              co_index && co_name ? co_name : "소속사를 선택해주세요."
+            }
             required
+            scrolling
           />
           <Form.Input
-            className="input-form"
-            error={addressError}
             label="직위"
             className="input-form position"
             id="wk_position"
             name="wk_position"
             placeholder="직위를 입력해주세요."
             required
-            value={
-              wk_position &&
-              wk_position.replace(
-                /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
-                ""
-              )
-            }
+            value={wk_position.replace(
+              /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
+              ""
+            )}
             onChange={onChange}
           />
           <Form.Input
             className="input-form"
-            error={addressError}
             label="이름"
             className="input-form name"
             id="wk_name"
             name="wk_name"
             placeholder="이름을 입력해주세요."
             required
-            value={
-              wk_name &&
-              wk_name.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")
-            }
+            value={wk_name.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")}
             onChange={onChange}
           />
-          <Form.Input
-            className="input-form"
-            error={addressError}
-            label="핸드폰"
-            className="input-form address"
-            id="wk_phone"
-            name="wk_phone"
-            placeholder="번호를 입력해 주세요."
-            required
-            value={wk_phone && wk_phone.replace(/[^0-9]*$/g, "")}
-            onChange={onChange}
-          />
-          <Form.Field control={Checkbox} label="비상알람 SMS" />
-          <div>생년월일</div>
-          <FaRegCalendarAlt />
-          <DatePicker
-            className="input-form"
-            locale="ko"
-            dateFormat="yyyy.MM.dd"
-            shouldCloseOnSelect
-            useWeekdaysShort={true}
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-          />
-          <div>
-            <Form.Field
-              className="input-form"
+          <div className="input-form phone-sms-area">
+            <div className="phone-area">
+              <div className="form-title phone">핸드폰</div>
+              <NumberFormat
+                format="###-####-####"
+                className="input-form phone"
+                id="wk_phone"
+                name="wk_phone"
+                placeholder="번호를 입력해 주세요."
+                required
+                value={wk_phone && wk_phone}
+                onChange={onChange}
+              />
+            </div>
+            <div className="sms-area">
+              <div className="form-title">비상알람 SMS</div>
+              <Checkbox
+                className="sms-checkbox"
+                id="wk_sms_yn"
+                name="wk_sms_yn"
+                checked={wk_sms_yn}
+                value={wk_sms_yn && wk_sms_yn}
+                onChange={(e, value) => onSelectChange(e, value)}
+              />
+            </div>
+          </div>
+          <div className="input-form birth-area">
+            <div className="form-title">생년월일</div>
+            <div className="birth-box">
+              <FaRegCalendarAlt className="cal-icon" />
+              <div className="date-picker-box">
+                <DatePicker
+                  className="input-form birth"
+                  locale="ko"
+                  dateFormat="yyyy.MM.dd"
+                  name="wk_birth"
+                  shouldCloseOnSelect
+                  useWeekdaysShort={true}
+                  selected={
+                    wk_birth ? new Date(wk_birth) : new Date("1980.01.01")
+                  }
+                  placeholder="생년월일을 입력해주세요."
+                  onChange={(date) => onChangeDate(date)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="input-form blood-area">
+            <div className="form-title">혈액형</div>
+            <Dropdown
+              fluid
+              selection
+              className="input-form bloodtype"
               control={Select}
               label="혈액형"
+              id="wk_blood_type"
+              name="wk_blood_type"
               options={bloodType}
-              placeholder="혈액형을 선택해 주세요."
+              placeholder={
+                wk_blood_type ? bloodtypeReturn(wk_blood_type) : "혈액형 선택"
+              }
+              onChange={(e, value) => onSelectChange(e, value)}
+              required
             />
-            <Form.Field
-              className="input-form"
+            <Dropdown
+              fluid
+              selection
+              className="input-form bloodgroup"
+              id="wk_blood_group"
+              name="wk_blood_group"
               control={Select}
               options={bloodGroup}
-              placeholder="RH형을 선택해 주세요."
+              placeholder={
+                wk_blood_group ? bloodgroupReturn(wk_blood_group) : "Rh+"
+              }
+              onChange={(e, value) => onSelectChange(e, value)}
+              required
             />
           </div>
           <Form.Input
-            error={addressError}
             label="국적"
-            className="input-form address"
+            className="input-form nation"
             id="wk_nation"
             name="wk_nation"
             placeholder="국적을 입력해주세요."
             required
-            value={
-              wk_nation &&
-              wk_nation.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")
-            }
+            value={wk_nation.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")}
             onChange={onChange}
           />
           <Form.Field
-            className="input-form"
+            className="input-form beacon"
             control={Select}
             label="비콘 사용 정보"
-            options={options}
-            placeholder="Gender"
+            options={unUsedBeaconList}
+            placeholder={
+              !bc_index
+                ? "할당할 비콘을 선택해 주세요."
+                : !bc_address
+                ? "할당할 비콘을 선택해 주세요."
+                : splitByColon(bc_address)
+            }
+            name="bc_index"
+            onChange={(e, value) => onSelectChange(e, value)}
+            scrolling
+            required
           />
-          <Form.Field className="input-form">
-            <div>하이욤</div>
-            <div>
-              <div>
-                <FaImage />
+          <Form.Field className="input-form photo">
+            <div className="form-title">사진</div>
+            <div
+              className="photo-box"
+              onClick={() => {
+                alert("hi");
+              }}
+            >
+              <div className="icon-box">
+                <FaImage className="photo-icon" />
               </div>
-              <div>사진을 등록해 주세요.(jpg, png, gif)</div>
+              <div className="photo-description">
+                {wk_image_path
+                  ? wk_image_path
+                  : "사진을 등록해 주세요.(jpg, png, gif)"}
+              </div>
             </div>
           </Form.Field>
         </div>

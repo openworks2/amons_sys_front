@@ -49,7 +49,7 @@ const CompanyTableCompo = styled.div`
     .table-body-box {
       width: 100% !important;
       overflow: auto;
-      height: 62.2vh;
+      height: 60.9vh;
       /* overflow-y: scroll; */
       &::-webkit-scrollbar {
         -webkit-appearance: none;
@@ -63,7 +63,7 @@ const CompanyTableCompo = styled.div`
         background: #ffffff 0% 0% no-repeat padding-box;
         border: 1px solid #d8d8d8;
         opacity: 1;
-        height: 48px;
+        height: 47px;
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -104,6 +104,7 @@ const CompanyTableCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
     opacity: 1;
+    padding: 8px !important;
     .pagination-component {
       float: right;
     }
@@ -135,8 +136,11 @@ const CompanyTableCompo = styled.div`
     letter-spacing: 0px;
     color: #7c7c7c;
     opacity: 1;
-    margin: 0px;
-    padding: 0px;
+    margin-top: 5px;
+    margin-bottom: 40px;
+    @media screen and (max-height: 937px) {
+      margin-top: 15px;
+    }
   }
 `;
 
@@ -241,7 +245,7 @@ const CompanyTable = ({
         {totalPages >= 1 && (
           <Table.Footer className="table-footer">
             <Table.Row className="table-pagination-row">
-              <Table.HeaderCell colSpan="5">
+              <Table.HeaderCell colSpan="5" className="table-pagination-row">
                 <Pagination
                   activePage={activePage ? activePage : 0}
                   totalPages={totalPages}

@@ -38,6 +38,17 @@ const InputCompo = styled.div`
     }
   }
 
+  .label,
+  .field > label,
+  .input-form.title {
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    letter-spacing: 0px;
+    opacity: 1;
+    font-weight: initial !important;
+  }
+
   .ui.form .required.field > label:after {
     content: "" !important;
   }
@@ -60,7 +71,10 @@ const InputCompo = styled.div`
     color: #ffffff;
     opacity: 1;
     position: absolute;
-    top: 68.3vh;
+    top: 69.3vh;
+    @media screen and (max-height: 937px) {
+      top: 68vh;
+    }
   }
 
   .modify-button {
@@ -72,7 +86,10 @@ const InputCompo = styled.div`
     letter-spacing: 0px;
     color: #ffffff;
     position: absolute;
-    top: 68.3vh;
+    top: 69.3vh;
+    @media screen and (max-height: 937px) {
+      top: 68vh;
+    }
   }
 `;
 

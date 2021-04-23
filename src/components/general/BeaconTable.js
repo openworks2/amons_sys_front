@@ -70,7 +70,7 @@ const TableCompo = styled.div`
       width: 100% !important;
       position: relative;
       overflow: auto;
-      height: 62.2vh;
+      height: 60.9vh;
       @media screen and (max-height: 937px) {
         height: 58.2vh;
       }
@@ -88,7 +88,7 @@ const TableCompo = styled.div`
         background: #ffffff 0% 0% no-repeat padding-box;
         border: 1px solid #d8d8d8;
         opacity: 1;
-        height: 48px;
+        height: 47px;
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -136,6 +136,7 @@ const TableCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
     opacity: 1;
+    padding: 8px !important;
     .pagination-component {
       float: right;
     }
@@ -169,6 +170,8 @@ const TableCompo = styled.div`
     opacity: 1;
     margin: 0px;
     padding: 0px;
+    margin-top: 25px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -383,7 +386,7 @@ const BeaconTable = ({
           {totalPages >= 1 && (
             <Table.Footer className="table-footer">
               <Table.Row className="table-pagination-row">
-                <Table.HeaderCell colSpan="12">
+                <Table.HeaderCell colSpan="12" className="table-pagination-row">
                   <Pagination
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}

@@ -157,6 +157,10 @@ export default function beacons(state = initialState, action) {
     case GET_UNUSED_BEACONS:
     case GET_UNUSED_BEACONS_SUCCESS:
     case GET_UNUSED_BEACONS_ERROR:
+      console.log("state");
+      console.log("state");
+      console.log(state);
+      console.log("state");
       return getUnUsedBeaconsReducer(state, action);
     default:
       return state;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   Button,
@@ -6,6 +6,7 @@ import {
   Table,
   Pagination,
   Modal,
+  Checkbox,
   Dropdown,
   Input,
 } from "semantic-ui-react";
@@ -33,29 +34,35 @@ const TableCompo = styled.div`
     &.no {
       width: 51px;
     }
-    &.address {
-      width: 205px;
+    &.company {
+      width: 170px;
       text-align: left;
     }
-    &.index {
-      width: 81px;
+    &.position {
+      width: 160px;
+      text-align: left;
     }
-    &.used-type {
-      width: 181.5px;
+    &.name {
+      width: 160px;
+      text-align: left;
     }
-    &.battery-remain {
-      width: 120px;
+    &.sms {
+      width: 51px;
     }
-    &.battery-time {
-      width: 178px;
+    &.age {
+      width: 61px;
     }
-    &.description {
-      width: 333.5px;
+    &.blood {
+      width: 100px;
     }
-    &.trash-icon {
-      width: 55px !important ;
-      color: #7d7d7d;
+    &.nation {
+      width: 160px;
+      text-align: left;
     }
+    &.beacon {
+      width: 220px;
+    }
+
     @media screen and (max-height: 937px) {
       &.trash-icon {
         width: 64px !important;
@@ -70,7 +77,7 @@ const TableCompo = styled.div`
       width: 100% !important;
       position: relative;
       overflow: auto;
-      height: 62.2vh;
+      height: 60.9vh;
       @media screen and (max-height: 937px) {
         height: 58.2vh;
       }
@@ -78,6 +85,10 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+      }
+      .sms-check,
+      .ui.checkbox input.hidden + label {
+        cursor: default !important;
       }
 
       .table-row {
@@ -88,7 +99,7 @@ const TableCompo = styled.div`
         background: #ffffff 0% 0% no-repeat padding-box;
         border: 1px solid #d8d8d8;
         opacity: 1;
-        height: 48px;
+        height: 47px;
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -99,24 +110,33 @@ const TableCompo = styled.div`
           &.no {
             width: 51px;
           }
-          &.address {
-            width: 204px;
+          &.company {
+            width: 170px;
             text-align: left;
           }
-          &.id {
-            width: 82px;
+          &.position {
+            width: 160px;
+            text-align: left;
           }
-          &.used-type {
-            width: 182px;
+          &.name {
+            width: 160px;
+            text-align: left;
           }
-          &.battery-remain {
-            width: 122px;
+          &.sms {
+            width: 51px;
           }
-          &.battery-time {
-            width: 180px;
+          &.age {
+            width: 61px;
           }
-          &.description {
-            width: 333px;
+          &.blood {
+            width: 100px;
+          }
+          &.nation {
+            width: 160px;
+            text-align: left;
+          }
+          &.beacon {
+            width: 220px;
           }
           &.trash-icon {
             width: 55px !important ;
@@ -136,6 +156,7 @@ const TableCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #d8d8d8;
     opacity: 1;
+    padding: 8px !important;
     .pagination-component {
       float: right;
     }
@@ -159,6 +180,13 @@ const TableCompo = styled.div`
       background: #f9fafb !important;
     }
   }
+  .ui.checkbox input:checked ~ label:after {
+    background-color: #2e2e2e;
+    border-radius: 4px;
+    border-color: #929292;
+    color: #ffffff;
+    font-size: 12px;
+  }
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -168,6 +196,8 @@ const TableCompo = styled.div`
     color: #7c7c7c;
     opacity: 1;
     margin: 0px;
+    margin-top: 25px;
+    margin-bottom: 10px;
     padding: 0px;
   }
 `;
@@ -197,11 +227,12 @@ const SearchCompo = styled.div`
     opacity: 1;
     font-size: 13px;
   }
-  .ui.dropdown > .dropdown.icon:before {
+  .ui.dropdown > .dropdown.icon,
+  &:before,
+  &:after {
+    left: 80px;
     font-size: 20px;
     position: absolute;
-    left: 10px;
-    top: -5px !important;
     color: #2e2e2e !important;
     opacity: 0.8;
   }
@@ -221,6 +252,8 @@ const WorkerTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  companyData,
+  companyList,
 }) => {
   const options = [
     { key: "page", text: "소속사", value: "page" },
@@ -233,7 +266,6 @@ const WorkerTable = ({
 
   // 테이블
   const { activePage, itemsPerPage } = pageInfo;
-  console.log("data--->", data);
   const totalPages = Math.ceil(data.length / itemsPerPage, 1);
   const viewItems = data.slice(
     (activePage - 1) * itemsPerPage,
@@ -241,6 +273,14 @@ const WorkerTable = ({
   );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
+
+  const today = new Date();
+
+  const calAge = (birth) => {
+    let currentYear = today.getFullYear();
+    let age = currentYear - birth.substring(0, 4) + 1;
+    return age;
+  };
 
   const splitByColon = (str = "") => {
     let length = str.length;
@@ -257,6 +297,38 @@ const WorkerTable = ({
     return splitedStr;
   };
 
+  const bloodReturn = (type, group) => {
+    let typeStr = "";
+    let groupStr = "";
+    switch (type) {
+      case 0:
+        typeStr = "A";
+        break;
+      case 1:
+        typeStr = "B";
+        break;
+      case 2:
+        typeStr = "O";
+        break;
+      case 3:
+        typeStr = "AB";
+        break;
+      default:
+        typeStr = "error";
+    }
+    switch (group) {
+      case 0:
+        groupStr = "Rh+";
+        break;
+      case 1:
+        groupStr = "Rh-";
+        break;
+      default:
+        groupStr = "Rh+";
+    }
+    return typeStr + " " + groupStr;
+  };
+
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
@@ -268,35 +340,47 @@ const WorkerTable = ({
           className="table-row"
           key={index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.bc_id))}
+          onClick={item && ((e) => activeHandler(e, index, item.wk_id))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
           </Table.Cell>
-          <Table.Cell className="table-cell address" name="address">
-            {item && item.bc_address && splitByColon(item.bc_address)}
+          <Table.Cell className="table-cell company" name="company">
+            {item &&
+              companyData &&
+              companyData.find((el) => el.co_index === item.co_index).co_name}
           </Table.Cell>
-          <Table.Cell className="table-cell id" name="id">
-            {item && item.bc_id}
+          <Table.Cell className="table-cell position" name="position">
+            {item && item.wk_position}
           </Table.Cell>
-          <Table.Cell className="table-cell used-type" name="used-type">
-            {item && item.bc_used_type}
+          <Table.Cell className="table-cell name" name="name">
+            {item && item.wk_name}
           </Table.Cell>
-          <Table.Cell
-            className="table-cell battery-remain"
-            name="battery-remain"
-          >
-            {item && item.bc_remain}
+          <Table.Cell className="table-cell sms" name="sms">
+            {item && (
+              <Checkbox
+                className="sms-check"
+                checked={item.wk_sms_yn === 1 ? true : false}
+              />
+            )}
           </Table.Cell>
-          <Table.Cell className="table-cell battery-time" name="battery-time">
-            {item && item.bc_time}
+          <Table.Cell className="table-cell age" name="age">
+            {item && item.wk_birth && calAge(item.wk_birth)}
           </Table.Cell>
-          <Table.Cell className="table-cell description" name="description">
-            {item && item.description}
+          <Table.Cell className="table-cell blood" name="blood">
+            {item && bloodReturn(item.wk_blood_type, item.wk_blood_group)}
+          </Table.Cell>
+          <Table.Cell className="table-cell nation" name="nation">
+            {item && item.wk_nation}
+          </Table.Cell>
+          <Table.Cell className="table-cell beacon" name="beacon">
+            {item && item.bc_address
+              ? splitByColon(item.bc_address)
+              : item && "할당없음"}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.bc_id === selectedId && (
+            {item && selectedId && item.wk_id === selectedId && (
               <Button
                 className="trash-icon-button"
                 onClick={(e) => {
@@ -324,9 +408,9 @@ const WorkerTable = ({
             <Dropdown
               button
               basic
-              options={options}
-              defaultValue="page"
+              options={companyList}
               className="dropdown"
+              placeholder="소속사"
               position="left"
             />
           }
@@ -337,7 +421,7 @@ const WorkerTable = ({
         />
       </SearchCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">비콘 목록</p>
+        <p className="subtitle">작업자 목록</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
@@ -353,25 +437,19 @@ const WorkerTable = ({
               <Table.HeaderCell singleLine className="table-header name">
                 이름
               </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header battery-remain"
-              >
+              <Table.HeaderCell singleLine className="table-header sms">
                 SMS
               </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header battery-time"
-              >
+              <Table.HeaderCell singleLine className="table-header age">
                 나이
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
+              <Table.HeaderCell singleLine className="table-header blood">
                 혈액형
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
+              <Table.HeaderCell singleLine className="table-header nation">
                 국적
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
+              <Table.HeaderCell singleLine className="table-header beacon">
                 비콘 사용 정보
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header trash-icon">
@@ -389,7 +467,7 @@ const WorkerTable = ({
           {totalPages >= 1 && (
             <Table.Footer className="table-footer">
               <Table.Row className="table-pagination-row">
-                <Table.HeaderCell colSpan="12">
+                <Table.HeaderCell colSpan="12" className="table-pagination-row">
                   <Pagination
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
@@ -438,7 +516,7 @@ const WorkerTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem && `${selectedItem.bc_address}`} 비콘을
+                {selectedItem && `${selectedItem.wk_name}`} 작업자 정보를
                 삭제하시겠습니까?
               </p>
             </Modal.Description>

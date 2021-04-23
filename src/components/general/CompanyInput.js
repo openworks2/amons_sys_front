@@ -49,7 +49,10 @@ const CompanyInputCompo = styled.div`
     color: #ffffff;
     opacity: 1;
     position: absolute;
-    top: 68.3vh;
+    top: 69.3vh;
+    @media screen and (max-height: 937px) {
+      top: 68vh;
+    }
   }
 
   .modify-button {
@@ -61,7 +64,19 @@ const CompanyInputCompo = styled.div`
     letter-spacing: 0px;
     color: #ffffff;
     position: absolute;
-    top: 68.3vh;
+    top: 69.3vh;
+    @media screen and (max-height: 937px) {
+      top: 68vh;
+    }
+  }
+  .label,
+  .field > label {
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    letter-spacing: 0px;
+    opacity: 1;
+    font-weight: initial !important;
   }
 `;
 
@@ -96,7 +111,10 @@ const CompanyInput = ({
               name="co_name"
               placeholder={"소속사를 입력해 주세요."}
               required
-              value={co_name}
+              value={co_name.replace(
+                /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
+                ""
+              )}
               onChange={onChange}
             />
           </Form.Field>
@@ -108,7 +126,10 @@ const CompanyInput = ({
               name="co_sectors"
               placeholder={"업종을 입력해 주세요."}
               required
-              value={co_sectors}
+              value={co_sectors.replace(
+                /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
+                ""
+              )}
               onChange={onChange}
             />
           </Form.Field>
