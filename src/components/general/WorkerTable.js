@@ -9,6 +9,7 @@ import {
   Checkbox,
   Dropdown,
   Input,
+  SearchCategory,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle } from "react-icons/fa";
 
@@ -254,30 +255,38 @@ const WorkerTable = ({
   initActiveRow,
   companyData,
   companyList,
+  companySearchList,
 }) => {
-  const options = [
-    { key: "page", text: "소속사", value: "page" },
-    { key: "org", text: "인원", value: "org" },
-    { key: "site", text: "차량", value: "site" },
-  ];
-
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // 검색 기능
+  // 검색 기능 table 데이터 처리
   // 검색하고 curreunt page 1 로 이동시켜줘야 함.
-  const [categorieIndex, setCategorieIndex] = useState("");
-  const [categorieName, setCategorieName] = useState("all");
+  const [categorieValue, setCategorieValue] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [currentData, setCurrentData] = useState([]);
 
   useEffect(() => {
     const _data = data;
-    if (categorieIndex === "all") {
+    let tempData = [];
+    if (categorieValue === null) {
       setCurrentData(_data);
-    } else if (categorieIndex === "company") {
+    } else {
+      tempData = _data.filter((item) => item.co_index === categorieValue);
+      setCurrentData(tempData);
     }
-  }, [data, categorieIndex]);
+  }, [data, categorieValue]);
+
+  const onChangeCategorie = (e, value) => {
+    const _value = value.value;
+    setCategorieValue(_value);
+  };
+
+  // serach input 입력
+  const onSearchChange = (e) => {
+    const _searchValue = e.target.value;
+    setSearchValue(_searchValue);
+  };
 
   const onSearch = () => {};
 
@@ -428,16 +437,22 @@ const WorkerTable = ({
             <Dropdown
               button
               basic
-              options={companyList}
+              options={companySearchList}
               className="dropdown"
               placeholder="소속사"
               position="left"
+              name="searchCategorie"
+              onChange={(e, value) => {
+                onChangeCategorie(e, value);
+              }}
             />
           }
           actionPosition="left"
           icon="search"
           iconPosition="right"
           placeholder="이름을 검색해 주세요."
+          value={searchValue}
+          onChange={onSearchChange}
         />
       </SearchCompo>
       <TableCompo className="company-table-compo">

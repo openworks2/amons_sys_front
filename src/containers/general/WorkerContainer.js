@@ -3,7 +3,7 @@ import styled from "styled-components";
 import WorkerInput from "../../components/general/WorkerInput";
 import WorkerTable from "../../components/general/WorkerTable";
 import { useDispatch, useSelector } from "react-redux";
-import { getBeacons, getUnUsedBeacons } from "../../modules/beacons";
+import { getUnUsedBeacons } from "../../modules/beacons";
 import { getCompanies } from "../../modules/companies";
 import {
   getWorkers,
@@ -11,7 +11,6 @@ import {
   deleteWorker,
   putWorker,
 } from "../../modules/workers";
-import axios from "axios";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -133,18 +132,33 @@ const WorkerContatiner = () => {
   };
 
   const [companyList, setCompanyList] = useState([]);
+  const [companySearchList, setCompanySearchList] = useState([]);
   const [unUsedBeaconList, setUnUsedBeaconList] = useState([]);
 
   const makeCompanyList = (data) => {
     if (data) {
       let _companyList = [];
+      let _companySearchList = [];
+
+      _companySearchList.push({
+        key: "all",
+        text: "소속사 전체",
+        value: null,
+      });
+
       data.map((item, index) => {
         _companyList.push({
           key: index,
           text: item.co_name,
           value: item.co_index,
         });
+        _companySearchList.push({
+          key: index,
+          text: item.co_name,
+          value: item.co_index,
+        });
       });
+      setCompanySearchList(_companySearchList);
       setCompanyList(_companyList);
     }
   };
@@ -224,7 +238,8 @@ const WorkerContatiner = () => {
   };
 
   const onChangeDate = (date) => {
-    if (data) {
+    if (!data) {
+    } else if (data.length) {
       setFormData({
         ...formData,
         wk_birth: getFormatDate(date),
@@ -472,6 +487,7 @@ const WorkerContatiner = () => {
               initActiveRow={initActiveRow}
               companyData={companyData}
               companyList={companyList}
+              companySearchList={companySearchList}
             />
           )}
         </div>
