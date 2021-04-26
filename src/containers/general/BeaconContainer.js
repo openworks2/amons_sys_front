@@ -182,7 +182,10 @@ const WorkerContatiner = () => {
       }, 1350);
     } else {
       // 성공
-      let newBeacon = { ...formData, bc_address: _bc_address };
+      let newBeacon = {
+        ...formData,
+        bc_address: _bc_address,
+      };
       dispatch(postBeacon(newBeacon));
       initActiveRow();
       initFormData();
@@ -216,7 +219,34 @@ const WorkerContatiner = () => {
       }, 1350);
     } else {
       // 성공
-      let newBeacon = { ...formData, bc_address: _bc_address };
+      const findItem = selectedRow.selectedItem;
+      const now = new Date();
+      let newBeacon = {
+        ...formData,
+        bc_address: _bc_address,
+        created_date: findItem.created_date,
+        modified_date: now,
+        bc_used_type: findItem.bc_used_type,
+        battery_remain: findItem.battery_remain,
+        battery_time: findItem.battery_time,
+        sc_group: findItem.sc_group,
+        bc_receive_time: findItem.bc_receive_time,
+        bc_input_time: findItem.bc_input_time,
+        bc_out_time: findItem.bc_out_time,
+        bc_pos_x: findItem.bc_pos_x,
+        bc_emergency: findItem.bc_emergency,
+        wk_id: findItem.wk_id,
+        wk_name: findItem.wk_name,
+        vh_id: findItem.vh_id,
+        vh_index: findItem.vh_index,
+        vh_name: findItem.vh_name,
+      };
+      console.log(newBeacon);
+      console.log(newBeacon);
+      console.log("newBeacon");
+      console.log("newBeacon");
+      console.log("newBeacon");
+      console.log(newBeacon);
       dispatch(putBeacon(newBeacon.bc_index, newBeacon));
       initActiveRow();
       initFormData();

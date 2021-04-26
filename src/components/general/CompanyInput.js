@@ -9,6 +9,39 @@ const CompanyInputCompo = styled.div`
   margin-top: 5px;
   margin-bottom: 18px;
 
+  .ui.input > input {
+    /* ui focus 색상변경 */
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.dropdown {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.form input {
+    border-radius: 4px;
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.selection.active.dropdown .menu {
+    border-color: #f1592a !important;
+  }
+  .ui.dropdown .menu > .item {
+    /* border-color: #f1592a !important; */
+  }
+  .ui.form textarea {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.checkbox input:focus ~ label:before {
+    border-color: #f1592a !important;
+    /* ui focus 색상변경 끝 */
+  }
+
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;

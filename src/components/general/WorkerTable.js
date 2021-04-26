@@ -9,9 +9,10 @@ import {
   Checkbox,
   Dropdown,
   Input,
-  SearchCategory,
 } from "semantic-ui-react";
-import { FaTrash, FaMinusCircle } from "react-icons/fa";
+import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
+import { getWorkers } from "../../modules/workers";
+import { useDispatch } from "react-redux";
 
 const TableCompo = styled.div`
   margin-left: 22px;
@@ -158,6 +159,7 @@ const TableCompo = styled.div`
     border: 1px solid #d8d8d8;
     opacity: 1;
     padding: 8px !important;
+    height: 60px !important;
     .pagination-component {
       float: right;
     }
@@ -219,6 +221,16 @@ const SearchCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     opacity: 1;
   }
+  .search-icon {
+    position: absolute;
+    left: 405px;
+    top: 13px;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover {
+      color: #f1592a;
+    }
+  }
   .dropdown {
     display: block;
     width: 123px;
@@ -228,6 +240,11 @@ const SearchCompo = styled.div`
     opacity: 1;
     font-size: 13px;
   }
+  .ui.input > input {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
   .ui.dropdown > .dropdown.icon,
   &:before,
   &:after {
@@ -236,11 +253,6 @@ const SearchCompo = styled.div`
     position: absolute;
     color: #2e2e2e !important;
     opacity: 0.8;
-  }
-  .ui.icon.input > i.icon {
-    color: #3d3d3d 0% 0% no-repeat padding-box;
-    opacity: 0.8;
-    font-size: 15px;
   }
 `;
 
@@ -254,9 +266,11 @@ const WorkerTable = ({
   initFormData,
   initActiveRow,
   companyData,
-  companyList,
+
   companySearchList,
 }) => {
+  let { activePage, itemsPerPage } = pageInfo;
+
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -265,17 +279,6 @@ const WorkerTable = ({
   const [categorieValue, setCategorieValue] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [currentData, setCurrentData] = useState([]);
-
-  useEffect(() => {
-    const _data = data;
-    let tempData = [];
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.co_index === categorieValue);
-      setCurrentData(tempData);
-    }
-  }, [data, categorieValue]);
 
   const onChangeCategorie = (e, value) => {
     const _value = value.value;
@@ -288,10 +291,44 @@ const WorkerTable = ({
     setSearchValue(_searchValue);
   };
 
-  const onSearch = () => {};
+  const dispatch = useDispatch();
+
+  const onSearch = (e) => {
+    const _data = data;
+    let tempData = [];
+    if (!searchValue) {
+      dispatch(getWorkers());
+    }
+    if (categorieValue === null) {
+      // 전체검색
+      tempData = _data.filter((item) => item.wk_name.includes(searchValue));
+      setCurrentData(tempData);
+    } else {
+      // 검색
+      tempData = _data.filter((item) => item.co_index === categorieValue);
+      tempData = tempData.filter((item) => item.wk_name.includes(searchValue));
+      setCurrentData(tempData);
+    }
+    initActiveRow();
+    initFormData();
+    activePage = 1;
+  };
+
+  useEffect(() => {
+    const _data = data;
+    setCurrentData(_data);
+    // 카테고리 별 데이터 변경 시
+    // let tempData = [];
+    // if (categorieValue === null) {
+    //   setCurrentData(_data);
+    // } else {
+    //   tempData = _data.filter((item) => item.co_index === categorieValue);
+    //   setCurrentData(tempData);
+    // }
+  }, [data]);
 
   // 테이블
-  const { activePage, itemsPerPage } = pageInfo;
+
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData.slice(
     (activePage - 1) * itemsPerPage,
@@ -448,11 +485,15 @@ const WorkerTable = ({
             />
           }
           actionPosition="left"
-          icon="search"
-          iconPosition="right"
           placeholder="이름을 검색해 주세요."
           value={searchValue}
           onChange={onSearchChange}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              onSearch();
+            }
+          }}
+          icon={<FaSearch onClick={onSearch} className="search-icon" />}
         />
       </SearchCompo>
       <TableCompo className="company-table-compo">
@@ -499,10 +540,10 @@ const WorkerTable = ({
             </div>
           </Table.Cell>
           {/* =============================테이블 푸터(페이지네이션)============================== */}
-          {totalPages >= 1 && (
-            <Table.Footer className="table-footer">
-              <Table.Row className="table-pagination-row">
-                <Table.HeaderCell colSpan="12" className="table-pagination-row">
+          <Table.Footer className="table-footer">
+            <Table.Row className="table-pagination-row">
+              <Table.HeaderCell colSpan="12" className="table-pagination-row">
+                {totalPages > 1 && (
                   <Pagination
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
@@ -534,10 +575,10 @@ const WorkerTable = ({
                     active={1 === activePage}
                     className="pagination-component"
                   />
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Footer>
-          )}
+                )}
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
         </Table>
         {/* =============================모달============================== */}
         <Modal

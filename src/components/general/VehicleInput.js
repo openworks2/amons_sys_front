@@ -103,85 +103,10 @@ const InputCompo = styled.div`
         &.title {
           color: #2e2e2e;
         }
-        &.phone-sms-area {
-          height: 65px;
-          width: 322px;
-          display: inline-block;
-          .sms-area {
-            display: inline-block;
-            margin-left: 30px;
-            vertical-align: top;
-          }
-          .sms-checkbox {
-            vertical-align: middle;
-            margin-top: 16px;
-            margin-left: 35px;
-          }
-          .phone-area {
-            display: inline-block;
-            .phone {
-              color: black;
-              width: 180px !important;
-              &:focus {
-                border-color: #f1592a !important;
-              }
-            }
-          }
-        }
-        &.birth-area {
-          height: 70px;
-          width: 322px;
-          margin-top: 5px;
-          .birth-box {
-            border: solid 1px;
-            border-radius: 4px;
-            background: #ffffff 0% 0% no-repeat padding-box;
-            border: 1px solid #d8d8d8;
-            border-radius: 4px;
-            opacity: 1;
-            height: 38px;
-            margin-top: 5px;
-            .cal-icon {
-              margin-top: 4px;
-              margin-left: 15px;
-              color: #2e2e2e;
-              display: inline-block;
-              font-size: 15px;
-              vertical-align: middle;
-            }
-            .date-picker-box {
-              .birth {
-                vertical-align: middle;
-                padding-left: 17px;
-                width: 213px !important;
-                margin-top: 5px;
-                border: 0px;
-                height: 25px;
-                color: black;
-              }
-              vertical-align: middle;
-              display: inline-block;
-            }
-          }
-        }
-        &.blood-area {
-          width: 322px;
-          height: 60px;
-          margin-bottom: 10px;
-          .bloodtype {
-            margin-top: 5px;
-            width: 170px;
-            display: inline-block;
-          }
-          .bloodgroup {
-            margin-left: 32px;
-            display: inline-block;
-            width: 120px;
-          }
-        }
       }
     }
   }
+
   .photo {
     .photo-box {
       cursor: pointer;
@@ -302,10 +227,9 @@ const InputCompo = styled.div`
   }
 `;
 
-const WorkerInput = ({
+const VehicleInput = ({
   onChange,
   onSelectChange,
-  onChangeDate,
   onFileUpload,
   createHandler,
   updateHandler,
@@ -320,91 +244,23 @@ const WorkerInput = ({
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const {
-    wk_id,
-    wk_index,
-    wk_name,
-    wk_phone,
-    wk_position,
-    wk_birth,
-    wk_nation,
-    wk_blood_type,
-    wk_blood_group,
-    wk_sms_yn,
-    wk_image_path,
+    vh_id,
+    vh_index,
+    created_date,
+    modified_date,
+    vh_name,
+    vh_number,
+    vh_image_path,
+    vh_io_state,
     co_index,
-    bc_index,
     co_name,
+    bc_index,
     bc_address,
   } = formData;
-  const [selectDate, setSelectDate] = useState(new Date());
-
-  const bloodType = [
-    { key: "a", text: "A", value: "0" },
-    { key: "b", text: "B", value: "1" },
-    { key: "o", text: "O", value: "2" },
-    { key: "ab", text: "AB", value: "3" },
-  ];
-
-  const bloodGroup = [
-    { key: "+", text: "Rh+", value: "0" },
-    { key: "-", text: "Rh-", value: "1" },
-  ];
-
-  const splitByColon = (str = "") => {
-    let length = str.length;
-    let point = str.length % 2;
-    let splitedStr = "";
-
-    splitedStr = str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += str.substring(point, point + 2);
-      point += 2;
-    }
-
-    return splitedStr;
-  };
-
-  const bloodtypeReturn = (type) => {
-    let typeStr = "";
-    switch (type) {
-      case 0:
-        typeStr = "A";
-        break;
-      case 1:
-        typeStr = "B";
-        break;
-      case 2:
-        typeStr = "O";
-        break;
-      case 3:
-        typeStr = "AB";
-        break;
-      default:
-        typeStr = "error";
-    }
-
-    return typeStr;
-  };
-
-  const bloodgroupReturn = (group) => {
-    let groupStr = "";
-    switch (group) {
-      case 0:
-        groupStr = "Rh+";
-        break;
-      case 1:
-        groupStr = "Rh-";
-        break;
-      default:
-        groupStr = "Rh+";
-    }
-    return groupStr;
-  };
 
   return (
-    <InputCompo className="input-compo" selectedState={wk_id}>
-      <p className="subtitle">작업자 등록</p>
+    <InputCompo className="input-compo" selectedState={vh_id}>
+      <p className="subtitle">차량 등록</p>
       <Form
         className="input-form-body"
         onSubmit={(e) => {
@@ -426,115 +282,24 @@ const WorkerInput = ({
             required
           />
           <Form.Input
-            label="직위"
-            className="input-form position"
-            id="wk_position"
-            name="wk_position"
-            placeholder="직위를 입력해주세요."
+            label="차량 종류"
+            className="input-form name"
+            id="vh_name"
+            name="vh_name"
+            placeholder="차량 종류를 입력해주세요."
             required
-            value={wk_position.replace(
-              /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
-              ""
-            )}
+            value={vh_name}
             onChange={onChange}
           />
           <Form.Input
             className="input-form"
-            label="이름"
-            className="input-form name"
-            id="wk_name"
-            name="wk_name"
-            placeholder="이름을 입력해주세요."
+            label="차량번호"
+            className="input-form number"
+            id="vh_number"
+            name="vh_number"
+            placeholder="차량 번호를 입력해주세요."
             required
-            value={wk_name.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")}
-            onChange={onChange}
-          />
-          <div className="input-form phone-sms-area">
-            <div className="phone-area">
-              <div className="form-title phone">핸드폰</div>
-              <NumberFormat
-                format="###-####-####"
-                className="input-form phone"
-                id="wk_phone"
-                name="wk_phone"
-                placeholder="번호를 입력해 주세요."
-                required
-                value={wk_phone && wk_phone}
-                onChange={onChange}
-              />
-            </div>
-            <div className="sms-area">
-              <div className="form-title">비상알람 SMS</div>
-              <Checkbox
-                className="sms-checkbox"
-                id="wk_sms_yn"
-                name="wk_sms_yn"
-                checked={wk_sms_yn}
-                value={wk_sms_yn && wk_sms_yn}
-                onChange={(e, value) => onSelectChange(e, value)}
-              />
-            </div>
-          </div>
-          <div className="input-form birth-area">
-            <div className="form-title">생년월일</div>
-            <div className="birth-box">
-              <FaRegCalendarAlt className="cal-icon" />
-              <div className="date-picker-box">
-                <DatePicker
-                  className="input-form birth"
-                  locale="ko"
-                  dateFormat="yyyy.MM.dd"
-                  name="wk_birth"
-                  shouldCloseOnSelect
-                  useWeekdaysShort={true}
-                  selected={
-                    wk_birth ? new Date(wk_birth) : new Date("1980.01.01")
-                  }
-                  placeholder="생년월일을 입력해주세요."
-                  onChange={(date) => onChangeDate(date)}
-                  required
-                />
-              </div>
-            </div>
-          </div>
-          <div className="input-form blood-area">
-            <div className="form-title">혈액형</div>
-            <Dropdown
-              fluid
-              selection
-              className="input-form bloodtype"
-              control={Select}
-              label="혈액형"
-              id="wk_blood_type"
-              name="wk_blood_type"
-              options={bloodType}
-              placeholder={"A"}
-              value={formData.wk_blood_type}
-              onChange={(e, value) => onSelectChange(e, value)}
-              required
-            />
-            <Dropdown
-              fluid
-              selection
-              className="input-form bloodgroup"
-              id="wk_blood_group"
-              name="wk_blood_group"
-              control={Select}
-              options={bloodGroup}
-              placeholder={"Rh+"}
-              value={formData.wk_blood_group}
-              onChange={(e, value) => onSelectChange(e, value)}
-              required
-            />
-          </div>
-          <Form.Input
-            label="국적"
-            className="input-form nation"
-            id="wk_nation"
-            name="wk_nation"
-            placeholder="국적을 입력해주세요."
-            required
-            value={wk_nation.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")}
+            value={vh_number}
             onChange={onChange}
           />
           <Form.Field
@@ -543,7 +308,7 @@ const WorkerInput = ({
             label="비콘 사용 정보"
             options={unUsedBeaconList}
             placeholder={
-              formData.wk_id
+              formData.vh_id
                 ? !formData.bc_index && "할당없음"
                 : "할당할 비콘을 선택해 주세요."
             }
@@ -637,4 +402,4 @@ const WorkerInput = ({
   );
 };
 
-export default WorkerInput;
+export default VehicleInput;

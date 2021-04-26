@@ -6,12 +6,13 @@ import {
   Table,
   Pagination,
   Modal,
+  Checkbox,
   Dropdown,
   Input,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { getBeacons } from "../../modules/beacons";
-import { useDispatch, useSelector } from "react-redux";
+import { getVehicles } from "../../modules/vehicles";
+import { useDispatch } from "react-redux";
 
 const TableCompo = styled.div`
   margin-left: 22px;
@@ -35,29 +36,35 @@ const TableCompo = styled.div`
     &.no {
       width: 51px;
     }
-    &.address {
-      width: 205px;
+    &.company {
+      width: 170px;
       text-align: left;
     }
-    &.index {
-      width: 81px;
+    &.position {
+      width: 160px;
+      text-align: left;
     }
-    &.used-type {
-      width: 181.5px;
+    &.name {
+      width: 160px;
+      text-align: left;
     }
-    &.battery-remain {
-      width: 120px;
+    &.sms {
+      width: 51px;
     }
-    &.battery-time {
-      width: 178px;
+    &.age {
+      width: 61px;
     }
-    &.description {
-      width: 333.5px;
+    &.blood {
+      width: 100px;
     }
-    &.trash-icon {
-      width: 55px !important ;
-      color: #7d7d7d;
+    &.nation {
+      width: 160px;
+      text-align: left;
     }
+    &.beacon {
+      width: 220px;
+    }
+
     @media screen and (max-height: 937px) {
       &.trash-icon {
         width: 64px !important;
@@ -81,6 +88,10 @@ const TableCompo = styled.div`
         -webkit-appearance: none;
         margin: 0px;
       }
+      .sms-check,
+      .ui.checkbox input.hidden + label {
+        cursor: default !important;
+      }
 
       .table-row {
         font-size: 14px;
@@ -101,24 +112,33 @@ const TableCompo = styled.div`
           &.no {
             width: 51px;
           }
-          &.address {
-            width: 204px;
+          &.company {
+            width: 170px;
             text-align: left;
           }
-          &.id {
-            width: 82px;
+          &.position {
+            width: 160px;
+            text-align: left;
           }
-          &.used-type {
-            width: 182px;
+          &.name {
+            width: 160px;
+            text-align: left;
           }
-          &.battery-remain {
-            width: 122px;
+          &.sms {
+            width: 51px;
           }
-          &.battery-time {
-            width: 180px;
+          &.age {
+            width: 61px;
           }
-          &.description {
-            width: 333px;
+          &.blood {
+            width: 100px;
+          }
+          &.nation {
+            width: 160px;
+            text-align: left;
+          }
+          &.beacon {
+            width: 220px;
           }
           &.trash-icon {
             width: 55px !important ;
@@ -163,6 +183,13 @@ const TableCompo = styled.div`
       background: #f9fafb !important;
     }
   }
+  .ui.checkbox input:checked ~ label:after {
+    background-color: #2e2e2e;
+    border-radius: 4px;
+    border-color: #929292;
+    color: #ffffff;
+    font-size: 12px;
+  }
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -172,9 +199,9 @@ const TableCompo = styled.div`
     color: #7c7c7c;
     opacity: 1;
     margin: 0px;
-    padding: 0px;
     margin-top: 25px;
     margin-bottom: 10px;
+    padding: 0px;
   }
 `;
 
@@ -208,28 +235,28 @@ const SearchCompo = styled.div`
     display: block;
     width: 123px;
   }
-
-  .ui.input > input {
-    &:focus {
-      border-color: #f1592a !important;
-    }
-  }
   .ui.basic.button.dropdown {
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     font-size: 13px;
   }
-  .ui.dropdown > .dropdown.icon:before {
+  .ui.input > input {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.dropdown > .dropdown.icon,
+  &:before,
+  &:after {
+    left: 80px;
     font-size: 20px;
     position: absolute;
-    left: 10px;
-    top: -5px !important;
     color: #2e2e2e !important;
     opacity: 0.8;
   }
 `;
 
-const BeaconTable = ({
+const VehicleTable = ({
   pageInfo,
   data,
   activeHandler,
@@ -238,17 +265,13 @@ const BeaconTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  companyData,
+  companySearchList,
 }) => {
-  const options = [
-    { key: "0", text: "사용정보", value: null },
-    { key: "1", text: "인원", value: 1 },
-    { key: "2", text: "차량", value: 2 },
-  ];
   let { activePage, itemsPerPage } = pageInfo;
+
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  const dispatch = useDispatch();
 
   // 검색 기능 table 데이터 처리
   // 검색하고 curreunt page 1 로 이동시켜줘야 함.
@@ -267,38 +290,23 @@ const BeaconTable = ({
     setSearchValue(_searchValue);
   };
 
+  const dispatch = useDispatch();
+
   const onSearch = (e) => {
-    // 조건 usedtype
     const _data = data;
-    let tempData1 = _data.filter((item) => item.bc_used_type === 1); // 작업자용
-    let tempData2 = _data.filter((item) => item.bc_used_type === 2); // 차량용
+    let tempData = [];
     if (!searchValue) {
-      dispatch(getBeacons());
+      dispatch(getVehicles());
     }
     if (categorieValue === null) {
       // 전체검색
-      tempData1 !== [] &&
-        (tempData1 = tempData1.filter((item) =>
-          item.wk_name.includes(searchValue)
-        ));
-      tempData2 !== [] &&
-        (tempData2 = tempData2.filter((item) =>
-          item.vh_name.includes(searchValue)
-        ));
-      setCurrentData([...tempData1, ...tempData2]);
-    } else if (categorieValue === 1) {
-      // 인원
-      tempData1 !== [] &&
-        (tempData1 = tempData1.filter((item) =>
-          item.wk_name.includes(searchValue)
-        ));
-      setCurrentData(tempData1);
+      tempData = _data.filter((item) => item.wk_name.includes(searchValue));
+      setCurrentData(tempData);
     } else {
-      tempData2 !== [] &&
-        (tempData2 = tempData2.filter((item) =>
-          item.vh_name.includes(searchValue)
-        ));
-      setCurrentData(tempData2);
+      // 검색
+      tempData = _data.filter((item) => item.co_index === categorieValue);
+      tempData = tempData.filter((item) => item.wk_name.includes(searchValue));
+      setCurrentData(tempData);
     }
     initActiveRow();
     initFormData();
@@ -354,35 +362,41 @@ const BeaconTable = ({
           className="table-row"
           key={index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.bc_id))}
+          onClick={item && ((e) => activeHandler(e, index, item.vh_id))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
           </Table.Cell>
-          <Table.Cell className="table-cell address" name="address">
-            {item && item.bc_address && splitByColon(item.bc_address)}
+          <Table.Cell className="table-cell company" name="company">
+            {item &&
+              companyData &&
+              companyData.find((el) => el.co_index === item.co_index).co_name}
           </Table.Cell>
-          <Table.Cell className="table-cell id" name="id">
-            {item && item.bc_id}
+          <Table.Cell className="table-cell position" name="position">
+            {item && item.wk_position}
           </Table.Cell>
-          <Table.Cell className="table-cell used-type" name="used-type">
-            {!item ? "" : item.bc_used_type === 1 ? item.wk_name : item.vh_name}
+          <Table.Cell className="table-cell name" name="name">
+            {item && item.wk_name}
           </Table.Cell>
-          <Table.Cell
-            className="table-cell battery-remain"
-            name="battery-remain"
-          >
-            {item && item.bc_remain}
+          <Table.Cell className="table-cell sms" name="sms">
+            {item && (
+              <Checkbox
+                className="sms-check"
+                checked={item.wk_sms_yn === 1 ? true : false}
+              />
+            )}
           </Table.Cell>
-          <Table.Cell className="table-cell battery-time" name="battery-time">
-            {item && item.bc_time}
+          <Table.Cell className="table-cell nation" name="nation">
+            {item && item.wk_nation}
           </Table.Cell>
-          <Table.Cell className="table-cell description" name="description">
-            {item && item.description}
+          <Table.Cell className="table-cell beacon" name="beacon">
+            {item && item.bc_address
+              ? splitByColon(item.bc_address)
+              : item && "할당없음"}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.bc_id === selectedId && (
+            {item && selectedId && item.wk_id === selectedId && (
               <Button
                 className="trash-icon-button"
                 onClick={(e) => {
@@ -410,9 +424,9 @@ const BeaconTable = ({
             <Dropdown
               button
               basic
-              options={options}
+              options={companySearchList}
               className="dropdown"
-              placeholder="사용정보"
+              placeholder="소속사"
               position="left"
               name="searchCategorie"
               onChange={(e, value) => {
@@ -421,7 +435,7 @@ const BeaconTable = ({
             />
           }
           actionPosition="left"
-          placeholder="작업자 이름 또는 차량 종류를 검색해 주세요."
+          placeholder="이름을 검색해 주세요."
           value={searchValue}
           onChange={onSearchChange}
           onKeyPress={(e) => {
@@ -433,36 +447,36 @@ const BeaconTable = ({
         />
       </SearchCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">비콘 목록</p>
+        <p className="subtitle">작업자 목록</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">
                 NO
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header address">
-                MAC 주소
+              <Table.HeaderCell singleLine className="table-header company">
+                소속사
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header index">
-                관리번호
+              <Table.HeaderCell singleLine className="table-header position">
+                직위
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header used-type">
-                사용정보
+              <Table.HeaderCell singleLine className="table-header name">
+                이름
               </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header battery-remain"
-              >
-                배터리 잔량(%)
+              <Table.HeaderCell singleLine className="table-header sms">
+                SMS
               </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header battery-time"
-              >
-                잔량 측정 일시
+              <Table.HeaderCell singleLine className="table-header age">
+                나이
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
-                비고
+              <Table.HeaderCell singleLine className="table-header blood">
+                혈액형
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header nation">
+                국적
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header beacon">
+                비콘 사용 정보
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header trash-icon">
                 <FaTrash />
@@ -528,7 +542,7 @@ const BeaconTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem && `${selectedItem.bc_address}`} 비콘을
+                {selectedItem && `${selectedItem.wk_name}`} 작업자 정보를
                 삭제하시겠습니까?
               </p>
             </Modal.Description>
@@ -563,4 +577,4 @@ const BeaconTable = ({
   );
 };
 
-export default BeaconTable;
+export default VehicleTable;

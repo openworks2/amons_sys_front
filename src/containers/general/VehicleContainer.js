@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import WorkerInput from "../../components/general/WorkerInput";
-import WorkerTable from "../../components/general/WorkerTable";
+import VehicleInput from "../../components/general/VehicleInput";
+import VehicleTable from "../../components/general/VehicleTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getUnUsedBeacons } from "../../modules/beacons";
 import { getCompanies } from "../../modules/companies";
 import {
-  getWorkers,
-  postWorker,
-  deleteWorker,
-  putWorker,
-} from "../../modules/workers";
+  getVehicles,
+  postVehicle,
+  putVehicle,
+  deleteVehicle,
+} from "../../modules/vehicles";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -67,9 +67,9 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const WorkerContatiner = () => {
+const VehicleContainer = () => {
   const { data, loading, error } = useSelector(
-    (state) => state.workers.workers
+    (state) => state.vehicles.vehicles
   );
   const companyData = useSelector((state) => state.companies.companies.data);
   const unUsedBeaconData = useSelector((state) => state.beacons.beacons.data);
@@ -79,21 +79,18 @@ const WorkerContatiner = () => {
   useEffect(() => {
     dispatch(getUnUsedBeacons());
     dispatch(getCompanies());
-    dispatch(getWorkers());
+    dispatch(getVehicles());
   }, [dispatch]);
 
   const [formData, setFormData] = useState({
-    wk_id: null,
-    wk_index: null,
-    wk_name: "",
-    wk_phone: "",
-    wk_position: "",
-    wk_nation: "",
-    wk_birth: "1980.01.01",
-    wk_blood_type: "0",
-    wk_blood_group: "0",
-    wk_sms_yn: false,
-    wk_image_path: "",
+    vh_id: null,
+    vh_index: null,
+    created_date: null,
+    modified_date: null,
+    vh_name: null,
+    vh_number: null,
+    vh_image_path: null,
+    vh_io_state: null,
     co_index: null,
     co_name: null,
     bc_index: null,
@@ -202,7 +199,6 @@ const WorkerContatiner = () => {
   };
 
   // form onSelectChant Event
-
   const onSelectChange = (e, seletedValue) => {
     console.log("*****************************");
     console.log("e");
@@ -213,19 +209,8 @@ const WorkerContatiner = () => {
     console.log(seletedValue.options);
     const name = seletedValue.name;
     const value = seletedValue.value;
-    if (formData.wk_blood_type) {
-      setFormData({ ...formData, wk_blood_type: 0 });
-    }
-    if (formData.wk_blood_group) {
-      setFormData({ ...formData, wk_blood_group: 0 });
-    }
 
-    if (name === "wk_sms_yn") {
-      setFormData({
-        ...formData,
-        [name]: !value,
-      });
-    } else if (name === "bc_index") {
+    if (name === "bc_index") {
       const address = seletedValue.options.find((el) => el.value == value)
         .address;
 
@@ -240,30 +225,10 @@ const WorkerContatiner = () => {
         [name]: value,
       });
     }
+
     console.log("formData");
     console.log(formData);
     console.log("*****************************");
-  };
-
-  // datepicker
-
-  const getFormatDate = (date) => {
-    var year = date.getFullYear(); //yyyy
-    var month = 1 + date.getMonth(); //M
-    month = month >= 10 ? month : "0" + month; //month 두자리로 저장
-    var day = date.getDate(); //d
-    day = day >= 10 ? day : "0" + day; //day 두자리로 저장
-    return year + "." + month + "." + day; //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
-  };
-
-  const onChangeDate = (date) => {
-    if (!data) {
-    } else if (data.length) {
-      setFormData({
-        ...formData,
-        wk_birth: getFormatDate(date),
-      });
-    }
   };
 
   // 사진 업로드
@@ -287,7 +252,7 @@ const WorkerContatiner = () => {
   useEffect(() => {
     setFormData({
       ...formData,
-      wk_image_path: imageUrl,
+      vh_image_path: imageUrl,
     });
   }, [imageUrl]);
 
@@ -308,17 +273,14 @@ const WorkerContatiner = () => {
   const initFormData = () => {
     setFormData({
       ...formData,
-      wk_id: null,
-      wk_index: null,
-      wk_name: "",
-      wk_phone: "",
-      wk_position: "",
-      wk_nation: "",
-      wk_birth: "1980.01.01",
-      wk_blood_type: "0",
-      wk_blood_group: "0",
-      wk_sms_yn: false,
-      wk_image_path: "",
+      vh_id: null,
+      vh_index: null,
+      created_date: null,
+      modified_date: null,
+      vh_name: null,
+      vh_number: null,
+      vh_image_path: null,
+      vh_io_state: null,
       co_index: null,
       co_name: null,
       bc_index: null,
@@ -332,27 +294,21 @@ const WorkerContatiner = () => {
       initActiveRow();
       initFormData();
     } else {
-      const findItem = data.find((worker) => worker.wk_id === selectedId);
+      const findItem = data.find((vehicle) => vehicle.vh_id === selectedId);
 
       setSelectedRow({
-        selectedId: findItem.wk_id,
+        selectedId: findItem.vh_id,
         selectedItem: findItem,
         clickedIndex: index,
       });
 
       setFormData({
         ...formData,
-        wk_id: findItem.wk_id,
-        wk_index: findItem.wk_index,
-        wk_name: findItem.wk_name,
-        wk_phone: findItem.wk_phone,
-        wk_position: findItem.wk_position,
-        wk_nation: findItem.wk_nation,
-        wk_birth: findItem.wk_birth,
-        wk_blood_type: findItem.wk_blood_type,
-        wk_blood_group: findItem.wk_blood_group,
-        wk_sms_yn: findItem.wk_sms_yn,
-        wk_image_path: findItem.wk_image_path,
+        vh_id: findItem.vh_id,
+        vh_index: findItem.vh_index,
+        vh_name: findItem.vh_name,
+        vh_number: findItem.vh_name,
+        vh_image_path: findItem.vh_image_path,
         co_index: findItem.co_index,
         co_name: findItem.co_name,
         bc_index: findItem.bc_index,
@@ -393,20 +349,7 @@ const WorkerContatiner = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    const calAge = (birth) => {
-      let currentYear = today.getFullYear();
-      let age = currentYear - birth.substring(0, 4) + 1;
-      return age;
-    };
-
-    let age = calAge(formData.wk_birth);
-
-    if (age > 100 || age < 17) {
-      setFormData({
-        ...formData,
-        wk_birth: "1980.01.01",
-      });
-    } else if (!formData.co_index) {
+    if (!formData.vh_index) {
       setCompanyError({
         content: "소속사를 선택해 주세요.",
         pointing: "below",
@@ -415,8 +358,8 @@ const WorkerContatiner = () => {
         setCompanyError(undefined);
       }, 1500);
     } else {
-      let newWorker = { ...formData };
-      dispatch(postWorker(newWorker));
+      let newVehicle = { ...formData };
+      dispatch(postVehicle(newVehicle));
       initActiveRow();
       initFormData();
     }
@@ -424,23 +367,9 @@ const WorkerContatiner = () => {
 
   // UPDATE
   const updateHandler = (e) => {
-    // let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
     // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
-
-    const calAge = (birth) => {
-      let currentYear = today.getFullYear();
-      let age = currentYear - formData.wk_birth.substring(0, 4) + 1;
-      return age;
-    };
-
-    let age = calAge(formData.wk_birth);
-
-    if (age > 100 || age < 17) {
-      setFormData({
-        ...formData,
-        wk_birth: "1980.01.01",
-      });
-    } else if (!formData.co_index) {
+    e.preventDefault();
+    if (!formData.co_index) {
       setCompanyError({
         content: "소속사를 선택해 주세요.",
         pointing: "below",
@@ -455,21 +384,21 @@ const WorkerContatiner = () => {
       console.log(formData);
       console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
       console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
-      let newWorker = {
+      let newVehicle = {
         ...formData,
-        wk_io_state: findItem.wk_io_state,
-        created_date: findItem.wk_create_date,
+        vh_io_state: findItem.vh_io_state,
+        created_date: findItem.created_date,
         modified_date: today,
       };
-      dispatch(putWorker(newWorker.wk_index, newWorker));
+      dispatch(putVehicle(newVehicle.vh_index, newVehicle));
       initActiveRow();
       initFormData();
     }
   };
 
   // DELETE
-  const deleteHandler = (e, wk_id) => {
-    dispatch(deleteWorker(wk_id));
+  const deleteHandler = (e, vh_id) => {
+    dispatch(deleteVehicle(vh_id));
     initActiveRow();
     initFormData();
   };
@@ -486,11 +415,10 @@ const WorkerContatiner = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <WorkerInput
-            className="worker-input-box"
+          <VehicleInput
+            className="vehicle-input-box"
             onChange={onChange}
             onSelectChange={onSelectChange}
-            onChangeDate={onChangeDate}
             onFileUpload={onFileUpload}
             formData={formData}
             createHandler={createHandler}
@@ -505,8 +433,8 @@ const WorkerContatiner = () => {
         </div>
         <div className="table-box">
           {data && (
-            <WorkerTable
-              className="worker-table-box"
+            <VehicleTable
+              className="vehicle-table-box"
               pageInfo={pageInfo}
               data={data}
               activeHandler={activeHandler}
@@ -526,4 +454,4 @@ const WorkerContatiner = () => {
   );
 };
 
-export default WorkerContatiner;
+export default VehicleContainer;

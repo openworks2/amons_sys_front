@@ -105,6 +105,7 @@ const CompanyTableCompo = styled.div`
     border: 1px solid #d8d8d8;
     opacity: 1;
     padding: 8px !important;
+    height: 60px !important;
     .pagination-component {
       float: right;
     }
@@ -136,9 +137,10 @@ const CompanyTableCompo = styled.div`
     letter-spacing: 0px;
     color: #7c7c7c;
     opacity: 1;
-    margin-top: 5px;
-    margin-bottom: 40px;
+    margin-top: 25px;
+    margin-bottom: 38px;
     @media screen and (max-height: 937px) {
+      margin-bottom: 25px;
       margin-top: 15px;
     }
   }
@@ -242,10 +244,10 @@ const CompanyTable = ({
           <div className="table-body-box">{tableRender(viewItems)}</div>
         </Table.Cell>
         {/* =============================테이블 푸터(페이지네이션)============================== */}
-        {totalPages >= 1 && (
-          <Table.Footer className="table-footer">
-            <Table.Row className="table-pagination-row">
-              <Table.HeaderCell colSpan="5" className="table-pagination-row">
+        <Table.Footer className="table-footer">
+          <Table.Row className="table-pagination-row">
+            <Table.HeaderCell colSpan="5" className="table-pagination-row">
+              {totalPages > 1 && (
                 <Pagination
                   activePage={activePage ? activePage : 0}
                   totalPages={totalPages}
@@ -274,10 +276,10 @@ const CompanyTable = ({
                   active={1 === activePage}
                   className="pagination-component"
                 />
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Footer>
-        )}
+              )}
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
       </Table>
       {/* =============================모달============================== */}
       <Modal
