@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import Dahua from '../../../lib/cctv/location001/Dahua';
+import Dahua from '../../../lib/cctv/location001/Dahua';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fortawesome/pro-solid-svg-icons"
+import AccessDetailPanel from './AccessDetailPanel';
 
 const CameraCompo = styled.div`
     width: 100%;
@@ -21,7 +22,7 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation001 = ({ id, ctrlPanel }) => {
+const CameraLocation001 = ({ id, ctrlPanel, accessPanel }) => {
     const [form, setForm] = useState({
         ip: 'openworks2.iptime.org',
         port: '1234',
@@ -60,7 +61,7 @@ const CameraLocation001 = ({ id, ctrlPanel }) => {
         setLocate(!Locate)
     }
     /**
-     * @pa`ram{string} key 컨트롤 인덱스
+     * @param{string} key 컨트롤 인덱스
      * @param{boolean} flag 진위값
      * @description 영상 이동 조작
      */
@@ -136,21 +137,47 @@ const CameraLocation001 = ({ id, ctrlPanel }) => {
     }
 
 
-    // const connCCTV = async () => {
-    //     try {
-    //         const cctv = await new Dahua(`divPlugin-${id}`);
-    //         cctv.init(form);
-    //         setCamera(cctv);
+    const connCCTV = async () => {
+        try {
+            const cctv = await new Dahua(`divPlugin-${id}`);
+            cctv.init(form);
+            setCamera(cctv);
+        } catch (error) {
 
-    //     } catch (error) {
+        }
+    }
 
-    //     }
-    // }
+    const resizeVideo = useCallback(() => {
+        console.log(ctrlPanel)
+        if (accessPanel !== null && accessPanel === 'loc003') {
+            Camera.hiddenScreen();
+        }
+        else if (accessPanel === null || accessPanel !== 'loc003') {
+            Camera.showScreen();
+        }
+    }, [Camera, accessPanel]);
 
-    // useEffect(() => {
-    //     connCCTV();
-    // }, []);
 
+    useEffect(() => {
+        if (!Camera) {
+            connCCTV();
+        }
+        if (Camera) {
+            resizeVideo();
+            if (ctrlPanel !== id || ctrlPanel === null) {
+                if(Locate){
+                    ptzLocationHandler();
+                }
+            }
+        }
+    }, [accessPanel, ctrlPanel]);
+
+    const resizeHandler = ()=>{
+        if(Camera){
+            Camera.setReposition();
+        }
+    }
+    window.addEventListener("resize", resizeHandler);
 
     return (
         <CameraCompo>
@@ -159,114 +186,117 @@ const CameraLocation001 = ({ id, ctrlPanel }) => {
                 {/* <iframe id={`divPlugin-${id}`} className="plugin"></iframe> */}
             </div>
             {
-                ctrlPanel===id &&
-                    <div className="controll-box">
-                        <div className="ptz-mode">
-                            <input
-                                type="radio"
-                                id="zoom-btn"
-                                name="zoom"
-                                value="zoom"
-                                checked={radio === 'zoom'}
-                                onChange={onRadioChange}
-                            />
-                            <label id="zoom-label">Zoom</label>
-                            <input
-                                type="radio"
-                                id="focus-btn"
-                                name="focus"
-                                value="focus"
-                                checked={radio === 'focus'}
-                                onChange={onRadioChange}
-                            />
-                            <label>Focus</label>
-                        </div>
-                        <div className="ptz-zoom">
-                            <div
-                                className="ctrlBtn-plus"
-                                onMouseDown={() => onPlusAction(true)}
-                                onMouseUp={() => onPlusAction(false)}
-                            ></div>
-                            <div
-                                className="ctrlBtn-minus"
-                                onMouseDown={() => onMinusAction(true)}
-                                onMouseUp={() => onMinusAction(false)}
-                            ></div>
-                        </div>
+                ctrlPanel === id &&
+                <div className="controll-box">
+                    <div className="ptz-mode">
+                        <input
+                            type="radio"
+                            id="zoom-btn"
+                            name="zoom"
+                            value="zoom"
+                            checked={radio === 'zoom'}
+                            onChange={onRadioChange}
+                        />
+                        <label id="zoom-label">Zoom</label>
+                        <input
+                            type="radio"
+                            id="focus-btn"
+                            name="focus"
+                            value="focus"
+                            checked={radio === 'focus'}
+                            onChange={onRadioChange}
+                        />
+                        <label>Focus</label>
+                    </div>
+                    <div className="ptz-zoom">
+                        <div
+                            className="ctrlBtn-plus"
+                            onMouseDown={() => onPlusAction(true)}
+                            onMouseUp={() => onPlusAction(false)}
+                        ></div>
+                        <div
+                            className="ctrlBtn-minus"
+                            onMouseDown={() => onMinusAction(true)}
+                            onMouseUp={() => onMinusAction(false)}
+                        ></div>
+                    </div>
 
-                        <div className="ptz-controll">
-                            <div className="button-panel">
-                                <div className="ptz-header">
-                                    <div
-                                        className="upperLeft"
-                                        onMouseDown={() => onPTZController('upperLeft', true)}
-                                        onMouseUp={() => onPTZController('upperLeft', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretUp} /></span>
-                                    </div>
-                                    <div
-                                        className="upper"
-                                        onMouseDown={() => onPTZController('upper', true)}
-                                        onMouseUp={() => onPTZController('upper', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretUp} /></span>
-                                    </div>
-                                    <div
-                                        className="upperRight"
-                                        onMouseDown={() => onPTZController('upperRight', true)}
-                                        onMouseUp={() => onPTZController('upperRight', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretUp} /></span>
-                                    </div>
+                    <div className="ptz-controll">
+                        <div className="button-panel">
+                            <div className="ptz-header">
+                                <div
+                                    className="upperLeft"
+                                    onMouseDown={() => onPTZController('upperLeft', true)}
+                                    onMouseUp={() => onPTZController('upperLeft', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretUp} /></span>
                                 </div>
-                                <div className="ptz-center">
-                                    <div
-                                        className="left"
-                                        onMouseDown={() => onPTZController('left', true)}
-                                        onMouseUp={() => onPTZController('left', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretLeft} /></span>
-                                    </div>
-                                    <div
-                                        className={Locate ? "locate enable-location" : "locate disable-location"}
-                                        onClick={ptzLocationHandler}
-                                    >
-                                        <span><FontAwesomeIcon icon={faSearch} /></span>
-                                    </div>
-                                    <div
-                                        className="right"
-                                        onMouseDown={() => onPTZController('right', true)}
-                                        onMouseUp={() => onPTZController('right', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretRight} /></span>
-                                    </div>
+                                <div
+                                    className="upper"
+                                    onMouseDown={() => onPTZController('upper', true)}
+                                    onMouseUp={() => onPTZController('upper', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretUp} /></span>
                                 </div>
-                                <div className="ptz-footer">
-                                    <div
-                                        className="lowerLeft"
-                                        onMouseDown={() => onPTZController('lowerLeft', true)}
-                                        onMouseUp={() => onPTZController('lowerLeft', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretDown} /></span>
-                                    </div>
-                                    <div
-                                        className="lower"
-                                        onMouseDown={() => onPTZController('lower', true)}
-                                        onMouseUp={() => onPTZController('lower', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretDown} /></span>
-                                    </div>
-                                    <div
-                                        className="lowerRight"
-                                        onMouseDown={() => onPTZController('lowerRight', true)}
-                                        onMouseUp={() => onPTZController('lowerRight', false)}
-                                    >
-                                        <span><FontAwesomeIcon icon={faCaretDown} /></span>
-                                    </div>
+                                <div
+                                    className="upperRight"
+                                    onMouseDown={() => onPTZController('upperRight', true)}
+                                    onMouseUp={() => onPTZController('upperRight', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretUp} /></span>
+                                </div>
+                            </div>
+                            <div className="ptz-center">
+                                <div
+                                    className="left"
+                                    onMouseDown={() => onPTZController('left', true)}
+                                    onMouseUp={() => onPTZController('left', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretLeft} /></span>
+                                </div>
+                                <div
+                                    className={Locate ? "locate enable-location" : "locate disable-location"}
+                                    onClick={ptzLocationHandler}
+                                >
+                                    <span><FontAwesomeIcon icon={faSearch} /></span>
+                                </div>
+                                <div
+                                    className="right"
+                                    onMouseDown={() => onPTZController('right', true)}
+                                    onMouseUp={() => onPTZController('right', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretRight} /></span>
+                                </div>
+                            </div>
+                            <div className="ptz-footer">
+                                <div
+                                    className="lowerLeft"
+                                    onMouseDown={() => onPTZController('lowerLeft', true)}
+                                    onMouseUp={() => onPTZController('lowerLeft', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretDown} /></span>
+                                </div>
+                                <div
+                                    className="lower"
+                                    onMouseDown={() => onPTZController('lower', true)}
+                                    onMouseUp={() => onPTZController('lower', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretDown} /></span>
+                                </div>
+                                <div
+                                    className="lowerRight"
+                                    onMouseDown={() => onPTZController('lowerRight', true)}
+                                    onMouseUp={() => onPTZController('lowerRight', false)}
+                                >
+                                    <span><FontAwesomeIcon icon={faCaretDown} /></span>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            }
+            {
+                accessPanel === id && <AccessDetailPanel />
             }
         </CameraCompo>
     );

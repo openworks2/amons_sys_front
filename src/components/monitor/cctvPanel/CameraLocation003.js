@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Dahua from '../../../lib/cctv/location003/Dahua';
+// import Dahua from '../../../lib/cctv/location003/Dahua';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fortawesome/pro-solid-svg-icons"
+import AccessDetailPanel from './AccessDetailPanel';
 
 const CameraCompo = styled.div`
     width: 100%;
@@ -20,7 +21,7 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation003 = ({ id, ctrlPanel }) => {
+const CameraLocation003 = ({ id, ctrlPanel, accessPanel }) => {
 
     const [form, setForm] = useState({
         ip: 'dhh3-4.iptime.org',
@@ -172,7 +173,7 @@ const CameraLocation003 = ({ id, ctrlPanel }) => {
                             checked={radio === 'zoom'}
                             onChange={onRadioChange}
                         />
-                        <label for="zoom" id="zoom-label">Zoom</label>
+                        <label id="zoom-label">Zoom</label>
                         <input
                             type="radio"
                             id="focus-btn"
@@ -181,7 +182,7 @@ const CameraLocation003 = ({ id, ctrlPanel }) => {
                             checked={radio === 'focus'}
                             onChange={onRadioChange}
                         />
-                        <label for="focus">Focus</label>
+                        <label>Focus</label>
                     </div>
                     <div className="ptz-zoom">
                         <div
@@ -268,6 +269,9 @@ const CameraLocation003 = ({ id, ctrlPanel }) => {
                         </div>
                     </div>
                 </div>
+            }
+            {
+                accessPanel === id && <AccessDetailPanel />
             }
         </CameraCompo>
     );

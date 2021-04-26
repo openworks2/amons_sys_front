@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DrillRatePanel from './DrillRatePanel';
+import { ProgressBar } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const DrillMapCompo = styled.div`
     width: 100%;
@@ -80,6 +82,19 @@ const DrillMapCompo = styled.div`
             top: 28px;
         }
     }
+    .progress-demo{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color:gray;
+    }
+    .progress-bar{
+        background-color: #971717;
+    }
+    .progress-bar-striped {
+        background-image: url(../../image/ar_L.png) !important;    
+        animation-direction: reverse;
+    }
 `;
 
 const DrillMapComponent = ({ ratePanelOpen }) => {
@@ -91,6 +106,7 @@ const DrillMapComponent = ({ ratePanelOpen }) => {
                 <div className="text-box left-top-text">
                     <div className="location-title">시점 함양</div>
                     <div className="location-dig">1,020m</div>
+
                 </div>
                 <div className="location-distance top-distance">함양 L=3,359m</div>
                 <div className="text-box right-top-text">
@@ -113,6 +129,10 @@ const DrillMapComponent = ({ ratePanelOpen }) => {
                 ratePanelOpen &&
                 <DrillRatePanel />
             }
+            <div classNam="progress-demo">
+                <ProgressBar now={60} animated />;
+            </div>
+
         </DrillMapCompo>
     );
 };

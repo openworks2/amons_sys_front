@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fortawesome/pro-solid-svg-icons"
+import AccessDetailPanel from './AccessDetailPanel';
 
 const CameraCompo = styled.div`
     width: 100%;
@@ -20,7 +21,7 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation004 = ({ id, ctrlPanel }) => {
+const CameraLocation004 = ({ id, ctrlPanel, accessPanel }) => {
 
     const [form, setForm] = useState({
         ip: 'openworks2.iptime.org',
@@ -171,7 +172,7 @@ const CameraLocation004 = ({ id, ctrlPanel }) => {
                             checked={radio === 'zoom'}
                             onChange={onRadioChange}
                         />
-                        <label for="zoom" id="zoom-label">Zoom</label>
+                        <label id="zoom-label">Zoom</label>
                         <input
                             type="radio"
                             id="focus-btn"
@@ -180,7 +181,7 @@ const CameraLocation004 = ({ id, ctrlPanel }) => {
                             checked={radio === 'focus'}
                             onChange={onRadioChange}
                         />
-                        <label for="focus">Focus</label>
+                        <label>Focus</label>
                     </div>
                     <div className="ptz-zoom">
                         <div
@@ -267,6 +268,9 @@ const CameraLocation004 = ({ id, ctrlPanel }) => {
                         </div>
                     </div>
                 </div>
+            }
+            {
+                accessPanel === id && <AccessDetailPanel />
             }
         </CameraCompo>
     );

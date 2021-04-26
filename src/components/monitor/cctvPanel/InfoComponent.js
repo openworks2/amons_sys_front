@@ -69,7 +69,7 @@ const InfoCompo = styled.div`
                 border-radius: 4px;
                 background-color:#2E2E2E;
                 text-align:center;
-                padding-top: 5px;
+                /* padding-top: 5px; */
                 margin-left: 6px;
                 .optional-icon{
                     font-size: 18px;
@@ -85,11 +85,24 @@ const InfoCompo = styled.div`
                     color:#036EB8;
                     background-color:#1e1e1e;
                 }
+                &.active{
+                    color:#036EB8;
+                } 
+
             }
         }
     }
 `;
-const InfoComponent = ({ way, id, openCtrlPanel }) => {
+const InfoComponent = ({
+    way,
+    id,
+    ctrlPanel,
+    openCtrlPanel,
+    accessPanel,
+    openAccessPanel
+}) => {
+
+
     return (
         <InfoCompo className="info-component">
             <div className="left-box">
@@ -108,11 +121,11 @@ const InfoComponent = ({ way, id, openCtrlPanel }) => {
                     </div>
                 </div>
                 <div className="optional-box">
-                    <div className="detail-panel-button">
+                    <div className={accessPanel === id ? "detail-panel-button active" : "detail-panel-button"} onClick={() => openAccessPanel(id)}>
                         <div className="optional-icon"><FontAwesomeIcon icon={faList} /></div>
                         <div className="optional-name">LIST</div>
                     </div>
-                    <div className="ptz-control-button" onClick={()=>openCtrlPanel(id)}>
+                    <div className={ctrlPanel === id ? "ptz-control-button active" : "ptz-control-button"} onClick={() => openCtrlPanel(id)}>
                         <div className="optional-icon"><FontAwesomeIcon icon={faArrows} /></div>
                         <div className="optional-name">CCTV</div>
                     </div>

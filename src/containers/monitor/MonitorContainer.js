@@ -85,15 +85,26 @@ const BodyCompo = styled.div`
 
 
 const MonitorContainer = ({ ratePanelOpen }) => {
-    const [ctrlPanel, setOpenPanel] = useState(null);
+    const [ctrlPanel, setOpenCtrlPanel] = useState(null);
+    const [accessPanel, setOpenAccessPanel] = useState(null);
 
     const openCtrlPanel = (id) => {
-
         if (ctrlPanel === id) {
-            setOpenPanel(null);
+            setOpenCtrlPanel(null);
         } else {
             console.log(id)
-            setOpenPanel(id)
+            setOpenCtrlPanel(id);
+            setOpenAccessPanel(null);
+        }
+    }
+
+    const openAccessPanel = (id) => {
+        console.log(id)
+        if (accessPanel === id) {
+            setOpenAccessPanel(null)
+        } else {
+            setOpenAccessPanel(id)
+            setOpenCtrlPanel(null);
         }
     }
 
@@ -106,7 +117,7 @@ const MonitorContainer = ({ ratePanelOpen }) => {
                         <StatusInfo />
                     </div>
                     <div className="left-center-box drill-map-box">
-                        <DrillMapComponent ratePanelOpen={ratePanelOpen}/>
+                        <DrillMapComponent ratePanelOpen={ratePanelOpen} />
                     </div>
                     <div className="left-bottom-box map-box">
 
@@ -119,10 +130,24 @@ const MonitorContainer = ({ ratePanelOpen }) => {
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                <CctvCompo way="right" id="loc001" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
+                                <CctvCompo
+                                    way="right"
+                                    id="loc001"
+                                    ctrlPanel={ctrlPanel}
+                                    openCtrlPanel={openCtrlPanel}
+                                    accessPanel={accessPanel}
+                                    openAccessPanel={openAccessPanel}
+                                />
                             </div>
                             <div className="bottom-cctv">
-                                <CctvCompo way="right" id="loc002" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
+                                <CctvCompo
+                                    way="right"
+                                    id="loc002"
+                                    ctrlPanel={ctrlPanel}
+                                    openCtrlPanel={openCtrlPanel}
+                                    accessPanel={accessPanel}
+                                    openAccessPanel={openAccessPanel}
+                                />
                             </div>
                         </div>
                     </div>
@@ -131,10 +156,24 @@ const MonitorContainer = ({ ratePanelOpen }) => {
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                <CctvCompo way="left" id="loc003" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
+                                <CctvCompo
+                                    way="left"
+                                    id="loc003"
+                                    ctrlPanel={ctrlPanel}
+                                    openCtrlPanel={openCtrlPanel}
+                                    accessPanel={accessPanel}
+                                    openAccessPanel={openAccessPanel}
+                                />
                             </div>
                             <div className="bottom-cctv">
-                                <CctvCompo way="left" id="loc004" ctrlPanel={ctrlPanel} openCtrlPanel={openCtrlPanel} />
+                                <CctvCompo
+                                    way="left"
+                                    id="loc004"
+                                    ctrlPanel={ctrlPanel}
+                                    openCtrlPanel={openCtrlPanel}
+                                    accessPanel={accessPanel}
+                                    openAccessPanel={openAccessPanel}
+                                />
                             </div>
                         </div>
                     </div>

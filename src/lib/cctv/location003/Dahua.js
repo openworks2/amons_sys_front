@@ -46,6 +46,12 @@ Dahua.prototype = {
         szProtocol: undefined,
         szTitmeout: undefined
     },
+    position: {
+        left: 0,
+        right: 0,
+        width: 0,
+        height: 0
+    },
     ptzSpeed: 4,
     channel: 1, //채널 번호
     streamType: 1, // 현재 코드 유형
@@ -63,11 +69,11 @@ Dahua.prototype = {
             //초기화 플러그인
             WebVideoCtrl.initPlugin("Protocol2", function () {
                 WebVideoCtrl.setOpInfoCallback(_this.showOPInfo);
-                let left = _this.camOCX.offsetLeft;
-                let top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
-                let width = _this.camOCX.offsetWidth;
-                let height = _this.camOCX.offsetHeight;
- 
+                let left = _this.position.left = _this.camOCX.offsetLeft;
+                let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
+                let width = _this.position.width = _this.camOCX.offsetWidth;
+                let height = _this.position.height = _this.camOCX.offsetHeight;
+
                 WebVideoCtrl.resizeVideo(left, top, width, height);
                 //비디오 창을 만듭니다
                 WebVideoCtrl.createMultiNodeDisplay(36);
@@ -441,7 +447,35 @@ Dahua.prototype = {
         let speed = this.ptzSpeed;
         WebVideoCtrl.controlAperture(speed, 1, flag);
 
+    },
+    hiddenScreen() {
+        WebVideoCtrl.resizeVideo(0, 0, 0, 0);
+    },
+    showScreen() {
+        const _this = this;
+        let left = _this.position.left;
+        let top = _this.position.top;
+        let width = _this.position.width;
+        let height = _this.position.height;
+        WebVideoCtrl.resizeVideo(left, top, width, height);
+    },
+    setReposition() {
+        const _this = this;
+        let left = _this.position.left = _this.camOCX.offsetLeft;
+        let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
+        let width = _this.position.width = _this.camOCX.offsetWidth;
+        let height = _this.position.height = _this.camOCX.offsetHeight;
+
+        WebVideoCtrl.resizeVideo(left, top, width, height);
+    },
+    getPosition() {
+        const _this = this;
+        const _position = {
+            left: _this.position.left,
+            top: _this.position.top,
+            width: _this.position.width,
+            right: _this.position.height
+        }
+        return _position;
     }
-
-
 }

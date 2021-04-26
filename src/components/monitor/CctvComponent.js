@@ -22,6 +22,10 @@ const CctvCompo = styled.div`
         height: 54%;
         background-color:beige;
         background-color:#2E2E2E;
+        .access-detail-panel{
+            left: -845px;
+            top: -450px;
+        }
     }   
     .controll-box{
         width: 136px;
@@ -194,7 +198,7 @@ const CctvCompo = styled.div`
     }
 `;
 
-const CctvComponent = ({ way, id, ctrlPanel, openCtrlPanel }) => {
+const CctvComponent = ({ way, id, ctrlPanel, openCtrlPanel, accessPanel, openAccessPanel }) => {
 
     const [ctrlTarget, setTarget] = useState({
         id: null
@@ -225,23 +229,30 @@ const CctvComponent = ({ way, id, ctrlPanel, openCtrlPanel }) => {
     return (
         <CctvCompo className="cctv-component">
             <div className="info-box" >
-                <InfoComponent way={way} openCtrlPanel={openCtrlPanel} id={id} />
+                <InfoComponent
+                    way={way}
+                    id={id}
+                    ctrlPanel={ctrlPanel} 
+                    openCtrlPanel={openCtrlPanel}
+                    accessPanel={accessPanel}
+                    openAccessPanel={openAccessPanel}
+                />
             </div>
             <div className="status-box">
                 <LocStatusComponent />
             </div>
             <div className="cctv-box">
                 {
-                    cctvShow['loc001'] && id === 'loc001' && <CameraLocation001 id={id} ctrlPanel={ctrlPanel} />
+                    cctvShow['loc001'] && id === 'loc001' && <CameraLocation001 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
                 }
                 {
-                    cctvShow['loc002'] && id === 'loc002' && <CameraLocation002 id={id} ctrlPanel={ctrlPanel} />
+                    cctvShow['loc002'] && id === 'loc002' && <CameraLocation002 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
                 }
                 {
-                    cctvShow['loc003'] && id === 'loc003' && <CameraLocation003 id={id} ctrlPanel={ctrlPanel} />
+                    cctvShow['loc003'] && id === 'loc003' && <CameraLocation003 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
                 }
                 {
-                    cctvShow['loc004'] && id === 'loc004' && <CameraLocation004 id={id} ctrlPanel={ctrlPanel} />
+                    cctvShow['loc004'] && id === 'loc004' && <CameraLocation004 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
                 }
             </div>
         </CctvCompo>
