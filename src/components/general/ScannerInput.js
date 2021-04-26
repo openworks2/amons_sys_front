@@ -219,7 +219,7 @@ const InputCompo = styled.div`
   }
 `;
 
-const VehicleInput = ({
+const ScannerInput = ({
   onChange,
   onSelectChange,
   onFileUpload,
@@ -404,4 +404,4 @@ const VehicleInput = ({
   );
 };
 
-export default VehicleInput;
+export default ScannerInput;

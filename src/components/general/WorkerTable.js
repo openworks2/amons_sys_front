@@ -442,7 +442,7 @@ const WorkerTable = ({
           </Table.Cell>
           <Table.Cell className="table-cell beacon" name="beacon">
             {item && item.bc_address
-              ? splitByColon(item.bc_address)
+              ? item.bc_id + " : " + splitByColon(item.bc_address)
               : item && "할당없음"}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">

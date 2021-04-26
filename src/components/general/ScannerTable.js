@@ -248,7 +248,7 @@ const SearchCompo = styled.div`
   }
 `;
 
-const VehicleTable = ({
+const ScannerTable = ({
   pageInfo,
   data,
   activeHandler,
@@ -553,4 +553,4 @@ const VehicleTable = ({
   );
 };
 
-export default VehicleTable;
+export default ScannerTable;

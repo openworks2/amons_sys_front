@@ -87,10 +87,12 @@ const VehicleContainer = () => {
     vh_index: null,
     created_date: null,
     modified_date: null,
-    vh_name: null,
-    vh_number: null,
-    vh_image_path: null,
+    vh_name: "",
+    vh_number: "",
+    vh_image_path: "",
     vh_io_state: null,
+    description: "",
+    co_id: null,
     co_index: null,
     co_name: null,
     bc_index: null,
@@ -181,6 +183,7 @@ const VehicleContainer = () => {
           text: splitByColonInput(item.bc_address),
           value: item.bc_index,
           address: item.bc_address,
+          bc_id: item.bc_id,
         });
       });
       setUnUsedBeaconList(_unUsedBeaconList);
@@ -200,24 +203,18 @@ const VehicleContainer = () => {
 
   // form onSelectChant Event
   const onSelectChange = (e, seletedValue) => {
-    console.log("*****************************");
-    console.log("e");
-    console.log(e);
-    console.log(e.target);
-    console.log("value");
-    console.log("*****************************");
-    console.log(seletedValue.options);
     const name = seletedValue.name;
     const value = seletedValue.value;
 
     if (name === "bc_index") {
-      const address = seletedValue.options.find((el) => el.value == value)
-        .address;
-
+      const findBeacon = seletedValue.options.find((el) => el.value == value);
+      const address = findBeacon.address;
+      console.log(findBeacon);
       setFormData({
         ...formData,
         [name]: value,
         bc_address: address,
+        bc_id: findBeacon.bc_id,
       });
     } else {
       setFormData({
@@ -225,10 +222,6 @@ const VehicleContainer = () => {
         [name]: value,
       });
     }
-
-    console.log("formData");
-    console.log(formData);
-    console.log("*****************************");
   };
 
   // 사진 업로드
@@ -277,10 +270,12 @@ const VehicleContainer = () => {
       vh_index: null,
       created_date: null,
       modified_date: null,
-      vh_name: null,
-      vh_number: null,
-      vh_image_path: null,
+      vh_name: "",
+      vh_number: "",
+      description: "",
+      vh_image_path: "",
       vh_io_state: null,
+      co_id: null,
       co_index: null,
       co_name: null,
       bc_index: null,
@@ -309,8 +304,10 @@ const VehicleContainer = () => {
         vh_name: findItem.vh_name,
         vh_number: findItem.vh_name,
         vh_image_path: findItem.vh_image_path,
+        co_id: findItem.co_id,
         co_index: findItem.co_index,
         co_name: findItem.co_name,
+        bc_id: findItem.bc_id,
         bc_index: findItem.bc_index,
         bc_address: findItem.bc_address,
       });
@@ -349,7 +346,7 @@ const VehicleContainer = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    if (!formData.vh_index) {
+    if (!formData.co_index) {
       setCompanyError({
         content: "소속사를 선택해 주세요.",
         pointing: "below",

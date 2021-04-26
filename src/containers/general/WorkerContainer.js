@@ -96,6 +96,8 @@ const WorkerContatiner = () => {
     wk_image_path: "",
     co_index: null,
     co_name: null,
+    co_sector: null,
+    bc_id: null,
     bc_index: null,
     bc_address: null,
   });
@@ -184,6 +186,7 @@ const WorkerContatiner = () => {
           text: splitByColonInput(item.bc_address),
           value: item.bc_index,
           address: item.bc_address,
+          bc_id: item.bc_id,
         });
       });
       setUnUsedBeaconList(_unUsedBeaconList);
@@ -226,13 +229,13 @@ const WorkerContatiner = () => {
         [name]: !value,
       });
     } else if (name === "bc_index") {
-      const address = seletedValue.options.find((el) => el.value == value)
-        .address;
-
+      const findBeacon = seletedValue.options.find((el) => el.value == value);
+      const address = findBeacon.address;
       setFormData({
         ...formData,
         [name]: value,
         bc_address: address,
+        bc_id: findBeacon.bc_id,
       });
     } else {
       setFormData({
@@ -321,6 +324,8 @@ const WorkerContatiner = () => {
       wk_image_path: "",
       co_index: null,
       co_name: null,
+      co_sector: null,
+      bc_id: null,
       bc_index: null,
       bc_address: null,
     });
@@ -355,6 +360,8 @@ const WorkerContatiner = () => {
         wk_image_path: findItem.wk_image_path,
         co_index: findItem.co_index,
         co_name: findItem.co_name,
+        co_sector: findItem.co_sector,
+        bc_id: findItem.bc_id,
         bc_index: findItem.bc_index,
         bc_address: findItem.bc_address,
       });
