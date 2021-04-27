@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 const NoticeCompo = styled.div`
@@ -89,6 +89,7 @@ const NoticeCompo = styled.div`
 
 const Notice = () => {
 
+    let intervalId = useRef();
     const rollingAction = () => {
         let rollingData = [
             '우리 현장에는 당신의 안전보다 우선인 작업이 없습니다. 제목만 2줄 까지 출력하고 클릭시 내용을 출력 합시다.',
@@ -108,8 +109,8 @@ const Notice = () => {
         //위 선언은 따로 완전히 수정하지 않는 한 조정할 필요는 없습니다.
 
         first.children[0].innerHTML = rollingData[0]
-
-        setInterval(() => {
+        
+        intervalId = setInterval(() => {
             if (move === 2) {
                 first.classList.remove('card_sliding')
                 first.classList.add('card_sliding_after')
@@ -165,17 +166,20 @@ const Notice = () => {
 
     useEffect(() => {
         rollingAction();
+        return ()=>{
+            clearInterval(intervalId);
+        }
     }, [])
 
     return (
         <NoticeCompo>
             <div className="left-component">공지사항</div>
             <div className="right-component">
-                <div class="rolling_box">
+                <div className="rolling_box">
                     <ul id="rolling_box">
-                        <li class="card_sliding" id="first"><p></p></li>
-                        <li class="" id="second"><p></p></li>
-                        <li class="" id="third"><p></p></li>
+                        <li className="card_sliding" id="first"><p></p></li>
+                        <li className="" id="second"><p></p></li>
+                        <li className="" id="third"><p></p></li>
                     </ul>
                 </div>
             </div>

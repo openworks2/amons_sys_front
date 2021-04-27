@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CctvCompo from '../../components/monitor/CctvComponent';
 import DrillMapComponent from '../../components/monitor/DrillMapComponent';
+import MapComponent from '../../components/monitor/MapComponent';
 import NoticeCompo from '../../components/monitor/Notice';
 import StatusInfo from '../../components/monitor/StatusInfo';
+import TodayInfoComponent from '../../components/monitor/TodayInfoComponent';
 
 const MonitorCompo = styled.div`
     width: 100vw;
@@ -37,7 +39,6 @@ const BodyCompo = styled.div`
         .left-bottom-box{
             width: 100%;
             height: 41.72em;
-            background: darkgray;
             margin-top: 10px;
         }
     }
@@ -84,6 +85,9 @@ const BodyCompo = styled.div`
 `;
 
 
+
+
+
 const MonitorContainer = ({ ratePanelOpen }) => {
     const [ctrlPanel, setOpenCtrlPanel] = useState(null);
     const [accessPanel, setOpenAccessPanel] = useState(null);
@@ -107,6 +111,10 @@ const MonitorContainer = ({ ratePanelOpen }) => {
             setOpenCtrlPanel(null);
         }
     }
+    useEffect(() => {
+
+
+    }, []);
 
     return (
         <MonitorCompo className="monitor-component">
@@ -120,7 +128,7 @@ const MonitorContainer = ({ ratePanelOpen }) => {
                         <DrillMapComponent ratePanelOpen={ratePanelOpen} />
                     </div>
                     <div className="left-bottom-box map-box">
-
+                        <MapComponent />
                     </div>
                 </div>
                 <div className="right-compo">
@@ -153,6 +161,7 @@ const MonitorContainer = ({ ratePanelOpen }) => {
                     </div>
                     <div className="right-right-box">
                         <div className="top-panel">
+                           <TodayInfoComponent />
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">

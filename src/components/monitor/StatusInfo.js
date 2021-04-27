@@ -132,7 +132,7 @@ const StatusInfoCompo = styled.div`
 const StatusInfo = () => {
     return (
         <StatusInfoCompo className="statusInfo-component">
-            <i class="fas fa-hard-hat"></i>
+            <i className="fas fa-hard-hat"></i>
             <div className="status-box">
                 <div className="top-contents worker-count-top">
                     <span className="box-title">총 잔류인원</span>
@@ -143,7 +143,7 @@ const StatusInfo = () => {
                     </div>
                     <div className="bottom-right">
                         <p className="count-box worker-count">
-                            <span className="value" id="worker-value">12</span>
+                            <span className="value" id="worker-value">00</span>
                             <span className="unit" id="worker-unit">명</span>
                         </p>
                     </div>
@@ -159,7 +159,7 @@ const StatusInfo = () => {
                     </div>
                     <div className="bottom-right">
                         <p className="count-box vehicle-count">
-                            <span className="value" id="vehicle-value">12</span>
+                            <span className="value" id="vehicle-value">00</span>
                             <span className="unit" id="vehicle-unit">대</span>
                         </p>
                     </div>

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Dahua from '../../../lib/cctv/location002/Dahua';
+// import Dahua from '../../../lib/cctv/location002/Dahua';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fortawesome/pro-solid-svg-icons"
@@ -136,41 +136,43 @@ const CameraLocation002 = ({ id, ctrlPanel, accessPanel }) => {
         }
     }
 
+    // const connCCTV = async () => {
+    //     try {
+    //         const cctv = await new Dahua(`divPlugin-${id}`);
+    //         cctv.init(form);
+    //         setCamera(cctv);
+    //     } catch (error) {
 
-    const connCCTV = async () => {
-        try {
-            const cctv = await new Dahua(`divPlugin-${id}`);
-            cctv.init(form);
-            setCamera(cctv);
+    //     }
+    // }
 
-        } catch (error) {
-
-        }
-    }
-
-    const resizeVideo = useCallback(() => {
-        console.log(accessPanel)
-        if (accessPanel !== null && accessPanel === 'loc004') {
-            Camera.hiddenScreen();
-        }
-        else if (accessPanel === null || accessPanel !== 'loc004') {
-            Camera.showScreen();
-        }
-    }, [Camera, accessPanel]);
+    // const resizeVideo = useCallback(() => {
+    //     console.log(ctrlPanel)
+    //     if (accessPanel !== null && accessPanel === 'loc003') {
+    //         Camera.hiddenScreen();
+    //     }
+    //     else if (accessPanel === null || accessPanel !== 'loc003') {
+    //         Camera.showScreen();
+    //     }
+    // }, [Camera, accessPanel]);
 
 
-    useEffect(() => {
-        if (!Camera) {
-            connCCTV();
-            console.log('>>>>>>>>>>>>>>>')
-        }
-        if (Camera) {
-            resizeVideo();
-        }
-    }, [accessPanel]);
+    // useEffect(() => {
+    //     if (!Camera) {
+    //         connCCTV();
+    //     }
+    //     if (Camera) {
+    //         resizeVideo();
+    //         if (ctrlPanel !== id || ctrlPanel === null) {
+    //             if(Locate){
+    //                 ptzLocationHandler();
+    //             }
+    //         }
+    //     }
+    // }, [accessPanel, ctrlPanel]);
 
-    const resizeHandler = () => {
-        if (Camera) {
+    const resizeHandler = ()=>{
+        if(Camera){
             Camera.setReposition();
         }
     }

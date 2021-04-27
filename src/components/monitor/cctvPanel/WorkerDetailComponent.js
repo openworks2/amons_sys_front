@@ -5,7 +5,7 @@ const WorkerDetailCompo = styled.div`
     width: 330px;
     height: 156px;
     position: absolute;
-    top: 263px;
+    top: 260px;
     left: 0px;
     background-color: #2E2E2E;
     border: 3px solid #000000;
@@ -48,6 +48,7 @@ const WorkerDetailCompo = styled.div`
                 }
             }
             .worker-info{
+                height: 17px;
                 label{
                     color:#7C7C7C;
                 }

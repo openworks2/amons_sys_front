@@ -3,9 +3,20 @@ const analog = {
     init(id) {
         const _this = this;
         _this.id = id;
+
+        _this.render();
     },
     render() {
-        const _this = this;
+        var _this = this;
+
+        window.context = document.getElementById(this.id).getContext("2d");
+        window.radius = document.getElementById(this.id).width / 2;
+
+        setInterval(function (context, radius) {
+            _this.makeClockTool(this.context, this.radius);
+            _this.makeNumberTool(this.context, this.radius);
+            _this.makeArrowTool(this.context, this.radius);
+        }, 1000);
 
     },
     makeClockTool: function (context, radius) {
@@ -13,15 +24,17 @@ const analog = {
         var grad;
         context.beginPath();
         context.arc(radius, radius, radius, 0, Math.PI * 2);
-        context.fillStyle = "#dad9d9";
+        context.fillStyle = "#D2D2D2";
         context.fill();
 
-        grad = context.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
-        grad.addColorStop(0, '#414141');
-        grad.addColorStop(1, '#414141');
+        // grad = context.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
+        grad = context.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 2);
+        // grad.addColorStop(0, '#414141');
+        // grad.addColorStop(1, '#414141');
+        grad.addColorStop(0, '#1c1c1c');
+        grad.addColorStop(1, '#1c1c1c');
         context.strokeStyle = grad;
         context.lineWidth = 0;
-
         context.stroke();
     },
     makeNumberTool: function (context, radius) {
@@ -46,14 +59,14 @@ const analog = {
         var minute = now.getMinutes();
         var second = now.getSeconds();
 
-        /*    // 초
-             context.beginPath();
-             context.moveTo(radius, radius);
-             context.lineTo(20* Math.cos(Math.PI* ((second* 6)- 90)/ 180)+ radius,
-                            20* Math.sin(Math.PI* ((second* 6)- 90)/ 180)+ radius);
-             context.lineWidth= 1;
-             context.strokeStyle= "#414141";
-             context.stroke();*/
+        // 초
+            // context.beginPath();
+            // context.moveTo(radius, radius);
+            // context.lineTo(20* Math.cos(Math.PI* ((second* 6)- 90)/ 180)+ radius,
+            //             20* Math.sin(Math.PI* ((second* 6)- 90)/ 180)+ radius);
+            // context.lineWidth= 1;
+            // context.strokeStyle= "#414141";
+            // context.stroke();
 
         // 분
         context.beginPath();

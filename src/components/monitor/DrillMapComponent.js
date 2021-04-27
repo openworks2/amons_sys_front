@@ -8,18 +8,38 @@ const DrillMapCompo = styled.div`
     width: 100%;
     height: 100%;
     /* background-color: aqua; */
-    background-image: url('../../image/dig_bg.png');
+    background-image: url('../../progress/dig_bg_1.png');
     background-repeat:no-repeat;
     position: relative;
     .location-top{
         width: 100%;
         height: 50%;
         position: relative;
+        .progress-left{
+            top: 78px;
+            left: 34px;
+        }
+        .progress-right{
+            right: 23px;
+            top: 78px;
+            width: 231px;
+            height: 6px;
+        }
     }
     .location-bottom{
         width: 100%;
         height: 50%;
         position: relative;
+        .progress-left{
+            top: 82px;
+            left: 34px;
+        }
+        .progress-right{
+            top: 82px;
+            right: 23px;
+            width: 229px;
+            height: 6px;
+        }
     }
     /* display: flex; */
     .text-box {
@@ -82,19 +102,31 @@ const DrillMapCompo = styled.div`
             top: 28px;
         }
     }
-    .progress-demo{
-        width: 100%;
-        height: 100%;
+    .progress-left {
+            width: 718px;
+            height: 20px;
+            position: absolute;
+            height: 6px;
+        }
+    .progress-right{
         position: absolute;
-        background-color:gray;
+        transform: rotate(180deg);
+    }
+    .progress{
+        height: 100%;
+        background-color: #171717;
+        border-radius: 0px;
     }
     .progress-bar{
         background-color: #971717;
     }
     .progress-bar-striped {
         background-image: url(../../image/ar_L.png) !important;    
+        /* background-image: url(../../progress/bar-f.png) !important;     */
+        animation: progress-bar-stripes 2s linear infinite;
         animation-direction: reverse;
-    }
+        background-size: 20px 6px!important;
+    } 
 `;
 
 const DrillMapComponent = ({ ratePanelOpen }) => {
@@ -113,6 +145,12 @@ const DrillMapComponent = ({ ratePanelOpen }) => {
                     <div className="location-dig">1,020m</div>
                     <div className="location-title">시점 함양</div>
                 </div>
+                <div className="progress-left">
+                    <ProgressBar now={60} animated />;
+                </div>
+                <div className="progress-right">
+                    <ProgressBar now={60} animated />;
+                </div>
             </div>
             <div className="location-bottom">
                 <div className="text-box left-bottom-text">
@@ -124,14 +162,20 @@ const DrillMapComponent = ({ ratePanelOpen }) => {
                     <div className="location-dig">0m</div>
                     <div className="location-title">시점 울산</div>
                 </div>
+                <div className="progress-left">
+                    <ProgressBar now={60} animated />;
+                </div>
+                <div className="progress-right">
+                    <ProgressBar now={60} animated />;
+                </div>
             </div>
             {
                 ratePanelOpen &&
                 <DrillRatePanel />
             }
-            <div classNam="progress-demo">
+            {/* <div classNam="progress-demo">
                 <ProgressBar now={60} animated />;
-            </div>
+            </div> */}
 
         </DrillMapCompo>
     );

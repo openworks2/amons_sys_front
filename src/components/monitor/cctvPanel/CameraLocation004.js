@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import Dahua from '../../../lib/cctv/location004/Dahua';
 
@@ -143,16 +143,42 @@ const CameraLocation004 = ({ id, ctrlPanel, accessPanel }) => {
     //         const cctv = await new Dahua(`divPlugin-${id}`);
     //         cctv.init(form);
     //         setCamera(cctv);
-
     //     } catch (error) {
 
     //     }
     // }
 
-    // useEffect(() => {
+    // const resizeVideo = useCallback(() => {
+    //     console.log(ctrlPanel)
+    //     if (accessPanel !== null && accessPanel === 'loc003') {
+    //         Camera.hiddenScreen();
+    //     }
+    //     else if (accessPanel === null || accessPanel !== 'loc003') {
+    //         Camera.showScreen();
+    //     }
+    // }, [Camera, accessPanel]);
 
-    //     connCCTV();
-    // }, []);
+
+    // useEffect(() => {
+    //     if (!Camera) {
+    //         connCCTV();
+    //     }
+    //     if (Camera) {
+    //         resizeVideo();
+    //         if (ctrlPanel !== id || ctrlPanel === null) {
+    //             if(Locate){
+    //                 ptzLocationHandler();
+    //             }
+    //         }
+    //     }
+    // }, [accessPanel, ctrlPanel]);
+
+    const resizeHandler = ()=>{
+        if(Camera){
+            Camera.setReposition();
+        }
+    }
+    window.addEventListener("resize", resizeHandler);
 
 
     return (

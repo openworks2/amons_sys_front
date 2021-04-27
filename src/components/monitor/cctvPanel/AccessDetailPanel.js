@@ -13,6 +13,7 @@ const AccessDetailCompo = styled.div`
     padding-top: 3px;
     padding-right: 3px;
     padding-bottom: 3px;
+    z-index: 101;
     .left-area{
         width: 49.6%;
         height: 100%;
@@ -93,6 +94,8 @@ const AccessDetailCompo = styled.div`
                     color: #D8D8D8;
                     td{
                         padding-left: 6px;
+                        padding-top: 6px;
+                        padding-bottom: 0px;
                     }
                     &:hover{
                         background-color:#7C7C7C;
