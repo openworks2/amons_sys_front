@@ -336,7 +336,6 @@ const WorkerInput = ({
     co_name,
     bc_address,
   } = formData;
-  const [selectDate, setSelectDate] = useState(new Date());
 
   const bloodType = [
     { key: "a", text: "A", value: "0" },
@@ -349,58 +348,6 @@ const WorkerInput = ({
     { key: "+", text: "Rh+", value: "0" },
     { key: "-", text: "Rh-", value: "1" },
   ];
-
-  const splitByColon = (str = "") => {
-    let length = str.length;
-    let point = str.length % 2;
-    let splitedStr = "";
-
-    splitedStr = str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += str.substring(point, point + 2);
-      point += 2;
-    }
-
-    return splitedStr;
-  };
-
-  const bloodtypeReturn = (type) => {
-    let typeStr = "";
-    switch (type) {
-      case 0:
-        typeStr = "A";
-        break;
-      case 1:
-        typeStr = "B";
-        break;
-      case 2:
-        typeStr = "O";
-        break;
-      case 3:
-        typeStr = "AB";
-        break;
-      default:
-        typeStr = "error";
-    }
-
-    return typeStr;
-  };
-
-  const bloodgroupReturn = (group) => {
-    let groupStr = "";
-    switch (group) {
-      case 0:
-        groupStr = "Rh+";
-        break;
-      case 1:
-        groupStr = "Rh-";
-        break;
-      default:
-        groupStr = "Rh+";
-    }
-    return groupStr;
-  };
 
   return (
     <InputCompo className="input-compo" selectedState={wk_id}>

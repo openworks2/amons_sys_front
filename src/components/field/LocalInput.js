@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import styled, { css } from "styled-components";
-import { Form, Button, Select, Modal, Input } from "semantic-ui-react";
+import styled from "styled-components";
+import { Form, Button, Modal, Input } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
-import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
-import NumberFormat from "react-number-format";
 
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  @media screen and (max-height: 937px) {
-    margin-right: 12px;
-  }
   margin-top: 5px;
   margin-bottom: 18px;
 
@@ -20,36 +15,11 @@ const InputCompo = styled.div`
       border-color: #f1592a !important;
     }
   }
-  .ui.dropdown {
-    &:focus {
-      border-color: #f1592a !important;
-    }
-  }
-  .ui.selection.active.dropdown .menu {
-    border-color: #f1592a !important;
-  }
-  .ui.dropdown .menu > .item {
-    /* border-color: #f1592a !important; */
-  }
   .ui.form textarea {
     &:focus {
       border-color: #f1592a !important;
     }
   }
-  .ui.checkbox input:focus ~ label:before {
-    border-color: #f1592a !important;
-    /* ui focus 색상변경 끝 */
-  }
-
-  ${(props) =>
-    props.selectedState &&
-    css`
-      // drop 선택
-      .ui.default.dropdown:not(.button) > .text,
-      .ui.dropdown:not(.button) > .default.text {
-        color: #2f2f2f;
-      }
-    `};
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -86,6 +56,10 @@ const InputCompo = styled.div`
       @media screen and (max-height: 937px) {
         height: 67.5vh;
       }
+      .form-title {
+        margin-bottom: 5px;
+      }
+
       .input-form {
         font-family: "NotoSansKR-Regular";
         font-size: 14px;
@@ -94,46 +68,12 @@ const InputCompo = styled.div`
         color: #929292;
         opacity: 1;
         &.title {
+          margin-top: 10px;
           color: #2e2e2e;
         }
       }
-    }
-  }
-
-  .photo {
-    .photo-box {
-      cursor: pointer;
-      border: solid 1px;
-      border-radius: 4px;
-      background: #ffffff 0% 0% no-repeat padding-box;
-      border: 1px solid #d8d8d8;
-      border-radius: 4px;
-      opacity: 1;
-      height: 38px;
-      margin-top: 5px;
-      .icon-box {
-        background-color: #2e2e2e;
-        display: inline-block;
-        height: 37px;
-        border-radius: 5px;
-        .photo-icon {
-          font-size: 20px;
-          margin-left: 9px;
-          margin-right: 9px;
-          margin-top: 7px;
-          color: #ffffff;
-        }
-      }
-      .photo-description {
-        display: inline-block;
-        margin: 0px;
-        padding-bottom: 12px;
-        vertical-align: middle;
-        margin-left: 10px;
-        text-align: left;
-        letter-spacing: 0px;
-        color: #d8d8d8;
-        opacity: 1;
+      #plan_length {
+        width: 283px;
       }
     }
   }
@@ -151,18 +91,6 @@ const InputCompo = styled.div`
       margin-bottom: 5px;
     }
   }
-  // 드롭다운 버튼
-  .ui.dropdown > .dropdown.icon,
-  &:before,
-  &:after {
-    top: 22px;
-    right: 27px;
-    font-size: 20px;
-    color: #2e2e2e !important;
-    opacity: 0.8;
-    padding: 0px;
-  }
-
   .ui.form .required.field > label:after {
     content: "" !important;
   }
@@ -172,13 +100,6 @@ const InputCompo = styled.div`
     left: 100px;
   }
 
-  .ui.checkbox input:checked ~ label:after {
-    background-color: #2e2e2e;
-    border-radius: 4px;
-    border-color: #929292;
-    color: #ffffff;
-    font-size: 12px;
-  }
   .input-form.description {
     height: 105px !important;
   }
@@ -222,69 +143,32 @@ const InputCompo = styled.div`
 
 const LocalInput = ({
   onChange,
-  onSelectChange,
   formData,
+  addComma,
   createHandler,
   updateHandler,
   selectedRow,
   initFormData,
   initActiveRow,
-  // localList,
   localError,
-  kindError,
+  lengthError,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const {
-    scn_id,
-    scn_index,
+    local_id,
+    local_index,
     created_date,
     modified_date,
-    scn_pos_x,
-    scn_kind,
-    scn_group,
-    scn_address,
-    scn_name,
-    scn_ip,
-    scn_port,
-    scn_receive_time,
-    scn_result,
-    scn_start_time,
-    scn_stop_time,
+    local_name,
+    process,
+    plan_length,
     description,
-    local_index,
-    closed_count,
   } = formData;
 
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 10) {
-      return str.substring(0, 14);
-    }
-
-    let length = _str.length;
-    let point = _str.length % 2;
-    let splitedStr = "";
-    splitedStr = _str.substring(0, point);
-    while (point < length) {
-      if (splitedStr != "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
-      point += 2;
-    }
-    return splitedStr;
-  };
-
-  const kindOptions = [
-    { key: 0, text: "기타", value: 0 },
-    { key: 1, text: "입장", value: 1 },
-    { key: 2, text: "퇴장", value: 2 },
-    { key: 3, text: "위치측정", value: 3 },
-  ];
-
   return (
-    <InputCompo className="input-compo" selectedState={scn_id}>
-      <p className="subtitle">스캐너 등록</p>
+    <InputCompo className="input-compo">
+      <p className="subtitle">노선 등록</p>
       <Form
         className="input-form-body"
         onSubmit={(e) => {
@@ -292,97 +176,30 @@ const LocalInput = ({
         }}
       >
         <div className="resizable-area">
-          {/* <Form.Field
-            className="input-form local"
-            id="local_index"
-            name="local_index"
-            control={Select}
+          <Form.Input
+            className="input-form name"
             label="노선"
-            options={localList}
-            onChange={(e, value) => onSelectChange(e, value)}
-            placeholder="노선을 선택해주세요."
-            value={local_index}
-            error={localError}
+            id="local_name"
+            name="local_name"
+            placeholder="노선명을 입력해 주세요."
             required
-          /> */}
-          <div className="pos-x-area">
-            <div className="form-title pos-x">설치위치</div>
+            error={localError}
+            value={local_name && local_name}
+            onChange={onChange}
+          />
+          <div className="length-area">
+            <div className="form-title length">계획 연장</div>
             <Input
               label={{ basic: true, content: "m" }}
               labelPosition="right"
-              className="input-form pos-x"
-              id="scn_pos_x"
-              name="scn_pos_x"
-              placeholder="설치위치를 입력해주세요."
+              className="input-form length"
+              id="plan_length"
+              name="plan_length"
+              placeholder="굴착 계획 연장 거리를 입력해주세요."
               required
-              value={scn_pos_x && scn_pos_x.replace(/[^0-9]*$/g, "")}
+              value={plan_length && addComma(plan_length)}
               onChange={onChange}
-            />
-          </div>
-          <Form.Field
-            label="사용용도"
-            className="input-form kind"
-            id="scn_kind"
-            name="scn_kind"
-            control={Select}
-            options={kindOptions}
-            onChange={(e, value) => onSelectChange(e, value)}
-            placeholder="사용 용도를 선택해주세요."
-            error={kindError}
-            required
-          />
-          <Form.Input
-            className="input-form group"
-            label="그룹"
-            id="scn_group"
-            name="scn_group"
-            placeholder="그룹을 입력해 주세요."
-            required
-            value={
-              scn_address &&
-              splitByColonInput(scn_address)
-                .toUpperCase()
-                .replace(/[^a-z|^A-Z|^0-9]*$/g, "")
-            }
-            onChange={onChange}
-          />
-          <Form.Input
-            className="input-form"
-            label="MAC 주소"
-            className="input-form address"
-            id="scn_address"
-            name="scn_address"
-            placeholder="__:__:__:__:__:__"
-            required
-            value={
-              scn_address &&
-              splitByColonInput(scn_address)
-                .toUpperCase()
-                .replace(/[^a-z|^A-Z|^0-9]*$/g, "")
-            }
-            onChange={onChange}
-          />
-          <Form.Input
-            label="URL"
-            className="input-form ip"
-            id="scn_ip"
-            name="scn_ip"
-            placeholder="URL을 입력해 주세요."
-            required
-            value={scn_ip}
-            onChange={onChange}
-          />
-          <div className="group-area">
-            <div className="form-title group">PORT</div>
-            <NumberFormat
-              format="#####"
-              className="input-form port"
-              id="scn_port"
-              name="scn_port"
-              placeholder="포트를 입력해주세요."
-              required
-              value={scn_port && scn_port}
-              onChange={onChange}
+              error={lengthError}
             />
           </div>
           <Form.Field className="company-input-form description">
@@ -392,7 +209,7 @@ const LocalInput = ({
               id="description"
               name="description"
               placeholder={"비고 입력란"}
-              value={description}
+              value={description ? description : ""}
               onChange={onChange}
             />
           </Form.Field>

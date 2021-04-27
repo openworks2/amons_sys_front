@@ -364,7 +364,6 @@ const VehicleContainer = () => {
 
   // UPDATE
   const updateHandler = (e) => {
-    // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
     e.preventDefault();
     if (!formData.co_index) {
       setCompanyError({

@@ -100,6 +100,9 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 51px;
+            @media screen and (max-height: 937px) {
+              width: 52px;
+            }
           }
           &.address {
             width: 204px;
@@ -107,15 +110,27 @@ const TableCompo = styled.div`
           }
           &.id {
             width: 82px;
+            @media screen and (max-height: 937px) {
+              width: 83px;
+            }
           }
           &.used-type {
             width: 182px;
+            @media screen and (max-height: 937px) {
+              width: 181px;
+            }
           }
           &.battery-remain {
             width: 122px;
+            @media screen and (max-height: 937px) {
+              width: 123px;
+            }
           }
           &.battery-time {
             width: 180px;
+            @media screen and (max-height: 937px) {
+              width: 183px;
+            }
           }
           &.description {
             width: 333px;
@@ -471,9 +486,7 @@ const BeaconTable = ({
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
           <Table.Cell className="table-body" colSpan="12">
-            <div className="resizable-table-body" as={Table}>
-              {tableRender(viewItems)}
-            </div>
+            <div className="resizable-table-body">{tableRender(viewItems)}</div>
           </Table.Cell>
           {/* =============================테이블 푸터(페이지네이션)============================== */}
           <Table.Footer className="table-footer">

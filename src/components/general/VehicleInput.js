@@ -7,9 +7,6 @@ import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  @media screen and (max-height: 937px) {
-    margin-right: 12px;
-  }
   margin-top: 5px;
   margin-bottom: 18px;
 

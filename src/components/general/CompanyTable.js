@@ -75,14 +75,20 @@ const CompanyTableCompo = styled.div`
             width: 52px;
           }
           &.company {
-            width: 200px;
+            width: 201px;
             text-align: left !important;
           }
           &.sector {
             width: 200px;
+            @media screen and (max-height: 937px) {
+              width: 202px;
+            }
           }
           &.description {
-            width: 700px;
+            width: 695px;
+            @media screen and (max-height: 937px) {
+              width: 699px;
+            }
           }
           &.trash-icon {
             color: #7d7d7d;

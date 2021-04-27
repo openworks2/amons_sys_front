@@ -74,8 +74,6 @@ const LocalContainer = () => {
     dispatch(getLocals());
   }, [dispatch]);
 
-  console.log(data);
-
   const [formData, setFormData] = useState({
     local_id: null,
     local_index: null,
@@ -86,31 +84,6 @@ const LocalContainer = () => {
     process: null,
     description: "",
   });
-
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
-
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 10) {
-      return str.substring(0, 14);
-    }
-
-    let length = _str.length;
-    let point = _str.length % 2;
-    let splitedStr = "";
-    splitedStr = _str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
-      point += 2;
-    }
-    return splitedStr;
-  };
 
   // form onChange Event
   const onChange = (e) => {
@@ -123,7 +96,27 @@ const LocalContainer = () => {
     });
   };
 
-  // 클릭된 row의 데이터
+  const addComma = (num) => {
+    let _num = num.toString();
+    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+    _num = _num.replace(/,/g, ""); // , 값 공백처리
+    if (_num.length > 4) {
+      _num = _num.substring(0, 4);
+    }
+    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
+  };
+
+  const minusComma = (num) => {
+    let _num = num.toString();
+    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+    _num = _num.replace(/,/g, ""); // , 값 공백처리
+    if (_num.length > 4) {
+      // 4자리 초과시 뒷자리 자르기
+      _num = _num.substring(0, 4);
+    }
+    return _num;
+  };
+
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
     selectedItem: undefined,
@@ -173,16 +166,9 @@ const LocalContainer = () => {
         modified_date: findItem.modified_date,
         local_name: findItem.local_name,
         plan_length: findItem.plan_length,
-        process: findItem.process,
         description: findItem.description,
       });
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션
@@ -213,43 +199,50 @@ const LocalContainer = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    // if (!formData.local_index) {
-    //   setLocalError({
-    //     content: "노선을 선택해 주세요.",
-    //     pointing: "below",
-    //   });
-    //   setTimeout(() => {
-    //     setLocalError(undefined);
-    //   }, 1500);
-    // } else {
-    let newLocal = { ...formData };
-    dispatch(postLocal(newLocal));
-    initActiveRow();
-    initFormData();
-    // }
+    if (!formData.local_name) {
+      setLocalError({
+        content: "노선이름을 입력해 주세요.",
+        pointing: "below",
+      });
+      setTimeout(() => {
+        setLocalError(undefined);
+      }, 1500);
+    } else {
+      let _plan_length = minusComma(formData.plan_length);
+      let newLocal = {
+        ...formData,
+        plan_length: _plan_length,
+      };
+      dispatch(postLocal(newLocal));
+      initActiveRow();
+      initFormData();
+    }
   };
 
   // UPDATE
   const updateHandler = (e) => {
     e.preventDefault();
-    // if (!formData.local_index) {
-    //   setLocalError({
-    //     content: "노선을 선택해 주세요.",
-    //     pointing: "below",
-    //   });
-    //   setTimeout(() => {
-    //     setLocalError(undefined);
-    //   }, 1500);
-    // } else {
-    // 성공
-    const findItem = selectedRow.selectedItem;
 
-    let newLocal = {
-      ...formData,
-      created_date: findItem.created_date,
-      modified_date: today,
-    };
-    dispatch(putLocal(newLocal.local_index, newLocal));
+    const findItem = selectedRow.selectedItem;
+    if (!formData.local_name) {
+      setLocalError({
+        content: "노선이름을 입력해 주세요.",
+        pointing: "below",
+      });
+      setTimeout(() => {
+        setLocalError(undefined);
+      }, 1500);
+    } else {
+      let _plan_length = minusComma(formData.plan_length);
+      let newLocal = {
+        ...formData,
+        plan_length: _plan_length,
+        process: findItem.process,
+        created_date: findItem.created_date,
+        modified_date: today,
+      };
+      dispatch(putLocal(newLocal.local_index, newLocal));
+    }
     initActiveRow();
     initFormData();
     // }
@@ -278,6 +271,7 @@ const LocalContainer = () => {
             className="local-input-box"
             onChange={onChange}
             formData={formData}
+            addComma={addComma}
             createHandler={createHandler}
             updateHandler={updateHandler}
             selectedRow={selectedRow}

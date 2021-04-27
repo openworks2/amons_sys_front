@@ -113,24 +113,42 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
+            @media screen and (max-height: 937px) {
+              width: 53px;
+            }
           }
           &.company {
-            width: 170px;
+            width: 171px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 172px;
+            }
           }
           &.name {
-            width: 160px;
+            width: 157px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 158px;
+            }
           }
           &.number {
-            width: 160px;
+            width: 158px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 157px;
+            }
           }
           &.beacon {
-            width: 220px;
+            width: 217px;
+            @media screen and (max-height: 937px) {
+              width: 219px;
+            }
           }
           &.description {
             width: 400px;
+            @media screen and (max-height: 937px) {
+              width: 404px;
+            }
           }
           &.trash-icon {
             width: 55px !important ;
@@ -460,9 +478,7 @@ const VehicleTable = ({
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
           <Table.Cell className="table-body" colSpan="12">
-            <div className="resizable-table-body" as={Table}>
-              {tableRender(viewItems)}
-            </div>
+            <div className="resizable-table-body">{tableRender(viewItems)}</div>
           </Table.Cell>
           {/* =============================테이블 푸터(페이지네이션)============================== */}
           <Table.Footer className="table-footer">

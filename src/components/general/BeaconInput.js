@@ -8,7 +8,15 @@ const InputCompo = styled.div`
   margin-right: 22px;
   margin-top: 5px;
   margin-bottom: 18px;
-
+  .ui.form .field > label,
+  .field > label {
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    letter-spacing: 0px;
+    opacity: 1;
+    font-weight: initial !important;
+  }
   .ui.input > input {
     /* ui focus 색상변경 */
     &:focus {

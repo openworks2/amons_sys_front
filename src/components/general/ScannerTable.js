@@ -576,9 +576,7 @@ const ScannerTable = ({
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
           <Table.Cell className="table-body" colSpan="12">
-            <div className="resizable-table-body" as={Table}>
-              {tableRender(viewItems)}
-            </div>
+            <div className="resizable-table-body">{tableRender(viewItems)}</div>
           </Table.Cell>
           {/* =============================테이블 푸터(페이지네이션)============================== */}
           <Table.Footer className="table-footer">

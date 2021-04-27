@@ -64,9 +64,9 @@ const TableCompo = styled.div`
     &.beacon {
       width: 220px;
     }
-
     @media screen and (max-height: 937px) {
       &.trash-icon {
+        color: #7d7d7d;
         width: 64px !important;
       }
     }
@@ -115,10 +115,16 @@ const TableCompo = styled.div`
           &.company {
             width: 170px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 171px;
+            }
           }
           &.position {
             width: 160px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 161px;
+            }
           }
           &.name {
             width: 160px;
@@ -132,6 +138,9 @@ const TableCompo = styled.div`
           }
           &.blood {
             width: 100px;
+            @media screen and (max-height: 937px) {
+              width: 101px;
+            }
           }
           &.nation {
             width: 160px;
@@ -535,9 +544,7 @@ const WorkerTable = ({
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
           <Table.Cell className="table-body" colSpan="12">
-            <div className="resizable-table-body" as={Table}>
-              {tableRender(viewItems)}
-            </div>
+            <div className="resizable-table-body">{tableRender(viewItems)}</div>
           </Table.Cell>
           {/* =============================테이블 푸터(페이지네이션)============================== */}
           <Table.Footer className="table-footer">
