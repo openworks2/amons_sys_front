@@ -6,18 +6,71 @@ import {
   Table,
   Pagination,
   Modal,
-  Checkbox,
-  Dropdown,
+  Menu,
   Input,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { getVehicles } from "../../modules/vehicles";
+import { getScanners } from "../../modules/scanners";
 import { useDispatch } from "react-redux";
+
+const CategorieMenuCompo = styled.div`
+  .ui.pointing.table-categorie-menu-box.menu {
+    margin-left: 18px !important;
+    margin-right: 18px !important;
+    margin-top: 10px !important;
+    margin-bottom: 0px !important;
+    height: 40px;
+    text-align: center !important;
+  }
+  .table-categorie-menu {
+    width: 123px;
+
+    &.all {
+      width: 80px;
+    }
+    &.search {
+      display: flex !important;
+      width: 234px;
+      margin: 0px !important;
+      padding: 0px !important;
+      font-family: "NotoSansKR-Regular";
+      font-size: 13px;
+      .search-box {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        height: 40px;
+        padding-left: 1px;
+      }
+      &.search-icon {
+        width: 30px;
+        position: absolute;
+        left: 200px;
+        top: 13px;
+        font-size: 15px;
+        cursor: pointer;
+        &:hover {
+          color: #f1592a;
+        }
+      }
+    }
+  }
+  .ui.menu .item > .input input {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.menu:not(.vertical) .item {
+    display: inline-block;
+  }
+  .ui.pointing.menu .item:after {
+    width: 1.3em;
+    height: 1.3em;
+  }
+`;
 
 const TableCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  margin-top: 5px;
   margin-bottom: 18px;
   .ui.table {
     margin-top: 5px;
@@ -191,19 +244,13 @@ const TableCompo = styled.div`
     color: #7c7c7c;
     opacity: 1;
     margin: 0px;
-    margin-top: 25px;
+    margin-top: 18px;
     margin-bottom: 10px;
     padding: 0px;
   }
 `;
 
 const SearchCompo = styled.div`
-  padding: 0px;
-  margin-left: 20px;
-  display: block;
-  font-family: "NotoSansKR-Regular";
-  font-size: 13px;
-
   .ui.input > input {
     display: block;
     width: 310px;
@@ -213,16 +260,7 @@ const SearchCompo = styled.div`
     background: #ffffff 0% 0% no-repeat padding-box;
     opacity: 1;
   }
-  .search-icon {
-    position: absolute;
-    left: 405px;
-    top: 13px;
-    font-size: 15px;
-    cursor: pointer;
-    &:hover {
-      color: #f1592a;
-    }
-  }
+
   .dropdown {
     display: block;
     width: 123px;
@@ -271,7 +309,7 @@ const ScannerTable = ({
   const [searchValue, setSearchValue] = useState("");
   const [currentData, setCurrentData] = useState([]);
 
-  const onChangeCategorie = (e, value) => {
+  const onClickCategorie = (e, value) => {
     const _value = value.value;
     setCategorieValue(_value);
   };
@@ -288,7 +326,7 @@ const ScannerTable = ({
     const _data = data;
     let tempData = [];
     if (!searchValue) {
-      dispatch(getVehicles());
+      dispatch(getScanners());
     }
     if (categorieValue === null) {
       // 전체검색
@@ -317,6 +355,38 @@ const ScannerTable = ({
     //   setCurrentData(tempData);
     // }
   }, [data]);
+
+  const splitByColonInput = (str) => {
+    let _str = str.replace(/\:/g, "");
+
+    if (_str.length > 10) {
+      return str.substring(0, 14);
+    }
+
+    let length = _str.length;
+    let point = _str.length % 2;
+    let splitedStr = "";
+    splitedStr = _str.substring(0, point);
+    while (point < length) {
+      if (splitedStr != "") splitedStr += ":";
+      splitedStr += _str.substring(point, point + 2);
+      point += 2;
+    }
+    return splitedStr;
+  };
+
+  const kindReturn = (kind) => {
+    switch (kind) {
+      case 1:
+        return "입장";
+      case 2:
+        return "퇴장";
+      case 3:
+        return "위치측정";
+      default:
+        return "기타";
+    }
+  };
 
   // 테이블
 
@@ -354,30 +424,35 @@ const ScannerTable = ({
           className="table-row"
           key={index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.vh_id))}
+          onClick={item && ((e) => activeHandler(e, index, item.scn_id))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
           </Table.Cell>
-          <Table.Cell className="table-cell company" name="company">
-            {item &&
-              companyData &&
-              companyData.find((el) => el.co_index === item.co_index).co_name}
+          <Table.Cell className="table-cell local" name="local">
+            {item && item.local_index && item.local_index}
           </Table.Cell>
-          <Table.Cell className="table-cell name" name="name">
-            {item && item.vh_name}
+          <Table.Cell className="table-cell pos-x" name="pos-x">
+            {item && item.scn_pos_x}
           </Table.Cell>
-          <Table.Cell className="table-cell number" name="number">
-            {item && item.vh_number}
+          <Table.Cell className="table-cell kind" name="kind">
+            {item && kindReturn(item.scn_kind)}
           </Table.Cell>
-          <Table.Cell className="table-cell beacon" name="beacon">
-            {item && item.bc_address
-              ? item.bc_id + " : " + splitByColon(item.bc_address)
-              : item && "할당없음"}
+          <Table.Cell className="table-cell group" name="group">
+            {item && item.scn_group}
+          </Table.Cell>
+          <Table.Cell className="table-cell address" name="address">
+            {item && item.scn_address && splitByColon(item.scn_address)}
+          </Table.Cell>
+          <Table.Cell className="table-cell ip" name="ip">
+            {item && item.scn_ip}
+          </Table.Cell>
+          <Table.Cell className="table-cell port" name="port">
+            {item && item.scn_port}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
-            {item && item.vh_description}
+            {item && item.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
             {item && selectedId && item.vh_id === selectedId && (
@@ -401,37 +476,69 @@ const ScannerTable = ({
 
   return (
     <>
-      <SearchCompo className="search-compo">
-        <Input
-          className="search-box"
-          action={
-            <Dropdown
-              button
-              basic
-              options={companySearchList}
-              className="dropdown"
-              placeholder="소속사"
-              position="left"
-              name="searchCategorie"
-              onChange={(e, value) => {
-                onChangeCategorie(e, value);
-              }}
-            />
-          }
-          actionPosition="left"
-          placeholder="차량 종류를 검색해 주세요."
-          value={searchValue}
-          onChange={onSearchChange}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-              onSearch();
-            }
-          }}
-          icon={<FaSearch onClick={onSearch} className="search-icon" />}
-        />
-      </SearchCompo>
+      <CategorieMenuCompo className="table-categorie-menu-compo">
+        <Menu pointing className="table-categorie-menu-box">
+          <Menu.Item
+            className="table-categorie-menu all"
+            name="전체"
+            active
+            onClick={onClickCategorie}
+          />
+          <Menu.Item
+            className="table-categorie-menu start-hamyang"
+            name="시점 함양"
+            active={categorieValue === 1}
+            onClick={onClickCategorie}
+          />
+          <Menu.Item
+            className="table-categorie-menu end-hamyang"
+            name="종점 함양"
+            active={categorieValue === 2}
+            onClick={onClickCategorie}
+          />
+          <Menu.Item
+            className="table-categorie-menu start-olsan"
+            name="시점 울산"
+            active={categorieValue === 3}
+            onClick={onClickCategorie}
+          />
+          <Menu.Item
+            className="table-categorie-menu end-olsan"
+            name="종점 울산"
+            active={categorieValue === 4}
+            onClick={onClickCategorie}
+          />
+          <Menu.Menu position="right">
+            <Menu.Item className="table-categorie-menu search">
+              <Input
+                className="search-box"
+                actionPosition="left"
+                placeholder="MAC 주소를 검색해 주세요."
+                value={
+                  searchValue &&
+                  splitByColonInput(searchValue)
+                    .toUpperCase()
+                    .replace(/[^a-z|^A-Z|^0-9]*$/g, "")
+                }
+                onChange={onSearchChange}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    onSearch();
+                  }
+                }}
+                icon={
+                  <FaSearch
+                    onClick={onSearch}
+                    className="table-categorie-menu search search-icon"
+                  />
+                }
+              />
+            </Menu.Item>
+          </Menu.Menu>
+        </Menu>
+      </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">차량 목록</p>
+        <p className="subtitle">스캐너 목록</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
@@ -439,16 +546,25 @@ const ScannerTable = ({
                 NO
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header company">
-                소속사
+                노선
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header name">
-                차량 종류
+                설치위치(m)
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header number">
-                차량번호
+                사용용도
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header beacon">
-                비콘 사용 정보
+                그룹
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header description">
+                MAC 주소
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header description">
+                URL
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header description">
+                PORT
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header description">
                 비고
@@ -518,8 +634,8 @@ const ScannerTable = ({
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
                 {selectedItem &&
-                  `${selectedItem.vh_name} ${selectedItem.vh_number}`}
-                차량 정보를 삭제하시겠습니까?
+                  `${selectedItem.local_index} ${selectedItem.scn_address}`}
+                스캐너 정보를 삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>

@@ -220,7 +220,7 @@ const InputCompo = styled.div`
   }
 `;
 
-const ScannerInput = ({
+const LocalInput = ({
   onChange,
   onSelectChange,
   formData,
@@ -457,4 +457,4 @@ const ScannerInput = ({
   );
 };
 
-export default ScannerInput;
+export default LocalInput;
