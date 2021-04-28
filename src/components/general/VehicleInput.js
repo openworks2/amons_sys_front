@@ -37,16 +37,6 @@ const InputCompo = styled.div`
     /* ui focus 색상변경 끝 */
   }
 
-  ${(props) =>
-    props.selectedState &&
-    css`
-      // drop 선택
-      .ui.default.dropdown:not(.button) > .text,
-      .ui.dropdown:not(.button) > .default.text {
-        color: #2f2f2f;
-      }
-    `};
-
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -143,9 +133,6 @@ const InputCompo = styled.div`
     letter-spacing: 0px;
     opacity: 1;
     font-weight: initial !important;
-    &.phone {
-      margin-bottom: 5px;
-    }
   }
   // 드롭다운 버튼
   .ui.dropdown > .dropdown.icon,
@@ -219,7 +206,7 @@ const InputCompo = styled.div`
 const VehicleInput = ({
   onChange,
   onSelectChange,
-  onFileUpload,
+  handleFileInputChange,
   createHandler,
   updateHandler,
   formData,
@@ -229,6 +216,7 @@ const VehicleInput = ({
   companyList,
   unUsedBeaconList,
   companyError,
+  fileName,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -311,15 +299,21 @@ const VehicleInput = ({
             enctype="multipart/form-data"
           >
             <div className="form-title">사진</div>
+            <label for="input-image-file" className="photo-box">
+              <div className="icon-box">
+                <FaImage className="photo-icon" />
+              </div>
+              <div className="photo-description">{fileName}</div>
+            </label>
             <Input
               type="file"
-              accept="image/jpg,jpge,png,gif"
+              id="input-image-file"
+              name="file"
               className="photo-box"
-              onChange={(e) => {
-                onFileUpload(e);
-              }}
+              accept="image/jpg,jpge,png,gif"
+              onChange={handleFileInputChange}
               placeholder="사진을 등록해 주세요.(jpg, png, gif)"
-              // value={wk_image_path && wk_image_path}
+              style={{ display: "none" }}
             >
               {/* <div className="icon-box">
                 <FaImage className="photo-icon" />

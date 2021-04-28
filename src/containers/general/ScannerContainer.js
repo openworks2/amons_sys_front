@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ScannerInput from "../../components/general/ScannerInput";
 import ScannerTable from "../../components/general/ScannerTable";
 import { useDispatch, useSelector } from "react-redux";
-// import { getLocals } from "../../modules/locals";
+import { getLocals } from "../../modules/locals";
 import {
   getScanners,
   postScanner,
@@ -70,16 +70,16 @@ const ScannerContainer = () => {
   const { data, loading, error } = useSelector(
     (state) => state.scanners.scanners
   );
+  const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(getLocals());
+    dispatch(getLocals());
     dispatch(getScanners());
   }, [dispatch]);
 
   console.log(data);
-  // const localData = useSelector((state) => state.locals.locals.data);
 
   const [formData, setFormData] = useState({
     scn_id: null,
@@ -88,19 +88,23 @@ const ScannerContainer = () => {
     modified_date: null,
     scn_pos_x: null,
     scn_kind: null,
-    scn_group: null,
-    scn_address: null,
+    scn_group: "",
+    scn_address: "",
     scn_name: null,
-    scn_ip: null,
-    scn_port: null,
+    scn_ip: "",
+    scn_port: "",
     scn_receive_time: null,
     scn_result: null,
     scn_start_time: null,
     scn_stop_time: null,
-    description: null,
+    description: "",
     local_index: null,
     closed_count: null,
   });
+
+  useEffect(() => {
+    makeLocalList(localData);
+  }, [localData, formData.local_index]);
 
   useEffect(() => {
     console.log("$$$$$$$change!");
@@ -108,59 +112,45 @@ const ScannerContainer = () => {
     console.log("$$$$$$$change!");
   }, [formData]);
 
-  const [companyList, setCompanyList] = useState([]);
-  const [companySearchList, setCompanySearchList] = useState([]);
-  const [unUsedBeaconList, setUnUsedBeaconList] = useState([]);
+  const [localList, setLocalList] = useState([]);
 
-  // useEffect(() => {
-  //   makeLocalList(localData);
-  // }, [localData, formData.local_index]);
+  const makeLocalList = (data) => {
+    if (data) {
+      let _localList = [];
 
-  // const makeCompanyList = (data) => {
-  //   if (data) {
-  //     let _companyList = [];
-  //     let _companySearchList = [];
-
-  //     _companySearchList.push({
-  //       key: "all",
-  //       text: "소속사 전체",
-  //       value: null,
-  //     });
-
-  //     data.map((item, index) => {
-  //       _companyList.push({
-  //         key: index,
-  //         text: item.co_name,
-  //         value: item.co_index,
-  //       });
-  //       _companySearchList.push({
-  //         key: index,
-  //         text: item.co_name,
-  //         value: item.co_index,
-  //       });
-  //     });
-  //     setCompanySearchList(_companySearchList);
-  //     setCompanyList(_companyList);
-  //   }
-  // };
-
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 10) {
-      return str.substring(0, 14);
+      data.map((item, index) => {
+        _localList.push({
+          key: index,
+          text: item.local_name,
+          value: item.local_index,
+          name: item.local_name,
+        });
+      });
+      setLocalList(_localList);
     }
+  };
 
-    let length = _str.length;
-    let point = _str.length % 2;
-    let splitedStr = "";
-    splitedStr = _str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
-      point += 2;
+  // 미터 콤마 더하기 빼기
+
+  const addComma = (num) => {
+    let _num = num.toString();
+    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+    _num = _num.replace(/,/g, ""); // , 값 공백처리
+    if (_num.length > 4) {
+      _num = _num.substring(0, 4);
     }
-    return splitedStr;
+    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
+  };
+
+  const minusComma = (num) => {
+    let _num = num.toString();
+    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+    _num = _num.replace(/,/g, ""); // , 값 공백처리
+    if (_num.length > 4) {
+      // 4자리 초과시 뒷자리 자르기
+      _num = _num.substring(0, 4);
+    }
+    return _num;
   };
 
   // form onChange Event
@@ -218,13 +208,13 @@ const ScannerContainer = () => {
       scn_index: null,
       created_date: null,
       modified_date: null,
-      scn_pos_x: null,
+      scn_pos_x: "",
       scn_kind: null,
-      scn_group: null,
-      scn_address: null,
-      scn_name: null,
-      scn_ip: null,
-      scn_port: null,
+      scn_group: "",
+      scn_address: "",
+      scn_name: "",
+      scn_ip: "",
+      scn_port: "",
       scn_receive_time: null,
       scn_result: null,
       scn_start_time: null,
@@ -253,8 +243,6 @@ const ScannerContainer = () => {
         ...formData,
         scn_id: findItem.scn_id,
         scn_index: findItem.scn_index,
-        created_date: findItem.created_date,
-        modified_date: findItem.modified_date,
         scn_pos_x: findItem.scn_pos_x,
         scn_kind: findItem.scn_kind,
         scn_group: findItem.scn_group,
@@ -262,10 +250,6 @@ const ScannerContainer = () => {
         scn_name: findItem.scn_name,
         scn_ip: findItem.scn_ip,
         scn_port: findItem.scn_port,
-        scn_receive_time: findItem.scn_receive_time,
-        scn_result: findItem.scn_result,
-        scn_start_time: findItem.scn_start_time,
-        scn_stop_time: findItem.scn_stop_time,
         description: findItem.description,
         local_index: findItem.local_index,
         closed_count: findItem.closed_count,
@@ -302,51 +286,105 @@ const ScannerContainer = () => {
 
   const [localError, setLocalError] = useState(undefined);
   const [kindError, setKindError] = useState(undefined);
+  const [addressError, setAddressError] = useState(undefined);
 
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
-    // if (!formData.local_index) {
-    //   setLocalError({
-    //     content: "노선을 선택해 주세요.",
-    //     pointing: "below",
-    //   });
-    //   setTimeout(() => {
-    //     setLocalError(undefined);
-    //   }, 1500);
-    // } else {
-    let newScanner = { ...formData };
-    dispatch(postScanner(newScanner));
-    initActiveRow();
-    initFormData();
-    // }
+    let _scn_address = formData.scn_address.replace(/\:/g, "");
+    _scn_address = _scn_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
+
+    setFormData({
+      ...formData,
+      scn_address: _scn_address,
+    });
+
+    if (_scn_address.length !== 10) {
+      // 자리수 유효성 검사
+      setAddressError({
+        content: "비콘 번호 10자리를 모두 입력해주세요.",
+      });
+      setTimeout(() => {
+        setAddressError(undefined);
+      }, 1350);
+    } else if (!formData.local_index) {
+      setLocalError({
+        content: "노선을 선택해 주세요.",
+        pointing: "below",
+      });
+      setTimeout(() => {
+        setLocalError(undefined);
+      }, 1500);
+    } else if (!formData.scn_kind) {
+      setKindError({
+        content: "사용용도를 선택해 주세요.",
+        pointing: "below",
+      });
+      setTimeout(() => {
+        setKindError(undefined);
+      }, 1500);
+    } else {
+      let newScanner = { ...formData };
+      dispatch(postScanner(newScanner));
+      initActiveRow();
+      initFormData();
+    }
   };
 
   // UPDATE
   const updateHandler = (e) => {
     e.preventDefault();
-    // if (!formData.local_index) {
-    //   setLocalError({
-    //     content: "노선을 선택해 주세요.",
-    //     pointing: "below",
-    //   });
-    //   setTimeout(() => {
-    //     setLocalError(undefined);
-    //   }, 1500);
-    // } else {
-    // 성공
-    const findItem = selectedRow.selectedItem;
 
-    let newScanner = {
+    let _scn_address = formData.scn_address.replace(/\:/g, "");
+    _scn_address = _scn_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
+
+    setFormData({
       ...formData,
-      created_date: findItem.created_date,
-      modified_date: today,
-    };
-    dispatch(putScanner(newScanner.scn_index, newScanner));
-    initActiveRow();
-    initFormData();
-    // }
+      scn_address: _scn_address,
+    });
+
+    if (_scn_address.length !== 10) {
+      // 자리수 유효성 검사
+      setAddressError({
+        content: "비콘 번호 10자리를 모두 입력해주세요.",
+      });
+      setTimeout(() => {
+        setAddressError(undefined);
+      }, 1350);
+    } else if (!formData.local_index) {
+      setLocalError({
+        content: "노선을 선택해 주세요.",
+        pointing: "below",
+      });
+      setTimeout(() => {
+        setLocalError(undefined);
+      }, 1500);
+    } else if (!formData.scn_kind) {
+      setKindError({
+        content: "사용용도를 선택해 주세요.",
+        pointing: "below",
+      });
+      setTimeout(() => {
+        setKindError(undefined);
+      }, 1500);
+    } else {
+      // 성공
+      const findItem = selectedRow.selectedItem;
+
+      let newScanner = {
+        ...formData,
+        created_date: findItem.created_date,
+        modified_date: today,
+        scn_receive_time: findItem.scn_receive_time,
+        scn_result: findItem.scn_result,
+        scn_start_time: findItem.scn_start_time,
+        scn_stop_time: findItem.scn_stop_time,
+      };
+      dispatch(putScanner(newScanner.scn_index, newScanner));
+      initActiveRow();
+      initFormData();
+    }
   };
 
   // DELETE
@@ -378,9 +416,11 @@ const ScannerContainer = () => {
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
-            // localList={localList}
+            localList={localList}
             localError={localError}
             kindError={kindError}
+            addressError={addressError}
+            addComma={addComma}
           />
         </div>
         <div className="table-box">
@@ -395,8 +435,9 @@ const ScannerContainer = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
-              // localData={localData}
-              // localList={localList}
+              localData={localData}
+              localList={localList}
+              addComma={addComma}
             />
           )}
         </div>

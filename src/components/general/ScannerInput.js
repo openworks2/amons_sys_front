@@ -28,6 +28,11 @@ const InputCompo = styled.div`
       border-color: #f1592a !important;
     }
   }
+  .input-form.port {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
   .ui.dropdown {
     &:focus {
       border-color: #f1592a !important;
@@ -48,16 +53,6 @@ const InputCompo = styled.div`
     border-color: #f1592a !important;
     /* ui focus 색상변경 끝 */
   }
-
-  ${(props) =>
-    props.selectedState &&
-    css`
-      // drop 선택
-      .ui.default.dropdown:not(.button) > .text,
-      .ui.dropdown:not(.button) > .default.text {
-        color: #2f2f2f;
-      }
-    `};
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -103,45 +98,18 @@ const InputCompo = styled.div`
         opacity: 1;
         &.title {
           color: #2e2e2e;
+          margin-top: 14px;
         }
-      }
-    }
-  }
-
-  .photo {
-    .photo-box {
-      cursor: pointer;
-      border: solid 1px;
-      border-radius: 4px;
-      background: #ffffff 0% 0% no-repeat padding-box;
-      border: 1px solid #d8d8d8;
-      border-radius: 4px;
-      opacity: 1;
-      height: 38px;
-      margin-top: 5px;
-      .icon-box {
-        background-color: #2e2e2e;
-        display: inline-block;
-        height: 37px;
-        border-radius: 5px;
-        .photo-icon {
-          font-size: 20px;
-          margin-left: 9px;
-          margin-right: 9px;
-          margin-top: 7px;
-          color: #ffffff;
+        &.description {
+          height: 105px !important;
         }
-      }
-      .photo-description {
-        display: inline-block;
-        margin: 0px;
-        padding-bottom: 12px;
-        vertical-align: middle;
-        margin-left: 10px;
-        text-align: left;
-        letter-spacing: 0px;
-        color: #d8d8d8;
-        opacity: 1;
+        &.pos-x {
+          width: 283px !important;
+          margin-top: 6px;
+          margin-bottom: 15px;
+        }
+        &.description {
+        }
       }
     }
   }
@@ -155,7 +123,7 @@ const InputCompo = styled.div`
     letter-spacing: 0px;
     opacity: 1;
     font-weight: initial !important;
-    &.phone {
+    &.port {
       margin-bottom: 5px;
     }
   }
@@ -180,13 +148,6 @@ const InputCompo = styled.div`
     left: 100px;
   }
 
-  .ui.checkbox input:checked ~ label:after {
-    background-color: #2e2e2e;
-    border-radius: 4px;
-    border-color: #929292;
-    color: #ffffff;
-    font-size: 12px;
-  }
   .input-form.description {
     height: 105px !important;
   }
@@ -237,9 +198,11 @@ const ScannerInput = ({
   selectedRow,
   initFormData,
   initActiveRow,
-  // localList,
+  localList,
   localError,
   kindError,
+  addressError,
+  addComma,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -291,7 +254,7 @@ const ScannerInput = ({
   ];
 
   return (
-    <InputCompo className="input-compo" selectedState={scn_id}>
+    <InputCompo className="input-compo">
       <p className="subtitle">스캐너 등록</p>
       <Form
         className="input-form-body"
@@ -300,7 +263,7 @@ const ScannerInput = ({
         }}
       >
         <div className="resizable-area">
-          {/* <Form.Field
+          <Form.Field
             className="input-form local"
             id="local_index"
             name="local_index"
@@ -312,7 +275,7 @@ const ScannerInput = ({
             value={local_index}
             error={localError}
             required
-          /> */}
+          />
           <div className="pos-x-area">
             <div className="form-title pos-x">설치위치</div>
             <Input
@@ -323,7 +286,7 @@ const ScannerInput = ({
               name="scn_pos_x"
               placeholder="설치위치를 입력해주세요."
               required
-              value={scn_pos_x && scn_pos_x.replace(/[^0-9]*$/g, "")}
+              value={scn_pos_x && addComma(scn_pos_x)}
               onChange={onChange}
             />
           </div>
@@ -337,6 +300,7 @@ const ScannerInput = ({
             onChange={(e, value) => onSelectChange(e, value)}
             placeholder="사용 용도를 선택해주세요."
             error={kindError}
+            value={scn_kind && scn_kind}
             required
           />
           <Form.Input
@@ -346,12 +310,7 @@ const ScannerInput = ({
             name="scn_group"
             placeholder="그룹을 입력해 주세요."
             required
-            value={
-              scn_address &&
-              splitByColonInput(scn_address)
-                .toUpperCase()
-                .replace(/[^a-z|^A-Z|^0-9]*$/g, "")
-            }
+            value={scn_group && scn_group}
             onChange={onChange}
           />
           <Form.Input
@@ -362,6 +321,7 @@ const ScannerInput = ({
             name="scn_address"
             placeholder="__:__:__:__:__:__"
             required
+            error={addressError}
             value={
               scn_address &&
               splitByColonInput(scn_address)
@@ -377,11 +337,11 @@ const ScannerInput = ({
             name="scn_ip"
             placeholder="URL을 입력해 주세요."
             required
-            value={scn_ip}
+            value={scn_ip && scn_ip}
             onChange={onChange}
           />
           <div className="group-area">
-            <div className="form-title group">PORT</div>
+            <div className="form-title port">PORT</div>
             <NumberFormat
               format="#####"
               className="input-form port"
@@ -400,7 +360,7 @@ const ScannerInput = ({
               id="description"
               name="description"
               placeholder={"비고 입력란"}
-              value={description}
+              value={description ? description : ""}
               onChange={onChange}
             />
           </Form.Field>

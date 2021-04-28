@@ -245,7 +245,6 @@ const LocalContainer = () => {
     }
     initActiveRow();
     initFormData();
-    // }
   };
 
   // DELETE

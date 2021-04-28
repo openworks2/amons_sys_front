@@ -193,6 +193,7 @@ const InputCompo = styled.div`
       opacity: 1;
       height: 38px;
       margin-top: 5px;
+
       .icon-box {
         background-color: #2e2e2e;
         display: inline-block;
@@ -233,6 +234,12 @@ const InputCompo = styled.div`
       margin-bottom: 5px;
     }
   }
+
+  .input#file-upload-button {
+    width: 0px !important;
+    height: 0px !important;
+  }
+
   // 드롭다운 버튼
   .ui.dropdown > .dropdown.icon,
   &:before,
@@ -506,22 +513,23 @@ const WorkerInput = ({
             enctype="multipart/form-data"
           >
             <div className="form-title">사진</div>
-            <Input
-              type="file"
-              name="file"
-              accept="image/jpg,jpge,png,gif"
-              className="photo-box"
-              onChange={handleFileInputChange}
-              placeholder="사진을 등록해 주세요.(jpg, png, gif)"
-              // value={wk_image_path && wk_image_path}
-            >
-              {/* <div className="icon-box">
+            <label for="input-image-file" className="photo-box">
+              <div className="icon-box">
                 <FaImage className="photo-icon" />
               </div>
-                <div className="photo-description">
-                  {}
-                </div> */}
-            </Input>
+              <div className="photo-description">
+                사진을 등록해 주세요.(jpg, png, gif)
+              </div>
+            </label>
+            <Input
+              type="file"
+              id="input-image-file"
+              name="file"
+              className="photo-box"
+              accept="image/jpg,jpge,png,gif"
+              onChange={handleFileInputChange}
+              style={{ display: "none" }}
+            />
           </Form.Field>
         </div>
         {selectedItem ? (

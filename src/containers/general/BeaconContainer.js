@@ -276,7 +276,6 @@ const WorkerContatiner = () => {
             className="beacon-input-box"
             onChange={onChange}
             formData={formData}
-            // splitedAddress={splitedAddress}
             createHandler={createHandler}
             updateHandler={updateHandler}
             selectedRow={selectedRow}

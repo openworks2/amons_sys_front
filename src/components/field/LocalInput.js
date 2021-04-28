@@ -87,9 +87,6 @@ const InputCompo = styled.div`
     letter-spacing: 0px;
     opacity: 1;
     font-weight: initial !important;
-    &.phone {
-      margin-bottom: 5px;
-    }
   }
   .ui.form .required.field > label:after {
     content: "" !important;

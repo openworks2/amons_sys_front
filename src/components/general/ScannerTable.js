@@ -89,25 +89,33 @@ const TableCompo = styled.div`
     &.no {
       width: 52px;
     }
-    &.company {
-      width: 168px;
+    &.local {
+      width: 100px;
+    }
+    &.pos-x {
+      width: 100px;
+    }
+    &.kind {
+      width: 60px;
+    }
+    &.group {
+      width: 50px;
+    }
+    &.address {
+      width: 170px;
       text-align: left;
     }
-    &.name {
-      width: 158px;
+    &.ip {
+      width: 190px;
       text-align: left;
     }
-    &.number {
-      width: 159px;
-      text-align: left;
-    }
-    &.beacon {
-      width: 217px;
+    &.port {
+      width: 60px;
     }
     &.description {
-      width: 395px;
+      width: 333px;
       @media screen and (max-height: 937px) {
-        width: 396px;
+        width: 333px;
       }
     }
     &.trash-icon {
@@ -167,23 +175,40 @@ const TableCompo = styled.div`
           &.no {
             width: 52px;
           }
-          &.company {
-            width: 170px;
+          &.local {
+            width: 102px;
+          }
+          &.pos-x {
+            width: 100px;
+          }
+          &.kind {
+            width: 73px;
+            @media screen and (max-height: 937px) {
+              width: 74px;
+            }
+          }
+          &.group {
+            width: 50px;
+            @media screen and (max-height: 937px) {
+              width: 50px;
+            }
+          }
+          &.address {
+            width: 171px;
+            text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 169px;
+            }
+          }
+          &.ip {
+            width: 191px;
             text-align: left;
           }
-          &.name {
-            width: 160px;
-            text-align: left;
-          }
-          &.number {
-            width: 160px;
-            text-align: left;
-          }
-          &.beacon {
-            width: 220px;
+          &.port {
+            width: 60px;
           }
           &.description {
-            width: 400px;
+            width: 335px;
           }
           &.trash-icon {
             width: 55px !important ;
@@ -250,42 +275,6 @@ const TableCompo = styled.div`
   }
 `;
 
-const SearchCompo = styled.div`
-  .ui.input > input {
-    display: block;
-    width: 310px;
-  }
-  .search-box {
-    height: 40px;
-    background: #ffffff 0% 0% no-repeat padding-box;
-    opacity: 1;
-  }
-
-  .dropdown {
-    display: block;
-    width: 123px;
-  }
-  .ui.basic.button.dropdown {
-    background: #f2f2f2 0% 0% no-repeat padding-box !important;
-    opacity: 1;
-    font-size: 13px;
-  }
-  .ui.input > input {
-    &:focus {
-      border-color: #f1592a !important;
-    }
-  }
-  .ui.dropdown > .dropdown.icon,
-  &:before,
-  &:after {
-    left: 80px;
-    font-size: 20px;
-    position: absolute;
-    color: #2e2e2e !important;
-    opacity: 0.8;
-  }
-`;
-
 const ScannerTable = ({
   pageInfo,
   data,
@@ -295,8 +284,9 @@ const ScannerTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
-  companyData,
-  companySearchList,
+  localData,
+  localList,
+  addComma,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -314,6 +304,20 @@ const ScannerTable = ({
     setCategorieValue(_value);
   };
 
+  useEffect(() => {
+    const _data = data;
+    setCurrentData(_data);
+
+    let tempData = [];
+    if (categorieValue === null) {
+      setCurrentData(_data);
+    } else {
+      tempData = _data.filter((item) => item.local_index === categorieValue);
+      alert("!");
+      setCurrentData(tempData);
+    }
+  }, [data, categorieValue]);
+
   // serach input 입력
   const onSearchChange = (e) => {
     const _searchValue = e.target.value;
@@ -330,31 +334,20 @@ const ScannerTable = ({
     }
     if (categorieValue === null) {
       // 전체검색
-      tempData = _data.filter((item) => item.vh_name.includes(searchValue));
+      tempData = _data.filter((item) => item.scn_address.includes(searchValue));
       setCurrentData(tempData);
     } else {
       // 검색
-      tempData = _data.filter((item) => item.co_index === categorieValue);
-      tempData = tempData.filter((item) => item.vh_name.includes(searchValue));
+      tempData = _data.filter((item) => item.local_index === categorieValue);
+      tempData = tempData.filter((item) =>
+        item.scn_address.includes(searchValue)
+      );
       setCurrentData(tempData);
     }
     initActiveRow();
     initFormData();
     activePage = 1;
   };
-
-  useEffect(() => {
-    const _data = data;
-    setCurrentData(_data);
-    // 카테고리 별 데이터 변경 시
-    // let tempData = [];
-    // if (categorieValue === null) {
-    //   setCurrentData(_data);
-    // } else {
-    //   tempData = _data.filter((item) => item.co_index === categorieValue);
-    //   setCurrentData(tempData);
-    // }
-  }, [data]);
 
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
@@ -372,6 +365,21 @@ const ScannerTable = ({
       splitedStr += _str.substring(point, point + 2);
       point += 2;
     }
+    return splitedStr;
+  };
+
+  const splitByColon = (str = "") => {
+    let length = str.length;
+    let point = str.length % 2;
+    let splitedStr = "";
+
+    splitedStr = str.substring(0, point);
+    while (point < length) {
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += str.substring(point, point + 2);
+      point += 2;
+    }
+
     return splitedStr;
   };
 
@@ -398,21 +406,6 @@ const ScannerTable = ({
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
-  const splitByColon = (str = "") => {
-    let length = str.length;
-    let point = str.length % 2;
-    let splitedStr = "";
-
-    splitedStr = str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += str.substring(point, point + 2);
-      point += 2;
-    }
-
-    return splitedStr;
-  };
-
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
@@ -431,31 +424,34 @@ const ScannerTable = ({
             {item ? tableNo : " "}
           </Table.Cell>
           <Table.Cell className="table-cell local" name="local">
-            {item && item.local_index && item.local_index}
+            {item &&
+              item.local_index &&
+              localData.find((el) => el.local_index === item.local_index)
+                .local_name}
           </Table.Cell>
           <Table.Cell className="table-cell pos-x" name="pos-x">
-            {item && item.scn_pos_x}
+            {item && item.scn_pos_x && addComma(item.scn_pos_x)}
           </Table.Cell>
           <Table.Cell className="table-cell kind" name="kind">
-            {item && kindReturn(item.scn_kind)}
+            {item && item.scn_kind && kindReturn(item.scn_kind)}
           </Table.Cell>
           <Table.Cell className="table-cell group" name="group">
-            {item && item.scn_group}
+            {item && item.scn_group && item.scn_group}
           </Table.Cell>
           <Table.Cell className="table-cell address" name="address">
             {item && item.scn_address && splitByColon(item.scn_address)}
           </Table.Cell>
           <Table.Cell className="table-cell ip" name="ip">
-            {item && item.scn_ip}
+            {item && item.scn_ip && item.scn_ip}
           </Table.Cell>
           <Table.Cell className="table-cell port" name="port">
-            {item && item.scn_port}
+            {item && item.scn_port && item.scn_port}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
-            {item && item.description}
+            {item && item.description && item.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.vh_id === selectedId && (
+            {item && selectedId && item.scn_id === selectedId && (
               <Button
                 className="trash-icon-button"
                 onClick={(e) => {
@@ -474,6 +470,21 @@ const ScannerTable = ({
     });
   };
 
+  const TopMenuRender = (localData = []) => {
+    let _localData = localData.slice(0, 7);
+    return _localData.map((item, index) => {
+      return (
+        <Menu.Item
+          className="table-categorie-menu categorie"
+          name={item.local_name && item.local_name}
+          active={categorieValue === item.local_index}
+          value={item.local_index && item.local_index}
+          onClick={onClickCategorie}
+        />
+      );
+    });
+  };
+
   return (
     <>
       <CategorieMenuCompo className="table-categorie-menu-compo">
@@ -481,33 +492,11 @@ const ScannerTable = ({
           <Menu.Item
             className="table-categorie-menu all"
             name="전체"
-            active
+            active={categorieValue === null}
+            value={null}
             onClick={onClickCategorie}
           />
-          <Menu.Item
-            className="table-categorie-menu start-hamyang"
-            name="시점 함양"
-            active={categorieValue === 1}
-            onClick={onClickCategorie}
-          />
-          <Menu.Item
-            className="table-categorie-menu end-hamyang"
-            name="종점 함양"
-            active={categorieValue === 2}
-            onClick={onClickCategorie}
-          />
-          <Menu.Item
-            className="table-categorie-menu start-olsan"
-            name="시점 울산"
-            active={categorieValue === 3}
-            onClick={onClickCategorie}
-          />
-          <Menu.Item
-            className="table-categorie-menu end-olsan"
-            name="종점 울산"
-            active={categorieValue === 4}
-            onClick={onClickCategorie}
-          />
+          {TopMenuRender(localData)}
           <Menu.Menu position="right">
             <Menu.Item className="table-categorie-menu search">
               <Input
@@ -545,25 +534,25 @@ const ScannerTable = ({
               <Table.HeaderCell singleLine className="table-header no">
                 NO
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header company">
+              <Table.HeaderCell singleLine className="table-header local">
                 노선
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header name">
+              <Table.HeaderCell singleLine className="table-header pos-x">
                 설치위치(m)
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header number">
+              <Table.HeaderCell singleLine className="table-header kind">
                 사용용도
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header beacon">
+              <Table.HeaderCell singleLine className="table-header group">
                 그룹
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
+              <Table.HeaderCell singleLine className="table-header address">
                 MAC 주소
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
+              <Table.HeaderCell singleLine className="table-header ip">
                 URL
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
+              <Table.HeaderCell singleLine className="table-header port">
                 PORT
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header description">
@@ -631,8 +620,7 @@ const ScannerTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem &&
-                  `${selectedItem.local_index} ${selectedItem.scn_address}`}
+                {selectedItem && `${selectedItem.scn_address} `}
                 스캐너 정보를 삭제하시겠습니까?
               </p>
             </Modal.Description>

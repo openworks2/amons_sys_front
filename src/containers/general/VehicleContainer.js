@@ -226,28 +226,40 @@ const VehicleContainer = () => {
 
   // 사진 업로드
 
-  const [imageUrl, setImageUrl] = useState("");
-  const onFileUpload = (event) => {
-    event.preventDefault();
-    console.log("실행!@#!#@!@#@!#!@");
-    let file = event.target.files[0];
-    let formData = new FormData();
-    formData.append("file", file);
-    setImageUrl(file);
-    console.log("imageUrl");
-    console.log(imageUrl);
-    console.log("imageUrl");
-    console.log("imageUrl");
-    console.log(imageUrl);
-    console.log(imageUrl);
+  const [files, setFiles] = useState({
+    selectFile: null,
+  });
+
+  const initFiles = () => {
+    setFiles({
+      selectFile: null,
+    });
   };
 
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      vh_image: imageUrl,
+  const handleFileInputChange = (e) => {
+    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    console.log("set file!!");
+    console.log(files);
+    console.log("e.target.files[0]");
+    console.log(e.target.files[0]);
+    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    setFiles({
+      selectFile: e.target.files[0],
     });
-  }, [imageUrl]);
+  };
+
+  const [fileName, setFileName] = useState("");
+
+  useEffect(() => {
+    if (files.selectFile) {
+      setFileName(" ");
+      files.selectFile.name && files.selectFile.name.length > 25
+        ? setFileName(fileName.toString().substring(0, 25) + "...")
+        : setFileName(files.selectFile.name.toString());
+    } else {
+      setFileName("사진을 등록해 주세요.(jpg, png, gif)");
+    }
+  }, [handleFileInputChange]);
 
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
@@ -355,8 +367,14 @@ const VehicleContainer = () => {
         setCompanyError(undefined);
       }, 1500);
     } else {
-      let newVehicle = { ...formData };
-      dispatch(postVehicle(newVehicle));
+      const createData = new FormData();
+      createData.append("file", files.selectFile);
+      createData.append("reqBody", JSON.stringify(formData));
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("createData!!");
+      console.log(createData);
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      dispatch(postVehicle(createData));
       initActiveRow();
       initFormData();
     }
@@ -376,17 +394,20 @@ const VehicleContainer = () => {
     } else {
       // 성공
       const findItem = selectedRow.selectedItem;
-      console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
-      console.log(formData);
-      console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
-      console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
-      let newVehicle = {
+      setFormData({
         ...formData,
         vh_io_state: findItem.vh_io_state,
         created_date: findItem.created_date,
         modified_date: today,
-      };
-      dispatch(putVehicle(newVehicle.vh_index, newVehicle));
+      });
+      const putData = new FormData();
+      putData.append("file", files.selectFile);
+      putData.append("reqBody", JSON.stringify(formData));
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("putData!!");
+      console.log(putData);
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      dispatch(putVehicle(formData.vh_index, putData));
       initActiveRow();
       initFormData();
     }
@@ -415,7 +436,7 @@ const VehicleContainer = () => {
             className="vehicle-input-box"
             onChange={onChange}
             onSelectChange={onSelectChange}
-            onFileUpload={onFileUpload}
+            handleFileInputChange={handleFileInputChange}
             formData={formData}
             createHandler={createHandler}
             updateHandler={updateHandler}
@@ -425,6 +446,7 @@ const VehicleContainer = () => {
             companyList={companyList}
             unUsedBeaconList={unUsedBeaconList}
             companyError={companyError}
+            fileName={fileName}
           />
         </div>
         <div className="table-box">

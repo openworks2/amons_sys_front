@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import WorkerInput from "../../components/general/WorkerInput";
 import WorkerTable from "../../components/general/WorkerTable";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getUnUsedBeacons } from "../../modules/beacons";
 import { getCompanies } from "../../modules/companies";
@@ -100,6 +101,7 @@ const WorkerContatiner = () => {
     bc_id: null,
     bc_index: null,
     bc_address: null,
+    image_file: null,
   });
 
   useEffect(() => {
@@ -272,76 +274,26 @@ const WorkerContatiner = () => {
   // 사진 업로드
 
   const [files, setFiles] = useState({
-    file: null,
-    base64URL: "",
+    selectFile: null,
   });
 
   const initFiles = () => {
     setFiles({
-      file: null,
-      base64URL: "",
-    });
-  };
-
-  const getBase64 = (file) => {
-    return new Promise((resolve) => {
-      let fileInfo;
-      let baseURL = "";
-
-      // FileReader 생성
-      let reader = new FileReader();
-      // Convert the file to base64 text
-      reader.readAsDataURL(file);
-
-      // on reader load somthing...
-      reader.onload = () => {
-        // Make a fileInfo Object
-        console.log("Called", reader);
-        baseURL = reader.result;
-        console.log(baseURL);
-        resolve(baseURL);
-      };
-      console.log(fileInfo);
+      selectFile: null,
     });
   };
 
   const handleFileInputChange = (e) => {
+    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    console.log("set file!!");
+    console.log(files);
+    console.log("e.target.files[0]");
     console.log(e.target.files[0]);
-    let { file } = files;
-    file = e.target.files[0];
-
-    getBase64(file)
-      .then((result) => {
-        file["base64"] = result;
-        console.log("File Is", file);
-        setFiles({
-          file,
-          base64URL: result,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
+    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
     setFiles({
-      file: e.target.files[0],
+      selectFile: e.target.files[0],
     });
   };
-
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      wk_image: files.base64URL,
-    });
-    console.log("###################################################");
-    console.log("###################################################");
-    console.log(formData.wk_image);
-    console.log(files);
-    console.log(files.file);
-    console.log(files.base64URL);
-    console.log("###################################################");
-    console.log("###################################################");
-  }, [files]);
 
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
@@ -377,6 +329,7 @@ const WorkerContatiner = () => {
       bc_id: null,
       bc_index: null,
       bc_address: null,
+      image_file: null,
     });
   };
 
@@ -414,6 +367,7 @@ const WorkerContatiner = () => {
         bc_id: findItem.bc_id,
         bc_index: findItem.bc_index,
         bc_address: findItem.bc_address,
+        image_file: findItem.image_file,
       });
     }
 
@@ -473,8 +427,14 @@ const WorkerContatiner = () => {
         setCompanyError(undefined);
       }, 1500);
     } else {
-      let newWorker = { ...formData };
-      dispatch(postWorker(newWorker));
+      const createData = new FormData();
+      createData.append("file", files.selectFile);
+      createData.append("reqBody", JSON.stringify(formData));
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("createData!!");
+      console.log(createData);
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      dispatch(postWorker(createData));
       initActiveRow();
       initFormData();
       initFiles();
@@ -510,17 +470,20 @@ const WorkerContatiner = () => {
     } else {
       // 성공
       const findItem = selectedRow.selectedItem;
-      console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
-      console.log(formData);
-      console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
-      console.log("qiopweujofiodifjaiefdjaowegfwaoiehgfawiuhe");
-      let newWorker = {
+      setFormData({
         ...formData,
         wk_io_state: findItem.wk_io_state,
         created_date: findItem.wk_create_date,
         modified_date: today,
-      };
-      dispatch(putWorker(newWorker.wk_index, newWorker));
+      });
+      const putData = new FormData();
+      putData.append("file", files.selectFile);
+      putData.append("reqBody", JSON.stringify(formData));
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("putData!!");
+      console.log(putData);
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      dispatch(putWorker(formData.wk_index, putData));
       initActiveRow();
       initFormData();
       initFiles();
