@@ -239,7 +239,7 @@ const VehicleInput = ({
     modified_date,
     vh_name,
     vh_number,
-    vh_image_path,
+    vh_image,
     vh_io_state,
     description,
     co_index,

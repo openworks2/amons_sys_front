@@ -93,7 +93,7 @@ const WorkerContatiner = () => {
     wk_blood_type: "0",
     wk_blood_group: "0",
     wk_sms_yn: false,
-    wk_image_path: "",
+    wk_image: "",
     co_index: null,
     co_name: null,
     co_sector: null,
@@ -229,7 +229,7 @@ const WorkerContatiner = () => {
         [name]: !value,
       });
     } else if (name === "bc_index") {
-      const findBeacon = seletedValue.options.find((el) => el.value == value);
+      const findBeacon = seletedValue.options.find((el) => el.value === value);
       const address = findBeacon.address;
       setFormData({
         ...formData,
@@ -271,28 +271,77 @@ const WorkerContatiner = () => {
 
   // 사진 업로드
 
-  const [imageUrl, setImageUrl] = useState("");
-  const onFileUpload = (event) => {
-    event.preventDefault();
-    console.log("실행!@#!#@!@#@!#!@");
-    let file = event.target.files[0];
-    let formData = new FormData();
-    formData.append("file", file);
-    setImageUrl(file);
-    console.log("imageUrl");
-    console.log(imageUrl);
-    console.log("imageUrl");
-    console.log("imageUrl");
-    console.log(imageUrl);
-    console.log(imageUrl);
+  const [files, setFiles] = useState({
+    file: null,
+    base64URL: "",
+  });
+
+  const initFiles = () => {
+    setFiles({
+      file: null,
+      base64URL: "",
+    });
+  };
+
+  const getBase64 = (file) => {
+    return new Promise((resolve) => {
+      let fileInfo;
+      let baseURL = "";
+
+      // FileReader 생성
+      let reader = new FileReader();
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+
+      // on reader load somthing...
+      reader.onload = () => {
+        // Make a fileInfo Object
+        console.log("Called", reader);
+        baseURL = reader.result;
+        console.log(baseURL);
+        resolve(baseURL);
+      };
+      console.log(fileInfo);
+    });
+  };
+
+  const handleFileInputChange = (e) => {
+    console.log(e.target.files[0]);
+    let { file } = files;
+    file = e.target.files[0];
+
+    getBase64(file)
+      .then((result) => {
+        file["base64"] = result;
+        console.log("File Is", file);
+        setFiles({
+          file,
+          base64URL: result,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setFiles({
+      file: e.target.files[0],
+    });
   };
 
   useEffect(() => {
     setFormData({
       ...formData,
-      wk_image_path: imageUrl,
+      wk_image: files.base64URL,
     });
-  }, [imageUrl]);
+    console.log("###################################################");
+    console.log("###################################################");
+    console.log(formData.wk_image);
+    console.log(files);
+    console.log(files.file);
+    console.log(files.base64URL);
+    console.log("###################################################");
+    console.log("###################################################");
+  }, [files]);
 
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
@@ -321,7 +370,7 @@ const WorkerContatiner = () => {
       wk_blood_type: "0",
       wk_blood_group: "0",
       wk_sms_yn: false,
-      wk_image_path: "",
+      wk_image: "",
       co_index: null,
       co_name: null,
       co_sector: null,
@@ -336,6 +385,7 @@ const WorkerContatiner = () => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
+      initFiles();
     } else {
       const findItem = data.find((worker) => worker.wk_id === selectedId);
 
@@ -357,7 +407,7 @@ const WorkerContatiner = () => {
         wk_blood_type: findItem.wk_blood_type,
         wk_blood_group: findItem.wk_blood_group,
         wk_sms_yn: findItem.wk_sms_yn,
-        wk_image_path: findItem.wk_image_path,
+        wk_image: findItem.wk_image,
         co_index: findItem.co_index,
         co_name: findItem.co_name,
         co_sector: findItem.co_sector,
@@ -391,6 +441,7 @@ const WorkerContatiner = () => {
     // 활성화된 로우 초기화
     initActiveRow();
     initFormData();
+    initFiles();
   };
 
   const today = new Date();
@@ -426,6 +477,7 @@ const WorkerContatiner = () => {
       dispatch(postWorker(newWorker));
       initActiveRow();
       initFormData();
+      initFiles();
     }
   };
 
@@ -471,6 +523,7 @@ const WorkerContatiner = () => {
       dispatch(putWorker(newWorker.wk_index, newWorker));
       initActiveRow();
       initFormData();
+      initFiles();
     }
   };
 
@@ -479,6 +532,7 @@ const WorkerContatiner = () => {
     dispatch(deleteWorker(wk_id));
     initActiveRow();
     initFormData();
+    initFiles();
   };
 
   if (error) {
@@ -498,10 +552,10 @@ const WorkerContatiner = () => {
             onChange={onChange}
             onSelectChange={onSelectChange}
             onChangeDate={onChangeDate}
-            onFileUpload={onFileUpload}
             formData={formData}
             createHandler={createHandler}
             updateHandler={updateHandler}
+            handleFileInputChange={handleFileInputChange}
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}

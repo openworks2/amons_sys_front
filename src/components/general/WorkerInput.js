@@ -309,6 +309,7 @@ const WorkerInput = ({
   onFileUpload,
   createHandler,
   updateHandler,
+  handleFileInputChange,
   formData,
   selectedRow,
   initFormData,
@@ -330,7 +331,7 @@ const WorkerInput = ({
     wk_blood_type,
     wk_blood_group,
     wk_sms_yn,
-    wk_image_path,
+    wk_image,
     co_index,
     bc_index,
     co_name,
@@ -507,11 +508,10 @@ const WorkerInput = ({
             <div className="form-title">사진</div>
             <Input
               type="file"
+              name="file"
               accept="image/jpg,jpge,png,gif"
               className="photo-box"
-              onChange={(e) => {
-                onFileUpload(e);
-              }}
+              onChange={handleFileInputChange}
               placeholder="사진을 등록해 주세요.(jpg, png, gif)"
               // value={wk_image_path && wk_image_path}
             >

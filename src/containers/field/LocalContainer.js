@@ -72,7 +72,7 @@ const LocalContainer = () => {
 
   useEffect(() => {
     dispatch(getLocals());
-  }, [dispatch]);
+  }, [dispatch, postLocal, putLocal]);
 
   const [formData, setFormData] = useState({
     local_id: null,

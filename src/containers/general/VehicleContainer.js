@@ -89,7 +89,7 @@ const VehicleContainer = () => {
     modified_date: null,
     vh_name: "",
     vh_number: "",
-    vh_image_path: "",
+    vh_image: "",
     vh_io_state: null,
     description: "",
     co_id: null,
@@ -207,7 +207,7 @@ const VehicleContainer = () => {
     const value = seletedValue.value;
 
     if (name === "bc_index") {
-      const findBeacon = seletedValue.options.find((el) => el.value == value);
+      const findBeacon = seletedValue.options.find((el) => el.value === value);
       const address = findBeacon.address;
       console.log(findBeacon);
       setFormData({
@@ -245,7 +245,7 @@ const VehicleContainer = () => {
   useEffect(() => {
     setFormData({
       ...formData,
-      vh_image_path: imageUrl,
+      vh_image: imageUrl,
     });
   }, [imageUrl]);
 
@@ -273,7 +273,7 @@ const VehicleContainer = () => {
       vh_name: "",
       vh_number: "",
       description: "",
-      vh_image_path: "",
+      vh_image: "",
       vh_io_state: null,
       co_id: null,
       co_index: null,
@@ -303,7 +303,7 @@ const VehicleContainer = () => {
         vh_index: findItem.vh_index,
         vh_name: findItem.vh_name,
         vh_number: findItem.vh_name,
-        vh_image_path: findItem.vh_image_path,
+        vh_image: findItem.vh_image,
         co_id: findItem.co_id,
         co_index: findItem.co_index,
         co_name: findItem.co_name,
