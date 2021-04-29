@@ -350,12 +350,10 @@ const ScannerContainer = () => {
   const [kindError, setKindError] = useState(undefined);
   const [addressError, setAddressError] = useState(undefined);
 
-  const dataValidationCheck = () => {};
-
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
-    let _scn_address = formData.scn_address.replace(/\:/g, "");
+    let _scn_address = formData.scn_address.replace(/\:/g, "").toUpperCase();
     _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
     let _scn_pos_x = minusComma(formData.scn_pos_x);
     let _scn_group = formData.scn_group.substring(0, 2); // 입력된 글자수 맞추기
@@ -393,7 +391,7 @@ const ScannerContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    let _scn_address = formData.scn_address.replace(/\:/g, "");
+    let _scn_address = formData.scn_address.replace(/\:/g, "").toUpperCase();
     _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 12자리 맞추기
 
     if (_scn_address.length !== 12) {

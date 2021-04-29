@@ -175,7 +175,7 @@ const BeaconContatiner = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    let _bc_address = formData.bc_address.replace(/\:/g, "");
+    let _bc_address = formData.bc_address.replace(/\:/g, "").toUpperCase();
     _bc_address = _bc_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
     if (_bc_address.length !== 12) {
       // 자리수 유효성 검사
@@ -203,7 +203,7 @@ const BeaconContatiner = () => {
 
   // UPDATE
   const updateHandler = (e) => {
-    let _bc_address = formData.bc_address.replace(/\:/g, "");
+    let _bc_address = formData.bc_address.replace(/\:/g, "").toUpperCase();
     _bc_address = _bc_address.substring(0, 12); // 입력된 글자수 12자리 맞추기
 
     let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);

@@ -86,8 +86,8 @@ const TableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
     &.no {
       width: 52px;
       @media screen and (max-height: 937px) {
@@ -104,32 +104,29 @@ const TableCompo = styled.div`
       width: 101px;
     }
     &.kind {
-      width: 74px;
-      @media screen and (max-height: 937px) {
-        width: 74px;
-      }
+      width: 90px;
     }
     &.group {
       width: 75px;
     }
     &.address {
-      width: 152px;
+      width: 162px;
       text-align: left;
     }
     &.ip {
-      width: 233px;
+      width: 223px;
       text-align: left;
       @media screen and (max-height: 937px) {
-        width: 231px;
+        width: 221px;
       }
     }
     &.port {
-      width: 61px;
+      width: 71px;
     }
     &.description {
-      width: 284px;
+      width: 260px;
       @media screen and (max-height: 937px) {
-        width: 280px;
+        width: 256px;
       }
     }
     &.trash-icon {
@@ -183,22 +180,31 @@ const TableCompo = styled.div`
           text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 15px;
+          padding-right: 15px;
           vertical-align: middle;
           &.no {
-            width: 52px;
+            width: 53px;
+            @media screen and (max-height: 937px) {
+              width: 52px;
+            }
           }
           &.local {
-            width: 101px;
+            width: 102px;
+            @media screen and (max-height: 937px) {
+              width: 101px;
+            }
           }
           &.pos-x {
             width: 101px;
+            @media screen and (max-height: 937px) {
+              width: 103px;
+            }
           }
           &.kind {
-            width: 74px;
+            width: 90px;
             @media screen and (max-height: 937px) {
-              width: 76px;
+              width: 91px;
             }
           }
           &.group {
@@ -208,23 +214,29 @@ const TableCompo = styled.div`
             }
           }
           &.address {
-            width: 152px;
+            width: 162px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 153px;
+              width: 164px;
             }
           }
           &.ip {
-            width: 233px;
+            width: 223px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 224px;
+            }
           }
           &.port {
-            width: 61px;
+            width: 72px;
+            @media screen and (max-height: 937px) {
+              width: 71px;
+            }
           }
           &.description {
-            width: 284px;
+            width: 260px;
             @media screen and (max-height: 937px) {
-              width: 282px;
+              width: 259px;
             }
           }
           &.trash-icon {
@@ -351,14 +363,24 @@ const ScannerTable = ({
     }
     if (categorieValue === null) {
       // 전체검색
-      tempData = _data.filter((item) => item.scn_address.includes(searchValue));
+      let _searchValue = searchValue.replace(/\:/g, "");
+      _searchValue = _searchValue.toUpperCase();
+      _searchValue = _searchValue.substring(0, 12);
+      tempData = _data.filter((item) =>
+        item.scn_address.includes(_searchValue)
+      );
+      setSearchValue("");
       setCurrentData(tempData);
     } else {
       // 검색
       tempData = _data.filter((item) => item.local_index === categorieValue);
+      let _searchValue = searchValue;
+      _searchValue = _searchValue.toUpperCase();
+      _searchValue = _searchValue.substring(0, 12);
       tempData = tempData.filter((item) =>
-        item.scn_address.includes(searchValue)
+        item.scn_address.includes(_searchValue)
       );
+      setSearchValue("");
       setCurrentData(tempData);
     }
     initActiveRow();
