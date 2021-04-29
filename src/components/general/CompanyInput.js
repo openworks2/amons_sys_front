@@ -64,7 +64,6 @@ const CompanyInputCompo = styled.div`
     font-size: 24px;
     text-align: left;
     letter-spacing: 0px;
-    color: #929292;
     opacity: 1;
   }
 

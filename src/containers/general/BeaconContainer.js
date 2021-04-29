@@ -65,7 +65,7 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const WorkerContatiner = () => {
+const BeaconContatiner = () => {
   const { data, loading, error } = useSelector(
     (state) => state.beacons.beacons
   );
@@ -163,11 +163,11 @@ const WorkerContatiner = () => {
     e.preventDefault();
 
     let _bc_address = formData.bc_address.replace(/\:/g, "");
-    _bc_address = _bc_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
-    if (_bc_address.length !== 10) {
+    _bc_address = _bc_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
+    if (_bc_address.length !== 12) {
       // 자리수 유효성 검사
       setAddressError({
-        content: "비콘 번호 10자리를 모두 입력해주세요.",
+        content: "비콘 번호 12자리를 모두 입력해주세요.",
       });
       setTimeout(() => {
         setAddressError(undefined);
@@ -195,15 +195,15 @@ const WorkerContatiner = () => {
   // UPDATE
   const updateHandler = (e) => {
     let _bc_address = formData.bc_address.replace(/\:/g, "");
-    _bc_address = _bc_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
+    _bc_address = _bc_address.substring(0, 12); // 입력된 글자수 12자리 맞추기
 
     let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
     // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
 
-    if (_bc_address.length !== 10) {
+    if (_bc_address.length !== 12) {
       // 자리수 유효성 검사
       setAddressError({
-        content: "비콘 번호 10자리를 모두 입력해주세요.",
+        content: "비콘 번호 12자리를 모두 입력해주세요.",
       });
       setTimeout(() => {
         setAddressError(undefined);
@@ -304,4 +304,4 @@ const WorkerContatiner = () => {
   );
 };
 
-export default WorkerContatiner;
+export default BeaconContatiner;

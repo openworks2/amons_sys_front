@@ -94,7 +94,6 @@ const InputCompo = styled.div`
         font-size: 14px;
         text-align: left;
         letter-spacing: 0px;
-        color: #929292;
         opacity: 1;
         &.title {
           color: #2e2e2e;
@@ -137,6 +136,15 @@ const InputCompo = styled.div`
     color: #2e2e2e !important;
     opacity: 0.8;
     padding: 0px;
+  }
+
+  .ui.form .field .ui.input input#scn_address {
+    // input 맥 어드레스 placeholder
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 14px;
+    text-align: left;
+    letter-spacing: 1.05px;
+    opacity: 1;
   }
 
   .ui.form .required.field > label:after {
@@ -203,6 +211,7 @@ const ScannerInput = ({
   kindError,
   addressError,
   addComma,
+  splitByColonInput,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -226,25 +235,6 @@ const ScannerInput = ({
     local_index,
     closed_count,
   } = formData;
-
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 10) {
-      return str.substring(0, 14);
-    }
-
-    let length = _str.length;
-    let point = _str.length % 2;
-    let splitedStr = "";
-    splitedStr = _str.substring(0, point);
-    while (point < length) {
-      if (splitedStr != "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
-      point += 2;
-    }
-    return splitedStr;
-  };
 
   const kindOptions = [
     { key: 0, text: "기타", value: 0 },

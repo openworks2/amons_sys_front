@@ -130,6 +130,43 @@ const ScannerContainer = () => {
     }
   };
 
+  // mac address 입력 / 출력
+  //입력
+  const splitByColonInput = (str) => {
+    let _str = str.replace(/\:/g, "");
+
+    if (_str.length > 12) {
+      return str.substring(0, 17);
+    }
+
+    let length = _str.length;
+    let point = _str.length % 2;
+    let splitedStr = "";
+    splitedStr = _str.substring(0, point);
+    while (point < length) {
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += _str.substring(point, point + 2);
+      point += 2;
+    }
+    return splitedStr;
+  };
+  // 출력
+
+  const splitByColon = (str = "") => {
+    let length = str.length;
+    let point = str.length % 2;
+    let splitedStr = "";
+
+    splitedStr = str.substring(0, point);
+    while (point < length) {
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += str.substring(point, point + 2);
+      point += 2;
+    }
+
+    return splitedStr;
+  };
+
   // 미터 콤마 더하기 빼기
 
   const addComma = (num) => {
@@ -293,17 +330,12 @@ const ScannerContainer = () => {
     e.preventDefault();
 
     let _scn_address = formData.scn_address.replace(/\:/g, "");
-    _scn_address = _scn_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
+    _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
 
-    setFormData({
-      ...formData,
-      scn_address: _scn_address,
-    });
-
-    if (_scn_address.length !== 10) {
+    if (_scn_address.length !== 12) {
       // 자리수 유효성 검사
       setAddressError({
-        content: "비콘 번호 10자리를 모두 입력해주세요.",
+        content: "비콘 번호 12자리를 모두 입력해주세요.",
       });
       setTimeout(() => {
         setAddressError(undefined);
@@ -316,7 +348,7 @@ const ScannerContainer = () => {
       setTimeout(() => {
         setLocalError(undefined);
       }, 1500);
-    } else if (!formData.scn_kind) {
+    } else if (formData.scn_kind === null || formData.scn_kind === undefined) {
       setKindError({
         content: "사용용도를 선택해 주세요.",
         pointing: "below",
@@ -325,7 +357,7 @@ const ScannerContainer = () => {
         setKindError(undefined);
       }, 1500);
     } else {
-      let newScanner = { ...formData };
+      let newScanner = { ...formData, scn_address: _scn_address };
       dispatch(postScanner(newScanner));
       initActiveRow();
       initFormData();
@@ -337,17 +369,12 @@ const ScannerContainer = () => {
     e.preventDefault();
 
     let _scn_address = formData.scn_address.replace(/\:/g, "");
-    _scn_address = _scn_address.substring(0, 10); // 입력된 글자수 10자리 맞추기
+    _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 12자리 맞추기
 
-    setFormData({
-      ...formData,
-      scn_address: _scn_address,
-    });
-
-    if (_scn_address.length !== 10) {
+    if (_scn_address.length !== 12) {
       // 자리수 유효성 검사
       setAddressError({
-        content: "비콘 번호 10자리를 모두 입력해주세요.",
+        content: "비콘 번호 12자리를 모두 입력해주세요.",
       });
       setTimeout(() => {
         setAddressError(undefined);
@@ -360,7 +387,7 @@ const ScannerContainer = () => {
       setTimeout(() => {
         setLocalError(undefined);
       }, 1500);
-    } else if (!formData.scn_kind) {
+    } else if (formData.scn_kind === (null || undefined)) {
       setKindError({
         content: "사용용도를 선택해 주세요.",
         pointing: "below",
@@ -380,6 +407,7 @@ const ScannerContainer = () => {
         scn_result: findItem.scn_result,
         scn_start_time: findItem.scn_start_time,
         scn_stop_time: findItem.scn_stop_time,
+        scn_address: _scn_address,
       };
       dispatch(putScanner(newScanner.scn_index, newScanner));
       initActiveRow();
@@ -421,6 +449,7 @@ const ScannerContainer = () => {
             kindError={kindError}
             addressError={addressError}
             addComma={addComma}
+            splitByColonInput={splitByColonInput}
           />
         </div>
         <div className="table-box">
@@ -438,6 +467,7 @@ const ScannerContainer = () => {
               localData={localData}
               localList={localList}
               addComma={addComma}
+              splitByColon={splitByColon}
             />
           )}
         </div>

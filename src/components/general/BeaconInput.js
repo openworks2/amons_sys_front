@@ -90,14 +90,27 @@ const InputCompo = styled.div`
     font-weight: initial !important;
   }
 
+  .ui.form .field .ui.input input {
+    // input placeholder
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 14px;
+    text-align: left;
+    letter-spacing: 1.05px;
+    opacity: 1;
+  }
+
   .ui.form .required.field > label:after {
     content: "" !important;
   }
   .ui.form .field .prompt.label {
+    // 에러 메시지
     position: absolute;
     top: 55px;
-    left: 100px;
+    left: 0px;
+    width: 318px;
+    text-align: center;
   }
+
   .input-form.description {
     height: 105px !important;
   }
@@ -151,8 +164,8 @@ const BeaconInput = ({
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
 
-    if (_str.length > 10) {
-      return str.substring(0, 14);
+    if (_str.length > 12) {
+      return str.substring(0, 17);
     }
 
     let length = _str.length;

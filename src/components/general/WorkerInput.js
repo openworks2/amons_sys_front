@@ -255,10 +255,14 @@ const InputCompo = styled.div`
   .ui.form .required.field > label:after {
     content: "" !important;
   }
+
   .ui.form .field .prompt.label {
+    // 에러 메시지
     position: absolute;
     top: 55px;
-    left: 100px;
+    left: 0px;
+    width: 318px;
+    text-align: center;
   }
 
   .ui.checkbox input:checked ~ label:after {

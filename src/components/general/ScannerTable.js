@@ -88,34 +88,46 @@ const TableCompo = styled.div`
     padding-right: 10px !important;
     &.no {
       width: 52px;
+      @media screen and (max-height: 937px) {
+        width: 51px;
+      }
     }
     &.local {
       width: 100px;
+      @media screen and (max-height: 937px) {
+        width: 99px;
+      }
     }
     &.pos-x {
       width: 100px;
     }
     &.kind {
       width: 60px;
+      @media screen and (max-height: 937px) {
+        width: 74px;
+      }
     }
     &.group {
       width: 50px;
     }
     &.address {
-      width: 170px;
+      width: 151px;
       text-align: left;
     }
     &.ip {
-      width: 190px;
+      width: 230px;
       text-align: left;
+      @media screen and (max-height: 937px) {
+        width: 229px;
+      }
     }
     &.port {
-      width: 60px;
+      width: 61px;
     }
     &.description {
-      width: 333px;
+      width: 303px;
       @media screen and (max-height: 937px) {
-        width: 333px;
+        width: 301px;
       }
     }
     &.trash-icon {
@@ -176,13 +188,13 @@ const TableCompo = styled.div`
             width: 52px;
           }
           &.local {
-            width: 102px;
+            width: 101px;
           }
           &.pos-x {
-            width: 100px;
+            width: 101px;
           }
           &.kind {
-            width: 73px;
+            width: 74px;
             @media screen and (max-height: 937px) {
               width: 74px;
             }
@@ -194,21 +206,21 @@ const TableCompo = styled.div`
             }
           }
           &.address {
-            width: 171px;
+            width: 152px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 169px;
+              width: 152px;
             }
           }
           &.ip {
-            width: 191px;
+            width: 233px;
             text-align: left;
           }
           &.port {
-            width: 60px;
+            width: 61px;
           }
           &.description {
-            width: 335px;
+            width: 309px;
           }
           &.trash-icon {
             width: 55px !important ;
@@ -313,7 +325,6 @@ const ScannerTable = ({
       setCurrentData(_data);
     } else {
       tempData = _data.filter((item) => item.local_index === categorieValue);
-      alert("!");
       setCurrentData(tempData);
     }
   }, [data, categorieValue]);
@@ -384,16 +395,20 @@ const ScannerTable = ({
   };
 
   const kindReturn = (kind) => {
-    switch (kind) {
-      case 1:
-        return "입장";
-      case 2:
-        return "퇴장";
-      case 3:
-        return "위치측정";
-      default:
-        return "기타";
+    let str = "";
+    if (kind === 0) {
+      str = "기타";
     }
+    if (kind === 1) {
+      str = "입장";
+    }
+    if (kind === 2) {
+      str = "퇴장";
+    }
+    if (kind === 3) {
+      str = "위치측정";
+    }
+    return str;
   };
 
   // 테이블
@@ -433,7 +448,7 @@ const ScannerTable = ({
             {item && item.scn_pos_x && addComma(item.scn_pos_x)}
           </Table.Cell>
           <Table.Cell className="table-cell kind" name="kind">
-            {item && item.scn_kind && kindReturn(item.scn_kind)}
+            {item && kindReturn(item.scn_kind)}
           </Table.Cell>
           <Table.Cell className="table-cell group" name="group">
             {item && item.scn_group && item.scn_group}

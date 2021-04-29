@@ -121,8 +121,8 @@ const WorkerContatiner = () => {
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
 
-    if (_str.length > 10) {
-      return str.substring(0, 14);
+    if (_str.length > 12) {
+      return str.substring(0, 17);
     }
 
     let length = _str.length;

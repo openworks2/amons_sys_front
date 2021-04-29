@@ -77,7 +77,6 @@ const InputCompo = styled.div`
         font-size: 14px;
         text-align: left;
         letter-spacing: 0px;
-        color: #929292;
         opacity: 1;
         &.title {
           color: #2e2e2e;

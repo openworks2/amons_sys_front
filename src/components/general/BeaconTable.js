@@ -33,26 +33,27 @@ const TableCompo = styled.div`
     padding-left: 10px !important;
     padding-right: 10px !important;
     &.no {
-      width: 51px;
+      width: 52px;
     }
     &.address {
-      width: 205px;
+      width: 176px;
       text-align: left;
     }
     &.index {
       width: 81px;
     }
     &.used-type {
-      width: 181.5px;
+      width: 159px;
+      text-align: left;
     }
     &.battery-remain {
-      width: 120px;
+      width: 119px;
     }
     &.battery-time {
       width: 178px;
     }
     &.description {
-      width: 333.5px;
+      width: 383.5px;
     }
     &.trash-icon {
       width: 55px !important ;
@@ -99,14 +100,17 @@ const TableCompo = styled.div`
           padding-right: 10px;
           vertical-align: middle;
           &.no {
-            width: 51px;
+            width: 52px;
             @media screen and (max-height: 937px) {
-              width: 52px;
+              width: 53px;
             }
           }
           &.address {
-            width: 204px;
-            text-align: left;
+            width: 175px !important;
+            text-align: center;
+            @media screen and (max-height: 937px) {
+              width: 171px !important;
+            }
           }
           &.id {
             width: 82px;
@@ -115,25 +119,26 @@ const TableCompo = styled.div`
             }
           }
           &.used-type {
-            width: 182px;
+            width: 160px;
+            text-align: left;
             @media screen and (max-height: 937px) {
-              width: 181px;
+              width: 162px;
             }
           }
           &.battery-remain {
-            width: 122px;
+            width: 121px;
             @media screen and (max-height: 937px) {
               width: 123px;
             }
           }
           &.battery-time {
-            width: 180px;
+            width: 181px;
             @media screen and (max-height: 937px) {
-              width: 183px;
+              width: 182px;
             }
           }
           &.description {
-            width: 333px;
+            width: 383px;
           }
           &.trash-icon {
             width: 55px !important ;
