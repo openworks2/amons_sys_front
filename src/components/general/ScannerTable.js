@@ -124,9 +124,9 @@ const TableCompo = styled.div`
       width: 71px;
     }
     &.description {
-      width: 260px;
+      width: 258px;
       @media screen and (max-height: 937px) {
-        width: 256px;
+        width: 254px;
       }
     }
     &.trash-icon {
@@ -234,9 +234,9 @@ const TableCompo = styled.div`
             }
           }
           &.description {
-            width: 260px;
+            width: 258px;
             @media screen and (max-height: 937px) {
-              width: 259px;
+              width: 257px;
             }
           }
           &.trash-icon {
