@@ -3,15 +3,31 @@ import styled, { css } from "styled-components";
 import { Form, Button, Select, Modal, Input } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
+import NumberFormat from "react-number-format";
 
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
+  @media screen and (max-height: 937px) {
+    margin-right: 12px;
+  }
   margin-top: 5px;
-  margin-bottom: 18px;
-
+  .ui.form .field > label,
+  .field > label {
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    letter-spacing: 0px;
+    opacity: 1;
+    font-weight: initial !important;
+  }
   .ui.input > input {
     /* ui focus 색상변경 */
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .input-form.port {
     &:focus {
       border-color: #f1592a !important;
     }
@@ -80,45 +96,21 @@ const InputCompo = styled.div`
         opacity: 1;
         &.title {
           color: #2e2e2e;
+          margin-top: 14px;
         }
-      }
-    }
-  }
-
-  .photo {
-    .photo-box {
-      cursor: pointer;
-      border: solid 1px;
-      border-radius: 4px;
-      background: #ffffff 0% 0% no-repeat padding-box;
-      border: 1px solid #d8d8d8;
-      border-radius: 4px;
-      opacity: 1;
-      height: 38px;
-      margin-top: 5px;
-      .icon-box {
-        background-color: #2e2e2e;
-        display: inline-block;
-        height: 37px;
-        border-radius: 5px;
-        .photo-icon {
-          font-size: 20px;
-          margin-left: 9px;
-          margin-right: 9px;
-          margin-top: 7px;
-          color: #ffffff;
+        &.description {
+          height: 105px !important;
         }
-      }
-      .photo-description {
-        display: inline-block;
-        margin: 0px;
-        padding-bottom: 12px;
-        vertical-align: middle;
-        margin-left: 10px;
-        text-align: left;
-        letter-spacing: 0px;
-        color: #d8d8d8;
-        opacity: 1;
+        &.pos-x {
+          width: 283px !important;
+          margin-top: 6px;
+          margin-bottom: 15px;
+        }
+        &.description {
+        }
+        &.port {
+          margin-bottom: 10px;
+        }
       }
     }
   }
@@ -135,15 +127,6 @@ const InputCompo = styled.div`
     font-weight: initial !important;
   }
 
-  .form-title.photo {
-    margin-top: -3px;
-    margin-bottom: 3px;
-  }
-
-  .photo-box {
-    margin-left: -1px !important;
-  }
-
   // 드롭다운 버튼
   .ui.dropdown > .dropdown.icon,
   &:before,
@@ -156,28 +139,21 @@ const InputCompo = styled.div`
     padding: 0px;
   }
 
+  .ui.form .field .ui.input input#scn_address {
+    // input 맥 어드레스 placeholder
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 14px;
+    text-align: left;
+    letter-spacing: 1.05px;
+    opacity: 1;
+  }
+
   .ui.form .required.field > label:after {
     content: "" !important;
   }
-  .ui.form .field .prompt.label {
-    //에러 색상
-    display: none;
-  }
 
-  .ui.checkbox input:checked ~ label:after {
-    background-color: #2e2e2e;
-    border-radius: 4px;
-    border-color: #929292;
-    color: #ffffff;
-    font-size: 12px;
-  }
   .input-form.description {
     height: 105px !important;
-  }
-  .ui.form .field .prompt.label {
-    position: absolute;
-    top: -25px;
-    left: 150px;
   }
 
   .submit-button {
@@ -210,6 +186,10 @@ const InputCompo = styled.div`
       top: 68vh;
     }
   }
+  .ui.form .field .prompt.label {
+    //에러 색상
+    display: none;
+  }
 `;
 
 const InputError = styled.div`
@@ -223,42 +203,41 @@ const InputError = styled.div`
   opacity: 1;
 `;
 
-const VehicleInput = ({
+const CctvInput = ({
   onChange,
   onSelectChange,
-  handleFileInputChange,
+  formData,
   createHandler,
   updateHandler,
-  formData,
   selectedRow,
   initFormData,
   initActiveRow,
-  companyList,
-  unUsedBeaconList,
-  companyError,
-  fileName,
+  localList,
+  localError,
+  kindError,
+  addressError,
+  addComma,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const {
-    vh_id,
-    vh_index,
-    created_date,
-    modified_date,
-    vh_name,
-    vh_number,
+    cctv_id,
+    cctv_index,
+    cctv_name,
+    cctv_pos_x,
+    cctv_user_id,
+    cctv_pw,
+    cctv_ip,
+    cctv_port,
+    local_index,
     description,
-    vh_image,
-    vh_io_state,
-    co_index,
-    co_name,
-    bc_index,
-    bc_address,
   } = formData;
 
+  const tabOrder = [{ key: 0, text: "기타", value: 0 }];
+
   return (
-    <InputCompo className="input-compo" selectedState={vh_id}>
-      <p className="subtitle">차량 등록</p>
+    <InputCompo className="input-compo">
+      <p className="subtitle">CCTV 등록</p>
       <Form
         className="input-form-body"
         onSubmit={(e) => {
@@ -267,75 +246,100 @@ const VehicleInput = ({
       >
         <div className="resizable-area">
           <Form.Field
-            className="input-form company"
-            id="co_index"
-            name="co_index"
+            className="input-form local"
+            id="local_index"
+            name="local_index"
             control={Select}
-            label="소속사"
-            options={companyList}
+            label="노선"
+            options={localList}
             onChange={(e, value) => onSelectChange(e, value)}
-            placeholder="소속사를 선택해주세요."
-            value={co_index}
-            error={companyError}
+            placeholder="노선을 선택해주세요."
+            value={local_index}
+            error={localError}
             required
           />
-          {companyError && <InputError>{companyError}</InputError>}
-          <Form.Input
-            label="차량 종류"
-            className="input-form name"
-            id="vh_name"
-            name="vh_name"
-            placeholder="차량 종류를 입력해주세요."
+          {localError && <InputError>{localError}</InputError>}
+          <div className="pos-x-area">
+            <div className="form-title pos-x">설치위치</div>
+            <Input
+              label={{ basic: true, content: "m" }}
+              labelPosition="right"
+              className="input-form pos-x"
+              id="cctv_pos_x"
+              name="cctv_pos_x"
+              placeholder="설치위치를 입력해주세요."
+              required
+              value={cctv_pos_x && addComma(cctv_pos_x)}
+              onChange={onChange}
+            />
+          </div>
+          <Form.Field
+            className="input-form tab-order-num"
+            id="tab-order-num"
+            name="tab-order-num"
+            control={Select}
+            label="탭 순서"
+            options={localList}
+            onChange={(e, value) => onSelectChange(e, value)}
+            placeholder="탭 순서를 선택해주세요."
+            value={local_index}
+            error={localError}
             required
-            value={vh_name}
+          />
+          <Form.Input
+            className="input-form group"
+            label="이름"
+            id="cctv_name"
+            name="cctv_name"
+            placeholder="이름을 입력해 주세요."
+            required
+            value={cctv_name && cctv_name}
             onChange={onChange}
           />
           <Form.Input
             className="input-form"
-            label="차량번호"
-            className="input-form number"
-            id="vh_number"
-            name="vh_number"
-            placeholder="차량 번호를 입력해주세요."
+            label="IP 주소"
+            className="input-form ip"
+            id="cctv_ip"
+            name="cctv_ip"
+            placeholder="ip주소를 입력해주세요."
             required
-            value={vh_number}
+            value={cctv_ip && cctv_ip}
             onChange={onChange}
           />
-          <Form.Field
-            className="input-form beacon"
-            control={Select}
-            label="비콘 사용 정보"
-            options={unUsedBeaconList}
-            placeholder={
-              vh_id ? !bc_index && "할당없음" : "할당할 비콘을 선택해 주세요."
-            }
-            name="bc_index"
-            onChange={(e, value) => onSelectChange(e, value)}
-            value={bc_index}
+          <div className="group-area">
+            <div className="form-title port">PORT</div>
+            <NumberFormat
+              format="#####"
+              className="input-form port"
+              id="cctv_port"
+              name="cctv_port"
+              placeholder="포트를 입력해주세요."
+              required
+              value={cctv_port && cctv_port}
+              onChange={onChange}
+            />
+          </div>
+          <Form.Input
+            className="input-form id"
+            label="아이디"
+            id="cctv_user_id"
+            name="cctv_user_id"
+            placeholder="아이디를 입력해 주세요."
             required
+            value={cctv_user_id && cctv_user_id}
+            onChange={onChange}
           />
-          <Form.Field
-            className="input-form photo"
-            method="post"
-            enctype="multipart/form-data"
-          >
-            <div className="form-title photo">사진</div>
-            <label for="input-image-file" className="photo-box">
-              <div className="icon-box">
-                <FaImage className="photo-icon" />
-              </div>
-              <div className="photo-description">{fileName}</div>
-            </label>
-            <Input
-              type="file"
-              id="input-image-file"
-              name="file"
-              className="photo-box"
-              accept="image/jpg,jpge,png,gif"
-              onChange={handleFileInputChange}
-              style={{ display: "none" }}
-            ></Input>
-          </Form.Field>
+          <Form.Input
+            className="input-form pw"
+            label="비밀번호"
+            id="cctv_pw"
+            name="cctv_pw"
+            placeholder="비밀번호를 입력해 주세요."
+            required
+            value={cctv_pw && cctv_pw}
+            onChange={onChange}
+          />
           <Form.Field className="company-input-form description">
             <label className="input-form title">비고</label>
             <textarea
@@ -408,4 +412,4 @@ const VehicleInput = ({
   );
 };
 
-export default VehicleInput;
+export default CctvInput;

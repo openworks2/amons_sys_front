@@ -101,8 +101,11 @@ const CompanyInputCompo = styled.div`
       top: 68vh;
     }
   }
+
   .label,
-  .field > label {
+  .ui.form .field > label,
+  .form-title {
+    margin-left: 5px;
     font-family: "NotoSansKR-Medium" !important;
     color: #2e2e2e;
     font-size: 14px !important;

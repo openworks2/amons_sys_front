@@ -8,7 +8,7 @@ import WorkerContainer from "../containers/general/WorkerContainer";
 import VehicleContainer from "../containers/general/VehicleContainer";
 import BeaconContainer from "../containers/general/BeaconContainer";
 import ScannerContainer from "../containers/general/ScannerContainer";
-// import CctvContainer from "../containers/general/CctvContainer";
+import CctvContainer from "../containers/general/CctvContainer";
 //
 import HomeShortcut from "../components/home/HomeShortcut";
 //
@@ -24,7 +24,7 @@ const Contents = () => {
       <Route path="/amons/home/general/vehicle" component={VehicleContainer} />
       <Route path="/amons/home/general/beacon" component={BeaconContainer} />
       <Route path="/amons/home/general/scanner" component={ScannerContainer} />
-      {/* <Route path="/amons/home/general/cctv" component={CctvContainer}/> */}
+      <Route path="/amons/home/general/cctv" component={CctvContainer} />
     </>
   );
 };

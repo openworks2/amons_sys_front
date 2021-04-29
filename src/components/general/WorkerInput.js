@@ -193,7 +193,6 @@ const InputCompo = styled.div`
       opacity: 1;
       height: 38px;
       margin-top: 5px;
-
       .icon-box {
         background-color: #2e2e2e;
         display: inline-block;
@@ -222,17 +221,30 @@ const InputCompo = styled.div`
   }
 
   .label,
-  .field > label,
+  .ui.form .field > label,
   .form-title {
+    margin-left: 5px;
     font-family: "NotoSansKR-Medium" !important;
     color: #2e2e2e;
     font-size: 14px !important;
     letter-spacing: 0px;
     opacity: 1;
     font-weight: initial !important;
+    &.sms {
+      margin-left: 0px;
+    }
     &.phone {
       margin-bottom: 5px;
     }
+  }
+
+  .form-title.photo {
+    margin-top: -3px;
+    margin-bottom: 3px;
+  }
+
+  .photo-box {
+    margin-left: -1px !important;
   }
 
   .input#file-upload-button {
@@ -424,7 +436,7 @@ const WorkerInput = ({
               />
             </div>
             <div className="sms-area">
-              <div className="form-title">비상알람 SMS</div>
+              <div className="form-title sms">비상알람 SMS</div>
               <Checkbox
                 className="sms-checkbox"
                 id="wk_sms_yn"
@@ -517,7 +529,9 @@ const WorkerInput = ({
             method="post"
             enctype="multipart/form-data"
           >
-            <div className="form-title">사진</div>
+            <div className="form-title photo" id="photo-title-unique">
+              사진
+            </div>
             <label for="input-image-file" className="photo-box">
               <div className="icon-box">
                 <FaImage className="photo-icon" />

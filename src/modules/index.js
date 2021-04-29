@@ -7,7 +7,7 @@ import beacons from "./beacons";
 import workers from "./workers";
 import vehicles from "./vehicles";
 import scanners from "./scanners";
-// import cctvs from "./cctv";
+import cctvs from "./cctvs";
 
 const rootReducer = combineReducers({
   //현장관리
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   workers,
   vehicles,
   scanners,
-  //   cctvs
+  cctvs,
 });
 
 export default rootReducer;
