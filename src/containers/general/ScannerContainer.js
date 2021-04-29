@@ -167,6 +167,20 @@ const ScannerContainer = () => {
     return splitedStr;
   };
 
+  // 0 추가
+  const addZero = (str, digit) => {
+    if (str.length >= digit) {
+      return str;
+    } else {
+      let _str = str.toString();
+      let zeros = "";
+      for (let i = 0; i < digit - _str.length; i++) {
+        zeros = zeros + "0";
+      }
+      return zeros + _str;
+    }
+  };
+
   // 미터 콤마 더하기 빼기
 
   const addComma = (num) => {
@@ -188,6 +202,17 @@ const ScannerContainer = () => {
       _num = _num.substring(0, 4);
     }
     return _num;
+  };
+
+  // 그룹 2자리 제한
+  const groupLimit = () => {
+    let _scn_group = formData.scn_group;
+    _scn_group = _scn_group.toUpperCase().replace(/[^a-z|^A-Z|^0-9]*$/g, "");
+    if (formData.scn_group && formData.scn_group.length >= 2) {
+      _scn_group = _scn_group.substring(0, 2);
+      return _scn_group;
+    }
+    return _scn_group;
   };
 
   // form onChange Event
@@ -325,39 +350,39 @@ const ScannerContainer = () => {
   const [kindError, setKindError] = useState(undefined);
   const [addressError, setAddressError] = useState(undefined);
 
+  const dataValidationCheck = () => {};
+
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
-
     let _scn_address = formData.scn_address.replace(/\:/g, "");
     _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
+    let _scn_pos_x = minusComma(formData.scn_pos_x);
+    let _scn_group = formData.scn_group.substring(0, 2); // 입력된 글자수 맞추기
 
     if (_scn_address.length !== 12) {
       // 자리수 유효성 검사
-      setAddressError({
-        content: "비콘 번호 12자리를 모두 입력해주세요.",
-      });
+      setAddressError("*비콘 번호 12자리를 모두 입력해주세요.");
       setTimeout(() => {
         setAddressError(undefined);
       }, 1350);
     } else if (!formData.local_index) {
-      setLocalError({
-        content: "노선을 선택해 주세요.",
-        pointing: "below",
-      });
+      setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
-      }, 1500);
+      }, 1350);
     } else if (formData.scn_kind === null || formData.scn_kind === undefined) {
-      setKindError({
-        content: "사용용도를 선택해 주세요.",
-        pointing: "below",
-      });
+      setKindError("*사용용도를 선택해 주세요.");
       setTimeout(() => {
         setKindError(undefined);
-      }, 1500);
+      }, 1350);
     } else {
-      let newScanner = { ...formData, scn_address: _scn_address };
+      let newScanner = {
+        ...formData,
+        scn_address: _scn_address,
+        scn_pos_x: _scn_pos_x,
+        scn_group: _scn_group,
+      };
       dispatch(postScanner(newScanner));
       initActiveRow();
       initFormData();
@@ -375,6 +400,7 @@ const ScannerContainer = () => {
       // 자리수 유효성 검사
       setAddressError({
         content: "비콘 번호 12자리를 모두 입력해주세요.",
+        pointing: "below",
       });
       setTimeout(() => {
         setAddressError(undefined);
@@ -450,6 +476,7 @@ const ScannerContainer = () => {
             addressError={addressError}
             addComma={addComma}
             splitByColonInput={splitByColonInput}
+            groupLimit={groupLimit}
           />
         </div>
         <div className="table-box">
@@ -468,6 +495,7 @@ const ScannerContainer = () => {
               localList={localList}
               addComma={addComma}
               splitByColon={splitByColon}
+              addZero={addZero}
             />
           )}
         </div>

@@ -17,10 +17,12 @@ import { useDispatch } from "react-redux";
 const TableCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  margin-top: 5px;
+  margin-top: -8px;
   margin-bottom: 18px;
   .ui.table {
     margin-top: 5px;
+    table-layout: fixed;
+    word-break: break-all;
   }
 
   .table-header {
@@ -31,31 +33,28 @@ const TableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
     &.no {
       width: 52px;
     }
     &.company {
-      width: 168px;
+      width: 166px;
       text-align: left;
     }
     &.name {
-      width: 158px;
+      width: 156px;
       text-align: left;
     }
     &.number {
-      width: 159px;
+      width: 157px;
       text-align: left;
     }
     &.beacon {
-      width: 217px;
+      width: 215px;
     }
     &.description {
-      width: 395px;
-      @media screen and (max-height: 937px) {
-        width: 396px;
-      }
+      width: 100%;
     }
     &.trash-icon {
       width: 55px !important ;
@@ -108,46 +107,44 @@ const TableCompo = styled.div`
           text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 15px;
+          padding-right: 15px;
           vertical-align: middle;
           &.no {
-            width: 52px;
-            @media screen and (max-height: 937px) {
-              width: 53px;
-            }
+            width: 53px;
           }
           &.company {
-            width: 171px;
+            width: 167px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 172px;
+              width: 170px;
             }
           }
           &.name {
-            width: 157px;
+            width: 156px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 158px;
+              width: 159px;
             }
           }
           &.number {
-            width: 158px;
+            width: 157px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 157px;
+              width: 160px;
             }
           }
           &.beacon {
-            width: 217px;
+            width: 215px;
+            text-align: left;
             @media screen and (max-height: 937px) {
               width: 219px;
             }
           }
           &.description {
-            width: 400px;
+            width: 388px;
             @media screen and (max-height: 937px) {
-              width: 404px;
+              width: 385px;
             }
           }
           &.trash-icon {
@@ -217,6 +214,7 @@ const TableCompo = styled.div`
 
 const SearchCompo = styled.div`
   padding: 0px;
+  margin-top: 9px;
   margin-left: 20px;
   display: block;
   font-family: "NotoSansKR-Regular";
@@ -277,6 +275,7 @@ const VehicleTable = ({
   initActiveRow,
   companyData,
   companySearchList,
+  addZero,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -391,7 +390,7 @@ const VehicleTable = ({
           </Table.Cell>
           <Table.Cell className="table-cell beacon" name="beacon">
             {item && item.bc_address
-              ? item.bc_id + " : " + splitByColon(item.bc_address)
+              ? addZero(item.bc_id, 3) + " : " + splitByColon(item.bc_address)
               : item && "할당없음"}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">

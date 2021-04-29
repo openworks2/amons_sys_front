@@ -89,9 +89,9 @@ const VehicleContainer = () => {
     modified_date: null,
     vh_name: "",
     vh_number: "",
+    description: "",
     vh_image: "",
     vh_io_state: null,
-    description: "",
     co_id: null,
     co_index: null,
     co_name: null,
@@ -112,6 +112,19 @@ const VehicleContainer = () => {
   useEffect(() => {
     makeBeaconList(unUsedBeaconData);
   }, [unUsedBeaconData, formData.bc_index]);
+
+  const addZero = (str, digit) => {
+    if (str.length >= digit) {
+      return str;
+    } else {
+      let _str = str.toString();
+      let zeros = "";
+      for (let i = 0; i < digit - _str.length; i++) {
+        zeros = zeros + "0";
+      }
+      return zeros + _str;
+    }
+  };
 
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
@@ -250,12 +263,15 @@ const VehicleContainer = () => {
 
   const [fileName, setFileName] = useState("");
 
+  // 가짜 input form 이미지 이름 바꾸기
   useEffect(() => {
-    if (files.selectFile) {
-      setFileName(" ");
-      files.selectFile.name && files.selectFile.name.length > 25
-        ? setFileName(fileName.toString().substring(0, 25) + "...")
-        : setFileName(files.selectFile.name.toString());
+    if (formData.wk_image) {
+      setFileName(formData.wk_image);
+    } else if (files.selectFile) {
+      let _filename = files.selectFile.name.toString();
+      _filename && _filename.length > 25
+        ? setFileName(_filename.substring(0, 25) + "...")
+        : setFileName(_filename);
     } else {
       setFileName("사진을 등록해 주세요.(jpg, png, gif)");
     }
@@ -300,6 +316,7 @@ const VehicleContainer = () => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
+      initFiles();
     } else {
       const findItem = data.find((vehicle) => vehicle.vh_id === selectedId);
 
@@ -322,7 +339,10 @@ const VehicleContainer = () => {
         bc_id: findItem.bc_id,
         bc_index: findItem.bc_index,
         bc_address: findItem.bc_address,
+        description: findItem.description,
       });
+
+      setFileName(formData.vh_image);
     }
 
     console.log("formData");
@@ -359,13 +379,10 @@ const VehicleContainer = () => {
     e.preventDefault();
 
     if (!formData.co_index) {
-      setCompanyError({
-        content: "소속사를 선택해 주세요.",
-        pointing: "below",
-      });
+      setCompanyError("*소속사를 선택해 주세요.");
       setTimeout(() => {
         setCompanyError(undefined);
-      }, 1500);
+      }, 1350);
     } else {
       const createData = new FormData();
       createData.append("file", files.selectFile);
@@ -384,13 +401,10 @@ const VehicleContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
     if (!formData.co_index) {
-      setCompanyError({
-        content: "소속사를 선택해 주세요.",
-        pointing: "below",
-      });
+      setCompanyError("*소속사를 선택해 주세요.");
       setTimeout(() => {
         setCompanyError(undefined);
-      }, 1500);
+      }, 1350);
     } else {
       // 성공
       const findItem = selectedRow.selectedItem;
@@ -464,6 +478,7 @@ const VehicleContainer = () => {
               companyData={companyData}
               companyList={companyList}
               companySearchList={companySearchList}
+              addZero={addZero}
             />
           )}
         </div>

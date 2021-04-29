@@ -94,6 +94,19 @@ const BeaconContatiner = () => {
     });
   };
 
+  const addZero = (str, digit) => {
+    if (str.length >= digit) {
+      return str;
+    } else {
+      let _str = str.toString();
+      let zeros = "";
+      for (let i = 0; i < digit - _str.length; i++) {
+        zeros = zeros + "0";
+      }
+      return zeros + _str;
+    }
+  };
+
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
@@ -166,17 +179,13 @@ const BeaconContatiner = () => {
     _bc_address = _bc_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
     if (_bc_address.length !== 12) {
       // 자리수 유효성 검사
-      setAddressError({
-        content: "비콘 번호 12자리를 모두 입력해주세요.",
-      });
+      setAddressError("*비콘 번호 12자리를 모두 입력해주세요.");
       setTimeout(() => {
         setAddressError(undefined);
       }, 1350);
     } else if (data.find((item) => item.bc_address === _bc_address)) {
       // 중복 유효성 검사
-      setAddressError({
-        content: "이미 동일한 주소의 비콘이 있습니다.",
-      });
+      setAddressError("*이미 동일한 주소의 비콘이 있습니다.");
       setTimeout(() => {
         setAddressError(undefined);
       }, 1350);
@@ -202,18 +211,14 @@ const BeaconContatiner = () => {
 
     if (_bc_address.length !== 12) {
       // 자리수 유효성 검사
-      setAddressError({
-        content: "비콘 번호 12자리를 모두 입력해주세요.",
-      });
+      setAddressError("*비콘 번호 12 자리를 모두 입력해주세요.");
       setTimeout(() => {
         setAddressError(undefined);
       }, 1350);
     } else if (filteredData.find((item) => item.bc_address === _bc_address)) {
       //중복 유효성 검사
       // 중복 에러
-      setAddressError({
-        content: "이미 동일한 주소의 비콘이 있습니다.",
-      });
+      setAddressError("*이미 동일한 주소의 비콘이 있습니다.");
       setTimeout(() => {
         setAddressError(undefined);
       }, 1350);
@@ -296,6 +301,7 @@ const BeaconContatiner = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
+              addZero={addZero}
             />
           )}
         </div>

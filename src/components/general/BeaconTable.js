@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 const TableCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  margin-top: 5px;
+  margin-top: -8px;
   margin-bottom: 18px;
   .ui.table {
     margin-top: 5px;
@@ -30,8 +30,8 @@ const TableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
     &.no {
       width: 52px;
     }
@@ -53,7 +53,10 @@ const TableCompo = styled.div`
       width: 178px;
     }
     &.description {
-      width: 383.5px;
+      width: 368px;
+      @media screen and (max-height: 937px) {
+        width: 359px;
+      }
     }
     &.trash-icon {
       width: 55px !important ;
@@ -96,8 +99,8 @@ const TableCompo = styled.div`
           text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 15px;
+          padding-right: 15px;
           vertical-align: middle;
           &.no {
             width: 52px;
@@ -106,39 +109,39 @@ const TableCompo = styled.div`
             }
           }
           &.address {
-            width: 175px !important;
-            text-align: center;
+            width: 176px !important;
+            text-align: left;
             @media screen and (max-height: 937px) {
-              width: 171px !important;
+              width: 179px !important;
             }
           }
           &.id {
-            width: 82px;
+            width: 81px;
             @media screen and (max-height: 937px) {
-              width: 83px;
+              width: 82px;
             }
           }
           &.used-type {
-            width: 160px;
+            width: 159px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 162px;
+              width: 161px;
             }
           }
           &.battery-remain {
-            width: 121px;
-            @media screen and (max-height: 937px) {
-              width: 123px;
-            }
+            width: 119px;
           }
           &.battery-time {
-            width: 181px;
+            width: 178px;
             @media screen and (max-height: 937px) {
-              width: 182px;
+              width: 180px;
             }
           }
           &.description {
-            width: 383px;
+            width: 368px;
+            @media screen and (max-height: 937px) {
+              width: 362px;
+            }
           }
           &.trash-icon {
             width: 55px !important ;
@@ -176,6 +179,11 @@ const TableCompo = styled.div`
     }
   }
 
+  .ui.table {
+    table-layout: fixed;
+    word-break: break-all;
+  }
+
   .ui.table td.active,
   .ui.table tr.active {
     background: #f9fafb !important;
@@ -200,6 +208,7 @@ const TableCompo = styled.div`
 
 const SearchCompo = styled.div`
   padding: 0px;
+  margin-top: 9px;
   margin-left: 20px;
   display: block;
   font-family: "NotoSansKR-Regular";
@@ -258,6 +267,7 @@ const BeaconTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  addZero,
 }) => {
   const options = [
     { key: "0", text: "사용정보", value: null },
@@ -384,7 +394,7 @@ const BeaconTable = ({
             {item && item.bc_address && splitByColon(item.bc_address)}
           </Table.Cell>
           <Table.Cell className="table-cell id" name="id">
-            {item && item.bc_id}
+            {item && addZero(item.bc_id, 3)}
           </Table.Cell>
           <Table.Cell className="table-cell used-type" name="used-type">
             {!item ? "" : item.bc_used_type === 1 ? item.wk_name : item.vh_name}

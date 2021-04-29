@@ -8,9 +8,10 @@ import "moment/locale/ko";
 const TableCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  margin-bottom: 18px;
   .ui.table {
     margin-top: 40px;
+    table-layout: fixed;
+    word-break: break-all;
   }
 
   .table-header {
@@ -21,8 +22,8 @@ const TableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
     &.no {
       width: 52px;
     }
@@ -37,9 +38,9 @@ const TableCompo = styled.div`
       width: 81px;
     }
     &.description {
-      width: 580px;
+      width: 569px;
       @media screen and (max-height: 937px) {
-        width: 567px;
+        width: 562px;
       }
     }
     &.created-date {
@@ -95,30 +96,42 @@ const TableCompo = styled.div`
           text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 15px;
+          padding-right: 15px;
           vertical-align: middle;
           &.no {
             width: 52px;
+            @media screen and (max-height: 937px) {
+              width: 53px;
+            }
           }
           &.name {
-            width: 169px;
+            width: 171px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 172px;
+            }
           }
           &.length {
             width: 81px;
           }
           &.description {
-            width: 574px;
+            width: 567px;
             @media screen and (max-height: 937px) {
-              width: 567px;
+              width: 573px;
             }
           }
           &.created-date {
             width: 130px;
+            @media screen and (max-height: 937px) {
+              width: 131px;
+            }
           }
           &.modified-date {
             width: 130px !important;
+            @media screen and (max-height: 937px) {
+              width: 130px;
+            }
           }
           &.trash-icon {
             width: 55px !important ;
@@ -172,7 +185,7 @@ const TableCompo = styled.div`
     color: #7c7c7c;
     opacity: 1;
     margin: 0px;
-    margin-top: 18px;
+    margin-top: 36px;
     margin-bottom: 10px;
     padding: 0px;
   }

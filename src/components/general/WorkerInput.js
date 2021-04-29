@@ -256,15 +256,6 @@ const InputCompo = styled.div`
     content: "" !important;
   }
 
-  .ui.form .field .prompt.label {
-    // 에러 메시지
-    position: absolute;
-    top: 55px;
-    left: 0px;
-    width: 318px;
-    text-align: center;
-  }
-
   .ui.checkbox input:checked ~ label:after {
     background-color: #2e2e2e;
     border-radius: 4px;
@@ -274,11 +265,6 @@ const InputCompo = styled.div`
   }
   .input-form.description {
     height: 105px !important;
-  }
-  .ui.form .field .prompt.label {
-    position: absolute;
-    top: -25px;
-    left: 150px;
   }
 
   .submit-button {
@@ -311,6 +297,20 @@ const InputCompo = styled.div`
       top: 68vh;
     }
   }
+  .ui.form .field .prompt.label {
+    //에러 색상
+    display: none;
+  }
+`;
+const InputError = styled.div`
+  margin-bottom: -4px;
+  margin-top: -15px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: left;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
 `;
 
 const WorkerInput = ({
@@ -384,6 +384,7 @@ const WorkerInput = ({
             error={companyError}
             required
           />
+          {companyError && <InputError>{companyError}</InputError>}
           <Form.Input
             label="직위"
             className="input-form position"

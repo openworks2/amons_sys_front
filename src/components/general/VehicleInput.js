@@ -149,9 +149,8 @@ const InputCompo = styled.div`
     content: "" !important;
   }
   .ui.form .field .prompt.label {
-    position: absolute;
-    top: 55px;
-    left: 100px;
+    //에러 색상
+    display: none;
   }
 
   .ui.checkbox input:checked ~ label:after {
@@ -202,6 +201,17 @@ const InputCompo = styled.div`
   }
 `;
 
+const InputError = styled.div`
+  margin-bottom: -4px;
+  margin-top: -15px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: left;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
+`;
+
 const VehicleInput = ({
   onChange,
   onSelectChange,
@@ -226,9 +236,9 @@ const VehicleInput = ({
     modified_date,
     vh_name,
     vh_number,
+    description,
     vh_image,
     vh_io_state,
-    description,
     co_index,
     co_name,
     bc_index,
@@ -258,6 +268,7 @@ const VehicleInput = ({
             error={companyError}
             required
           />
+          {companyError && <InputError>{companyError}</InputError>}
           <Form.Input
             label="차량 종류"
             className="input-form name"
@@ -311,16 +322,8 @@ const VehicleInput = ({
               className="photo-box"
               accept="image/jpg,jpge,png,gif"
               onChange={handleFileInputChange}
-              placeholder="사진을 등록해 주세요.(jpg, png, gif)"
               style={{ display: "none" }}
-            >
-              {/* <div className="icon-box">
-                <FaImage className="photo-icon" />
-              </div>
-                <div className="photo-description">
-                  {}
-                </div> */}
-            </Input>
+            ></Input>
           </Form.Field>
           <Form.Field className="company-input-form description">
             <label className="input-form title">비고</label>
@@ -328,8 +331,8 @@ const VehicleInput = ({
               className="input-form description"
               id="description"
               name="description"
-              placeholder={"비고 입력란"}
-              value={description}
+              placeholder="비고 입력란"
+              value={description ? description : ""}
               onChange={onChange}
             />
           </Form.Field>

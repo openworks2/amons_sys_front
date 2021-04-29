@@ -17,7 +17,7 @@ const CategorieMenuCompo = styled.div`
   .ui.pointing.table-categorie-menu-box.menu {
     margin-left: 18px !important;
     margin-right: 18px !important;
-    margin-top: 10px !important;
+    margin-top: 8px !important;
     margin-bottom: 0px !important;
     height: 40px;
     text-align: center !important;
@@ -74,6 +74,8 @@ const TableCompo = styled.div`
   margin-bottom: 18px;
   .ui.table {
     margin-top: 5px;
+    table-layout: fixed;
+    word-break: break-all;
   }
 
   .table-header {
@@ -93,41 +95,41 @@ const TableCompo = styled.div`
       }
     }
     &.local {
-      width: 100px;
+      width: 101px;
       @media screen and (max-height: 937px) {
         width: 99px;
       }
     }
     &.pos-x {
-      width: 100px;
+      width: 101px;
     }
     &.kind {
-      width: 60px;
+      width: 74px;
       @media screen and (max-height: 937px) {
         width: 74px;
       }
     }
     &.group {
-      width: 50px;
+      width: 75px;
     }
     &.address {
-      width: 151px;
+      width: 152px;
       text-align: left;
     }
     &.ip {
-      width: 230px;
+      width: 233px;
       text-align: left;
       @media screen and (max-height: 937px) {
-        width: 229px;
+        width: 231px;
       }
     }
     &.port {
       width: 61px;
     }
     &.description {
-      width: 303px;
+      width: 284px;
       @media screen and (max-height: 937px) {
-        width: 301px;
+        width: 280px;
       }
     }
     &.trash-icon {
@@ -196,20 +198,20 @@ const TableCompo = styled.div`
           &.kind {
             width: 74px;
             @media screen and (max-height: 937px) {
-              width: 74px;
+              width: 76px;
             }
           }
           &.group {
-            width: 50px;
+            width: 75px;
             @media screen and (max-height: 937px) {
-              width: 50px;
+              width: 75px;
             }
           }
           &.address {
             width: 152px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 152px;
+              width: 153px;
             }
           }
           &.ip {
@@ -220,7 +222,10 @@ const TableCompo = styled.div`
             width: 61px;
           }
           &.description {
-            width: 309px;
+            width: 284px;
+            @media screen and (max-height: 937px) {
+              width: 282px;
+            }
           }
           &.trash-icon {
             width: 55px !important ;
@@ -299,6 +304,7 @@ const ScannerTable = ({
   localData,
   localList,
   addComma,
+  addZero,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -445,7 +451,7 @@ const ScannerTable = ({
                 .local_name}
           </Table.Cell>
           <Table.Cell className="table-cell pos-x" name="pos-x">
-            {item && item.scn_pos_x && addComma(item.scn_pos_x)}
+            {item && addComma(addZero(item.scn_pos_x, 3))}
           </Table.Cell>
           <Table.Cell className="table-cell kind" name="kind">
             {item && kindReturn(item.scn_kind)}

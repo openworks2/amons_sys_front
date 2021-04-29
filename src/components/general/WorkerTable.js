@@ -17,10 +17,12 @@ import { useDispatch } from "react-redux";
 const TableCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  margin-top: 5px;
+  margin-top: -8px;
   margin-bottom: 18px;
   .ui.table {
     margin-top: 5px;
+    table-layout: fixed;
+    word-break: break-all;
   }
 
   .table-header {
@@ -31,25 +33,34 @@ const TableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
     &.no {
-      width: 51px;
+      width: 52px;
     }
     &.company {
-      width: 170px;
+      width: 152px;
       text-align: left;
+      @media screen and (max-height: 937px) {
+        width: 160px;
+      }
     }
     &.position {
-      width: 160px;
+      width: 163px;
       text-align: left;
+      @media screen and (max-height: 937px) {
+        width: 155px;
+      }
     }
     &.name {
-      width: 160px;
+      width: 163px;
       text-align: left;
+      @media screen and (max-height: 937px) {
+        width: 155px;
+      }
     }
     &.sms {
-      width: 51px;
+      width: 60px;
     }
     &.age {
       width: 61px;
@@ -58,15 +69,26 @@ const TableCompo = styled.div`
       width: 100px;
     }
     &.nation {
-      width: 160px;
+      width: 153px;
       text-align: left;
+      @media screen and (max-height: 937px) {
+        width: 152px;
+      }
     }
     &.beacon {
-      width: 220px;
+      width: 229px;
+    }
+    &.trash-icon {
+      width: 55px !important ;
+      color: #7d7d7d;
+    }
+    &.trash-icon-button {
+      height: 25px;
+      width: 25px;
+      border: 0px;
     }
     @media screen and (max-height: 937px) {
       &.trash-icon {
-        color: #7d7d7d;
         width: 64px !important;
       }
     }
@@ -106,32 +128,38 @@ const TableCompo = styled.div`
           text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 15px;
+          padding-right: 15px;
           vertical-align: middle;
           &.no {
-            width: 51px;
+            width: 53px;
+            @media screen and (max-height: 937px) {
+              width: 52px;
+            }
           }
           &.company {
-            width: 170px;
+            width: 154px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 171px;
+              width: 160px;
             }
           }
           &.position {
-            width: 160px;
+            width: 164px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 161px;
+              width: 155px;
             }
           }
           &.name {
-            width: 160px;
+            width: 164px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 155px;
+            }
           }
           &.sms {
-            width: 51px;
+            width: 60px;
           }
           &.age {
             width: 61px;
@@ -139,15 +167,21 @@ const TableCompo = styled.div`
           &.blood {
             width: 100px;
             @media screen and (max-height: 937px) {
-              width: 101px;
+              width: 100px;
             }
           }
           &.nation {
-            width: 160px;
+            width: 154px;
             text-align: left;
+            @media screen and (max-height: 937px) {
+              width: 152px;
+            }
           }
           &.beacon {
-            width: 220px;
+            width: 230px;
+            @media screen and (max-height: 937px) {
+              width: 228px;
+            }
           }
           &.trash-icon {
             width: 55px !important ;
@@ -192,6 +226,7 @@ const TableCompo = styled.div`
       background: #f9fafb !important;
     }
   }
+
   .ui.checkbox input:checked ~ label:after {
     background-color: #2e2e2e;
     border-radius: 4px;
@@ -216,6 +251,7 @@ const TableCompo = styled.div`
 
 const SearchCompo = styled.div`
   padding: 0px;
+  margin-top: 9px;
   margin-left: 20px;
   display: block;
   font-family: "NotoSansKR-Regular";
@@ -275,8 +311,8 @@ const WorkerTable = ({
   initFormData,
   initActiveRow,
   companyData,
-
   companySearchList,
+  addZero,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -451,7 +487,7 @@ const WorkerTable = ({
           </Table.Cell>
           <Table.Cell className="table-cell beacon" name="beacon">
             {item && item.bc_address
-              ? item.bc_id + " : " + splitByColon(item.bc_address)
+              ? addZero(item.bc_id, 3) + " : " + splitByColon(item.bc_address)
               : item && "할당없음"}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">

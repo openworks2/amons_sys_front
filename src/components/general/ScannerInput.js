@@ -12,7 +12,6 @@ const InputCompo = styled.div`
     margin-right: 12px;
   }
   margin-top: 5px;
-  margin-bottom: 18px;
   .ui.form .field > label,
   .field > label {
     font-family: "NotoSansKR-Medium" !important;
@@ -150,19 +149,9 @@ const InputCompo = styled.div`
   .ui.form .required.field > label:after {
     content: "" !important;
   }
-  .ui.form .field .prompt.label {
-    position: absolute;
-    top: 55px;
-    left: 100px;
-  }
 
   .input-form.description {
     height: 105px !important;
-  }
-  .ui.form .field .prompt.label {
-    position: absolute;
-    top: -25px;
-    left: 150px;
   }
 
   .submit-button {
@@ -195,6 +184,21 @@ const InputCompo = styled.div`
       top: 68vh;
     }
   }
+  .ui.form .field .prompt.label {
+    //에러 색상
+    display: none;
+  }
+`;
+
+const InputError = styled.div`
+  margin-bottom: -4px;
+  margin-top: -15px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: left;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
 `;
 
 const ScannerInput = ({
@@ -212,6 +216,7 @@ const ScannerInput = ({
   addressError,
   addComma,
   splitByColonInput,
+  groupLimit,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -266,6 +271,7 @@ const ScannerInput = ({
             error={localError}
             required
           />
+          {localError && <InputError>{localError}</InputError>}
           <div className="pos-x-area">
             <div className="form-title pos-x">설치위치</div>
             <Input
@@ -293,6 +299,7 @@ const ScannerInput = ({
             value={scn_kind && scn_kind}
             required
           />
+          {kindError && <InputError>{kindError}</InputError>}
           <Form.Input
             className="input-form group"
             label="그룹"
@@ -300,7 +307,7 @@ const ScannerInput = ({
             name="scn_group"
             placeholder="그룹을 입력해 주세요."
             required
-            value={scn_group && scn_group}
+            value={scn_group && groupLimit(scn_group)}
             onChange={onChange}
           />
           <Form.Input
@@ -311,7 +318,6 @@ const ScannerInput = ({
             name="scn_address"
             placeholder="__:__:__:__:__:__"
             required
-            error={addressError}
             value={
               scn_address &&
               splitByColonInput(scn_address)
@@ -319,7 +325,9 @@ const ScannerInput = ({
                 .replace(/[^a-z|^A-Z|^0-9]*$/g, "")
             }
             onChange={onChange}
+            error={addressError}
           />
+          {addressError && <InputError>{addressError}</InputError>}
           <Form.Input
             label="URL"
             className="input-form ip"
@@ -349,7 +357,7 @@ const ScannerInput = ({
               className="input-form description"
               id="description"
               name="description"
-              placeholder={"비고 입력란"}
+              placeholder="비고 입력란"
               value={description ? description : ""}
               onChange={onChange}
             />

@@ -7,8 +7,7 @@ import { FaTrash, FaMinusCircle } from "react-icons/fa";
 const CompanyTableCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  margin-top: 5px;
-  margin-bottom: 18px;
+  padding-top: 1px;
   .table-header {
     font-size: 14px;
     font-family: "NotoSansKR-Medium";
@@ -20,17 +19,20 @@ const CompanyTableCompo = styled.div`
     padding-left: 15px !important;
     padding-right: 15px !important;
     &.no {
-      width: 50px;
+      width: 52px;
     }
     &.company {
-      width: 201px;
+      width: 200px;
       text-align: left;
     }
     &.sector {
       width: 201px;
     }
     &.description {
-      width: 699px;
+      width: 680px;
+      @media screen and (max-height: 937px) {
+        width: 671px;
+      }
     }
     &.trash-icon {
       width: 55px !important ;
@@ -38,7 +40,7 @@ const CompanyTableCompo = styled.div`
     }
     @media screen and (max-height: 937px) {
       &.trash-icon {
-        width: 63px !important;
+        width: 64px !important;
       }
     }
   }
@@ -73,10 +75,16 @@ const CompanyTableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
+            @media screen and (max-height: 937px) {
+              width: 53px;
+            }
           }
           &.company {
             width: 201px;
             text-align: left !important;
+            @media screen and (max-height: 937px) {
+              width: 202px;
+            }
           }
           &.sector {
             width: 200px;
@@ -87,7 +95,7 @@ const CompanyTableCompo = styled.div`
           &.description {
             width: 695px;
             @media screen and (max-height: 937px) {
-              width: 699px;
+              width: 678px;
             }
           }
           &.trash-icon {
@@ -95,6 +103,9 @@ const CompanyTableCompo = styled.div`
             width: 55px !important ;
             margin: 0px;
             padding: 0px;
+            @media screen and (max-height: 937px) {
+              width: 53px !important;
+            }
           }
           &.trash-icon-button {
             height: 25px;
@@ -126,6 +137,11 @@ const CompanyTableCompo = styled.div`
       border: #f2f2f2 !important;
       color: red !important;
     }
+  }
+
+  .ui.table {
+    table-layout: fixed;
+    word-break: break-all;
   }
 
   .ui.table td.active,

@@ -118,6 +118,19 @@ const WorkerContatiner = () => {
     makeBeaconList(unUsedBeaconData);
   }, [unUsedBeaconData, formData.bc_index]);
 
+  const addZero = (str, digit) => {
+    if (str.length >= digit) {
+      return str;
+    } else {
+      let _str = str.toString();
+      let zeros = "";
+      for (let i = 0; i < digit - _str.length; i++) {
+        zeros = zeros + "0";
+      }
+      return zeros + _str;
+    }
+  };
+
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
 
@@ -419,13 +432,10 @@ const WorkerContatiner = () => {
         wk_birth: "1980.01.01",
       });
     } else if (!formData.co_index) {
-      setCompanyError({
-        content: "소속사를 선택해 주세요.",
-        pointing: "below",
-      });
+      setCompanyError("*소속사를 선택해 주세요.");
       setTimeout(() => {
         setCompanyError(undefined);
-      }, 1500);
+      }, 1350);
     } else {
       const createData = new FormData();
       createData.append("file", files.selectFile);
@@ -460,13 +470,10 @@ const WorkerContatiner = () => {
         wk_birth: "1980.01.01",
       });
     } else if (!formData.co_index) {
-      setCompanyError({
-        content: "소속사를 선택해 주세요.",
-        pointing: "below",
-      });
+      setCompanyError("*소속사를 선택해 주세요.");
       setTimeout(() => {
         setCompanyError(undefined);
-      }, 1500);
+      }, 1350);
     } else {
       // 성공
       const findItem = selectedRow.selectedItem;
@@ -542,6 +549,7 @@ const WorkerContatiner = () => {
               companyData={companyData}
               companyList={companyList}
               companySearchList={companySearchList}
+              addZero={addZero}
             />
           )}
         </div>

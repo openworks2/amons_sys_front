@@ -70,7 +70,6 @@ const InputCompo = styled.div`
         font-size: 14px;
         text-align: left;
         letter-spacing: 0px;
-        color: #929292;
         opacity: 1;
         &.title {
           color: #2e2e2e;
@@ -103,12 +102,8 @@ const InputCompo = styled.div`
     content: "" !important;
   }
   .ui.form .field .prompt.label {
-    // 에러 메시지
-    position: absolute;
-    top: 55px;
-    left: 0px;
-    width: 318px;
-    text-align: center;
+    //에러 색상
+    display: none;
   }
 
   .input-form.description {
@@ -145,6 +140,16 @@ const InputCompo = styled.div`
       top: 68vh;
     }
   }
+`;
+const InputError = styled.div`
+  margin-bottom: -4px;
+  margin-top: -15px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: left;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
 `;
 
 const BeaconInput = ({
@@ -192,7 +197,6 @@ const BeaconInput = ({
         <div className="resizable-area">
           <Form.Input
             className="input-form"
-            error={addressError}
             label="MAC 주소"
             className="input-form address"
             id="bc_address"
@@ -203,7 +207,9 @@ const BeaconInput = ({
               .toUpperCase()
               .replace(/[^a-z|^A-Z|^0-9]*$/g, "")}
             onChange={onChange}
+            error={addressError}
           />
+          {addressError && <InputError>{addressError}</InputError>}
           <Form.Field className="company-input-form description">
             <label className="input-form title">비고</label>
             <textarea
