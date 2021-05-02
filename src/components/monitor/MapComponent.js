@@ -44,59 +44,63 @@ const MapCompo = styled.div`
             left: 103px;
             top: 60px;
             .block{
-            position: absolute;
-            div{
                 position: absolute;
-            }
-            .worker-icon{
-                width: 37px;
-                height: 44px;
-                top: 43px;
-                left: 33px;
-            }
-            .vehicle-icon{
-                width: 62px;
-                height: 52px;
-                top: 68px;
-                left: 57px;
-            }
-            .scanner-icon{
-                .scanner-img{
-                    background-image: url(../../map/scanTag.png);
-                    background-repeat: no-repeat;
-                    width: 13px;
-                    height: 13px;
-                    top: 16px;
-                    left: 14px;
+                div{
+                    position: absolute;
                 }
-                .scanner-device-box {
-                    background-image: url(../../map/deviceBox.png);
-                    background-repeat: no-repeat;
-                    width: 13px;
-                    height: 18px;
-                    top: 28px;
-                    left: 16px;
+                .worker-icon{
+                    width: 37px;
+                    height: 44px;
+                    top: 43px;
+                    left: 33px;
+                }
+                .vehicle-icon{
+                    width: 62px;
+                    height: 52px;
+                    top: 68px;
+                    left: 57px;
+                }
+                .scanner-icon{
+                    right: 132px;
+                    top: 0px;
+                    .scanner-img{
+                        background-image: url(../../map/scanTag.png);
+                        background-repeat: no-repeat;
+                        width: 13px;
+                        height: 13px;
+                        top: 16px;
+                        left: 14px;
+                    }
+                    .scanner-device-box {
+                        background-image: url(../../map/deviceBox.png);
+                        background-repeat: no-repeat;
+                        width: 13px;
+                        height: 18px;
+                        top: 28px;
+                        left: 16px;
+                    }
+                }
+                .cctv-icon{
+                    top: 0px;
+                    right: 129px;
+                    .cctv-img{
+                        background-image: url(../../map/cctvTag.png);
+                        background-repeat: no-repeat;
+                        width: 13px;
+                        height: 13px;
+                        top: 6px;
+                        left: 37px;
+                    }
+                    .cctv-device-box {
+                        background-image: url(../../map/deviceBox.png);
+                        background-repeat: no-repeat;
+                        width: 13px;
+                        height: 18px;
+                        top: 17px;
+                        left: 36px;
+                    }
                 }
             }
-            .cctv-icon{
-                .cctv-img{
-                    background-image: url(../../map/cctvTag.png);
-                    background-repeat: no-repeat;
-                    width: 13px;
-                    height: 13px;
-                    top: 6px;
-                    left: 37px;
-                }
-                .cctv-device-box {
-                    background-image: url(../../map/deviceBox.png);
-                    background-repeat: no-repeat;
-                    width: 13px;
-                    height: 18px;
-                    top: 17px;
-                    left: 36px;
-                }
-            }
-         }
         }
     .entrance-image{
         position: absolute;
@@ -106,8 +110,8 @@ const MapCompo = styled.div`
             z-index: 100;
         }
         &#entrance002{
-            top: -40px;
-            left: 584px;
+            top: -36px;
+            left: 585px;
         }
         &#entrance003{
             top: 385px;
@@ -115,8 +119,8 @@ const MapCompo = styled.div`
             z-index: 100;
         }
         &#entrance004{
-            top: 40px;
-            left: 727px;
+            top: 44px;
+            left: 728px;
         }
     }
     .tag-list-box {
@@ -148,43 +152,72 @@ const MapCompo = styled.div`
             }
         }
     }
-    .map-fullscreen-component {
-        width: 100%;
-        height: 100%;
-        background-image: url('../../map/map_bg.png');
-        background-repeat:no-repeat;
-        position: fixed;
-        top: 0px;
-        z-index: 102;
-
-    }
 `;
-const MapComponent = () => {
-
+const MapComponent = ({ setOpenExpandMapHandler, data }) => {
+    console.log('MapComponent-->', data)
     const [checkBox, setCheckBox] = useState(false);
     const [showItem, setItem] = useState({
         worker: true,
         vehicle: true,
         cctv: false
     });
+    /*
+        const [first, setFirst] = useState({
+            total_Lenght: 3359, // 총 굴진거리
+            forward_Length: 2547, // 정방향 굴진거리 (함양 시점 방향)
+            forward_dig: 2500, // 정방향 진행 굴진거리
+            revers_length: 812,// 역방향 굴진거리 (함양 종점 방향)
+            revers_dig: 812, // 역방향 진행 굴진거리
+            block_Amount: 10 // 맵 블록 갯수
+        })
+    
+        const [second, setSecond] = useState({
+            total_Lenght: 3359, // 총 굴진거리
+            forward_Length: 2547, // 정방향 굴진거리 (함양 시점 방향)
+            forward_dig: 2547, // 정방향 진행 굴진거리
+            revers_length: 812,// 역방향 굴진거리 (함양 종점 방향)
+            revers_dig: 812, // 역방향 진행 굴진거리
+            block_Amount: 10 // 맵 블록 갯수
+        })
+    */
 
     const [first, setFirst] = useState({
-        total_Lenght: 3359, // 총 굴진거리
-        forward_Length: 2547, // 정방향 굴진거리 (함양 시점 방향)
-        forward_dig: 2500, // 정방향 진행 굴진거리
-        revers_length: 812,// 역방향 굴진거리 (함양 종점 방향)
-        revers_dig: 812, // 역방향 진행 굴진거리
+        total_Lenght: data[0].plan_length + data[1].plan_length, // 총 굴진거리
+        forward_index: data[0].local_index,
+        forward_Length: data[0].plan_length, // 정방향 굴진거리 (함양 시점 방향)
+        forward_dig: data[0].dig_length, // 정방향 진행 굴진거리
+        forward_device: {
+            cctv: data[0].cctv_id ? data[0].cctv_pos_x : 0
+        },
+        revers_index: data[1].local_index,
+        revers_length: data[1].plan_length,// 역방향 굴진거리 (함양 종점 방향)
+        revers_dig: data[1].dig_length, // 역방향 진행 굴진거리
+        revers_device: {
+            cctv: data[1].cctv_id ? data[1].cctv_pos_x : 0
+        },
+        block_Amount: 10, // 맵 블록 갯수
+    });
+
+
+    const [second, setSecond] = useState({
+        total_Lenght: data[2].plan_length + data[3].plan_length, // 총 굴진거리
+        forward_index: data[2].local_index,
+        forward_Length: data[2].plan_length, // 정방향 굴진거리 (함양 시점 방향)
+        forward_dig: data[2].dig_length, // 정방향 진행 굴진거리
+        forward_device: {
+            cctv: data[2].cctv_id ? data[2].cctv_pos_x : 0
+        },
+        revers_index: data[3].local_index,
+        revers_length: data[3].plan_length,// 역방향 굴진거리 (함양 종점 방향)
+        revers_dig: data[3].dig_length, // 역방향 진행 굴진거리
+        revers_device: {
+            cctv: data[3].cctv_id ? data[3].cctv_pos_x : 0
+        },
         block_Amount: 10 // 맵 블록 갯수
     })
 
-    const [second, setSecond] = useState({
-        total_Lenght: 3359, // 총 굴진거리
-        forward_Length: 2547, // 정방향 굴진거리 (함양 시점 방향)
-        forward_dig: 2547, // 정방향 진행 굴진거리
-        revers_length: 812,// 역방향 굴진거리 (함양 종점 방향)
-        revers_dig: 812, // 역방향 진행 굴진거리
-        block_Amount: 10 // 맵 블록 갯수
-    })
+
+
 
     const [dig1, setDig1] = useState([]);
     const [dig2, setDig2] = useState([]);
@@ -195,6 +228,7 @@ const MapComponent = () => {
 
         let mapArr = []
         for (let i = 1; i <= data.block_Amount; i++) {
+            console.log('data->', data)
             const obj = {
                 id: i,
                 value: i,
@@ -203,33 +237,49 @@ const MapComponent = () => {
                         ? true  // 굴착   
                         : false   // 미굴착
                     )     //정방향 이라면 
-                    : (data.revers_dig >= (data.total_Lenght - (block_Length * (i - 1)))
+                    : (data.revers_dig + 306 >= (data.total_Lenght - (block_Length * (i - 1))) // 1블럭당 306m로 구간이 짧아 1블럭을 기본으로 추가 해준다.
                         ? true // 굴착
                         : false // 미굴착
                     ),    //역방향 이라면
                 worker: true,
                 vehicle: true,
                 scanner: false,
-                cctv: false,
+                cctv: (block_Length * i) <= data.forward_Length
+                    ? (
+                        (data.forward_device.cctv > block_Length * i && data.forward_device.cctv < block_Length * (i + 1))
+                            ? true
+                            : false
+                    )   //정방향 이라면 
+                    : (data.revers_dig + 306 >= (data.total_Lenght - (block_Length * (i - 1)))   // 1블럭당 306m로 구간이 짧아 1블럭을 기본으로 추가 해준다.
+                        ? (
+                            (data.revers_device.cctv < (data.total_Lenght - (block_Length * (i - 1)))
+                                && data.revers_device.cctv > (data.total_Lenght - (block_Length * (i))))
+                                ? true
+                                : false
+                        )
+                        : false
+                    ),
                 revers: (block_Length * i) <= data.forward_Length ? false : true,
-                divisionLeng: block_Length * i
+                divisionLeng: block_Length * i,
+                show: {
+                    worker: true,
+                    vehicle: true,
+                    cctv: false,
+                    scanner: false
+                }
             };
-            console.log(obj);
             mapArr = [
                 ...mapArr,
                 obj
             ]
         }
-        console.log(mapArr)
         callback(mapArr)
     }
 
     const setStateDig1 = (data) => {
-        console.log("setStateDig1--->", data)
         setDig1(data);
     }
     const setStateDig2 = (data) => {
-        console.log("setStateDig2--->", data)
         setDig2(data);
     }
 
@@ -244,17 +294,24 @@ const MapComponent = () => {
 
     const onCheckChange = (e) => {
         const { name } = e.target;
-
+        onUpdateDig(dig1, name, setStateDig1);
+        onUpdateDig(dig2, name, setStateDig2);
         setItem({
             ...showItem,
             [name]: !showItem[name]
         });
     }
+    const onUpdateDig = (data, name, callback) => {
+        const setDig = data.map(item => {
+            item.show[name] = !item.show[name];
+            return item;
+        });
+        callback(setDig);
+    }
 
 
 
     const rendering = (initTopPoint, initLeftPoint, items) => {
-
         return <>
             {items.map((item, index) => {
                 const _blockStyled = {
@@ -267,7 +324,6 @@ const MapComponent = () => {
                     height: "124px"
                 }
 
-
                 const workerStyled = {
                     backgroundImage: item.revers ? 'url("../../map/workerRev.png")' : 'url("../../map/workerFor.png")',
                     backgroundRepeat: 'no-repeat',
@@ -278,15 +334,15 @@ const MapComponent = () => {
                     backgroundRepeat: 'no-repeat',
                 }
 
-                return <div className="block" id={`block-${item.value}`} key={index} style={_blockStyled}>
+                return <div className="block block " id={`block-${item.value}`} key={index} style={_blockStyled}>
                     <img src={item.open ? `../../map/open.png` : `../../map/close.png`} alt="close" style={_imgStyled} />
-                    {item.open && item.worker && <div className="worker-icon" style={workerStyled}></div>}
-                    {item.open && item.vehicle && <div className="vehicle-icon" style={vehicleStyled}></div>}
-                    {item.open && item.scanner && <div className="scanner-icon">
+                    {item.show['worker'] && item.open && item.worker && <div className="worker-icon" style={workerStyled}></div>}
+                    {item.show['vehicle'] && item.open && item.vehicle && <div className="vehicle-icon" style={vehicleStyled}></div>}
+                    {item.show['scanner'] && item.open && item.scanner && <div className="scanner-icon">
                         <div className="scanner-img"></div>
                         <div className="scanner-device-box"></div>
                     </div>}
-                    {item.open && item.cctv && <div className="cctv-icon">
+                    {item.show['cctv'] && item.open && item.cctv && <div className="cctv-icon">
                         <div className="cctv-img"></div>
                         <div className="cctv-device-box"></div>
                     </div>}
@@ -300,7 +356,7 @@ const MapComponent = () => {
             <div className="tag-button-box buttom-box" onClick={setOpenCheckBox}>
                 <FontAwesomeIcon icon={faTag} />
             </div>
-            <div className="expand-button-box buttom-box">
+            <div className="expand-button-box buttom-box" onClick={setOpenExpandMapHandler}>
                 <FontAwesomeIcon icon={faExpand} />
             </div>
             <div className="map-area">
@@ -350,8 +406,6 @@ const MapComponent = () => {
                     </ul>
                 </div>
             }
-            {/* <div className="map-fullscreen-component">
-            </div> */}
         </MapCompo>
     );
 };

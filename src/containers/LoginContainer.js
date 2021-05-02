@@ -224,7 +224,7 @@ const LoginContainer = () => {
                         </Form>
                     </div>
                     <div className="logo-box">
-                        <img className="logo-image" src="../../../image/hanwha.png" alt="LOGO" />
+                        <img className="logo-image" src="../../../images/hanwha.png" alt="LOGO" />
                     </div>
                     {
                         failMsg &&

@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import CctvCompo from '../../components/monitor/CctvComponent';
+import AlarmModal from '../../components/monitor/AlarmModal';
+import CctvComponent from '../../components/monitor/CctvComponent';
 import DrillMapComponent from '../../components/monitor/DrillMapComponent';
+import ExpandMapComponent from '../../components/monitor/ExpandMapComponent';
 import MapComponent from '../../components/monitor/MapComponent';
 import NoticeCompo from '../../components/monitor/Notice';
 import StatusInfo from '../../components/monitor/StatusInfo';
 import TodayInfoComponent from '../../components/monitor/TodayInfoComponent';
+import { getMonitor, receiveMonitor } from '../../modules/monitor';
+
 
 const MonitorCompo = styled.div`
     width: 100vw;
     height: 100vh;
     min-width: 1920px;
+    min-height: 1075px;
+
 `;
 const TopCompo = styled.div`
         width: 100vw;
@@ -61,8 +68,9 @@ const BodyCompo = styled.div`
         .top-panel{
             width: 100%;
             height: 4.79em;
-            background: #000000;
-            opacity:0.7;
+            /* background: #000000;
+            opacity: 0.7; */
+            background: rgba(0, 0, 0, 0.7);
             margin-bottom: 10px;
             border-radius: 5px;
         }
@@ -85,12 +93,31 @@ const BodyCompo = styled.div`
 `;
 
 
-
-
-
 const MonitorContainer = ({ ratePanelOpen }) => {
+
+    const { data, loading, error } = useSelector(state => {
+
+        return state.monitor.monitor
+    });
+
+
+    const dispatch = useDispatch();
+
+    // 컨트롤 패널 OPEN
     const [ctrlPanel, setOpenCtrlPanel] = useState(null);
+    // 출입 관리 패너 open
     const [accessPanel, setOpenAccessPanel] = useState(null);
+    // SOS 알람 
+    const [alarmPanel, setOpenAlarmPanel] = useState(false);
+    // 맵 확대
+    const [expandMap, setOpenExpandMap] = useState(false);
+
+    const [location, setLocation] = useState({
+        loc001: undefined,
+        loc002: undefined,
+        loc003: undefined,
+        loc004: undefined
+    })
 
     const openCtrlPanel = (id) => {
         if (ctrlPanel === id) {
@@ -111,10 +138,25 @@ const MonitorContainer = ({ ratePanelOpen }) => {
             setOpenCtrlPanel(null);
         }
     }
+
+    const setOpenAlarmModal = () => {
+        setOpenAlarmPanel(!alarmPanel);
+    }
+
+    const setOpenExpandMapHandler = () => {
+        setOpenExpandMap(!expandMap)
+    }
+    // dispatch(getMonitor());
+
+    const getDispatch = async () => {
+        dispatch(getMonitor());
+    }
+
     useEffect(() => {
-
-
-    }, []);
+        getDispatch();
+        // socket.emit("roomjoin", 'dong');  // been이라는 방 만들기
+        dispatch(receiveMonitor());
+    }, [dispatch]);
 
     return (
         <MonitorCompo className="monitor-component">
@@ -125,69 +167,95 @@ const MonitorContainer = ({ ratePanelOpen }) => {
                         <StatusInfo />
                     </div>
                     <div className="left-center-box drill-map-box">
-                        <DrillMapComponent ratePanelOpen={ratePanelOpen} />
+                        {data &&
+                            <DrillMapComponent
+                                ratePanelOpen={ratePanelOpen}
+                                data={data && data}
+                            />
+                        }
                     </div>
                     <div className="left-bottom-box map-box">
-                        <MapComponent />
+                        {
+                            data &&
+                            <MapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={data && data} />
+                        }
                     </div>
                 </div>
                 <div className="right-compo">
                     <div className="right-left-box">
                         <div className="top-panel">
-                            {/* <NoticeCompo /> */}
+                            <NoticeCompo />
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                <CctvCompo
+                                <CctvComponent
                                     way="right"
                                     id="loc001"
                                     ctrlPanel={ctrlPanel}
                                     openCtrlPanel={openCtrlPanel}
                                     accessPanel={accessPanel}
                                     openAccessPanel={openAccessPanel}
+                                    alarmPanel={alarmPanel}
+                                    expandMap={expandMap}
+                                    data={data && data[0]}
                                 />
                             </div>
                             <div className="bottom-cctv">
-                                <CctvCompo
+                                <CctvComponent
                                     way="right"
                                     id="loc002"
                                     ctrlPanel={ctrlPanel}
                                     openCtrlPanel={openCtrlPanel}
                                     accessPanel={accessPanel}
                                     openAccessPanel={openAccessPanel}
+                                    alarmPanel={alarmPanel}
+                                    expandMap={expandMap}
+                                    data={data && data[2]}
                                 />
                             </div>
                         </div>
                     </div>
                     <div className="right-right-box">
                         <div className="top-panel">
-                           <TodayInfoComponent />
+                            <TodayInfoComponent />
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                <CctvCompo
+                                <CctvComponent
                                     way="left"
                                     id="loc003"
                                     ctrlPanel={ctrlPanel}
                                     openCtrlPanel={openCtrlPanel}
                                     accessPanel={accessPanel}
                                     openAccessPanel={openAccessPanel}
+                                    alarmPanel={alarmPanel}
+                                    expandMap={expandMap}
+                                    data={data && data[1]}
                                 />
                             </div>
                             <div className="bottom-cctv">
-                                <CctvCompo
+                                <CctvComponent
                                     way="left"
                                     id="loc004"
                                     ctrlPanel={ctrlPanel}
                                     openCtrlPanel={openCtrlPanel}
                                     accessPanel={accessPanel}
                                     openAccessPanel={openAccessPanel}
+                                    alarmPanel={alarmPanel}
+                                    expandMap={expandMap}
+                                    data={data && data[3]}
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
+                {
+                    expandMap && <ExpandMapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} />
+                }
             </BodyCompo>
+            {
+                alarmPanel && <AlarmModal setOpenAlarmModal={setOpenAlarmModal} />
+            }
         </MonitorCompo>
     );
 };

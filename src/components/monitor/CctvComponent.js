@@ -70,12 +70,12 @@ const CctvCompo = styled.div`
                 }
             }
             .ctrlBtn-plus{
-                background-image: url('../../../image/ptz_plus.png');
+                background-image: url('../../../images/ptz_plus.png');
                 background-repeat:no-repeat;
                 margin-right: 10px;
             }
             .ctrlBtn-minus{
-                background-image: url('../../../image/ptz_minus.png');
+                background-image: url('../../../images/ptz_minus.png');
                 background-repeat:no-repeat;
             }
         }
@@ -88,7 +88,7 @@ const CctvCompo = styled.div`
             .button-panel {
                 width: 79%;
                 height: 82%;
-                background-image: url('../../../image/cont-btn-bg.png');
+                background-image: url('../../../images/cont-btn-bg.png');
                 background-repeat:no-repeat;
                 .ptz-header{
                     width:100%;
@@ -198,7 +198,17 @@ const CctvCompo = styled.div`
     }
 `;
 
-const CctvComponent = ({ way, id, ctrlPanel, openCtrlPanel, accessPanel, openAccessPanel }) => {
+const CctvComponent = ({
+    way,
+    id,
+    ctrlPanel,
+    openCtrlPanel,
+    accessPanel,
+    openAccessPanel,
+    alarmPanel,
+    expandMap,
+    data
+}) => {
 
     const [ctrlTarget, setTarget] = useState({
         id: null
@@ -212,19 +222,9 @@ const CctvComponent = ({ way, id, ctrlPanel, openCtrlPanel, accessPanel, openAcc
 
 
     useEffect(() => {
-        // setTimeout(()=>{
-        //     setShow({
-        //         ...cctvShow,
-        //         loc002: true
-        //     })
-        //     // setTimeout(()=>{
-        //     //   setAdd2(true)
-        //     //   // setTimeout(()=>{
-        //     //   //   setAdd3(true)
-        //     //   // },1500);
-        //     // },1500);
-        //   },1500);
-    }, []);
+        console.log('CctvComponent->', data);
+    }, [accessPanel, ctrlPanel, alarmPanel, expandMap, data]);
+
 
     return (
         <CctvCompo className="cctv-component">
@@ -232,31 +232,77 @@ const CctvComponent = ({ way, id, ctrlPanel, openCtrlPanel, accessPanel, openAcc
                 <InfoComponent
                     way={way}
                     id={id}
-                    ctrlPanel={ctrlPanel} 
+                    ctrlPanel={ctrlPanel}
                     openCtrlPanel={openCtrlPanel}
                     accessPanel={accessPanel}
                     openAccessPanel={openAccessPanel}
+                    localName={data && data.local_name}
                 />
             </div>
             <div className="status-box">
-                <LocStatusComponent />
+                {
+                    data
+                    && <LocStatusComponent
+                        processCode={data && data.local_process}
+                        planLength={data && data.plan_length}
+                        digLength={data && data.dig_length}
+                    />
+                }
             </div>
             <div className="cctv-box">
                 {
-                    cctvShow['loc001'] && id === 'loc001' && <CameraLocation001 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
+                    data &&
+                    cctvShow['loc001']
+                    && id === 'loc001'
+                    && <CameraLocation001
+                        id={id}
+                        ctrlPanel={ctrlPanel}
+                        accessPanel={accessPanel}
+                        alarmPanel={alarmPanel}
+                        expandMap={expandMap}
+                        data={data && data}
+                    />
                 }
                 {
-                    cctvShow['loc002'] && id === 'loc002' && <CameraLocation002 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
+                    data &&
+                    cctvShow['loc002']
+                    && id === 'loc002'
+                    && <CameraLocation002
+                        id={id}
+                        ctrlPanel={ctrlPanel}
+                        accessPanel={accessPanel}
+                        alarmPanel={alarmPanel}
+                        expandMap={expandMap}
+                        data={data && data}
+                    />
                 }
                 {
-                    cctvShow['loc003'] && id === 'loc003' && <CameraLocation003 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
+                    data &&
+                    cctvShow['loc003']
+                    && id === 'loc003'
+                    && <CameraLocation003
+                        id={id}
+                        ctrlPanel={ctrlPanel}
+                        accessPanel={accessPanel}
+                        alarmPanel={alarmPanel}
+                        expandMap={expandMap}
+                    />
                 }
                 {
-                    cctvShow['loc004'] && id === 'loc004' && <CameraLocation004 id={id} ctrlPanel={ctrlPanel} accessPanel={accessPanel} />
+                    data &&
+                    cctvShow['loc004']
+                    && id === 'loc004'
+                    && <CameraLocation004
+                        id={id}
+                        ctrlPanel={ctrlPanel}
+                        accessPanel={accessPanel}
+                        alarmPanel={alarmPanel}
+                        expandMap={expandMap}
+                    />
                 }
             </div>
         </CctvCompo>
     );
 };
 
-export default CctvComponent;
+export default React.memo(CctvComponent);

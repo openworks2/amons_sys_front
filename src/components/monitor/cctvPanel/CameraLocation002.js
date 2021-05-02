@@ -21,7 +21,14 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation002 = ({ id, ctrlPanel, accessPanel }) => {
+const CameraLocation002 = ({ 
+    id, 
+    ctrlPanel, 
+    accessPanel, 
+    alarmPanel, 
+    expandMap,
+    data 
+}) => {
     const [form, setForm] = useState({
         ip: 'dhh3-4.iptime.org',
         port: '1113',
@@ -33,6 +40,18 @@ const CameraLocation002 = ({ id, ctrlPanel, accessPanel }) => {
         streamType: 1,
         channel: 1
     });
+
+    // const [form, setForm] = useState({
+    //     ip: data.cctv_ip,
+    //     port: data.cctv_port,
+    //     username: data.cctv_user_id,
+    //     password: data.cctv_pw,
+    //     rtspPort: 80,
+    //     protocol: 0,
+    //     timeout: 5,
+    //     streamType: 1,
+    //     channel: 1
+    // });
 
     const [Camera, setCamera] = useState(null);
 
@@ -137,46 +156,51 @@ const CameraLocation002 = ({ id, ctrlPanel, accessPanel }) => {
     }
 
     // const connCCTV = async () => {
-    //     try {
-    //         const cctv = await new Dahua(`divPlugin-${id}`);
-    //         cctv.init(form);
-    //         setCamera(cctv);
-    //     } catch (error) {
-
-    //     }
+    //     const cctv = await new Dahua(`divPlugin-${id}`);
+    //     cctv.init(form);
+    //     setCamera(cctv);
     // }
 
     // const resizeVideo = useCallback(() => {
     //     console.log(ctrlPanel)
-    //     if (accessPanel !== null && accessPanel === 'loc003') {
+    //     if (accessPanel !== null && accessPanel === 'loc004') {
     //         Camera.hiddenScreen();
     //     }
-    //     else if (accessPanel === null || accessPanel !== 'loc003') {
+    //     else if (accessPanel === null || accessPanel !== 'loc004') {
     //         Camera.showScreen();
     //     }
     // }, [Camera, accessPanel]);
 
 
     // useEffect(() => {
+    //     console.log('CameraLocation002--->',data)
     //     if (!Camera) {
     //         connCCTV();
     //     }
     //     if (Camera) {
-    //         resizeVideo();
-    //         if (ctrlPanel !== id || ctrlPanel === null) {
-    //             if(Locate){
-    //                 ptzLocationHandler();
+    //         if(expandMap){
+    //             Camera.hiddenScreen();
+    //         } else {
+    //             if(alarmPanel){
+    //                 Camera.hiddenScreen();
+    //             } else {
+    //                 resizeVideo();
+    //                 if (ctrlPanel !== id || ctrlPanel === null) {
+    //                     if (Locate) {
+    //                         ptzLocationHandler();
+    //                     }
+    //                 }
     //             }
     //         }
     //     }
-    // }, [accessPanel, ctrlPanel]);
+    // },[accessPanel, ctrlPanel, alarmPanel, expandMap]);
 
-    const resizeHandler = ()=>{
-        if(Camera){
-            Camera.setReposition();
-        }
-    }
-    window.addEventListener("resize", resizeHandler);
+    // const resizeHandler = () => {
+    //     if (Camera) {
+    //         Camera.setReposition();
+    //     }
+    // }
+    // window.addEventListener("resize", resizeHandler);
     return (
         <CameraCompo>
             <div className="plugin-panel">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DrillRatePanel from './DrillRatePanel';
 import { ProgressBar } from 'react-bootstrap';
@@ -121,7 +121,8 @@ const DrillMapCompo = styled.div`
         background-color: #971717;
     }
     .progress-bar-striped {
-        background-image: url(../../image/ar_L.png) !important;    
+        background-image: url(../../images/ar_L.png) !important;    
+        /* background-repeat: repeat; */
         /* background-image: url(../../progress/bar-f.png) !important;     */
         animation: progress-bar-stripes 2s linear infinite;
         animation-direction: reverse;
@@ -129,54 +130,92 @@ const DrillMapCompo = styled.div`
     } 
 `;
 
-const DrillMapComponent = ({ ratePanelOpen }) => {
-    console.log('monitor-->', ratePanelOpen)
+const DrillMapComponent = ({ ratePanelOpen, data }) => {
+
+    useEffect(() => {
+        console.log('>>DrillMapComponent--->', data)
+    }, []);
+
+    // 천단위 콤마
+    const numberOfDigitsHandler = (number) => {
+        return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+    }
+
+    // Progress
+    const progressRender = (plan, dig) => {
+        const percent = (dig / plan) * 100
+        console.log(percent)
+        return <ProgressBar now={percent} animated />;
+    }
 
     return (
         <DrillMapCompo>
             <div className="location-top">
                 <div className="text-box left-top-text">
-                    <div className="location-title">시점 함양</div>
-                    <div className="location-dig">1,020m</div>
+                    <div className="location-title">{data[0].local_name}</div>
+                    <div className="location-dig">
+                        {
+                            `${numberOfDigitsHandler(data[0].plan_length)}m`
+                        }
+                    </div>
 
                 </div>
-                <div className="location-distance top-distance">함양 L=3,359m</div>
+                <div className="location-distance top-distance">
+                    {
+                        `함양 L=${numberOfDigitsHandler(data[0].plan_length + data[1].plan_length)
+                        }m`
+                    }
+                </div>
                 <div className="text-box right-top-text">
-                    <div className="location-dig">1,020m</div>
-                    <div className="location-title">시점 함양</div>
+                    <div className="location-dig">
+                        {
+                            `${numberOfDigitsHandler(data[1].plan_length)}m`
+                        }
+                    </div>
+                    <div className="location-title">{data[1].local_name}</div>
                 </div>
                 <div className="progress-left">
-                    <ProgressBar now={60} animated />;
+                    {/* <ProgressBar now={60} animated /> */}
+                    {progressRender(data[0].plan_length, data[0].dig_length)}
                 </div>
                 <div className="progress-right">
-                    <ProgressBar now={60} animated />;
+                    {progressRender(data[1].plan_length, data[1].dig_length)}
                 </div>
             </div>
             <div className="location-bottom">
                 <div className="text-box left-bottom-text">
-                    <div className="location-title">시점 울산</div>
-                    <div className="location-dig">0m</div>
+                    <div className="location-title">{data[2].local_name}</div>
+                    <div className="location-dig">
+                        {
+                            `${numberOfDigitsHandler(data[2].plan_length)}m`
+                        }
+                    </div>
                 </div>
-                <div className="location-distance bottom-distance">울산 L=3,379m</div>
+                <div className="location-distance bottom-distance">
+                    {
+                        `울산 L=${numberOfDigitsHandler(data[2].plan_length + data[3].plan_length)
+                        }m`
+                    }
+                </div>
                 <div className="text-box right-bottom-text">
-                    <div className="location-dig">0m</div>
-                    <div className="location-title">시점 울산</div>
+                    <div className="location-dig">
+                        {
+                            `${numberOfDigitsHandler(data[3].plan_length)}m`
+                        }
+                    </div>
+                    <div className="location-title">{data[3].local_name}</div>
                 </div>
                 <div className="progress-left">
-                    <ProgressBar now={60} animated />;
+                    {progressRender(data[2].plan_length, data[2].dig_length)}
                 </div>
                 <div className="progress-right">
-                    <ProgressBar now={60} animated />;
+                {progressRender(data[3].plan_length, data[3].dig_length)}
                 </div>
             </div>
             {
                 ratePanelOpen &&
                 <DrillRatePanel />
             }
-            {/* <div classNam="progress-demo">
-                <ProgressBar now={60} animated />;
-            </div> */}
-
         </DrillMapCompo>
     );
 };

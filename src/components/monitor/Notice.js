@@ -160,7 +160,7 @@ const Notice = () => {
                 listCnt = 0
             }
 
-            console.log(listCnt)
+            // console.log(listCnt)
         }, timer);
     }
 

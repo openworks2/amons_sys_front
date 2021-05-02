@@ -22,12 +22,31 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation001 = ({ id, ctrlPanel, accessPanel }) => {
+const CameraLocation001 = ({
+    id,
+    ctrlPanel,
+    accessPanel,
+    alarmPanel,
+    expandMap,
+    data
+}) => {
+    // const [form, setForm] = useState({
+    //     ip: 'openworks2.iptime.org',
+    //     port: '1234',
+    //     username: 'admin',
+    //     password: 'work1801!@',
+    //     rtspPort: 80,
+    //     protocol: 0,
+    //     timeout: 5,
+    //     streamType: 1,
+    //     channel: 1
+    // });
+
     const [form, setForm] = useState({
-        ip: 'openworks2.iptime.org',
-        port: '1234',
-        username: 'admin',
-        password: 'work1801!@',
+        ip: data.cctv_ip,
+        port: data.cctv_port,
+        username: data.cctv_user_id,
+        password: data.cctv_pw,
         rtspPort: 80,
         protocol: 0,
         timeout: 5,
@@ -159,21 +178,30 @@ const CameraLocation001 = ({ id, ctrlPanel, accessPanel }) => {
 
 
     // useEffect(() => {
+    //     console.log('CameraLocation001--->', data)
     //     if (!Camera) {
     //         connCCTV();
     //     }
     //     if (Camera) {
-    //         resizeVideo();
-    //         if (ctrlPanel !== id || ctrlPanel === null) {
-    //             if(Locate){
-    //                 ptzLocationHandler();
+    //         if (expandMap) {
+    //             Camera.hiddenScreen();
+    //         } else {
+    //             if (alarmPanel) {
+    //                 Camera.hiddenScreen();
+    //             } else {
+    //                 resizeVideo();
+    //                 if (ctrlPanel !== id || ctrlPanel === null) {
+    //                     if (Locate) {
+    //                         ptzLocationHandler();
+    //                     }
+    //                 }
     //             }
     //         }
     //     }
-    // }, [accessPanel, ctrlPanel]);
+    // }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
 
-    // const resizeHandler = ()=>{
-    //     if(Camera){
+    // const resizeHandler = () => {
+    //     if (Camera) {
     //         Camera.setReposition();
     //     }
     // }
@@ -183,7 +211,6 @@ const CameraLocation001 = ({ id, ctrlPanel, accessPanel }) => {
         <CameraCompo>
             <div className="plugin-panel">
                 <div id={`divPlugin-${id}`} className="plugin"></div>
-                {/* <iframe id={`divPlugin-${id}`} className="plugin"></iframe> */}
             </div>
             {
                 ctrlPanel === id &&
@@ -302,4 +329,4 @@ const CameraLocation001 = ({ id, ctrlPanel, accessPanel }) => {
     );
 };
 
-export default CameraLocation001;
+export default React.memo(CameraLocation001);

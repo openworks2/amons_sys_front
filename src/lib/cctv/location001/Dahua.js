@@ -73,6 +73,7 @@ Dahua.prototype = {
                 let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
                 let width = _this.position.width = _this.camOCX.offsetWidth;
                 let height = _this.position.height = _this.camOCX.offsetHeight;
+                console.log(left,'/',top,'/',width,'/',height)
 
                 WebVideoCtrl.resizeVideo(left, top, width, height);
                 //비디오 창을 만듭니다

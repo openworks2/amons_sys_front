@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -90,37 +90,82 @@ const LocStatusCompo = styled.div`
         }
         
     }
-
 `;
-const LocStatusComponent = () => {
+
+const LocStatusComponent = ({ processCode, planLength, digLength }) => {
+
+    const [process, setProcess] = useState({
+        1: { name: '미착공', color: '#286e41' },
+        2: { name: '천공', color: '#7c3795' },
+        3: { name: '장약', color: '#636363' },
+        4: { name: '발파', color: '#971717' },
+        5: { name: '버력처리', color: '#375795' },
+        6: { name: '숏크리트', color: '#7c4c17' },
+        7: { name: '강지보', color: '#707017' },
+        8: { name: '격자지보', color: '#a1922b' },
+        9: { name: '록볼트', color: '#175c59' },
+        10: { name: '방수시트', color: '#1b2f54' },
+        11: { name: '라이닝', color: '#3c3a3a' },
+        12: { name: '근무교대', color: '#407d23' },
+        13: { name: '장비점검', color: '#4c7e7c' },
+        14: { name: '기타', color: '#351c3e' }
+    })
+
+    const [currentState, setState] = useState({
+        name: '',
+        color: '',
+    })
+
+    useEffect(() => {
+        console.log('processCode-->', processCode);
+        setState({
+            name: process[processCode].name,
+            color: process[processCode].color,
+        })
+    }, [processCode]);
+
+
+
     return (
         <LocStatusCompo className="location-status-component">
-        <div className="state-box process-box">
-            <div className="contents-box">
-                <p className="title">공정현황</p>
-                <p className="current-state">버력처리</p>
+            <div className="state-box process-box">
+                <div className="contents-box">
+                    <p className="title">공정현황</p>
+                    <p className="current-state" style={{ backgroundColor: currentState.color }}>{currentState.name}</p>
+                </div>
             </div>
-        </div>
-        <div className="state-box worker-box">
-            <div className="contents-box">
-                <p className="title-icon worker-icon"><FontAwesomeIcon icon={faUserHardHat} /></p>
-                <p className="current-value worker-value">04</p>
+            <div className="state-box worker-box">
+                <div className="contents-box">
+                    <p className="title-icon worker-icon"><FontAwesomeIcon icon={faUserHardHat} /></p>
+                    <p className="current-value worker-value">04</p>
+                </div>
             </div>
-        </div>
-        <div className="state-box vehicle-box">
-            <div className="contents-box">
-                <p className="title-icon vehicle-icon"><FontAwesomeIcon icon={faTruck} /></p>
-                <p className="current-value vehicle-value">04</p>
+            <div className="state-box vehicle-box">
+                <div className="contents-box">
+                    <p className="title-icon vehicle-icon"><FontAwesomeIcon icon={faTruck} /></p>
+                    <p className="current-value vehicle-value">04</p>
+                </div>
             </div>
-        </div>
-        <div className="state-box progress-box">
-            <div className="contents-box">
-                <p className="title-icon progress-icon"><FontAwesomeIcon icon={faDigging} /></p>
-                <p className="total-progress-value">2,542</p>
-                <p className="current-value progress-value">1,020</p>
+            <div className="state-box progress-box">
+                <div className="contents-box">
+                    <p className="title-icon progress-icon"><FontAwesomeIcon icon={faDigging} /></p>
+                    <p className="total-progress-value">
+                        {
+                            planLength > 999
+                                ? planLength.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                : planLength
+                        }
+                    </p>
+                    <p className="current-value progress-value">
+                        {
+                            digLength > 999
+                                ? digLength.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                : digLength
+                        }
+                    </p>
+                </div>
             </div>
-        </div>
-    </LocStatusCompo>
+        </LocStatusCompo>
     );
 };
 

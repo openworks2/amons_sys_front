@@ -21,7 +21,14 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation003 = ({ id, ctrlPanel, accessPanel }) => {
+const CameraLocation003 = ({ 
+    id,
+    ctrlPanel,
+    accessPanel,
+    alarmPanel,
+    expandMap,
+    data
+ }) => {
 
     const [form, setForm] = useState({
         ip: 'dhh3-4.iptime.org',
@@ -148,37 +155,36 @@ const CameraLocation003 = ({ id, ctrlPanel, accessPanel }) => {
     //     }
     // }
 
-    // const resizeVideo = useCallback(() => {
-    //     console.log(ctrlPanel)
-    //     if (accessPanel !== null && accessPanel === 'loc003') {
-    //         Camera.hiddenScreen();
-    //     }
-    //     else if (accessPanel === null || accessPanel !== 'loc003') {
-    //         Camera.showScreen();
-    //     }
-    // }, [Camera, accessPanel]);
 
 
     // useEffect(() => {
+    //     console.log('CameraLocation001--->', data)
     //     if (!Camera) {
     //         connCCTV();
     //     }
     //     if (Camera) {
-    //         resizeVideo();
-    //         if (ctrlPanel !== id || ctrlPanel === null) {
-    //             if(Locate){
-    //                 ptzLocationHandler();
+    //         if (expandMap) {
+    //             Camera.hiddenScreen();
+    //         } else {
+    //             if (alarmPanel) {
+    //                 Camera.hiddenScreen();
+    //             } else {
+    //                 if (ctrlPanel !== id || ctrlPanel === null) {
+    //                     if (Locate) {
+    //                         ptzLocationHandler();
+    //                     }
+    //                 }
     //             }
     //         }
     //     }
-    // }, [accessPanel, ctrlPanel]);
+    // }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
 
-    const resizeHandler = ()=>{
-        if(Camera){
-            Camera.setReposition();
-        }
-    }
-    window.addEventListener("resize", resizeHandler);
+    // const resizeHandler = () => {
+    //     if (Camera) {
+    //         Camera.setReposition();
+    //     }
+    // }
+    // window.addEventListener("resize", resizeHandler);
 
     return (
         <CameraCompo>

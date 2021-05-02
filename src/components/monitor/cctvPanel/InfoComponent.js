@@ -99,15 +99,16 @@ const InfoComponent = ({
     ctrlPanel,
     openCtrlPanel,
     accessPanel,
-    openAccessPanel
+    openAccessPanel,
+    localName
 }) => {
 
 
     return (
         <InfoCompo className="info-component">
             <div className="left-box">
-                <img src={`../../../image/${way === 'left' ? 'arrow_left.png' : 'arrow-right.png'}`} alt="이미지"></img>
-                <span>시점 함양</span>
+                <img src={`../../../images/${way === 'left' ? 'arrow_left.png' : 'arrow-right.png'}`} alt="이미지"></img>
+                <span>{localName}</span>
             </div>
             <div className="right-box">
                 <div className="nms-box">

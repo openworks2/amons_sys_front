@@ -26,6 +26,7 @@ const HeaderCompo = styled.div`
   background: #2e2e2e;
   opacity: 1;
   display: flex;
+  z-index: 1001;
   .left-area{
       height: 100%;
       width: 63%;
