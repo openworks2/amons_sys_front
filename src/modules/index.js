@@ -1,6 +1,8 @@
 import { combineReducers } from "redux";
 // 현장관리
 import locals from "./locals";
+import announces from "./announces";
+import digs from "./digs";
 // 일반관리
 import companies from "./companies";
 import beacons from "./beacons";
@@ -12,6 +14,8 @@ import cctvs from "./cctvs";
 const rootReducer = combineReducers({
   //현장관리
   locals,
+  announces,
+  digs,
   //일반관리
   companies,
   beacons,

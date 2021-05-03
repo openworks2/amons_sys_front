@@ -8,9 +8,7 @@ import NumberFormat from "react-number-format";
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  @media screen and (max-height: 937px) {
-    margin-right: 12px;
-  }
+
   margin-top: 5px;
   .ui.form .field > label,
   .field > label {
@@ -73,17 +71,9 @@ const InputCompo = styled.div`
       }
       &::-webkit-scrollbar {
         -webkit-appearance: none;
-        margin: 10px !important;
+        display: none;
       }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background-clip: padding-box;
-        border: 2px solid transparent;
-      }
-      &::-webkit-scrollbar-track {
-        border-radius: 10px;
-        box-shadow: inset 0px 0px 5px white;
-      }
+
       overflow: auto;
       @media screen and (max-height: 937px) {
         height: 67.5vh;

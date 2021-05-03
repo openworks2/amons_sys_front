@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { Form, Button, Select, Modal, Input } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
-import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
+import { FaImage, FaRegCalendarAlt, FaBackspace } from "react-icons/fa";
 
 const InputCompo = styled.div`
   margin-left: 22px;
@@ -117,9 +117,25 @@ const InputCompo = styled.div`
         margin-left: 10px;
         text-align: left;
         letter-spacing: 0px;
-        color: #d8d8d8;
         opacity: 1;
+        &.yes {
+          color: #2e2e2e;
+        }
+        &.no {
+          color: #929292;
+        }
       }
+    }
+  }
+
+  #delete-icon {
+    float: right;
+    margin-top: -35px;
+    margin-right: 10px;
+    font-size: 25px !important;
+    cursor: pointer;
+    &:hover {
+      color: red;
     }
   }
 
@@ -237,6 +253,7 @@ const VehicleInput = ({
   unUsedBeaconList,
   companyError,
   fileName,
+  imageDeleteHandler,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -324,8 +341,17 @@ const VehicleInput = ({
               <div className="icon-box">
                 <FaImage className="photo-icon" />
               </div>
-              <div className="photo-description">{fileName}</div>
+              {fileName ? (
+                <div className="photo-description yes">{fileName}</div>
+              ) : (
+                <div className="photo-description no">
+                  사진을 등록해 주세요.(jpg, png, gif)
+                </div>
+              )}
             </label>
+            {fileName && (
+              <FaBackspace id="delete-icon" onClick={imageDeleteHandler} />
+            )}
             <Input
               type="file"
               id="input-image-file"

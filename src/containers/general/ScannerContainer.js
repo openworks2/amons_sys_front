@@ -231,22 +231,10 @@ const ScannerContainer = () => {
     const name = seletedValue.name;
     const value = seletedValue.value;
 
-    if (name === "bc_index") {
-      const findBeacon = seletedValue.options.find((el) => el.value == value);
-      const address = findBeacon.address;
-      console.log(findBeacon);
-      setFormData({
-        ...formData,
-        [name]: value,
-        bc_address: address,
-        bc_id: findBeacon.bc_id,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   // 클릭된 row의 데이터
@@ -392,33 +380,26 @@ const ScannerContainer = () => {
     e.preventDefault();
 
     let _scn_address = formData.scn_address.replace(/\:/g, "").toUpperCase();
-    _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 12자리 맞추기
+    _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
+    let _scn_pos_x = minusComma(formData.scn_pos_x);
+    let _scn_group = formData.scn_group.substring(0, 2); // 입력된 글자수 맞추기
 
     if (_scn_address.length !== 12) {
       // 자리수 유효성 검사
-      setAddressError({
-        content: "비콘 번호 12자리를 모두 입력해주세요.",
-        pointing: "below",
-      });
+      setAddressError("*비콘 번호 12자리를 모두 입력해주세요.");
       setTimeout(() => {
         setAddressError(undefined);
       }, 1350);
     } else if (!formData.local_index) {
-      setLocalError({
-        content: "노선을 선택해 주세요.",
-        pointing: "below",
-      });
+      setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
-      }, 1500);
-    } else if (formData.scn_kind === (null || undefined)) {
-      setKindError({
-        content: "사용용도를 선택해 주세요.",
-        pointing: "below",
-      });
+      }, 1350);
+    } else if (formData.scn_kind === null || formData.scn_kind === undefined) {
+      setKindError("*사용용도를 선택해 주세요.");
       setTimeout(() => {
         setKindError(undefined);
-      }, 1500);
+      }, 1350);
     } else {
       // 성공
       const findItem = selectedRow.selectedItem;
@@ -427,6 +408,8 @@ const ScannerContainer = () => {
         ...formData,
         created_date: findItem.created_date,
         modified_date: today,
+        scn_pos_x: _scn_pos_x,
+        scn_group: _scn_group,
         scn_receive_time: findItem.scn_receive_time,
         scn_result: findItem.scn_result,
         scn_start_time: findItem.scn_start_time,
@@ -434,8 +417,6 @@ const ScannerContainer = () => {
         scn_address: _scn_address,
       };
       dispatch(putScanner(newScanner.scn_index, newScanner));
-      initActiveRow();
-      initFormData();
     }
   };
 

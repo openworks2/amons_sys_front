@@ -27,27 +27,25 @@ const TableCompo = styled.div`
     &.no {
       width: 52px;
     }
-    &.name {
+    &.title {
       text-align: left;
-      width: 171px;
+      width: 421px;
+    }
+    &.contents {
+      text-align: left;
+      width: 421px;
+    }
+    &.preview {
+      width: 115px;
       @media screen and (max-height: 937px) {
-        width: 169px;
+        width: 110px;
       }
     }
-    &.length {
-      width: 81px;
-    }
-    &.description {
-      width: 569px;
+    &.date {
+      width: 124px;
       @media screen and (max-height: 937px) {
-        width: 562px;
+        width: 120px;
       }
-    }
-    &.created-date {
-      width: 130px;
-    }
-    &.modified-date {
-      width: 130px;
     }
     &.trash-icon {
       width: 55px !important ;
@@ -102,35 +100,33 @@ const TableCompo = styled.div`
           &.no {
             width: 52px;
             @media screen and (max-height: 937px) {
-              width: 53px;
+              width: 52px;
             }
           }
-          &.name {
-            width: 171px;
+          &.title {
             text-align: left;
+            width: 421px;
             @media screen and (max-height: 937px) {
-              width: 172px;
+              width: 421px;
             }
           }
-          &.length {
-            width: 81px;
-          }
-          &.description {
-            width: 567px;
+          &.contents {
+            text-align: left;
+            width: 421px;
             @media screen and (max-height: 937px) {
-              width: 573px;
+              width: 421px;
             }
           }
-          &.created-date {
-            width: 130px;
+          &.preview {
+            width: 115px;
             @media screen and (max-height: 937px) {
-              width: 131px;
+              width: 109px;
             }
           }
-          &.modified-date {
-            width: 130px !important;
+          &.date {
+            width: 124px;
             @media screen and (max-height: 937px) {
-              width: 130px;
+              width: 120px;
             }
           }
           &.trash-icon {
@@ -191,7 +187,7 @@ const TableCompo = styled.div`
   }
 `;
 
-const LocalTable = ({
+const AnnounceTable = ({
   pageInfo,
   data,
   activeHandler,
@@ -206,13 +202,6 @@ const LocalTable = ({
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const addComma = (num) => {
-    if (num) {
-      let _num = num.toString().replace(/[^0-9]/g, "");
-      let regExp = /\B(?=(\d{3})+(?!\d))/g;
-      return _num.toString().replace(regExp, ",");
-    }
-  };
   // 테이블
 
   const totalPages = Math.ceil(data.length / itemsPerPage, 1);
@@ -234,31 +223,30 @@ const LocalTable = ({
           className="table-row"
           key={index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.local_id))}
+          onClick={item && ((e) => activeHandler(e, index, item.ann_id))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
           </Table.Cell>
-          <Table.Cell className="table-cell name" name="name">
-            {item && item.local_name}
+          <Table.Cell className="table-cell title" name="title">
+            {item && item.ann_title}
           </Table.Cell>
-          <Table.Cell className="table-cell length" name="plan_length">
-            {item && item.plan_length && addComma(item.plan_length) + "m"}
+          <Table.Cell className="table-cell contents" name="contents">
+            {item && item.ann_contents}
           </Table.Cell>
-          <Table.Cell className="table-cell description" name="description">
-            {item && item.description}
+          <Table.Cell className="table-cell preview" name="preview">
+            {item && (item.ann_preview === 0 ? "미사용" : "사용")}
           </Table.Cell>
-          <Table.Cell className="table-cell created-date" name="created_date">
-            {item && moment(item.created_date).format("YYYY-MM-DD")}
-          </Table.Cell>
-          <Table.Cell className="table-cell modified-date" name="modified_date">
+          <Table.Cell className="table-cell date" name="date">
             {item &&
-              item.modified_date &&
-              moment(item.modified_date).format("YYYY-MM-DD")}
+              (item.modified_date
+                ? moment(item.modified_date).format("YYYY-MM-DD")
+                : item.created_date &&
+                  moment(item.created_date).format("YYYY-MM-DD"))}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.local_id === selectedId && (
+            {item && selectedId && item.ann_id === selectedId && (
               <Button
                 className="trash-icon-button"
                 onClick={(e) => {
@@ -279,34 +267,25 @@ const LocalTable = ({
 
   return (
     <>
-      <TableCompo className="local-table-compo">
-        <p className="subtitle">노선 목록</p>
+      <TableCompo className="announce-table-compo">
+        <p className="subtitle">공지사항 목록</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">
                 NO
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header name">
-                노선
+              <Table.HeaderCell singleLine className="table-header title">
+                제목
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header length">
-                계획 연장
+              <Table.HeaderCell singleLine className="table-header contents">
+                내용
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header description">
-                비고
+              <Table.HeaderCell singleLine className="table-header preview">
+                게시 여부
               </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header created-date"
-              >
-                등록일
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header modified-date"
-              >
-                수정일
+              <Table.HeaderCell singleLine className="table-header date">
+                작성일
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header trash-icon">
                 <FaTrash />
@@ -370,8 +349,9 @@ const LocalTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem && `${selectedItem.local_name} `}
-                노선을 삭제하시겠습니까?
+                {selectedItem && `${selectedItem.ann_title} `}
+                <br />
+                공지를 삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>
@@ -405,4 +385,4 @@ const LocalTable = ({
   );
 };
 
-export default LocalTable;
+export default AnnounceTable;

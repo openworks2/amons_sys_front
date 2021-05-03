@@ -86,8 +86,8 @@ const TableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
     &.no {
       width: 52px;
     }
@@ -98,26 +98,26 @@ const TableCompo = styled.div`
       width: 101px;
     }
     &.tab-order-num {
-      width: 90px;
+      width: 70px;
     }
     &.name {
-      width: 102px;
+      width: 117px;
     }
     &.ip {
-      width: 213px;
+      width: 203px;
       text-align: left;
       @media screen and (max-height: 937px) {
-        width: 203px;
+        width: 193px;
       }
     }
     &.port {
-      width: 71px;
+      width: 61px;
     }
     &.cctv-user-id {
-      width: 71px;
+      width: 86px;
     }
     &.cctv-pw {
-      width: 150px;
+      width: 160px;
     }
     &.description {
       width: 182px;
@@ -176,8 +176,8 @@ const TableCompo = styled.div`
           text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 15px;
-          padding-right: 15px;
+          padding-left: 10px;
+          padding-right: 10px;
           vertical-align: middle;
           &.no {
             width: 52px;
@@ -198,29 +198,26 @@ const TableCompo = styled.div`
             }
           }
           &.tab-order-num {
-            width: 90px;
-            @media screen and (max-height: 937px) {
-              width: 90px;
-            }
+            width: 70px;
           }
           &.name {
-            width: 102px;
+            width: 117px;
           }
           &.ip {
-            width: 213px;
+            width: 203px;
             text-align: left;
             @media screen and (max-height: 937px) {
-              width: 203px;
+              width: 193px;
             }
           }
           &.port {
-            width: 71px;
+            width: 61px;
           }
           &.cctv-user-id {
-            width: 71px;
+            width: 86px;
           }
           &.cctv-pw {
-            width: 150px;
+            width: 160px;
           }
           &.description {
             width: 182px;
@@ -411,7 +408,7 @@ const CctvTable = ({
             {item && addComma(addZero(item.cctv_pos_x, 3))}
           </Table.Cell>
           <Table.Cell className="table-cell tab-order-num" name="tab-order-num">
-            {/* {item && item.cctv_탭 번호} */}
+            {item && "1"}
           </Table.Cell>
           <Table.Cell className="table-cell name" name="name">
             {item && item.cctv_name && item.cctv_name}
@@ -429,7 +426,7 @@ const CctvTable = ({
             {item && item.cctv_pw && item.cctv_pw}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
-            {item && item.description && item.description}
+            {item && item.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
             {item && selectedId && item.cctv_id === selectedId && (

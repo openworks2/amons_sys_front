@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { Form, Button, Select, Modal, Input } from "semantic-ui-react";
+import { Form, Button, Select, Modal, Input, Table } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
-import NumberFormat from "react-number-format";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "../../react-datepicker.css";
+import ko from "date-fns/locale/ko";
+registerLocale("ko", ko);
 
 const InputCompo = styled.div`
   margin-left: 22px;
@@ -61,6 +64,33 @@ const InputCompo = styled.div`
     padding: 0px;
   }
 
+  .ui.table,
+  .sub-info-table {
+    border-radius: 4px 4px 0px 0px;
+    background: #f9fafb 0% 0% no-repeat padding-box;
+    border: 1px solid #d8d8d8;
+    opacity: 1;
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    text-align: center;
+    letter-spacing: 0px;
+    color: #2e2e2e;
+    opacity: 1;
+    &.header {
+      border-radius: 0px;
+      width: 146px !important;
+    }
+    &.origin {
+      border-radius: 0px;
+      letter-spacing: 0px;
+      color: #7c7c7c !important;
+      opacity: 1;
+    }
+    &.cell {
+      border-radius: 0px;
+    }
+  }
+
   .input-form-body {
     margin-top: 20px;
     .resizable-area {
@@ -70,7 +100,16 @@ const InputCompo = styled.div`
       }
       &::-webkit-scrollbar {
         -webkit-appearance: none;
-        display: none;
+        margin: 10px !important;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-clip: padding-box;
+        border: 2px solid transparent;
+      }
+      &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        box-shadow: inset 0px 0px 5px white;
       }
       overflow: auto;
       @media screen and (max-height: 937px) {
@@ -82,6 +121,42 @@ const InputCompo = styled.div`
         text-align: left;
         letter-spacing: 0px;
         opacity: 1;
+        &.date-area {
+          height: 70px;
+          width: 321px;
+          margin-top: 5px;
+          .date-box {
+            border: solid 1px;
+            border-radius: 4px;
+            background: #ffffff 0% 0% no-repeat padding-box;
+            border: 1px solid #d8d8d8;
+            border-radius: 4px;
+            opacity: 1;
+            height: 38px;
+            margin-top: 5px;
+            .cal-icon {
+              margin-top: 4px;
+              margin-left: 15px;
+              color: #2e2e2e;
+              display: inline-block;
+              font-size: 15px;
+              vertical-align: middle;
+            }
+            .date-picker-box {
+              .date {
+                vertical-align: middle;
+                padding-left: 17px;
+                width: 213px !important;
+                margin-top: 5px;
+                border: 0px;
+                height: 25px;
+                color: black;
+              }
+              vertical-align: middle;
+              display: inline-block;
+            }
+          }
+        }
         &.title {
           color: #2e2e2e;
           margin-top: 14px;
@@ -89,32 +164,40 @@ const InputCompo = styled.div`
         &.description {
           height: 105px !important;
         }
-        &.pos-x {
-          width: 283px !important;
-          margin-top: 6px;
-          margin-bottom: 15px;
+        &.dig-length {
+          margin-top: 2px;
+          margin-bottom: 10px;
         }
         &.description {
-        }
-        &.port {
-          margin-bottom: 10px;
+          height: 105px;
         }
       }
     }
   }
 
+  #dig_length {
+    width: 282px;
+  }
+
+  .sub-info-table.last-row {
+    margin-top: -14px;
+    border-radius: 0px 0px 4px 4px;
+    height: 39px;
+  }
+
   .label,
-  .ui.form .field > label,
+  .field > label,
   .form-title {
-    margin-left: 5px;
     font-family: "NotoSansKR-Medium" !important;
     color: #2e2e2e;
     font-size: 14px !important;
     letter-spacing: 0px;
     opacity: 1;
     font-weight: initial !important;
+    &.dig-length {
+      margin-bottom: 5px;
+    }
   }
-
   // 드롭다운 버튼
   .ui.dropdown > .dropdown.icon,
   &:before,
@@ -156,7 +239,7 @@ const InputCompo = styled.div`
     position: absolute;
     top: 70.1vh;
     @media screen and (max-height: 937px) {
-      top: 68.5vh;
+      top: 68vh;
     }
   }
 
@@ -191,7 +274,7 @@ const InputError = styled.div`
   opacity: 1;
 `;
 
-const CctvInput = ({
+const DigInput = ({
   onChange,
   onSelectChange,
   formData,
@@ -203,28 +286,23 @@ const CctvInput = ({
   localList,
   localError,
   addComma,
+  localInfo,
+  digInfo,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const {
-    cctv_id,
-    cctv_index,
-    cctv_name,
-    cctv_pos_x,
-    cctv_user_id,
-    cctv_pw,
-    cctv_ip,
-    cctv_port,
-    local_index,
-    cctv_number,
+    dig_seq,
+    created_date,
+    modified_date,
+    dig_length,
     description,
+    local_index,
   } = formData;
-
-  const numberOption = [{ key: 1, text: "1", value: 1 }];
 
   return (
     <InputCompo className="input-compo">
-      <p className="subtitle">CCTV 등록</p>
+      <p className="subtitle">굴진량 입력</p>
       <Form
         className="input-form-body"
         onSubmit={(e) => {
@@ -246,85 +324,84 @@ const CctvInput = ({
             required
           />
           {localError && <InputError>{localError}</InputError>}
-          <div className="pos-x-area">
-            <div className="form-title pos-x">설치위치</div>
+          <Table className="sub-info-table">
+            <Table.Body className="sub-info-table body">
+              <Table.Row className="sub-info-table row">
+                <Table.Cell className="sub-info-table origin" singleLine>
+                  계획연장
+                </Table.Cell>
+                <Table.Cell className="sub-info-table origin" singleLine>
+                  {localInfo.plan_length
+                    ? addComma(localInfo.plan_length) + "m"
+                    : "  m"}
+                </Table.Cell>
+                <Table.Cell className="sub-info-table origin" singleLine>
+                  100%
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row className="sub-info-table row">
+                <Table.Cell className="sub-info-table header" singleLine>
+                  누적굴진
+                </Table.Cell>
+                <Table.Cell className="sub-info-table cell" singleLine>
+                  {localInfo.plan_length &&
+                    addComma(localInfo.plan_length) + "m"}
+                </Table.Cell>
+                <Table.Cell className="sub-info-table cell" singleLine>
+                  {localInfo.plan_length &&
+                    addComma(localInfo.plan_length) + "m"}
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+          <Table className="sub-info-table last-row">
+            <Table.Body>
+              <Table.Row className="sub-info-table row">
+                <Table.Cell className="sub-info-table header" singleLine>
+                  최종 입력일
+                </Table.Cell>
+                <Table.Cell className="sub-info-table cell 1" singleLine>
+                  {localInfo.plan_length &&
+                    addComma(localInfo.plan_length) + "m"}
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+
+          <div className="dig-length-area">
+            <div className="form-title dig-length">누적 굴진량</div>
             <Input
               label={{ basic: true, content: "m" }}
               labelPosition="right"
-              className="input-form pos-x"
-              id="cctv_pos_x"
-              name="cctv_pos_x"
-              placeholder="설치위치를 입력해주세요."
+              className="input-form dig-length"
+              id="dig_length"
+              name="dig_length"
+              placeholder="누적 굴진량을 입력해주세요."
               required
-              value={cctv_pos_x && addComma(cctv_pos_x)}
+              value={dig_length && addComma(dig_length)}
               onChange={onChange}
             />
           </div>
-          <Form.Field
-            className="input-form cctv_number"
-            id="cctv_number"
-            name="cctv_number"
-            control={Select}
-            label="탭 순서"
-            options={numberOption}
-            placeholder="1"
-            value="1"
-            required
-          />
-          <Form.Input
-            className="input-form group"
-            label="이름"
-            id="cctv_name"
-            name="cctv_name"
-            placeholder="이름을 입력해 주세요."
-            required
-            value={cctv_name && cctv_name}
-            onChange={onChange}
-          />
-          <Form.Input
-            className="input-form"
-            label="IP 주소"
-            className="input-form ip"
-            id="cctv_ip"
-            name="cctv_ip"
-            placeholder="ip주소를 입력해주세요."
-            required
-            value={cctv_ip && cctv_ip}
-            onChange={onChange}
-          />
-          <div className="group-area">
-            <div className="form-title port">PORT</div>
-            <NumberFormat
-              format="#####"
-              className="input-form port"
-              id="cctv_port"
-              name="cctv_port"
-              placeholder="포트를 입력해주세요."
-              required
-              value={cctv_port && cctv_port}
-              onChange={onChange}
-            />
+          <div className="input-form date-area">
+            <div className="form-title">입력일</div>
+            <div className="date-box">
+              <FaRegCalendarAlt className="cal-icon" />
+              <div className="date-picker-box">
+                <DatePicker
+                  className="input-form date"
+                  locale="ko"
+                  dateFormat="yyyy-MM-dd"
+                  name="created_date"
+                  shouldCloseOnSelect
+                  useWeekdaysShort={true}
+                  selected={created_date ? new Date(created_date) : new Date()}
+                  placeholder="생년월일을 입력해주세요."
+                  // onChange={(date) => onChangeDate(date)}
+                  required
+                />
+              </div>
+            </div>
           </div>
-          <Form.Input
-            className="input-form id"
-            label="아이디"
-            id="cctv_user_id"
-            name="cctv_user_id"
-            placeholder="아이디를 입력해 주세요."
-            required
-            value={cctv_user_id && cctv_user_id}
-            onChange={onChange}
-          />
-          <Form.Input
-            className="input-form pw"
-            label="비밀번호"
-            id="cctv_pw"
-            name="cctv_pw"
-            placeholder="비밀번호를 입력해 주세요."
-            required
-            value={cctv_pw && cctv_pw}
-            onChange={onChange}
-          />
           <Form.Field className="company-input-form description">
             <label className="input-form title">비고</label>
             <textarea
@@ -397,4 +474,4 @@ const CctvInput = ({
   );
 };
 
-export default CctvInput;
+export default DigInput;

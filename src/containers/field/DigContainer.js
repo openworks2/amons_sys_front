@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import CctvInput from "../../components/general/CctvInput";
-import CctvTable from "../../components/general/CctvTable";
+import DigInput from "../../components/field/DigInput";
+import DigTable from "../../components/field/DigTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
-import { getCctvs, postCctv, putCctv, deleteCctv } from "../../modules/cctvs";
+import { getDigs, postDig, putDig, deleteDig } from "../../modules/digs";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -61,33 +61,26 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const CctvContainer = () => {
-  const { data, loading, error } = useSelector((state) => state.cctvs.cctvs);
+const DigContainer = () => {
+  const { data, loading, error } = useSelector((state) => state.digs.digs);
   const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getLocals());
-    dispatch(getCctvs());
+    dispatch(getDigs());
   }, [dispatch]);
 
   console.log(data);
 
   const [formData, setFormData] = useState({
-    cctv_id: null,
-    cctv_index: null,
+    dig_seq: null,
     created_date: null,
     modified_date: null,
-    cctv_name: "",
-    cctv_pos_x: "",
-    cctv_user_id: "",
-    cctv_pw: "",
-    cctv_ip: "",
-    cctv_port: "",
-    local_index: null,
-    cctv_number: 1,
+    dig_length: null,
     description: "",
+    local_index: null,
   });
 
   useEffect(() => {
@@ -166,6 +159,9 @@ const CctvContainer = () => {
     });
   };
 
+  const [localInfo, setLocalInfo] = useState({});
+  const [digInfo, setDigInfo] = useState({});
+
   // form onSelectChant Event
   const onSelectChange = (e, seletedValue) => {
     const name = seletedValue.name;
@@ -175,6 +171,16 @@ const CctvContainer = () => {
       ...formData,
       [name]: value,
     });
+
+    let _localInfo = localData.find((el) => el.local_index === value);
+    let _digInfo = data.find((el) => el.local_index === value);
+    setLocalInfo(_localInfo);
+    setDigInfo(_digInfo);
+
+    if (value === null || undefined) {
+      setLocalInfo(null);
+      setDigInfo(null);
+    }
   };
 
   // 클릭된 row의 데이터
@@ -194,19 +200,12 @@ const CctvContainer = () => {
   const initFormData = () => {
     setFormData({
       ...formData,
-      cctv_id: null,
-      cctv_index: null,
+      dig_seq: null,
       created_date: null,
       modified_date: null,
-      cctv_name: "",
-      cctv_pos_x: "",
-      cctv_user_id: "",
-      cctv_pw: "",
-      cctv_ip: "",
-      cctv_port: "",
-      local_index: null,
-      cctv_number: 1,
+      dig_length: null,
       description: "",
+      local_index: null,
     });
   };
 
@@ -216,27 +215,22 @@ const CctvContainer = () => {
       initActiveRow();
       initFormData();
     } else {
-      const findItem = data.find((cctv) => cctv.cctv_id === selectedId);
+      const findItem = data.find((scanner) => scanner.scn_id === selectedId);
 
       setSelectedRow({
-        selectedId: findItem.cctv_id,
+        selectedId: findItem.scn_id,
         selectedItem: findItem,
         clickedIndex: index,
       });
 
       setFormData({
         ...formData,
-        cctv_id: findItem.cctv_id,
-        cctv_index: findItem.cctv_index,
-        cctv_name: findItem.cctv_name,
-        cctv_pos_x: findItem.cctv_pos_x,
-        cctv_user_id: findItem.cctv_user_id,
-        cctv_pw: findItem.cctv_pw,
-        cctv_ip: findItem.cctv_ip,
-        cctv_port: findItem.cctv_port,
-        local_index: findItem.local_index,
-        cctv_number: 1,
+        dig_seq: findItem.dig_seq,
+        created_date: findItem.created_date,
+        modified_date: findItem.modified_date,
+        dig_length: findItem.dig_length,
         description: findItem.description,
+        local_index: findItem.local_index,
       });
     }
 
@@ -269,24 +263,24 @@ const CctvContainer = () => {
   const today = new Date();
 
   const [localError, setLocalError] = useState(undefined);
+  const [dateError, setDateError] = useState(undefined);
 
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
-    let _cctv_pos_x = minusComma(formData.cctv_pos_x);
-
+    let _scn_pos_x = minusComma(formData.scn_pos_x);
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 1350);
     } else {
-      let newCctv = {
+      let newDig = {
         ...formData,
-        cctv_pos_x: _cctv_pos_x,
+        scn_pos_x: _scn_pos_x,
       };
-      dispatch(postCctv(newCctv));
+      dispatch(postDig(newDig));
       initActiveRow();
       initFormData();
     }
@@ -296,33 +290,29 @@ const CctvContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    let _cctv_pos_x = minusComma(formData.cctv_pos_x);
+    let _scn_pos_x = minusComma(formData.scn_pos_x);
 
     if (!formData.local_index) {
-      setLocalError({
-        content: "*노선을 선택해 주세요.",
-        pointing: "below",
-      });
+      setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
-      }, 1500);
+      }, 1350);
     } else {
       // 성공
       const findItem = selectedRow.selectedItem;
 
-      let newCctv = {
+      let newDig = {
         ...formData,
-        cctv_pos_x: _cctv_pos_x,
-        created_date: findItem.created_date,
         modified_date: today,
+        scn_pos_x: _scn_pos_x,
       };
-      dispatch(putCctv(newCctv.cctv_index, newCctv));
+      dispatch(putDig(newDig.dig_seq, newDig));
     }
   };
 
   // DELETE
-  const deleteHandler = (e, cctv_id) => {
-    dispatch(deleteCctv(cctv_id));
+  const deleteHandler = (e, dig_seq) => {
+    dispatch(deleteDig(dig_seq));
     initActiveRow();
     initFormData();
   };
@@ -339,8 +329,8 @@ const CctvContainer = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <CctvInput
-            className="cctv-input-box"
+          <DigInput
+            className="scanner-input-box"
             onChange={onChange}
             onSelectChange={onSelectChange}
             formData={formData}
@@ -349,15 +339,18 @@ const CctvContainer = () => {
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
+            localData={localData}
             localList={localList}
             localError={localError}
             addComma={addComma}
+            localInfo={localInfo}
+            digInfo={digInfo}
           />
         </div>
         <div className="table-box">
           {data && (
-            <CctvTable
-              className="cctv-table-box"
+            <DigTable
+              className="scanner-table-box"
               pageInfo={pageInfo}
               data={data}
               activeHandler={activeHandler}
@@ -378,4 +371,4 @@ const CctvContainer = () => {
   );
 };
 
-export default CctvContainer;
+export default DigContainer;

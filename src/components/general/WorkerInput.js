@@ -11,18 +11,18 @@ import {
   Input,
 } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
-import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
+import { FaImage, FaRegCalendarAlt, FaBackspace } from "react-icons/fa";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "../../react-datepicker.css";
 import ko from "date-fns/locale/ko";
+import getYear from "date-fns/getYear";
+import getMonth from "date-fns/getMonth";
 registerLocale("ko", ko);
+const _ = require("lodash");
 
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
-  @media screen and (max-height: 937px) {
-    margin-right: 12px;
-  }
   margin-top: 5px;
   margin-bottom: 18px;
 
@@ -47,17 +47,50 @@ const InputCompo = styled.div`
     border-color: #f1592a !important;
     /* ui focus 색상변경 끝 */
   }
+  .react-datepicker {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+    .react-datepicker__day-names {
+      font-family: "NotoSansKR-Medium";
+      font-size: 15px;
+    }
+    .react-datepicker__day--selected,
+    .react-datepicker__day--keyboard-selected {
+      border-color: #f1592a !important;
+      background-color: #f1592a !important;
+    }
+  }
+  .increase-button,
+  .decrease-button {
+    font-family: "NotoSansKR-Medium";
+    font-size: 20px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 5px;
+    padding-top: 0px;
+    margin: 5px;
+    border-radius: 200px;
+    height: 23px;
+    border: solid 1px rgba(34, 36, 38, 0.35);
+    display: inline-block;
+    font-weight: bolder;
+    cursor: pointer;
+    &:hover {
+      color: #f1592a !important;
+      background-color: #ffffff;
+    }
+  }
 
-  ${(props) =>
-    props.selectedState &&
-    css`
-      // drop 선택
-      .ui.default.dropdown:not(.button) > .text,
-      .ui.dropdown:not(.button) > .default.text {
-        color: #2f2f2f;
-      }
-    `};
-
+  .ui.form select {
+    font-family: "NotoSansKR-Medium";
+    font-size: 14px;
+    padding: 5px;
+    width: 66px;
+    &:focus,
+    &:hover {
+      border-color: #f1592a;
+    }
+  }
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -77,17 +110,7 @@ const InputCompo = styled.div`
         height: 68vh;
       }
       &::-webkit-scrollbar {
-        -webkit-appearance: none;
-        margin: 10px !important;
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background-clip: padding-box;
-        border: 2px solid transparent;
-      }
-      &::-webkit-scrollbar-track {
-        border-radius: 10px;
-        box-shadow: inset 0px 0px 5px white;
+        display: none;
       }
       overflow: auto;
       @media screen and (max-height: 937px) {
@@ -109,7 +132,7 @@ const InputCompo = styled.div`
           display: inline-block;
           .sms-area {
             display: inline-block;
-            margin-left: 30px;
+            margin-left: 40px;
             vertical-align: top;
           }
           .sms-checkbox {
@@ -165,7 +188,7 @@ const InputCompo = styled.div`
           }
         }
         &.blood-area {
-          width: 322px;
+          width: 332px;
           height: 60px;
           margin-bottom: 10px;
           .bloodtype {
@@ -206,6 +229,7 @@ const InputCompo = styled.div`
           color: #ffffff;
         }
       }
+
       .photo-description {
         display: inline-block;
         margin: 0px;
@@ -214,12 +238,27 @@ const InputCompo = styled.div`
         margin-left: 10px;
         text-align: left;
         letter-spacing: 0px;
-        color: #d8d8d8;
         opacity: 1;
+        &.yes {
+          color: #2e2e2e;
+        }
+        &.no {
+          color: #929292;
+        }
       }
     }
   }
 
+  #delete-icon {
+    float: right;
+    margin-top: -35px;
+    margin-right: 10px;
+    font-size: 25px !important;
+    cursor: pointer;
+    &:hover {
+      color: red;
+    }
+  }
   .label,
   .ui.form .field > label,
   .form-title {
@@ -329,7 +368,6 @@ const WorkerInput = ({
   onChange,
   onSelectChange,
   onChangeDate,
-  onFileUpload,
   createHandler,
   updateHandler,
   handleFileInputChange,
@@ -340,6 +378,8 @@ const WorkerInput = ({
   companyList,
   unUsedBeaconList,
   companyError,
+  fileName,
+  imageDeleteHandler,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -371,6 +411,22 @@ const WorkerInput = ({
   const bloodGroup = [
     { key: "+", text: "Rh+", value: "0" },
     { key: "-", text: "Rh-", value: "1" },
+  ];
+
+  const years = _.range(1945, getYear(new Date()) + 1, 1); // 수정
+  const months = [
+    "1월",
+    "2월",
+    "3월",
+    "4월",
+    "5월",
+    "6월",
+    "7월",
+    "8월",
+    "9월",
+    "10월",
+    "11월",
+    "12월",
   ];
 
   return (
@@ -453,15 +509,69 @@ const WorkerInput = ({
               <FaRegCalendarAlt className="cal-icon" />
               <div className="date-picker-box">
                 <DatePicker
+                  renderCustomHeader={({
+                    date,
+                    changeYear,
+                    changeMonth,
+                    decreaseMonth,
+                    increaseMonth,
+                    prevMonthButtonDisabled,
+                    nextMonthButtonDisabled,
+                  }) => (
+                    <div
+                      style={{
+                        margin: 10,
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <div
+                        className="decrease-button"
+                        onClick={decreaseMonth}
+                        disabled={prevMonthButtonDisabled}
+                      >
+                        {"<"}
+                      </div>
+                      <select
+                        value={getYear(date)}
+                        onChange={({ target: { value } }) => changeYear(value)}
+                      >
+                        {years.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        value={months[getMonth(date)]}
+                        onChange={({ target: { value } }) =>
+                          changeMonth(months.indexOf(value))
+                        }
+                      >
+                        {months.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+
+                      <div
+                        className="increase-button"
+                        onClick={increaseMonth}
+                        disabled={nextMonthButtonDisabled}
+                      >
+                        {">"}
+                      </div>
+                    </div>
+                  )}
                   className="input-form birth"
-                  locale="ko"
+                  locale={ko}
                   dateFormat="yyyy.MM.dd"
                   name="wk_birth"
                   shouldCloseOnSelect
-                  useWeekdaysShort={true}
-                  selected={
-                    wk_birth ? new Date(wk_birth) : new Date("1980.01.01")
-                  }
+                  maxDate={new Date()}
+                  selected={wk_birth ? new Date(wk_birth) : new Date()}
                   placeholder="생년월일을 입력해주세요."
                   onChange={(date) => onChangeDate(date)}
                   required
@@ -536,10 +646,17 @@ const WorkerInput = ({
               <div className="icon-box">
                 <FaImage className="photo-icon" />
               </div>
-              <div className="photo-description">
-                사진을 등록해 주세요.(jpg, png, gif)
-              </div>
+              {fileName ? (
+                <div className="photo-description yes">{fileName}</div>
+              ) : (
+                <div className="photo-description no">
+                  사진을 등록해 주세요.(jpg, png, gif)
+                </div>
+              )}
             </label>
+            {fileName && (
+              <FaBackspace id="delete-icon" onClick={imageDeleteHandler} />
+            )}
             <Input
               type="file"
               id="input-image-file"

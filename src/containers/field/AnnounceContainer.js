@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import BeaconInput from "../../components/general/BeaconInput";
-import BeaconTable from "../../components/general/BeaconTable";
+import AnnounceInput from "../../components/field/AnnounceInput";
+import AnnounceTable from "../../components/field/AnnounceTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getBeacons,
-  postBeacon,
-  deleteBeacon,
-  putBeacon,
-} from "../../modules/beacons";
+  getAnnounces,
+  postAnnounce,
+  putAnnounce,
+  deleteAnnounce,
+} from "../../modules/announces";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -65,23 +65,30 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const BeaconContatiner = () => {
+const AnnounceContainer = () => {
   const { data, loading, error } = useSelector(
-    (state) => state.beacons.beacons
+    (state) => state.announces.announces
   );
-
-  const [addressError, setAddressError] = useState(undefined);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBeacons());
+    dispatch(getAnnounces());
   }, [dispatch]);
 
   const [formData, setFormData] = useState({
-    bc_address: "",
-    description: "",
+    ann_id: null,
+    created_date: null,
+    modified_date: null,
+    ann_title: "",
+    ann_contents: "",
+    ann_writer: null,
+    ann_preview: 1,
   });
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   // form onChange Event
   const onChange = (e) => {
@@ -94,20 +101,15 @@ const BeaconContatiner = () => {
     });
   };
 
-  const addZero = (str, digit) => {
-    if (str.length >= digit) {
-      return str;
-    } else {
-      let _str = str.toString();
-      let zeros = "";
-      for (let i = 0; i < digit - _str.length; i++) {
-        zeros = zeros + "0";
-      }
-      return zeros + _str;
-    }
+  // radioChange event handler
+  const onRadioChange = (value) => {
+    let _ann_preview = value;
+    setFormData({
+      ...formData,
+      ann_preview: _ann_preview,
+    });
   };
 
-  // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
     selectedItem: undefined,
@@ -123,8 +125,14 @@ const BeaconContatiner = () => {
   };
   const initFormData = () => {
     setFormData({
-      bc_address: "",
-      description: "",
+      ...formData,
+      ann_id: null,
+      created_date: null,
+      modified_date: null,
+      ann_title: "",
+      ann_contents: "",
+      ann_writer: null,
+      ann_preview: 1,
     });
   };
 
@@ -134,20 +142,23 @@ const BeaconContatiner = () => {
       initActiveRow();
       initFormData();
     } else {
-      const findItem = data.find((beacon) => beacon.bc_id === selectedId);
+      const findItem = data.find((announce) => announce.ann_id === selectedId);
 
       setSelectedRow({
-        selectedId: findItem.bc_id,
+        selectedId: findItem.ann_id,
         selectedItem: findItem,
         clickedIndex: index,
       });
 
       setFormData({
         ...formData,
-        bc_id: findItem.bc_id,
-        bc_index: findItem.bc_index,
-        bc_address: findItem.bc_address,
-        description: findItem.description,
+        ann_id: findItem.ann_id,
+        created_date: findItem.created_date,
+        modified_date: findItem.modified_date,
+        ann_title: findItem.ann_title,
+        ann_contents: findItem.ann_contents,
+        ann_writer: findItem.ann_writer,
+        ann_preview: findItem.ann_preview,
       });
     }
   };
@@ -171,94 +182,37 @@ const BeaconContatiner = () => {
     initFormData();
   };
 
+  const today = new Date();
+
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
-    let _bc_address = formData.bc_address.replace(/\:/g, "").toUpperCase();
-    _bc_address = _bc_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
-    if (_bc_address.length !== 12) {
-      // 자리수 유효성 검사
-      setAddressError("*비콘 번호 12자리를 모두 입력해주세요.");
-      setTimeout(() => {
-        setAddressError(undefined);
-      }, 1350);
-    } else if (data.find((item) => item.bc_address === _bc_address)) {
-      // 중복 유효성 검사
-      setAddressError("*이미 동일한 주소의 비콘이 있습니다.");
-      setTimeout(() => {
-        setAddressError(undefined);
-      }, 1350);
-    } else {
-      // 성공
-      let newBeacon = {
-        ...formData,
-        bc_address: _bc_address,
-      };
-      dispatch(postBeacon(newBeacon));
-      initActiveRow();
-      initFormData();
-    }
+    let newAnnounce = {
+      ...formData,
+    };
+    dispatch(postAnnounce(newAnnounce));
+    initActiveRow();
+    initFormData();
   };
 
   // UPDATE
   const updateHandler = (e) => {
-    let _bc_address = formData.bc_address.replace(/\:/g, "").toUpperCase();
-    _bc_address = _bc_address.substring(0, 12); // 입력된 글자수 12자리 맞추기
+    e.preventDefault();
 
-    let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
-    // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
+    const findItem = selectedRow.selectedItem;
 
-    if (_bc_address.length !== 12) {
-      // 자리수 유효성 검사
-      setAddressError("*비콘 번호 12 자리를 모두 입력해주세요.");
-      setTimeout(() => {
-        setAddressError(undefined);
-      }, 1350);
-    } else if (filteredData.find((item) => item.bc_address === _bc_address)) {
-      //중복 유효성 검사
-      // 중복 에러
-      setAddressError("*이미 동일한 주소의 비콘이 있습니다.");
-      setTimeout(() => {
-        setAddressError(undefined);
-      }, 1350);
-    } else {
-      // 성공
-      const findItem = selectedRow.selectedItem;
-      const now = new Date();
-      let newBeacon = {
-        ...formData,
-        bc_address: _bc_address,
-        created_date: findItem.created_date,
-        modified_date: now,
-        bc_used_type: findItem.bc_used_type,
-        battery_remain: findItem.battery_remain,
-        battery_time: findItem.battery_time,
-        sc_group: findItem.sc_group,
-        bc_receive_time: findItem.bc_receive_time,
-        bc_input_time: findItem.bc_input_time,
-        bc_out_time: findItem.bc_out_time,
-        bc_pos_x: findItem.bc_pos_x,
-        bc_emergency: findItem.bc_emergency,
-        wk_id: findItem.wk_id,
-        wk_name: findItem.wk_name,
-        vh_id: findItem.vh_id,
-        vh_index: findItem.vh_index,
-        vh_name: findItem.vh_name,
-      };
-      console.log(newBeacon);
-      console.log(newBeacon);
-      console.log("newBeacon");
-      console.log("newBeacon");
-      console.log("newBeacon");
-      console.log(newBeacon);
-      dispatch(putBeacon(newBeacon.bc_index, newBeacon));
-    }
+    let newAnnounce = {
+      ...formData,
+      created_date: findItem.created_date,
+      modified_date: today,
+    };
+    dispatch(putAnnounce(newAnnounce.ann_id, newAnnounce));
   };
 
   // DELETE
-  const deleteHandler = (e, bc_id) => {
-    dispatch(deleteBeacon(bc_id));
+  const deleteHandler = (e, ann_id) => {
+    dispatch(deleteAnnounce(ann_id));
     initActiveRow();
     initFormData();
   };
@@ -275,8 +229,8 @@ const BeaconContatiner = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <BeaconInput
-            className="beacon-input-box"
+          <AnnounceInput
+            className="local-input-box"
             onChange={onChange}
             formData={formData}
             createHandler={createHandler}
@@ -284,13 +238,13 @@ const BeaconContatiner = () => {
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
-            addressError={addressError}
+            onRadioChange={onRadioChange}
           />
         </div>
         <div className="table-box">
           {data && (
-            <BeaconTable
-              className="beacon-table-box"
+            <AnnounceTable
+              className="local-table-box"
               pageInfo={pageInfo}
               data={data}
               activeHandler={activeHandler}
@@ -299,7 +253,6 @@ const BeaconContatiner = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
-              addZero={addZero}
             />
           )}
         </div>
@@ -308,4 +261,4 @@ const BeaconContatiner = () => {
   );
 };
 
-export default BeaconContatiner;
+export default AnnounceContainer;

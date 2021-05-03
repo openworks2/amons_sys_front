@@ -185,7 +185,8 @@ const VehicleContainer = () => {
         // 선택한 줄이 있을 경우, 해당 데이터 추가
         _unUsedBeaconList.push({
           key: 1,
-          text: splitByColonInput(formData.bc_address),
+          text: `${addZero(formData.bc_id)} : 
+            ${splitByColonInput(formData.bc_address)}`,
           value: formData.bc_index,
           address: formData.bc_address,
         });
@@ -193,7 +194,8 @@ const VehicleContainer = () => {
       data.map((item, index) => {
         _unUsedBeaconList.push({
           key: index + 2,
-          text: splitByColonInput(item.bc_address),
+          text: `${addZero(item.bc_id)} : 
+          ${splitByColonInput(item.bc_address)}`,
           value: item.bc_index,
           address: item.bc_address,
           bc_id: item.bc_id,
@@ -273,9 +275,19 @@ const VehicleContainer = () => {
         ? setFileName(_filename.substring(0, 25) + "...")
         : setFileName(_filename);
     } else {
-      setFileName("사진을 등록해 주세요.(jpg, png, gif)");
+      setFileName(null);
     }
   }, [handleFileInputChange]);
+
+  const imageDeleteHandler = (e) => {
+    e.stopPropagation();
+    initFiles();
+    let deletedImageForm = {
+      ...formData,
+      vh_image: null,
+    };
+    setFormData(deletedImageForm);
+  };
 
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
@@ -394,6 +406,7 @@ const VehicleContainer = () => {
       dispatch(postVehicle(createData));
       initActiveRow();
       initFormData();
+      initFiles();
     }
   };
 
@@ -422,8 +435,6 @@ const VehicleContainer = () => {
       console.log(putData);
       console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       dispatch(putVehicle(formData.vh_index, putData));
-      initActiveRow();
-      initFormData();
     }
   };
 
@@ -432,6 +443,7 @@ const VehicleContainer = () => {
     dispatch(deleteVehicle(vh_id));
     initActiveRow();
     initFormData();
+    initFiles();
   };
 
   if (error) {
@@ -461,6 +473,7 @@ const VehicleContainer = () => {
             unUsedBeaconList={unUsedBeaconList}
             companyError={companyError}
             fileName={fileName}
+            imageDeleteHandler={imageDeleteHandler}
           />
         </div>
         <div className="table-box">

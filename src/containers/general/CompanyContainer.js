@@ -173,8 +173,6 @@ const CompanyContatiner = () => {
   const updateHandler = (e) => {
     let modifyItem = { ...formData };
     dispatch(putCompany(modifyItem.co_index, modifyItem));
-    initActiveRow();
-    initFormData();
   };
 
   const deleteHandler = (e, co_id) => {

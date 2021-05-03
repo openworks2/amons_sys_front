@@ -72,7 +72,7 @@ const LocalContainer = () => {
 
   useEffect(() => {
     dispatch(getLocals());
-  }, [dispatch, postLocal, putLocal]);
+  }, [dispatch]);
 
   const [formData, setFormData] = useState({
     local_id: null,
@@ -192,31 +192,18 @@ const LocalContainer = () => {
 
   const today = new Date();
 
-  const [localError, setLocalError] = useState(undefined);
-  const [lengthError, setlengthError] = useState(undefined);
-
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
-    if (!formData.local_name) {
-      setLocalError({
-        content: "노선이름을 입력해 주세요.",
-        pointing: "below",
-      });
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 1500);
-    } else {
-      let _plan_length = minusComma(formData.plan_length);
-      let newLocal = {
-        ...formData,
-        plan_length: _plan_length,
-      };
-      dispatch(postLocal(newLocal));
-      initActiveRow();
-      initFormData();
-    }
+    let _plan_length = minusComma(formData.plan_length);
+    let newLocal = {
+      ...formData,
+      plan_length: _plan_length,
+    };
+    dispatch(postLocal(newLocal));
+    initActiveRow();
+    initFormData();
   };
 
   // UPDATE
@@ -224,27 +211,17 @@ const LocalContainer = () => {
     e.preventDefault();
 
     const findItem = selectedRow.selectedItem;
-    if (!formData.local_name) {
-      setLocalError({
-        content: "노선이름을 입력해 주세요.",
-        pointing: "below",
-      });
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 1500);
-    } else {
-      let _plan_length = minusComma(formData.plan_length);
-      let newLocal = {
-        ...formData,
-        plan_length: _plan_length,
-        process: findItem.process,
-        created_date: findItem.created_date,
-        modified_date: today,
-      };
-      dispatch(putLocal(newLocal.local_index, newLocal));
-    }
-    initActiveRow();
-    initFormData();
+
+    let _plan_length = minusComma(formData.plan_length);
+    let newLocal = {
+      ...formData,
+      plan_length: _plan_length,
+      process: findItem.process,
+      created_date: findItem.created_date,
+      modified_date: today,
+    };
+
+    dispatch(putLocal(newLocal.local_index, newLocal));
   };
 
   // DELETE
@@ -276,8 +253,6 @@ const LocalContainer = () => {
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
-            localError={localError}
-            kindError={lengthError}
           />
         </div>
         <div className="table-box">

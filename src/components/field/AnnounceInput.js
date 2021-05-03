@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Form, Button, Modal, Input } from "semantic-ui-react";
+import { Form, Button, Modal, Radio } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 
 const InputCompo = styled.div`
@@ -67,14 +67,17 @@ const InputCompo = styled.div`
         letter-spacing: 0px;
         opacity: 1;
         &.title {
-          margin-top: 10px;
           color: #2e2e2e;
         }
       }
-      #plan_length {
-        width: 283px;
-      }
     }
+  }
+
+  #ann_title {
+    height: 76px;
+  }
+  #ann_contents {
+    height: 105px;
   }
 
   .label,
@@ -137,32 +140,30 @@ const InputCompo = styled.div`
   }
 `;
 
-const LocalInput = ({
+const AnnounceInput = ({
   onChange,
   formData,
-  addComma,
   createHandler,
   updateHandler,
   selectedRow,
   initFormData,
   initActiveRow,
+  onRadioChange,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const {
-    local_id,
-    local_index,
+    ann_id,
     created_date,
     modified_date,
-    local_name,
-    process,
-    plan_length,
-    description,
+    ann_title,
+    ann_contents,
+    ann_writer,
+    ann_preview,
   } = formData;
-
   return (
     <InputCompo className="input-compo">
-      <p className="subtitle">노선 등록</p>
+      <p className="subtitle">공지사항 등록</p>
       <Form
         className="input-form-body"
         onSubmit={(e) => {
@@ -170,39 +171,48 @@ const LocalInput = ({
         }}
       >
         <div className="resizable-area">
-          <Form.Input
-            className="input-form name"
-            label="노선"
-            id="local_name"
-            name="local_name"
-            placeholder="노선명을 입력해 주세요."
-            required
-            value={local_name && local_name}
-            onChange={onChange}
-          />
-          <div className="length-area">
-            <div className="form-title length">계획 연장</div>
-            <Input
-              label={{ basic: true, content: "m" }}
-              labelPosition="right"
-              className="input-form length"
-              id="plan_length"
-              name="plan_length"
-              placeholder="굴착 계획 연장 거리를 입력해주세요."
+          <Form.Field className="announce-input-form description">
+            <label className="input-form title">제목</label>
+            <textarea
+              className="input-form title"
+              id="ann_title"
+              name="ann_title"
+              placeholder={"제목을 입력해 주세요."}
+              value={ann_title ? ann_title : ""}
+              onChange={onChange}
               required
-              value={plan_length && addComma(plan_length)}
+            />
+          </Form.Field>
+          <Form.Field className="announce-input-form description">
+            <label className="input-form contents">내용</label>
+            <textarea
+              className="input-form contents"
+              id="ann_contents"
+              name="ann_contents"
+              placeholder={"내용 입력란"}
+              value={ann_contents ? ann_contents : ""}
               onChange={onChange}
             />
-          </div>
-          <Form.Field className="local-input-form description">
-            <label className="input-form title">비고</label>
-            <textarea
-              className="input-form description"
-              id="description"
-              name="description"
-              placeholder={"비고 입력란"}
-              value={description ? description : ""}
-              onChange={onChange}
+          </Form.Field>
+          <Form.Field className="announce-input-form radio">
+            <label className="input-form title">게시 여부</label>
+          </Form.Field>
+          <Form.Field className="announce-input-form radio">
+            <Radio
+              label="게시중"
+              name="radioGroup"
+              value={1}
+              checked={ann_preview === 1}
+              onChange={() => onRadioChange(1)}
+            />
+          </Form.Field>
+          <Form.Field className="announce-input-form radio">
+            <Radio
+              label="숨김"
+              name="radioGroup"
+              value={0}
+              checked={ann_preview === 0}
+              onClick={() => onRadioChange(0)}
             />
           </Form.Field>
         </div>
@@ -266,4 +276,4 @@ const LocalInput = ({
   );
 };
 
-export default LocalInput;
+export default AnnounceInput;

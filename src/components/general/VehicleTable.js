@@ -325,14 +325,6 @@ const VehicleTable = ({
   useEffect(() => {
     const _data = data;
     setCurrentData(_data);
-    // 카테고리 별 데이터 변경 시
-    // let tempData = [];
-    // if (categorieValue === null) {
-    //   setCurrentData(_data);
-    // } else {
-    //   tempData = _data.filter((item) => item.co_index === categorieValue);
-    //   setCurrentData(tempData);
-    // }
   }, [data]);
 
   // 테이블
@@ -427,7 +419,7 @@ const VehicleTable = ({
               basic
               options={companySearchList}
               className="dropdown"
-              placeholder="소속사"
+              placeholder="소속사 전체"
               position="left"
               name="searchCategorie"
               onChange={(e, value) => {

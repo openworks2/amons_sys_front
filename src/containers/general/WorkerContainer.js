@@ -12,6 +12,8 @@ import {
   deleteWorker,
   putWorker,
 } from "../../modules/workers";
+import moment from "moment";
+import "moment/locale/ko";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -83,6 +85,8 @@ const WorkerContatiner = () => {
     dispatch(getWorkers());
   }, [dispatch]);
 
+  const today = new Date();
+
   const [formData, setFormData] = useState({
     wk_id: null,
     wk_index: null,
@@ -90,7 +94,7 @@ const WorkerContatiner = () => {
     wk_phone: "",
     wk_position: "",
     wk_nation: "",
-    wk_birth: "1980.01.01",
+    wk_birth: today,
     wk_blood_type: "0",
     wk_blood_group: "0",
     wk_sms_yn: false,
@@ -190,7 +194,8 @@ const WorkerContatiner = () => {
         // 선택한 줄이 있을 경우, 해당 데이터 추가
         _unUsedBeaconList.push({
           key: 1,
-          text: splitByColonInput(formData.bc_address),
+          text: `${addZero(formData.bc_id)} : 
+          ${splitByColonInput(formData.bc_address)}`,
           value: formData.bc_index,
           address: formData.bc_address,
         });
@@ -198,7 +203,8 @@ const WorkerContatiner = () => {
       data.map((item, index) => {
         _unUsedBeaconList.push({
           key: index + 2,
-          text: splitByColonInput(item.bc_address),
+          text: `${addZero(item.bc_id)} : 
+          ${splitByColonInput(item.bc_address)}`,
           value: item.bc_index,
           address: item.bc_address,
           bc_id: item.bc_id,
@@ -265,23 +271,24 @@ const WorkerContatiner = () => {
 
   // datepicker
 
-  const getFormatDate = (date) => {
-    var year = date.getFullYear(); //yyyy
-    var month = 1 + date.getMonth(); //M
-    month = month >= 10 ? month : "0" + month; //month 두자리로 저장
-    var day = date.getDate(); //d
-    day = day >= 10 ? day : "0" + day; //day 두자리로 저장
-    return year + "." + month + "." + day; //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
-  };
+  // const getFormatDate = (date) => {
+  //   var year = date.getFullYear(); //yyyy
+  //   var month = 1 + date.getMonth(); //M
+  //   month = month >= 10 ? month : "0" + month; //month 두자리로 저장
+  //   var day = date.getDate(); //d
+  //   day = day >= 10 ? day : "0" + day; //day 두자리로 저장
+  //   return year + "." + month + "." + day; //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+  // };
 
   const onChangeDate = (date) => {
-    if (!data) {
-    } else if (data.length) {
-      setFormData({
-        ...formData,
-        wk_birth: getFormatDate(date),
-      });
+    let _date = date;
+    if (_date === null || undefined) {
+      _date = today;
     }
+    setFormData({
+      ...formData,
+      wk_birth: moment(_date).format("YYYY.MM.DD"),
+    });
   };
 
   // 사진 업로드
@@ -308,6 +315,32 @@ const WorkerContatiner = () => {
     });
   };
 
+  const [fileName, setFileName] = useState("");
+
+  // 가짜 input form 이미지 이름 바꾸기
+  useEffect(() => {
+    if (formData.wk_image) {
+      setFileName(formData.wk_image);
+    } else if (files.selectFile) {
+      let _filename = files.selectFile.name.toString();
+      _filename && _filename.length > 25
+        ? setFileName(_filename.substring(0, 25) + "...")
+        : setFileName(_filename);
+    } else {
+      setFileName(null);
+    }
+  }, [handleFileInputChange]);
+
+  const imageDeleteHandler = (e) => {
+    e.stopPropagation();
+    initFiles();
+    let deletedImageForm = {
+      ...formData,
+      wk_image: null,
+    };
+    setFormData(deletedImageForm);
+  };
+
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
@@ -331,7 +364,7 @@ const WorkerContatiner = () => {
       wk_phone: "",
       wk_position: "",
       wk_nation: "",
-      wk_birth: "1980.01.01",
+      wk_birth: today,
       wk_blood_type: "0",
       wk_blood_group: "0",
       wk_sms_yn: false,
@@ -411,8 +444,6 @@ const WorkerContatiner = () => {
     initFiles();
   };
 
-  const today = new Date();
-
   const [companyError, setCompanyError] = useState(undefined);
   // CREATE
   const createHandler = (e) => {
@@ -491,9 +522,6 @@ const WorkerContatiner = () => {
       console.log(putData);
       console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       dispatch(putWorker(formData.wk_index, putData));
-      initActiveRow();
-      initFormData();
-      initFiles();
     }
   };
 
@@ -532,6 +560,8 @@ const WorkerContatiner = () => {
             companyList={companyList}
             unUsedBeaconList={unUsedBeaconList}
             companyError={companyError}
+            fileName={fileName}
+            imageDeleteHandler={imageDeleteHandler}
           />
         </div>
         <div className="table-box">
