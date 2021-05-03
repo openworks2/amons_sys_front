@@ -5,6 +5,8 @@ import DigTable from "../../components/field/DigTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getDigs, postDig, putDig, deleteDig } from "../../modules/digs";
+import moment from "moment";
+import "moment/locale/ko";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -66,34 +68,30 @@ const DigContainer = () => {
   const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
+  const today = new Date();
+
+  const [localInfo, setLocalInfo] = useState({});
+  const [currentLatestDigInfo, setCurrentLatestDigInfo] = useState({}); // 현재 조회 중인 로컬인덱스의 가장 최신 로그
+
+  const [formData, setFormData] = useState({
+    dig_seq: null,
+    created_date: null,
+    modified_date: null,
+    record_date: moment(today).format("YYYY.MM.DD"),
+    dig_length: null,
+    description: "",
+    local_index: null,
+  });
+  const [localList, setLocalList] = useState([]);
 
   useEffect(() => {
     dispatch(getLocals());
     dispatch(getDigs());
   }, [dispatch]);
 
-  console.log(data);
-
-  const [formData, setFormData] = useState({
-    dig_seq: null,
-    created_date: null,
-    modified_date: null,
-    dig_length: null,
-    description: "",
-    local_index: null,
-  });
-
   useEffect(() => {
     makeLocalList(localData);
   }, [localData, formData.local_index]);
-
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
-
-  const [localList, setLocalList] = useState([]);
 
   const makeLocalList = (data) => {
     if (data) {
@@ -109,6 +107,41 @@ const DigContainer = () => {
       });
       setLocalList(_localList);
     }
+  };
+
+  // form onSelectChant Event
+  const onSelectChange = (e, seletedValue) => {
+    const name = seletedValue.name;
+    const value = seletedValue.value;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    if (!selectedRow.selectedId && data && formData.local_index) {
+      let _digData = data;
+      _digData = _digData.filter(
+        (el) => el.local_index === formData.local_index
+      );
+      _digData = _digData.sort((a, b) =>
+        b.record_date.localeCompare(a.record_date)
+      )[0];
+      setCurrentLatestDigInfo(_digData);
+    }
+  }, [onSelectChange]);
+
+  useEffect(() => {
+    console.log("$$$$$$$change!");
+    console.log(formData);
+    console.log("$$$$$$$change!");
+  }, [formData]);
+
+  // 누적 굴진율 퍼센트 구하기
+  const getDigAmountPercent = (plan_length, dig_length) => {
+    return ((dig_length / plan_length) * 100).toFixed(1) + "%";
   };
 
   // 0 추가
@@ -159,28 +192,15 @@ const DigContainer = () => {
     });
   };
 
-  const [localInfo, setLocalInfo] = useState({});
-  const [digInfo, setDigInfo] = useState({});
-
-  // form onSelectChant Event
-  const onSelectChange = (e, seletedValue) => {
-    const name = seletedValue.name;
-    const value = seletedValue.value;
-
+  const onChangeDate = (date) => {
+    let _date = date;
+    if (_date === null || undefined) {
+      _date = today;
+    }
     setFormData({
       ...formData,
-      [name]: value,
+      record_date: moment(_date).format("YYYY.MM.DD"),
     });
-
-    let _localInfo = localData.find((el) => el.local_index === value);
-    let _digInfo = data.find((el) => el.local_index === value);
-    setLocalInfo(_localInfo);
-    setDigInfo(_digInfo);
-
-    if (value === null || undefined) {
-      setLocalInfo(null);
-      setDigInfo(null);
-    }
   };
 
   // 클릭된 row의 데이터
@@ -203,7 +223,8 @@ const DigContainer = () => {
       dig_seq: null,
       created_date: null,
       modified_date: null,
-      dig_length: null,
+      record_date: moment(today).format("YYYY.MM.DD"),
+      dig_length: "",
       description: "",
       local_index: null,
     });
@@ -215,10 +236,10 @@ const DigContainer = () => {
       initActiveRow();
       initFormData();
     } else {
-      const findItem = data.find((scanner) => scanner.scn_id === selectedId);
+      const findItem = data.find((digLog) => digLog.dig_seq === selectedId);
 
       setSelectedRow({
-        selectedId: findItem.scn_id,
+        selectedId: findItem.dig_seq,
         selectedItem: findItem,
         clickedIndex: index,
       });
@@ -228,18 +249,33 @@ const DigContainer = () => {
         dig_seq: findItem.dig_seq,
         created_date: findItem.created_date,
         modified_date: findItem.modified_date,
+        record_date: findItem.record_date,
         dig_length: findItem.dig_length,
         description: findItem.description,
         local_index: findItem.local_index,
       });
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
+
+  useEffect(() => {
+    // 클릭 된 열 있을 시 노선 정보 대입하기
+    if (formData.local_index === null || undefined) {
+      setLocalInfo(null);
+      setCurrentLatestDigInfo(null);
+    } else {
+      let _localInfo = localData.find(
+        (el) => el.local_index === formData.local_index
+      );
+
+      setLocalInfo(_localInfo);
+
+      let _currentLatestDigInfo = {};
+      _currentLatestDigInfo = data.find(
+        (el) => el.local_index === formData.local_index
+      );
+      setCurrentLatestDigInfo(_currentLatestDigInfo);
+    }
+  }, [activeHandler]);
 
   // 페이지 네이션
   const [pageInfo, setPageInfo] = useState({
@@ -260,8 +296,6 @@ const DigContainer = () => {
     initFormData();
   };
 
-  const today = new Date();
-
   const [localError, setLocalError] = useState(undefined);
   const [dateError, setDateError] = useState(undefined);
 
@@ -269,16 +303,21 @@ const DigContainer = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    let _scn_pos_x = minusComma(formData.scn_pos_x);
+    let _dig_length = minusComma(formData.dig_length);
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
+      setTimeout(() => {
+        setLocalError(undefined);
+      }, 1350);
+    } else if (_dig_length > localInfo.plan_length) {
+      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 1350);
     } else {
       let newDig = {
         ...formData,
-        scn_pos_x: _scn_pos_x,
+        dig_length: _dig_length,
       };
       dispatch(postDig(newDig));
       initActiveRow();
@@ -290,10 +329,15 @@ const DigContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    let _scn_pos_x = minusComma(formData.scn_pos_x);
+    let _dig_length = minusComma(formData.dig_length);
 
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
+      setTimeout(() => {
+        setLocalError(undefined);
+      }, 1350);
+    } else if (_dig_length > localInfo.plan_length) {
+      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 1350);
@@ -304,7 +348,7 @@ const DigContainer = () => {
       let newDig = {
         ...formData,
         modified_date: today,
-        scn_pos_x: _scn_pos_x,
+        dig_length: _dig_length,
       };
       dispatch(putDig(newDig.dig_seq, newDig));
     }
@@ -312,7 +356,7 @@ const DigContainer = () => {
 
   // DELETE
   const deleteHandler = (e, dig_seq) => {
-    dispatch(deleteDig(dig_seq));
+    dispatch(deleteDig(1));
     initActiveRow();
     initFormData();
   };
@@ -344,7 +388,9 @@ const DigContainer = () => {
             localError={localError}
             addComma={addComma}
             localInfo={localInfo}
-            digInfo={digInfo}
+            currentLatestDigInfo={currentLatestDigInfo}
+            onChangeDate={onChangeDate}
+            getDigAmountPercent={getDigAmountPercent}
           />
         </div>
         <div className="table-box">
@@ -363,6 +409,8 @@ const DigContainer = () => {
               localList={localList}
               addComma={addComma}
               addZero={addZero}
+              getDigAmountPercent={getDigAmountPercent}
+              currentLatestDigInfo={currentLatestDigInfo}
             />
           )}
         </div>

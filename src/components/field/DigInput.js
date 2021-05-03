@@ -6,12 +6,22 @@ import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "../../react-datepicker.css";
 import ko from "date-fns/locale/ko";
+import getYear from "date-fns/getYear";
+import getMonth from "date-fns/getMonth";
+import moment from "moment";
+import "moment/locale/ko";
 registerLocale("ko", ko);
+const _ = require("lodash");
 
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
   margin-top: 5px;
+  .ui.table {
+    margin-top: 5px;
+    table-layout: fixed;
+    word-break: break-all;
+  }
   .ui.form .field > label,
   .field > label {
     font-family: "NotoSansKR-Medium" !important;
@@ -52,6 +62,51 @@ const InputCompo = styled.div`
     border-color: #f1592a !important;
     /* ui focus 색상변경 끝 */
   }
+  /* date picker customize 시작 */
+  .react-datepicker {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+    .react-datepicker__day-names {
+      font-family: "NotoSansKR-Medium";
+      font-size: 15px;
+    }
+    .react-datepicker__day--selected,
+    .react-datepicker__day--keyboard-selected {
+      border-color: #f1592a !important;
+      background-color: #f1592a !important;
+    }
+  }
+  .increase-button,
+  .decrease-button {
+    font-family: "NotoSansKR-Medium";
+    font-size: 20px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 5px;
+    padding-top: 0px;
+    margin: 5px;
+    border-radius: 200px;
+    height: 23px;
+    border: solid 1px rgba(34, 36, 38, 0.35);
+    display: inline-block;
+    font-weight: bolder;
+    cursor: pointer;
+    &:hover {
+      color: #f1592a !important;
+      background-color: #ffffff;
+    }
+  }
+  .ui.form select {
+    font-family: "NotoSansKR-Medium";
+    font-size: 14px;
+    padding: 5px;
+    width: 66px;
+    &:focus,
+    &:hover {
+      border-color: #f1592a;
+    }
+  }
+  /* date picker customize 종료 */
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -87,6 +142,7 @@ const InputCompo = styled.div`
       opacity: 1;
     }
     &.cell {
+      width: 90px !important;
       border-radius: 0px;
     }
   }
@@ -287,7 +343,9 @@ const DigInput = ({
   localError,
   addComma,
   localInfo,
-  digInfo,
+  currentLatestDigInfo,
+  onChangeDate,
+  getDigAmountPercent,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -295,10 +353,27 @@ const DigInput = ({
     dig_seq,
     created_date,
     modified_date,
+    record_date,
     dig_length,
     description,
     local_index,
   } = formData;
+
+  const years = _.range(2019, getYear(new Date()) + 1, 1); // 수정
+  const months = [
+    "1월",
+    "2월",
+    "3월",
+    "4월",
+    "5월",
+    "6월",
+    "7월",
+    "8월",
+    "9월",
+    "10월",
+    "11월",
+    "12월",
+  ];
 
   return (
     <InputCompo className="input-compo">
@@ -321,22 +396,23 @@ const DigInput = ({
             placeholder="노선을 선택해주세요."
             value={local_index}
             error={localError}
+            disabled={selectedRow.selectedId}
             required
           />
           {localError && <InputError>{localError}</InputError>}
           <Table className="sub-info-table">
             <Table.Body className="sub-info-table body">
               <Table.Row className="sub-info-table row">
-                <Table.Cell className="sub-info-table origin" singleLine>
+                <Table.Cell className="sub-info-table header" singleLine>
                   계획연장
                 </Table.Cell>
                 <Table.Cell className="sub-info-table origin" singleLine>
-                  {localInfo.plan_length
-                    ? addComma(localInfo.plan_length) + "m"
-                    : "  m"}
+                  {localInfo &&
+                    localInfo.plan_length &&
+                    addComma(localInfo.plan_length) + "m"}
                 </Table.Cell>
                 <Table.Cell className="sub-info-table origin" singleLine>
-                  100%
+                  {localInfo && "100%"}
                 </Table.Cell>
               </Table.Row>
               <Table.Row className="sub-info-table row">
@@ -344,12 +420,25 @@ const DigInput = ({
                   누적굴진
                 </Table.Cell>
                 <Table.Cell className="sub-info-table cell" singleLine>
-                  {localInfo.plan_length &&
-                    addComma(localInfo.plan_length) + "m"}
+                  {selectedRow.selectedId
+                    ? addComma(dig_length) + "m"
+                    : currentLatestDigInfo &&
+                      currentLatestDigInfo.dig_length &&
+                      addComma(currentLatestDigInfo.dig_length) + "m"}
                 </Table.Cell>
                 <Table.Cell className="sub-info-table cell" singleLine>
-                  {localInfo.plan_length &&
-                    addComma(localInfo.plan_length) + "m"}
+                  {selectedRow.selectedId
+                    ? localInfo &&
+                      localInfo.plan_length &&
+                      getDigAmountPercent(localInfo.plan_length, dig_length)
+                    : localInfo &&
+                      localInfo.plan_length &&
+                      currentLatestDigInfo &&
+                      currentLatestDigInfo.dig_length &&
+                      getDigAmountPercent(
+                        localInfo.plan_length,
+                        currentLatestDigInfo.dig_length
+                      )}
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
@@ -360,9 +449,14 @@ const DigInput = ({
                 <Table.Cell className="sub-info-table header" singleLine>
                   최종 입력일
                 </Table.Cell>
-                <Table.Cell className="sub-info-table cell 1" singleLine>
-                  {localInfo.plan_length &&
-                    addComma(localInfo.plan_length) + "m"}
+                <Table.Cell className="sub-info-table date" singleLine>
+                  {selectedRow.selectedId
+                    ? moment(record_date).format("YYYY-MM-DD")
+                    : currentLatestDigInfo &&
+                      currentLatestDigInfo.record_date &&
+                      moment(currentLatestDigInfo.record_date).format(
+                        "YYYY-MM-DD"
+                      )}
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
@@ -387,18 +481,77 @@ const DigInput = ({
             <div className="date-box">
               <FaRegCalendarAlt className="cal-icon" />
               <div className="date-picker-box">
-                <DatePicker
-                  className="input-form date"
-                  locale="ko"
-                  dateFormat="yyyy-MM-dd"
-                  name="created_date"
-                  shouldCloseOnSelect
-                  useWeekdaysShort={true}
-                  selected={created_date ? new Date(created_date) : new Date()}
-                  placeholder="생년월일을 입력해주세요."
-                  // onChange={(date) => onChangeDate(date)}
-                  required
-                />
+                <div className="date-picker-box">
+                  <DatePicker
+                    renderCustomHeader={({
+                      date,
+                      changeYear,
+                      changeMonth,
+                      decreaseMonth,
+                      increaseMonth,
+                      prevMonthButtonDisabled,
+                      nextMonthButtonDisabled,
+                    }) => (
+                      <div
+                        style={{
+                          margin: 10,
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <div
+                          className="decrease-button"
+                          onClick={decreaseMonth}
+                          disabled={prevMonthButtonDisabled}
+                        >
+                          {"<"}
+                        </div>
+                        <select
+                          value={getYear(date)}
+                          onChange={({ target: { value } }) =>
+                            changeYear(value)
+                          }
+                        >
+                          {years.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+
+                        <select
+                          value={months[getMonth(date)]}
+                          onChange={({ target: { value } }) =>
+                            changeMonth(months.indexOf(value))
+                          }
+                        >
+                          {months.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                        <div
+                          className="increase-button"
+                          onClick={increaseMonth}
+                          disabled={nextMonthButtonDisabled}
+                        >
+                          {">"}
+                        </div>
+                      </div>
+                    )}
+                    className="input-form date"
+                    locale={ko}
+                    dateFormat="yyyy.MM.dd"
+                    name="record_date"
+                    shouldCloseOnSelect
+                    useWeekdaysShort
+                    selected={record_date ? new Date(record_date) : new Date()}
+                    placeholder="입력일을 선택해주세요."
+                    onChange={(date) => onChangeDate(date)}
+                    required
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -426,7 +579,7 @@ const DigInput = ({
           </Button>
         ) : (
           <Button className="submit-button" type="submit">
-            등록
+            입력
           </Button>
         )}
       </Form>

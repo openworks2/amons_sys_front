@@ -192,9 +192,11 @@ const TableCompo = styled.div`
           }
           &.amount {
             width: 121px;
+            color: #ce3f3f;
           }
           &.percent {
             width: 121px;
+            color: #ce3f3f;
           }
           &.date {
             width: 111px;
@@ -280,9 +282,9 @@ const DigTable = ({
   initFormData,
   initActiveRow,
   localData,
-  localList,
   addComma,
   addZero,
+  getDigAmountPercent,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -292,7 +294,6 @@ const DigTable = ({
   // 검색 기능 table 데이터 처리
   // 검색하고 curreunt page 1 로 이동시켜줘야 함.
   const [categorieValue, setCategorieValue] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, value) => {
@@ -301,7 +302,9 @@ const DigTable = ({
   };
 
   useEffect(() => {
-    const _data = data;
+    const _data = data.sort((a, b) =>
+      b.record_date.localeCompare(a.record_date)
+    ); // 최신 입력일 순으로
     setCurrentData(_data);
 
     let tempData = [];
@@ -312,14 +315,6 @@ const DigTable = ({
       setCurrentData(tempData);
     }
   }, [data, categorieValue]);
-
-  // serach input 입력
-  const onSearchChange = (e) => {
-    const _searchValue = e.target.value;
-    setSearchValue(_searchValue);
-  };
-
-  const dispatch = useDispatch();
 
   // 테이블
 
@@ -342,7 +337,7 @@ const DigTable = ({
           className="table-row"
           key={index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.scn_id))}
+          onClick={item && ((e) => activeHandler(e, index, item.dig_seq))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
@@ -365,15 +360,21 @@ const DigTable = ({
               ) + "m"}
           </Table.Cell>
           <Table.Cell className="table-cell amount" name="amount">
-            {/* {item && kindReturn(item.scn_kind)} */}
+            {item && item.dig_length && addComma(item.dig_length) + "m"}
           </Table.Cell>
           <Table.Cell className="table-cell percent" name="percent">
-            {/* {item && item.scn_group && item.scn_group} */}
+            {item &&
+              item.dig_length &&
+              getDigAmountPercent(
+                localData.find((el) => el.local_index === item.local_index)
+                  .plan_length,
+                item.dig_length
+              )}
           </Table.Cell>
           <Table.Cell className="table-cell date" name="date">
             {item &&
-              item.created_date &&
-              moment(item.created_date).format("YYYY-MM-DD")}
+              item.record_date &&
+              moment(item.record_date).format("YYYY-MM-DD")}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
             {item && item.description && item.description}

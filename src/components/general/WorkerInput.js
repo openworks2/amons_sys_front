@@ -47,6 +47,8 @@ const InputCompo = styled.div`
     border-color: #f1592a !important;
     /* ui focus 색상변경 끝 */
   }
+
+  /* date picker customize 시작 */
   .react-datepicker {
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
@@ -80,7 +82,6 @@ const InputCompo = styled.div`
       background-color: #ffffff;
     }
   }
-
   .ui.form select {
     font-family: "NotoSansKR-Medium";
     font-size: 14px;
@@ -91,6 +92,7 @@ const InputCompo = styled.div`
       border-color: #f1592a;
     }
   }
+  /* date picker customize 종료 */
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -555,7 +557,6 @@ const WorkerInput = ({
                           </option>
                         ))}
                       </select>
-
                       <div
                         className="increase-button"
                         onClick={increaseMonth}
@@ -570,6 +571,7 @@ const WorkerInput = ({
                   dateFormat="yyyy.MM.dd"
                   name="wk_birth"
                   shouldCloseOnSelect
+                  useWeekdaysShort
                   maxDate={new Date()}
                   selected={wk_birth ? new Date(wk_birth) : new Date()}
                   placeholder="생년월일을 입력해주세요."
