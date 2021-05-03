@@ -115,7 +115,7 @@ const ContentTitle = ({ currentUrl }) => {
             ui={false}
           />
         );
-      case "state":
+      case "process":
         title = "공정상태 변경";
         return (
           <Image

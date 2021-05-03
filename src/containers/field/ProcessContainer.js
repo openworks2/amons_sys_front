@@ -1,10 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import DigInput from "../../components/field/DigInput";
-import DigTable from "../../components/field/DigTable";
+import ProcessInput from "../../components/field/ProcessInput";
+import ProcessTable from "../../components/field/ProcessTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
-import { getDigs, postDig, putDig, deleteDig } from "../../modules/digs";
+import {
+  getProcesses,
+  postProcess,
+  putProcess,
+  deleteProcess,
+} from "../../modules/processes";
 import moment from "moment";
 import "moment/locale/ko";
 
@@ -63,8 +68,10 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const DigContainer = () => {
-  const { data, loading, error } = useSelector((state) => state.digs.digs);
+const ProcessContainer = () => {
+  const { data, loading, error } = useSelector(
+    (state) => state.processes.processes
+  );
   const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
@@ -74,19 +81,19 @@ const DigContainer = () => {
   const [currentLatestDigInfo, setCurrentLatestDigInfo] = useState({}); // 현재 조회 중인 로컬인덱스의 가장 최신 로그
 
   const [formData, setFormData] = useState({
-    dig_seq: null,
+    pcs_seq: null,
     created_date: null,
     modified_date: null,
-    record_date: moment(today).format("YYYY.MM.DD"),
-    dig_length: null,
-    description: "",
+    prev_pcs_state: null,
+    pcs_state: null,
     local_index: null,
+    description: "",
   });
   const [localList, setLocalList] = useState([]);
 
   useEffect(() => {
     dispatch(getLocals());
-    dispatch(getDigs());
+    dispatch(getProcesses());
   }, [dispatch]);
 
   useEffect(() => {
@@ -119,67 +126,25 @@ const DigContainer = () => {
       [name]: value,
     });
   };
-
-  useEffect(() => {
-    if (!selectedRow.selectedId && data && formData.local_index) {
-      let _digData = data;
-      _digData = _digData.filter(
-        (el) => el.local_index === formData.local_index
-      );
-      _digData = _digData.sort((a, b) =>
-        b.record_date.localeCompare(a.record_date)
-      )[0];
-      setCurrentLatestDigInfo(_digData);
-    }
-  }, [onSelectChange]);
+  // 시간순 정렬
+  // useEffect(() => {
+  //   if (!selectedRow.selectedId && data && formData.local_index) {
+  //     let _digData = data;
+  //     _digData = _digData.filter(
+  //       (el) => el.local_index === formData.local_index
+  //     );
+  //     _digData = _digData.sort((a, b) =>
+  //       b.record_date.localeCompare(a.record_date)
+  //     )[0];
+  //     setCurrentLatestDigInfo(_digData);
+  //   }
+  // }, [onSelectChange]);
 
   useEffect(() => {
     console.log("$$$$$$$change!");
     console.log(formData);
     console.log("$$$$$$$change!");
   }, [formData]);
-
-  // 누적 굴진율 퍼센트 구하기
-  const getDigAmountPercent = (plan_length, dig_length) => {
-    return ((dig_length / plan_length) * 100).toFixed(1) + "%";
-  };
-
-  // 0 추가
-  const addZero = (str, digit) => {
-    if (str.length >= digit) {
-      return str;
-    } else {
-      let _str = str.toString();
-      let zeros = "";
-      for (let i = 0; i < digit - _str.length; i++) {
-        zeros = zeros + "0";
-      }
-      return zeros + _str;
-    }
-  };
-
-  // 미터 콤마 더하기 빼기
-
-  const addComma = (num) => {
-    let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      _num = _num.substring(0, 4);
-    }
-    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
-  };
-
-  const minusComma = (num) => {
-    let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      // 4자리 초과시 뒷자리 자르기
-      _num = _num.substring(0, 4);
-    }
-    return _num;
-  };
 
   // form onChange Event
   const onChange = (e) => {
@@ -189,17 +154,6 @@ const DigContainer = () => {
     setFormData({
       ...formData,
       [name]: value,
-    });
-  };
-
-  const onChangeDate = (date) => {
-    let _date = date;
-    if (_date === null || undefined) {
-      _date = today;
-    }
-    setFormData({
-      ...formData,
-      record_date: moment(_date).format("YYYY.MM.DD"),
     });
   };
 
@@ -220,13 +174,13 @@ const DigContainer = () => {
   const initFormData = () => {
     setFormData({
       ...formData,
-      dig_seq: null,
+      pcs_seq: null,
       created_date: null,
       modified_date: null,
-      record_date: moment(today).format("YYYY.MM.DD"),
-      dig_length: "",
-      description: "",
+      prev_pcs_state: null,
+      pcs_state: null,
       local_index: null,
+      description: "",
     });
   };
 
@@ -246,13 +200,13 @@ const DigContainer = () => {
 
       setFormData({
         ...formData,
-        dig_seq: findItem.dig_seq,
+        pcs_seq: findItem.pcs_seq,
         created_date: findItem.created_date,
         modified_date: findItem.modified_date,
-        record_date: findItem.record_date,
-        dig_length: findItem.dig_length,
-        description: findItem.description,
+        prev_pcs_state: findItem.prev_pcs_state,
+        pcs_state: findItem.pcs_state,
         local_index: findItem.local_index,
+        description: findItem.description,
       });
     }
   };
@@ -303,23 +257,16 @@ const DigContainer = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    let _dig_length = minusComma(formData.dig_length);
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 1350);
-    } else if (_dig_length > localInfo.plan_length) {
-      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 1350);
     } else {
-      let newDig = {
+      let newProcess = {
         ...formData,
-        dig_length: _dig_length,
       };
-      dispatch(postDig(newDig));
+      dispatch(postProcess(newProcess));
       initActiveRow();
       initFormData();
     }
@@ -329,15 +276,8 @@ const DigContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    let _dig_length = minusComma(formData.dig_length);
-
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 1350);
-    } else if (_dig_length > localInfo.plan_length) {
-      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 1350);
@@ -345,18 +285,17 @@ const DigContainer = () => {
       // 성공
       const findItem = selectedRow.selectedItem;
 
-      let newDig = {
+      let newProcess = {
         ...formData,
         modified_date: today,
-        dig_length: _dig_length,
       };
-      dispatch(putDig(newDig.dig_seq, newDig));
+      dispatch(putProcess(newProcess.pcs_seq, newProcess));
     }
   };
 
   // DELETE
-  const deleteHandler = (e, dig_seq) => {
-    dispatch(deleteDig(dig_seq));
+  const deleteHandler = (e, pcs_seq) => {
+    dispatch(deleteProcess(pcs_seq));
     initActiveRow();
     initFormData();
   };
@@ -373,8 +312,8 @@ const DigContainer = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <DigInput
-            className="dig-input-box"
+          <ProcessInput
+            className="process-input-box"
             onChange={onChange}
             onSelectChange={onSelectChange}
             formData={formData}
@@ -386,17 +325,13 @@ const DigContainer = () => {
             localData={localData}
             localList={localList}
             localError={localError}
-            addComma={addComma}
             localInfo={localInfo}
-            currentLatestDigInfo={currentLatestDigInfo}
-            onChangeDate={onChangeDate}
-            getDigAmountPercent={getDigAmountPercent}
           />
         </div>
         <div className="table-box">
           {data && (
-            <DigTable
-              className="dig-table-box"
+            <ProcessTable
+              className="process-table-box"
               pageInfo={pageInfo}
               data={data}
               activeHandler={activeHandler}
@@ -407,10 +342,6 @@ const DigContainer = () => {
               initActiveRow={initActiveRow}
               localData={localData}
               localList={localList}
-              addComma={addComma}
-              addZero={addZero}
-              getDigAmountPercent={getDigAmountPercent}
-              currentLatestDigInfo={currentLatestDigInfo}
             />
           )}
         </div>
@@ -419,4 +350,4 @@ const DigContainer = () => {
   );
 };
 
-export default DigContainer;
+export default ProcessContainer;

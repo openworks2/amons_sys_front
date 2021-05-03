@@ -108,10 +108,6 @@ const InputCompo = styled.div`
   }
   /* date picker customize 종료 */
 
-  #local_index {
-    margin-bottom: 10px;
-  }
-
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -147,9 +143,6 @@ const InputCompo = styled.div`
     }
     &.cell {
       width: 90px !important;
-      border-radius: 0px;
-    }
-    &.date {
       border-radius: 0px;
     }
   }
@@ -273,6 +266,15 @@ const InputCompo = styled.div`
     padding: 0px;
   }
 
+  .ui.form .field .ui.input input#scn_address {
+    // input 맥 어드레스 placeholder
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 14px;
+    text-align: left;
+    letter-spacing: 1.05px;
+    opacity: 1;
+  }
+
   .ui.form .required.field > label:after {
     content: "" !important;
   }
@@ -318,8 +320,8 @@ const InputCompo = styled.div`
 `;
 
 const InputError = styled.div`
-  margin-bottom: 6px;
-  margin-top: -25px;
+  margin-bottom: -4px;
+  margin-top: -15px;
   font-family: "NotoSansKR-Regular";
   font-size: 13px;
   text-align: left;
@@ -328,7 +330,7 @@ const InputError = styled.div`
   opacity: 1;
 `;
 
-const DigInput = ({
+const ProcessInput = ({
   onChange,
   onSelectChange,
   formData,
@@ -375,7 +377,7 @@ const DigInput = ({
 
   return (
     <InputCompo className="input-compo">
-      <p className="subtitle">굴진량 입력</p>
+      <p className="subtitle">공정상태 변경</p>
       <Form
         className="input-form-body"
         onSubmit={(e) => {
@@ -398,161 +400,7 @@ const DigInput = ({
             required
           />
           {localError && <InputError>{localError}</InputError>}
-          <Table className="sub-info-table">
-            <Table.Body className="sub-info-table body">
-              <Table.Row className="sub-info-table row">
-                <Table.Cell className="sub-info-table header" singleLine>
-                  계획연장
-                </Table.Cell>
-                <Table.Cell className="sub-info-table origin" singleLine>
-                  {localInfo &&
-                    localInfo.plan_length &&
-                    addComma(localInfo.plan_length) + "m"}
-                </Table.Cell>
-                <Table.Cell className="sub-info-table origin" singleLine>
-                  {localInfo && "100%"}
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row className="sub-info-table row">
-                <Table.Cell className="sub-info-table header" singleLine>
-                  누적굴진
-                </Table.Cell>
-                <Table.Cell className="sub-info-table cell" singleLine>
-                  {selectedRow.selectedId
-                    ? addComma(dig_length) + "m"
-                    : currentLatestDigInfo &&
-                      currentLatestDigInfo.dig_length &&
-                      addComma(currentLatestDigInfo.dig_length) + "m"}
-                </Table.Cell>
-                <Table.Cell className="sub-info-table cell" singleLine>
-                  {selectedRow.selectedId
-                    ? localInfo &&
-                      localInfo.plan_length &&
-                      getDigAmountPercent(localInfo.plan_length, dig_length)
-                    : localInfo &&
-                      localInfo.plan_length &&
-                      currentLatestDigInfo &&
-                      currentLatestDigInfo.dig_length &&
-                      getDigAmountPercent(
-                        localInfo.plan_length,
-                        currentLatestDigInfo.dig_length
-                      )}
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
-          <Table className="sub-info-table last-row">
-            <Table.Body>
-              <Table.Row className="sub-info-table row">
-                <Table.Cell className="sub-info-table header" singleLine>
-                  최종 입력일
-                </Table.Cell>
-                <Table.Cell className="sub-info-table date" singleLine>
-                  {selectedRow.selectedId
-                    ? moment(record_date).format("YYYY-MM-DD")
-                    : currentLatestDigInfo &&
-                      currentLatestDigInfo.record_date &&
-                      moment(currentLatestDigInfo.record_date).format(
-                        "YYYY-MM-DD"
-                      )}
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
 
-          <div className="dig-length-area">
-            <div className="form-title dig-length">누적 굴진량</div>
-            <Input
-              label={{ basic: true, content: "m" }}
-              labelPosition="right"
-              className="input-form dig-length"
-              id="dig_length"
-              name="dig_length"
-              placeholder="누적 굴진량을 입력해주세요."
-              required
-              value={dig_length && addComma(dig_length)}
-              onChange={onChange}
-            />
-          </div>
-          <div className="input-form date-area">
-            <div className="form-title">입력일</div>
-            <div className="date-box">
-              <FaRegCalendarAlt className="cal-icon" />
-              <div className="date-picker-box">
-                <div className="date-picker-box">
-                  <DatePicker
-                    renderCustomHeader={({
-                      date,
-                      changeYear,
-                      changeMonth,
-                      decreaseMonth,
-                      increaseMonth,
-                      prevMonthButtonDisabled,
-                      nextMonthButtonDisabled,
-                    }) => (
-                      <div
-                        style={{
-                          margin: 10,
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <div
-                          className="decrease-button"
-                          onClick={decreaseMonth}
-                          disabled={prevMonthButtonDisabled}
-                        >
-                          {"<"}
-                        </div>
-                        <select
-                          value={getYear(date)}
-                          onChange={({ target: { value } }) =>
-                            changeYear(value)
-                          }
-                        >
-                          {years.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-
-                        <select
-                          value={months[getMonth(date)]}
-                          onChange={({ target: { value } }) =>
-                            changeMonth(months.indexOf(value))
-                          }
-                        >
-                          {months.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                        <div
-                          className="increase-button"
-                          onClick={increaseMonth}
-                          disabled={nextMonthButtonDisabled}
-                        >
-                          {">"}
-                        </div>
-                      </div>
-                    )}
-                    className="input-form date"
-                    locale={ko}
-                    dateFormat="yyyy.MM.dd"
-                    name="record_date"
-                    shouldCloseOnSelect
-                    useWeekdaysShort
-                    selected={record_date ? new Date(record_date) : new Date()}
-                    placeholder="입력일을 선택해주세요."
-                    onChange={(date) => onChangeDate(date)}
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
           <Form.Field className="company-input-form description">
             <label className="input-form title">비고</label>
             <textarea
@@ -625,4 +473,4 @@ const DigInput = ({
   );
 };
 
-export default DigInput;
+export default ProcessInput;

@@ -230,7 +230,7 @@ const AnnounceContainer = () => {
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
           <AnnounceInput
-            className="local-input-box"
+            className="announce-input-box"
             onChange={onChange}
             formData={formData}
             createHandler={createHandler}
@@ -244,7 +244,7 @@ const AnnounceContainer = () => {
         <div className="table-box">
           {data && (
             <AnnounceTable
-              className="local-table-box"
+              className="announce-table-box"
               pageInfo={pageInfo}
               data={data}
               activeHandler={activeHandler}

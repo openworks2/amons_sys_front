@@ -185,10 +185,10 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/field/state"
+          to="/amons/home/field/process"
           className="sidemenu-sub-title"
-          name="state"
-          active={currentUrl === "state"}
+          name="process"
+          active={currentUrl === "process"}
         >
           공정상태 변경
         </Menu.Item>

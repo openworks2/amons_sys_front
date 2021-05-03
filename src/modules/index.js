@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import locals from "./locals";
 import announces from "./announces";
 import digs from "./digs";
+import processes from "./processes";
 // 일반관리
 import companies from "./companies";
 import beacons from "./beacons";
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   locals,
   announces,
   digs,
+  processes,
   //일반관리
   companies,
   beacons,

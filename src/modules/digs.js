@@ -41,7 +41,7 @@ export const deleteDig = (id) => async (dispatch) => {
   dispatch({ type: DELETE_DIG });
   try {
     // API 호출
-    const payload = await digsAPI(id);
+    const payload = await digsAPI.deleteDig(id);
     // 요청 성공
     dispatch({ type: DELETE_DIG_SUCCESS, payload });
   } catch (e) {
@@ -91,6 +91,14 @@ export default function digs(state = initialState, action) {
       const items = state.digs.data;
       const _id = parseInt(action.payload.param);
       const filterData = items.filter((item) => item.dig_seq !== _id);
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log(items);
+      console.log(_id);
+      console.log(action);
+      console.log(action.payload.param);
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       return {
         ...state,
         digs: {
@@ -101,6 +109,14 @@ export default function digs(state = initialState, action) {
         },
       };
     case DELETE_DIG_ERROR:
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      // console.log(items);
+      // console.log(_id);
+      console.log(action);
+      console.log(action.payload.param);
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       return {
         ...state,
         digs: {

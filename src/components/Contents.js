@@ -4,6 +4,7 @@ import { Route } from "react-router";
 import LocalContatiner from "../containers/field/LocalContainer";
 import AnnounceContainer from "../containers/field/AnnounceContainer";
 import DigContainer from "../containers/field/DigContainer";
+import ProcessContainer from "../containers/field/ProcessContainer";
 // general (일반관리)
 import CompanyContatiner from "../containers/general/CompanyContainer";
 import WorkerContainer from "../containers/general/WorkerContainer";
@@ -22,6 +23,7 @@ const Contents = () => {
       <Route path="/amons/home/field/local" component={LocalContatiner} />
       <Route path="/amons/home/field/announce" component={AnnounceContainer} />
       <Route path="/amons/home/field/dig" component={DigContainer} />
+      <Route path="/amons/home/field/process" component={ProcessContainer} />
       {/* *****************************general 일반관리****************************** */}
       <Route path="/amons/home/general/company" component={CompanyContatiner} />
       <Route path="/amons/home/general/worker" component={WorkerContainer} />
