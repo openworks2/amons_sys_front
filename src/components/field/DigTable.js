@@ -29,31 +29,6 @@ const CategorieMenuCompo = styled.div`
     &.all {
       width: 80px;
     }
-    &.search {
-      display: flex !important;
-      width: 234px;
-      margin: 0px !important;
-      padding: 0px !important;
-      font-family: "NotoSansKR-Regular";
-      font-size: 13px;
-      .search-box {
-        margin-top: 0px;
-        margin-bottom: 0px;
-        height: 40px;
-        padding-left: 1px;
-      }
-      &.search-icon {
-        width: 30px;
-        position: absolute;
-        left: 200px;
-        top: 13px;
-        font-size: 15px;
-        cursor: pointer;
-        &:hover {
-          color: #f1592a;
-        }
-      }
-    }
   }
   .ui.menu .item > .input input {
     &:focus {
@@ -302,12 +277,10 @@ const DigTable = ({
   };
 
   useEffect(() => {
-    const _data = data.sort((a, b) =>
-      b.record_date.localeCompare(a.record_date)
-    ); // 최신 입력일 순으로
-    setCurrentData(_data);
-
+    let _data = data;
     let tempData = [];
+    _data = _data.sort((a, b) => b.record_date.localeCompare(a.record_date)); // 최신 입력일 순으로
+    setCurrentData(_data);
     if (categorieValue === null) {
       setCurrentData(_data);
     } else {
@@ -346,11 +319,17 @@ const DigTable = ({
           <Table.Cell className="table-cell local" name="local">
             {item &&
               item.local_index &&
-              localData.find((el) => el.local_index === item.local_index)
-                .local_name}
+              localData.find((el) => el.local_index === item.local_index) &&
+              (localData.find((el) => el.local_index === item.local_index)
+                .local_used === 0
+                ? localData.find((el) => el.local_index === item.local_index)
+                    .local_name + `(삭제됨)`
+                : localData.find((el) => el.local_index === item.local_index)
+                    .local_name)}
           </Table.Cell>
           <Table.Cell className="table-cell plan" name="plan">
             {item &&
+              localData.find((el) => el.local_index === item.local_index) &&
               addComma(
                 addZero(
                   localData.find((el) => el.local_index === item.local_index)
@@ -365,6 +344,7 @@ const DigTable = ({
           <Table.Cell className="table-cell percent" name="percent">
             {item &&
               item.dig_length &&
+              localData.find((el) => el.local_index === item.local_index) &&
               getDigAmountPercent(
                 localData.find((el) => el.local_index === item.local_index)
                   .plan_length,
@@ -400,7 +380,11 @@ const DigTable = ({
   };
 
   const TopMenuRender = (localData = []) => {
-    let _localData = localData.slice(0, 7);
+    if (!localData) {
+      localData = [];
+    }
+    let _localData = localData.filter((el) => el.local_used !== 0);
+    _localData = _localData.slice(0, 7);
     return _localData.map((item, index) => {
       return (
         <Menu.Item
@@ -518,6 +502,9 @@ const DigTable = ({
               <p className="confirm-modal text">
                 {selectedItem &&
                   `${
+                    localData.find(
+                      (el) => el.local_index === selectedItem.local_index
+                    ) &&
                     localData.find(
                       (el) => el.local_index === selectedItem.local_index
                     ).local_name + selectedItem.created_date

@@ -297,7 +297,6 @@ const CctvTable = ({
   initFormData,
   initActiveRow,
   localData,
-  localList,
   addComma,
   addZero,
 }) => {
@@ -401,8 +400,13 @@ const CctvTable = ({
           <Table.Cell className="table-cell local" name="local">
             {item &&
               item.local_index &&
-              localData.find((el) => el.local_index === item.local_index)
-                .local_name}
+              localData.find((el) => el.local_index === item.local_index) &&
+              (localData.find((el) => el.local_index === item.local_index)
+                .local_used === 0
+                ? localData.find((el) => el.local_index === item.local_index)
+                    .local_name + "(삭제됨)"
+                : localData.find((el) => el.local_index === item.local_index)
+                    .local_name)}
           </Table.Cell>
           <Table.Cell className="table-cell pos-x" name="pos-x">
             {item && addComma(addZero(item.cctv_pos_x, 3))}
@@ -447,9 +451,12 @@ const CctvTable = ({
       );
     });
   };
-
   const TopMenuRender = (localData = []) => {
-    let _localData = localData.slice(0, 7);
+    if (!localData) {
+      localData = [];
+    }
+    let _localData = localData.filter((el) => el.local_used !== 0);
+    _localData = _localData.slice(0, 7);
     return _localData.map((item, index) => {
       return (
         <Menu.Item

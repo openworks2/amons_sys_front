@@ -37,11 +37,6 @@ const InputCompo = styled.div`
       border-color: #f1592a !important;
     }
   }
-  .input-form.port {
-    &:focus {
-      border-color: #f1592a !important;
-    }
-  }
   .ui.dropdown {
     &:focus {
       border-color: #f1592a !important;
@@ -108,6 +103,12 @@ const InputCompo = styled.div`
   }
   /* date picker customize 종료 */
 
+  .ui.form .field > label,
+  .form-title.dig-length,
+  .form-title {
+    margin-left: 5px;
+  }
+
   #local_index {
     margin-bottom: 10px;
   }
@@ -162,18 +163,9 @@ const InputCompo = styled.div`
         height: 68vh;
       }
       &::-webkit-scrollbar {
-        -webkit-appearance: none;
-        margin: 10px !important;
+        display: none;
       }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background-clip: padding-box;
-        border: 2px solid transparent;
-      }
-      &::-webkit-scrollbar-track {
-        border-radius: 10px;
-        box-shadow: inset 0px 0px 5px white;
-      }
+
       overflow: auto;
       @media screen and (max-height: 937px) {
         height: 67.5vh;
@@ -553,7 +545,7 @@ const DigInput = ({
               </div>
             </div>
           </div>
-          <Form.Field className="company-input-form description">
+          <Form.Field className="dig-input-form description">
             <label className="input-form title">비고</label>
             <textarea
               className="input-form description"

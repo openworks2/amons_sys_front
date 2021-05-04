@@ -21,6 +21,11 @@ const InputCompo = styled.div`
     }
   }
 
+  .ui.form .field > label,
+  .form-title.dig-length,
+  .form-title {
+    margin-left: 5px;
+  }
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -155,7 +160,6 @@ const LocalInput = ({
     created_date,
     modified_date,
     local_name,
-    process,
     plan_length,
     description,
   } = formData;

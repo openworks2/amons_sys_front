@@ -117,8 +117,9 @@ const ScannerContainer = () => {
   const makeLocalList = (data) => {
     if (data) {
       let _localList = [];
+      const _data = data.filter((el) => el.local_used !== 0);
 
-      data.map((item, index) => {
+      _data.map((item, index) => {
         _localList.push({
           key: index,
           text: item.local_name,

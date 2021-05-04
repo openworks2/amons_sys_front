@@ -1,27 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { Form, Button, Select, Modal, Input, Table } from "semantic-ui-react";
+import { Form, Button, Select, Modal, Radio } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
-import DatePicker, { registerLocale } from "react-datepicker";
 import "../../react-datepicker.css";
-import ko from "date-fns/locale/ko";
-import getYear from "date-fns/getYear";
-import getMonth from "date-fns/getMonth";
-import moment from "moment";
-import "moment/locale/ko";
-registerLocale("ko", ko);
-const _ = require("lodash");
 
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
   margin-top: 5px;
-  .ui.table {
-    margin-top: 5px;
-    table-layout: fixed;
-    word-break: break-all;
-  }
+
   .ui.form .field > label,
   .field > label {
     font-family: "NotoSansKR-Medium" !important;
@@ -33,11 +21,6 @@ const InputCompo = styled.div`
   }
   .ui.input > input {
     /* ui focus 색상변경 */
-    &:focus {
-      border-color: #f1592a !important;
-    }
-  }
-  .input-form.port {
     &:focus {
       border-color: #f1592a !important;
     }
@@ -62,51 +45,6 @@ const InputCompo = styled.div`
     border-color: #f1592a !important;
     /* ui focus 색상변경 끝 */
   }
-  /* date picker customize 시작 */
-  .react-datepicker {
-    font-family: "NotoSansKR-Regular";
-    font-size: 14px;
-    .react-datepicker__day-names {
-      font-family: "NotoSansKR-Medium";
-      font-size: 15px;
-    }
-    .react-datepicker__day--selected,
-    .react-datepicker__day--keyboard-selected {
-      border-color: #f1592a !important;
-      background-color: #f1592a !important;
-    }
-  }
-  .increase-button,
-  .decrease-button {
-    font-family: "NotoSansKR-Medium";
-    font-size: 20px;
-    vertical-align: middle;
-    text-align: center;
-    padding: 5px;
-    padding-top: 0px;
-    margin: 5px;
-    border-radius: 200px;
-    height: 23px;
-    border: solid 1px rgba(34, 36, 38, 0.35);
-    display: inline-block;
-    font-weight: bolder;
-    cursor: pointer;
-    &:hover {
-      color: #f1592a !important;
-      background-color: #ffffff;
-    }
-  }
-  .ui.form select {
-    font-family: "NotoSansKR-Medium";
-    font-size: 14px;
-    padding: 5px;
-    width: 66px;
-    &:focus,
-    &:hover {
-      border-color: #f1592a;
-    }
-  }
-  /* date picker customize 종료 */
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -119,34 +57,6 @@ const InputCompo = styled.div`
     padding: 0px;
   }
 
-  .ui.table,
-  .sub-info-table {
-    border-radius: 4px 4px 0px 0px;
-    background: #f9fafb 0% 0% no-repeat padding-box;
-    border: 1px solid #d8d8d8;
-    opacity: 1;
-    font-family: "NotoSansKR-Regular";
-    font-size: 13px;
-    text-align: center;
-    letter-spacing: 0px;
-    color: #2e2e2e;
-    opacity: 1;
-    &.header {
-      border-radius: 0px;
-      width: 146px !important;
-    }
-    &.origin {
-      border-radius: 0px;
-      letter-spacing: 0px;
-      color: #7c7c7c !important;
-      opacity: 1;
-    }
-    &.cell {
-      width: 90px !important;
-      border-radius: 0px;
-    }
-  }
-
   .input-form-body {
     margin-top: 20px;
     .resizable-area {
@@ -155,17 +65,7 @@ const InputCompo = styled.div`
         height: 68vh;
       }
       &::-webkit-scrollbar {
-        -webkit-appearance: none;
-        margin: 10px !important;
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background-clip: padding-box;
-        border: 2px solid transparent;
-      }
-      &::-webkit-scrollbar-track {
-        border-radius: 10px;
-        box-shadow: inset 0px 0px 5px white;
+        display: none;
       }
       overflow: auto;
       @media screen and (max-height: 937px) {
@@ -177,68 +77,37 @@ const InputCompo = styled.div`
         text-align: left;
         letter-spacing: 0px;
         opacity: 1;
-        &.date-area {
-          height: 70px;
-          width: 321px;
-          margin-top: 5px;
-          .date-box {
-            border: solid 1px;
-            border-radius: 4px;
-            background: #ffffff 0% 0% no-repeat padding-box;
-            border: 1px solid #d8d8d8;
-            border-radius: 4px;
-            opacity: 1;
-            height: 38px;
-            margin-top: 5px;
-            .cal-icon {
-              margin-top: 4px;
-              margin-left: 15px;
-              color: #2e2e2e;
-              display: inline-block;
-              font-size: 15px;
-              vertical-align: middle;
-            }
-            .date-picker-box {
-              .date {
-                vertical-align: middle;
-                padding-left: 17px;
-                width: 213px !important;
-                margin-top: 5px;
-                border: 0px;
-                height: 25px;
-                color: black;
-              }
-              vertical-align: middle;
-              display: inline-block;
-            }
-          }
-        }
-        &.title {
-          color: #2e2e2e;
-          margin-top: 14px;
-        }
-        &.description {
-          height: 105px !important;
-        }
-        &.dig-length {
-          margin-top: 2px;
-          margin-bottom: 10px;
-        }
-        &.description {
-          height: 105px;
-        }
+      }
+      &.title {
+        color: #2e2e2e;
+        margin-top: 14px;
+      }
+      &.description {
+        height: 105px !important;
+      }
+      &.dig-length {
+        margin-top: 2px;
+        margin-bottom: 10px;
       }
     }
   }
 
-  #dig_length {
-    width: 282px;
-  }
-
-  .sub-info-table.last-row {
-    margin-top: -14px;
-    border-radius: 0px 0px 4px 4px;
-    height: 39px;
+  .radio-grouper {
+    height: 150px;
+    width: 90px;
+    display: inline-block;
+    margin: 8px;
+    margin-top: 3px;
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+    text-align: left;
+    letter-spacing: 0px;
+    .radio-row {
+      margin: 6px;
+    }
+    .blank-place {
+      font-size: 25px;
+    }
   }
 
   .label,
@@ -264,15 +133,6 @@ const InputCompo = styled.div`
     color: #2e2e2e !important;
     opacity: 0.8;
     padding: 0px;
-  }
-
-  .ui.form .field .ui.input input#scn_address {
-    // input 맥 어드레스 placeholder
-    font-family: "NotoSansKR-Regular" !important;
-    font-size: 14px;
-    text-align: left;
-    letter-spacing: 1.05px;
-    opacity: 1;
   }
 
   .ui.form .required.field > label:after {
@@ -317,6 +177,12 @@ const InputCompo = styled.div`
     //에러 색상
     display: none;
   }
+
+  .ui.form .field > label,
+  .form-title.dig-length,
+  .form-title {
+    margin-left: 5px;
+  }
 `;
 
 const InputError = styled.div`
@@ -330,6 +196,70 @@ const InputError = styled.div`
   opacity: 1;
 `;
 
+const PreviewBox = styled.div`
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle;
+  color: #2e2e2e;
+  opacity: 1;
+  width: 322px;
+  height: 80px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  opacity: 1;
+  padding: 0px;
+  .tri-angle {
+    position: absolute;
+    top: 125px;
+    left: 163px;
+    width: 0px;
+    height: 0px;
+    border-top: 12px solid transparent;
+    border-left: 12px solid #ffffff;
+    border-bottom: 12px solid transparent;
+  }
+  .preview.current-state-box {
+    display: inline-block;
+    width: 162px;
+    height: 78px;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  .preview.current-state {
+    background: #375795 0% 0% no-repeat padding-box;
+    margin: auto;
+    margin-top: 8px;
+    width: 70px;
+    height: 30px;
+    border-radius: 3px;
+    opacity: 1;
+    padding: 4px;
+    color: #ffffff;
+  }
+  .preview.next-state-box {
+    display: inline-block;
+    width: 158px;
+    height: 78px;
+    background: #f2f2f2 0% 0% no-repeat padding-box;
+    padding: 8px;
+    border-radius: 0px 4px 4px 0px;
+  }
+  .preview.next-state {
+    background: #7c3795 0% 0% no-repeat padding-box;
+    margin: auto;
+    margin-top: 8px;
+    width: 70px;
+    height: 30px;
+    border-radius: 3px;
+    opacity: 1;
+    padding: 4px;
+    color: #ffffff;
+  }
+`;
+
 const ProcessInput = ({
   onChange,
   onSelectChange,
@@ -341,39 +271,19 @@ const ProcessInput = ({
   initActiveRow,
   localList,
   localError,
-  addComma,
-  localInfo,
-  currentLatestDigInfo,
-  onChangeDate,
-  getDigAmountPercent,
+  onRadioChange,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const {
-    dig_seq,
+    pcs_seq,
     created_date,
     modified_date,
-    record_date,
-    dig_length,
+    prev_pcs_state,
+    pcs_state,
     description,
     local_index,
   } = formData;
-
-  const years = _.range(2019, getYear(new Date()) + 1, 1); // 수정
-  const months = [
-    "1월",
-    "2월",
-    "3월",
-    "4월",
-    "5월",
-    "6월",
-    "7월",
-    "8월",
-    "9월",
-    "10월",
-    "11월",
-    "12월",
-  ];
 
   return (
     <InputCompo className="input-compo">
@@ -400,8 +310,144 @@ const ProcessInput = ({
             required
           />
           {localError && <InputError>{localError}</InputError>}
+          <Form.Field className="process-input-form description">
+            <label className="input-form title">미리보기</label>
+            <PreviewBox>
+              <div className="preview current-state-box">
+                현재상태
+                <div className="preview current-state">{"0165165"}</div>
+              </div>
+              <div className="tri-angle" />
+              <div className="preview next-state-box">
+                변경상태
+                <div className="preview next-state">{"0165165"}</div>
+              </div>
+            </PreviewBox>
+          </Form.Field>
+          <Form.Field className="process-input-form radio-group">
+            <label className="input-form title">공정상태 선택</label>
+            <div className="radio-grouper row1">
+              <Radio
+                label="미착공"
+                className="radio-row one"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="발파"
+                className="radio-row one"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="강지보"
+                className="radio-row one"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="방수시트"
+                className="radio-row one"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="장비점검"
+                className="radio-row one"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+            </div>
+            <div className="radio-grouper row2">
+              <Radio
+                label="천공"
+                className="radio-row two"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="버력처리"
+                className="radio-row two"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="격자지보"
+                className="radio-row two"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="라이닝"
+                className="radio-row two"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="기타"
+                className="radio-row two"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+            </div>
+            <div className="radio-grouper row3">
+              <Radio
+                label="장약"
+                className="radio-row three"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="숏크리트"
+                className="radio-row three"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
 
-          <Form.Field className="company-input-form description">
+              <Radio
+                label="록볼트"
+                className="radio-row three"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <Radio
+                label="근무교대"
+                className="radio-row three"
+                name="radioGroup"
+                value={0}
+                checked={pcs_state && pcs_state === 0}
+                onChange={(e, target) => onRadioChange(e, target)}
+              />
+              <div className="blank-place"> </div>
+            </div>
+          </Form.Field>
+          <Form.Field className="process-input-form description">
             <label className="input-form title">비고</label>
             <textarea
               className="input-form description"

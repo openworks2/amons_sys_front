@@ -49,6 +49,9 @@ const InputCompo = styled.div`
     border-color: #f1592a !important;
     /* ui focus 색상변경 끝 */
   }
+  .ui.form .field > label {
+    margin-left: 5px;
+  }
 
   .subtitle {
     font-family: "NotoSansKR-Medium";
@@ -178,7 +181,7 @@ const BeaconInput = ({
     let splitedStr = "";
     splitedStr = _str.substring(0, point);
     while (point < length) {
-      if (splitedStr != "") splitedStr += ":";
+      if (splitedStr !== "") splitedStr += ":";
       splitedStr += _str.substring(point, point + 2);
       point += 2;
     }

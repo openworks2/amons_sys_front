@@ -7,10 +7,8 @@ import {
   Pagination,
   Modal,
   Menu,
-  Input,
 } from "semantic-ui-react";
-import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { FaTrash, FaMinusCircle } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko";
 
@@ -28,31 +26,6 @@ const CategorieMenuCompo = styled.div`
 
     &.all {
       width: 80px;
-    }
-    &.search {
-      display: flex !important;
-      width: 234px;
-      margin: 0px !important;
-      padding: 0px !important;
-      font-family: "NotoSansKR-Regular";
-      font-size: 13px;
-      .search-box {
-        margin-top: 0px;
-        margin-bottom: 0px;
-        height: 40px;
-        padding-left: 1px;
-      }
-      &.search-icon {
-        width: 30px;
-        position: absolute;
-        left: 200px;
-        top: 13px;
-        font-size: 15px;
-        cursor: pointer;
-        &:hover {
-          color: #f1592a;
-        }
-      }
     }
   }
   .ui.menu .item > .input input {
@@ -99,17 +72,14 @@ const TableCompo = styled.div`
       width: 141px;
       text-align: left;
     }
-    &.plan {
-      width: 101px;
+    &.prev {
+      width: 127px;
     }
-    &.amount {
-      width: 121px;
-    }
-    &.percent {
-      width: 121px;
+    &.state {
+      width: 127px;
     }
     &.date {
-      width: 111px;
+      width: 200px;
     }
     &.description {
       width: 486px;
@@ -150,7 +120,7 @@ const TableCompo = styled.div`
         -webkit-appearance: none;
         margin: 0px;
       }
-      .sms-check,
+
       .ui.checkbox input.hidden + label {
         cursor: default !important;
       }
@@ -171,6 +141,7 @@ const TableCompo = styled.div`
           padding-left: 15px;
           padding-right: 15px;
           vertical-align: middle;
+          background: inherit;
           &.no {
             width: 53px;
             @media screen and (max-height: 937px) {
@@ -184,22 +155,29 @@ const TableCompo = styled.div`
               width: 142px;
             }
           }
-          &.plan {
-            width: 101px;
-            @media screen and (max-height: 937px) {
-              width: 101px;
+          &.prev {
+            width: 127px;
+            #tri-angle {
+              position: absolute;
+              left: 321px;
+              @media screen and (max-height: 937px) {
+                left: 320px;
+              }
+              margin-top: -9px;
+              width: 17px;
+              height: 17px;
+              background-color: inherit;
+              transform: translateX(-50%) translateY(-50%) rotate(45deg);
+              border: none;
+              border-top: 1px solid #d8d8d8;
+              border-right: 1px solid #d8d8d8;
             }
           }
-          &.amount {
-            width: 121px;
-            color: #ce3f3f;
-          }
-          &.percent {
-            width: 121px;
-            color: #ce3f3f;
+          &.state {
+            width: 127px;
           }
           &.date {
-            width: 111px;
+            width: 200px;
           }
           &.description {
             width: 486px;
@@ -282,6 +260,7 @@ const ProcessTable = ({
   initFormData,
   initActiveRow,
   localData,
+  stateToString,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -293,16 +272,28 @@ const ProcessTable = ({
   const [categorieValue, setCategorieValue] = useState(null);
   const [currentData, setCurrentData] = useState([]);
 
-  const onClickCategorie = (e, value) => {
-    const _value = value.value;
-    setCategorieValue(_value);
+  const onClickCategorie = (e, target) => {
+    const _target = target.value;
+    setCategorieValue(_target);
   };
 
   useEffect(() => {
-    const _data = data.sort((a, b) =>
-      b.created_date.localeCompare(a.created_date_date)
-    ); // 최신 입력일 순으로
-    setCurrentData(_data);
+    let _data = data;
+    _data = data.sort((a, b) => b.created_date.localeCompare(a.created_date)); // 최신 입력일 순으로
+    setCurrentData(data);
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("_data sorted");
+    console.log(_data);
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("currentData");
+    console.log(currentData);
+    console.log(currentData);
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
     let tempData = [];
     if (categorieValue === null) {
@@ -341,14 +332,23 @@ const ProcessTable = ({
             {item ? tableNo : " "}
           </Table.Cell>
           <Table.Cell className="table-cell local" name="local">
-            {/* {item &&
+            {item &&
               item.local_index &&
-              item.local_index &&
-              localData.find((el) => el.local_index === item.local_index)
-                .local_name} */}
+              localData.find((el) => el.local_index === item.local_index) &&
+              (localData.find((el) => el.local_index === item.local_index)
+                .local_used === 0
+                ? localData.find((el) => el.local_index === item.local_index)
+                    .local_name + "(삭제됨)"
+                : localData.find((el) => el.local_index === item.local_index)
+                    .local_name)}
           </Table.Cell>
-          <Table.Cell className="table-cell plan" name="prev"></Table.Cell>
-          <Table.Cell className="table-cell state" name="state"></Table.Cell>
+          <Table.Cell className="table-cell prev" name="prev">
+            {item && item.prev_pcs_state && stateToString(item.prev_pcs_state)}
+            {item && item.prev_pcs_state && <div id="tri-angle" />}
+          </Table.Cell>
+          <Table.Cell className="table-cell state" name="state">
+            {item && item.pcs_state && stateToString(item.pcs_state)}
+          </Table.Cell>
           <Table.Cell className="table-cell date" name="date">
             {item &&
               item.created_date &&
@@ -381,7 +381,8 @@ const ProcessTable = ({
     if (!localData) {
       localData = [];
     }
-    let _localData = localData.slice(0, 7);
+    let _localData = localData.filter((el) => el.local_used !== 0);
+    _localData = _localData.slice(0, 7);
     return _localData.map((item, index) => {
       return (
         <Menu.Item
@@ -495,16 +496,23 @@ const ProcessTable = ({
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
                 {selectedItem &&
-                  `${
-                    selectedItem.created_date +
-                    localData.find(
-                      (el) => el.local_index === selectedItem.local_index
-                    ).local_name
-                  }${(<br />)}(${
-                    selectedItem.prev_psc_state && selectedItem.prev_psc_state
-                  }) > (${selectedItem.pcs_state && selectedItem.pcs_state}) ${(
-                    <br />
-                  )}``공정 상태 변경 이력을 삭제하시겠습니까?`}
+                  `${moment(selectedItem.created_date).format(
+                    "YYYY년MM월DD일 HH시 MM분 SS초"
+                  )} `}
+              </p>
+              <p className="confirm-modal text">
+                이전 공정상태 (
+                {selectedItem &&
+                  selectedItem.prev_pcs_state &&
+                  selectedItem.prev_pcs_state}
+                ) 현재 공정상태 (
+                {selectedItem &&
+                  selectedItem.pcs_state &&
+                  selectedItem.pcs_state}
+                )
+              </p>
+              <p className="confirm-modal text">
+                {`공정 상태 변경 이력을 삭제하시겠습니까?`}
               </p>
             </Modal.Description>
           </Modal.Content>

@@ -96,8 +96,8 @@ const DigContainer = () => {
   const makeLocalList = (data) => {
     if (data) {
       let _localList = [];
-
-      data.map((item, index) => {
+      const _data = data.filter((el) => el.local_used !== 0);
+      _data.map((item, index) => {
         _localList.push({
           key: index,
           text: item.local_name,

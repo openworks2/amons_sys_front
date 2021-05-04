@@ -108,6 +108,10 @@ const InputCompo = styled.div`
     left: 150px;
   }
 
+  .ui.form .field > label {
+    margin-left: 5px;
+  }
+
   .submit-button {
     width: 324px;
     height: 50px;

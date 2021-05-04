@@ -72,13 +72,13 @@ const ProcessContainer = () => {
   const { data, loading, error } = useSelector(
     (state) => state.processes.processes
   );
+
   const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
   const today = new Date();
 
   const [localInfo, setLocalInfo] = useState({});
-  const [currentLatestDigInfo, setCurrentLatestDigInfo] = useState({}); // 현재 조회 중인 로컬인덱스의 가장 최신 로그
 
   const [formData, setFormData] = useState({
     pcs_seq: null,
@@ -103,8 +103,8 @@ const ProcessContainer = () => {
   const makeLocalList = (data) => {
     if (data) {
       let _localList = [];
-
-      data.map((item, index) => {
+      const _data = data.filter((el) => el.local_used !== 0);
+      _data.map((item, index) => {
         _localList.push({
           key: index,
           text: item.local_name,
@@ -114,6 +114,76 @@ const ProcessContainer = () => {
       });
       setLocalList(_localList);
     }
+  };
+
+  // radioChange event handler
+  const onRadioChange = (e, target) => {
+    console.log(target.value);
+
+    let _pcs_state = target.value;
+    if (_pcs_state === formData.pcs_state) {
+      _pcs_state = null;
+    }
+    setFormData({
+      ...formData,
+      pcs_state: _pcs_state,
+    });
+  };
+
+  const stateToString = (value) => {
+    let _value = parseInt(value);
+    let str = "";
+
+    switch (_value) {
+      case 0:
+        str = "미착공";
+        break;
+      case 1:
+        str = "미착공";
+        break;
+      case 2:
+        str = "천공";
+        break;
+      case 3:
+        str = "장약";
+        break;
+      case 4:
+        str = "발파";
+        break;
+      case 5:
+        str = "버력처리";
+        break;
+      case 6:
+        str = "숏크리트";
+        break;
+      case 7:
+        str = "강지보";
+        break;
+      case 8:
+        str = "격자지보";
+        break;
+      case 9:
+        str = "록볼트";
+        break;
+      case 10:
+        str = "방수시트";
+        break;
+      case 11:
+        str = "라이닝";
+        break;
+      case 12:
+        str = "근무교대";
+        break;
+      case 13:
+        str = "장비점검";
+        break;
+      case 14:
+        str = "기타";
+        break;
+      default:
+        str = "error";
+    }
+    return str;
   };
 
   // form onSelectChant Event
@@ -126,19 +196,6 @@ const ProcessContainer = () => {
       [name]: value,
     });
   };
-  // 시간순 정렬
-  // useEffect(() => {
-  //   if (!selectedRow.selectedId && data && formData.local_index) {
-  //     let _digData = data;
-  //     _digData = _digData.filter(
-  //       (el) => el.local_index === formData.local_index
-  //     );
-  //     _digData = _digData.sort((a, b) =>
-  //       b.record_date.localeCompare(a.record_date)
-  //     )[0];
-  //     setCurrentLatestDigInfo(_digData);
-  //   }
-  // }, [onSelectChange]);
 
   useEffect(() => {
     console.log("$$$$$$$change!");
@@ -190,10 +247,12 @@ const ProcessContainer = () => {
       initActiveRow();
       initFormData();
     } else {
-      const findItem = data.find((digLog) => digLog.dig_seq === selectedId);
+      const findItem = data.find(
+        (processLog) => processLog.pcs_seq === selectedId
+      );
 
       setSelectedRow({
-        selectedId: findItem.dig_seq,
+        selectedId: findItem.pcs_seq,
         selectedItem: findItem,
         clickedIndex: index,
       });
@@ -215,19 +274,11 @@ const ProcessContainer = () => {
     // 클릭 된 열 있을 시 노선 정보 대입하기
     if (formData.local_index === null || undefined) {
       setLocalInfo(null);
-      setCurrentLatestDigInfo(null);
     } else {
       let _localInfo = localData.find(
         (el) => el.local_index === formData.local_index
       );
-
       setLocalInfo(_localInfo);
-
-      let _currentLatestDigInfo = {};
-      _currentLatestDigInfo = data.find(
-        (el) => el.local_index === formData.local_index
-      );
-      setCurrentLatestDigInfo(_currentLatestDigInfo);
     }
   }, [activeHandler]);
 
@@ -251,7 +302,6 @@ const ProcessContainer = () => {
   };
 
   const [localError, setLocalError] = useState(undefined);
-  const [dateError, setDateError] = useState(undefined);
 
   // CREATE
   const createHandler = (e) => {
@@ -326,6 +376,8 @@ const ProcessContainer = () => {
             localList={localList}
             localError={localError}
             localInfo={localInfo}
+            onRadioChange={onRadioChange}
+            stateToString={stateToString}
           />
         </div>
         <div className="table-box">
@@ -342,6 +394,7 @@ const ProcessContainer = () => {
               initActiveRow={initActiveRow}
               localData={localData}
               localList={localList}
+              stateToString={stateToString}
             />
           )}
         </div>

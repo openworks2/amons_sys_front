@@ -74,6 +74,16 @@ const LocalContainer = () => {
     dispatch(getLocals());
   }, [dispatch]);
 
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      console.log("data-->", data);
+      const _filteredData = data.filter((el) => el.local_used !== 0);
+      setFilteredData(_filteredData);
+    }
+  }, [dispatch, data]);
+
   const [formData, setFormData] = useState({
     local_id: null,
     local_index: null,
@@ -83,6 +93,7 @@ const LocalContainer = () => {
     plan_length: "",
     process: null,
     description: "",
+    local_used: 1,
   });
 
   // form onChange Event
@@ -141,6 +152,7 @@ const LocalContainer = () => {
       plan_length: "",
       process: null,
       description: "",
+      local_used: 1,
     });
   };
 
@@ -167,6 +179,7 @@ const LocalContainer = () => {
         local_name: findItem.local_name,
         plan_length: findItem.plan_length,
         description: findItem.description,
+        local_used: findItem.local_used,
       });
     }
   };
@@ -225,8 +238,10 @@ const LocalContainer = () => {
   };
 
   // DELETE
-  const deleteHandler = (e, local_id) => {
-    dispatch(deleteLocal(local_id));
+  const deleteHandler = (e, local_index, selectedItem) => {
+    // local 테이블은 데이터 삭제를 하지 않고 보존하기 때문에 put으로 수정한다.
+    let _selectedItem = { ...selectedItem, local_used: 0 };
+    dispatch(putLocal(local_index, _selectedItem));
     initActiveRow();
     initFormData();
   };
@@ -256,11 +271,11 @@ const LocalContainer = () => {
           />
         </div>
         <div className="table-box">
-          {data && (
+          {filteredData && (
             <LocalTable
               className="local-table-box"
               pageInfo={pageInfo}
-              data={data}
+              filteredData={filteredData}
               activeHandler={activeHandler}
               deleteHandler={deleteHandler}
               onPageChange={onPageChange}

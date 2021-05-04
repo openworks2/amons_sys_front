@@ -102,6 +102,12 @@ const InputCompo = styled.div`
     }
   }
 
+  .ui.form .field > label,
+  .form-title.port,
+  .form-title.pos-x {
+    margin-left: 5px;
+  }
+
   .label,
   .field > label,
   .form-title {

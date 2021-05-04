@@ -193,7 +193,7 @@ const TableCompo = styled.div`
 
 const LocalTable = ({
   pageInfo,
-  data,
+  filteredData,
   activeHandler,
   deleteHandler,
   onPageChange,
@@ -215,8 +215,8 @@ const LocalTable = ({
   };
   // 테이블
 
-  const totalPages = Math.ceil(data.length / itemsPerPage, 1);
-  const viewItems = data.slice(
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage, 1);
+  const viewItems = filteredData.slice(
     (activePage - 1) * itemsPerPage,
     (activePage - 1) * itemsPerPage + itemsPerPage
   );
@@ -383,7 +383,7 @@ const LocalTable = ({
               labelPosition="right"
               icon="checkmark"
               onClick={(e) => {
-                deleteHandler(e, selectedId);
+                deleteHandler(e, selectedItem.local_index, selectedItem);
                 setDeleteModalOpen(false);
               }}
             />
