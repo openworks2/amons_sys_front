@@ -207,7 +207,9 @@ const CctvComponent = ({
     openAccessPanel,
     alarmPanel,
     expandMap,
-    data
+    data,
+    scanner,
+    bleData
 }) => {
 
     const [ctrlTarget, setTarget] = useState({
@@ -223,8 +225,8 @@ const CctvComponent = ({
 
     useEffect(() => {
         console.log('CctvComponent->', data);
+        console.log('bleData--->',bleData);
     }, [accessPanel, ctrlPanel, alarmPanel, expandMap, data]);
-
 
     return (
         <CctvCompo className="cctv-component">
@@ -237,6 +239,7 @@ const CctvComponent = ({
                     accessPanel={accessPanel}
                     openAccessPanel={openAccessPanel}
                     localName={data && data.local_name}
+                    scanner={scanner}
                 />
             </div>
             <div className="status-box">
@@ -246,6 +249,7 @@ const CctvComponent = ({
                         processCode={data && data.local_process}
                         planLength={data && data.plan_length}
                         digLength={data && data.dig_length}
+                        bleData={bleData}
                     />
                 }
             </div>

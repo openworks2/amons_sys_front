@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRouter, faList, faArrows } from "@fortawesome/pro-duotone-svg-icons";
@@ -100,9 +100,23 @@ const InfoComponent = ({
     openCtrlPanel,
     accessPanel,
     openAccessPanel,
-    localName
+    localName,
+    scanner
 }) => {
 
+    const scannerListRender = (items = []) => {
+        const _Component = items.map((item) => {
+            return <div key={item.scn_id}>
+                <div className={item.scn_result === 'open' ? "nms-status on" : "nms-status off"}>
+                    <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
+                    <p className="scanner-text">{item.scn_result === 'open' ? 'ON' : 'OFF'}</p>
+                </div>
+            </div>
+        })
+        return _Component
+    }
+    useEffect(() => {
+    }, [scanner]);
 
     return (
         <InfoCompo className="info-component">
@@ -112,14 +126,9 @@ const InfoComponent = ({
             </div>
             <div className="right-box">
                 <div className="nms-box">
-                    <div className="nms-status on">
-                        <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
-                        <p className="scanner-text">ON</p>
-                    </div>
-                    <div className="nms-status off">
-                        <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
-                        <p className="scanner-text">OFF</p>
-                    </div>
+                    {
+                        scanner && scannerListRender(scanner)
+                    }
                 </div>
                 <div className="optional-box">
                     <div className={accessPanel === id ? "detail-panel-button active" : "detail-panel-button"} onClick={() => openAccessPanel(id)}>

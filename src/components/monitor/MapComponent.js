@@ -45,6 +45,7 @@ const MapCompo = styled.div`
             top: 60px;
             .block{
                 position: absolute;
+                /* background-color: #fff */
                 div{
                     position: absolute;
                 }
@@ -53,12 +54,32 @@ const MapCompo = styled.div`
                     height: 44px;
                     top: 43px;
                     left: 33px;
+                    .worker-count-box {
+                        position: absolute;
+                        top: -24px;
+                        left: 22px;
+                        background: #171717;
+                        color: #fff;
+                        width: 22px;
+                        height: 22px;
+                        text-align: center;
+                    }
                 }
                 .vehicle-icon{
                     width: 62px;
                     height: 52px;
                     top: 68px;
                     left: 57px;
+                    .vehicle-count-box {
+                        position: absolute;
+                        top: -21px;
+                        left: 38px;
+                        background: #171717;
+                        color: #fff;
+                        width: 22px;
+                        height: 22px;
+                        text-align: center;
+                    }
                 }
                 .scanner-icon{
                     right: 132px;
@@ -154,12 +175,12 @@ const MapCompo = styled.div`
     }
 `;
 const MapComponent = ({ setOpenExpandMapHandler, data }) => {
-    console.log('MapComponent-->', data)
+    // console.log('MapComponent-->', data)
     const [checkBox, setCheckBox] = useState(false);
     const [showItem, setItem] = useState({
         worker: true,
         vehicle: true,
-        cctv: false
+        cctv: true
     });
     /*
         const [first, setFirst] = useState({
@@ -228,7 +249,6 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
 
         let mapArr = []
         for (let i = 1; i <= data.block_Amount; i++) {
-            console.log('data->', data)
             const obj = {
                 id: i,
                 value: i,
@@ -241,8 +261,8 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
                         ? true // 굴착
                         : false // 미굴착
                     ),    //역방향 이라면
-                worker: true,
-                vehicle: true,
+                worker: false,
+                vehicle: false,
                 scanner: false,
                 cctv: (block_Length * i) <= data.forward_Length
                     ? (
@@ -264,7 +284,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
                 show: {
                     worker: true,
                     vehicle: true,
-                    cctv: false,
+                    cctv: true,
                     scanner: false
                 }
             };
@@ -315,7 +335,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
         return <>
             {items.map((item, index) => {
                 const _blockStyled = {
-                    top: `${initTopPoint - (33.5 * index)}px`,
+                    top: `${initTopPoint - (33.4 * index)}px`,
                     left: `${initLeftPoint + (58 * index)}px`,
                     zIndex: `${99 - index}`,
                 }
@@ -336,8 +356,14 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
 
                 return <div className="block block " id={`block-${item.value}`} key={index} style={_blockStyled}>
                     <img src={item.open ? `../../map/open.png` : `../../map/close.png`} alt="close" style={_imgStyled} />
-                    {item.show['worker'] && item.open && item.worker && <div className="worker-icon" style={workerStyled}></div>}
-                    {item.show['vehicle'] && item.open && item.vehicle && <div className="vehicle-icon" style={vehicleStyled}></div>}
+                    {item.show['worker'] && item.open && item.worker
+                        && <div className="worker-icon" style={workerStyled}>
+                            <div className="worker-count-box">0</div>
+                        </div>}
+                    {item.show['vehicle'] && item.open && item.vehicle
+                        && <div className="vehicle-icon" style={vehicleStyled}>
+                            <div className="vehicle-count-box">0</div>
+                        </div>}
                     {item.show['scanner'] && item.open && item.scanner && <div className="scanner-icon">
                         <div className="scanner-img"></div>
                         <div className="scanner-device-box"></div>

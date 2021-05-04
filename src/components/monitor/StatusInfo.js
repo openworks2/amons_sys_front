@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faDigging, faUserHardHat, faTruck } from "@fortawesome/pro-duotone-svg-icons"
@@ -129,7 +129,67 @@ const StatusInfoCompo = styled.div`
     }
 `;
 
-const StatusInfo = () => {
+const StatusInfo = ({ localInfo, bleData }) => {
+
+    const [drillStatus, setDrillStatus] = useState({
+        total: 0,
+        drill: 0,
+    });
+
+    const [bleCount, setCount] = useState({
+        worker: 0,
+        vehicle: 0
+    });
+
+
+    // 천단위 콤마
+    const numberOfDigitsHandler = (number) => {
+        return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+    }
+
+    const binding = () => {
+        let _total = 0;
+        let _drill = 0;
+        localInfo.map(item => {
+            _total += item.plan_length;
+            _drill += item.dig_length;
+            return item
+        });
+        const _percent = (_drill / _total) * 100;
+        setDrillStatus({
+            total: numberOfDigitsHandler(_total),
+            drill: numberOfDigitsHandler(_drill),
+            percent: Math.round(_percent * 10) / 10.0
+        });
+    }
+
+    const setBleCountBinding = () => {
+        console.log('setBleCountBinding->', bleData);
+        let wkCount = 0;
+        let vhCount = 0;
+        bleData.map(item => {
+            if (item.wk_id) {
+                wkCount += 1;
+            }
+            else if (item.vh_id) {
+                vhCount += 1;
+            }
+            return item;
+        });
+        setCount({
+            worker: wkCount,
+            vehicle: vhCount
+        })
+
+    }
+
+    useEffect(() => {
+        binding();
+        if (bleData) {
+            setBleCountBinding();
+        }
+    }, [localInfo, bleData]);
+
     return (
         <StatusInfoCompo className="statusInfo-component">
             <i className="fas fa-hard-hat"></i>
@@ -143,7 +203,7 @@ const StatusInfo = () => {
                     </div>
                     <div className="bottom-right">
                         <p className="count-box worker-count">
-                            <span className="value" id="worker-value">00</span>
+                            <span className="value" id="worker-value">{bleCount.worker < 10 ? `0${bleCount.worker}` : bleCount.worker}</span>
                             <span className="unit" id="worker-unit">명</span>
                         </p>
                     </div>
@@ -159,7 +219,7 @@ const StatusInfo = () => {
                     </div>
                     <div className="bottom-right">
                         <p className="count-box vehicle-count">
-                            <span className="value" id="vehicle-value">00</span>
+                            <span className="value" id="vehicle-value">{bleCount.vehicle < 10 ? `0${bleCount.vehicle}` : bleCount.vehicle}</span>
                             <span className="unit" id="vehicle-unit">대</span>
                         </p>
                     </div>
@@ -175,12 +235,12 @@ const StatusInfo = () => {
                     </div>
                     <div className="bottom-right progress-bottom-right">
                         <p className="count-box progress-info-top">
-                            <span className="progress-value">18</span>
+                            <span className="progress-value">{drillStatus.percent}</span>
                             <span className="unit" id="progress-unit">%</span>
                         </p>
                         <p className="progress-info-bottom">
-                            <span className="progress-current-value">1,233</span>/
-                        <span className="progress-total-vlaue">6,738m</span>
+                            <span className="progress-current-value">{drillStatus.drill}</span>/
+                        <span className="progress-total-vlaue">{`${drillStatus.total}m`}</span>
                         </p>
                     </div>
                 </div>

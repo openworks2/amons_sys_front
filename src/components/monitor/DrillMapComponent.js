@@ -133,7 +133,6 @@ const DrillMapCompo = styled.div`
 const DrillMapComponent = ({ ratePanelOpen, data }) => {
 
     useEffect(() => {
-        console.log('>>DrillMapComponent--->', data)
     }, []);
 
     // 천단위 콤마
@@ -144,7 +143,6 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
     // Progress
     const progressRender = (plan, dig) => {
         const percent = (dig / plan) * 100
-        console.log(percent)
         return <ProgressBar now={percent} animated />;
     }
 
@@ -155,7 +153,7 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
                     <div className="location-title">{data[0].local_name}</div>
                     <div className="location-dig">
                         {
-                            `${numberOfDigitsHandler(data[0].plan_length)}m`
+                            `${numberOfDigitsHandler(data[0].dig_length)}m`
                         }
                     </div>
 
@@ -169,7 +167,7 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
                 <div className="text-box right-top-text">
                     <div className="location-dig">
                         {
-                            `${numberOfDigitsHandler(data[1].plan_length)}m`
+                            `${numberOfDigitsHandler(data[1].dig_length)}m`
                         }
                     </div>
                     <div className="location-title">{data[1].local_name}</div>
@@ -187,7 +185,7 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
                     <div className="location-title">{data[2].local_name}</div>
                     <div className="location-dig">
                         {
-                            `${numberOfDigitsHandler(data[2].plan_length)}m`
+                            `${numberOfDigitsHandler(data[2].dig_length)}m`
                         }
                     </div>
                 </div>
@@ -200,7 +198,7 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
                 <div className="text-box right-bottom-text">
                     <div className="location-dig">
                         {
-                            `${numberOfDigitsHandler(data[3].plan_length)}m`
+                            `${numberOfDigitsHandler(data[3].dig_length)}m`
                         }
                     </div>
                     <div className="location-title">{data[3].local_name}</div>
@@ -214,7 +212,7 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
             </div>
             {
                 ratePanelOpen &&
-                <DrillRatePanel />
+                <DrillRatePanel data={data}/>
             }
         </DrillMapCompo>
     );

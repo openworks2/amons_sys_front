@@ -54,65 +54,70 @@ const RateCompo = styled.div`
 `;
 
 
-const DrillRatePanel = () => {
+const DrillRatePanel = ({ data }) => {
+    console.log('DrillRatePanel-->',data);
     return (
         <RateCompo className="rate-component">
             <div className="contents-container">
                 <table className="contents-table">
-                    <tr>
-                        <td rowSpan="2" className="row-title">구분</td>
-                        <td colSpan="3" className="colunm-title">
-                            <span className="location-name">함양</span>
-                            <span className="location-value">L=3,359m (개착 24m, NATM 3,335m)</span>
-                        </td>
-                        <td colSpan="3" className="colunm-title">
-                            <span className="location-name">울산</span>
-                            <span className="location-value">L=3,379m (개착 24m, NATM 3,335m)</span>
-                        </td>
-                        <td className="colunm-title">
-                            <span className="location-name">신원터널</span>
-                            <span className="location-value">L=6,738m</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="location-name">시점 함양</td>
-                        <td className="location-name">종점 함양</td>
-                        <td className="location-name">함양 합계</td>
-                        <td className="location-name">시점 울산</td>
-                        <td className="location-name">종점 울산</td>
-                        <td className="location-name">울산 합계</td>
-                        <td className="location-name">전체 합계</td>
-                    </tr>
-                    <tr className="">
-                        <td className="row-title">총 계획 연장</td>
-                        <td className="item-value">2,542m</td>
-                        <td className="item-value">817m</td>
-                        <td className="item-value">3,359m</td>
-                        <td className="item-value">2,562m</td>
-                        <td className="item-value">2817m</td>
-                        <td className="item-value">3,378m</td>
-                        <td className="item-value">6,738m</td>
-                    </tr>
-                    <tr>
-                        <td className="row-title">누적 굴진량(거리)</td>
-                        <td className="item-value">2,542m</td>
-                        <td className="item-value">817m</td>
-                        <td className="item-value">3,359m</td>
-                        <td className="item-value">2,562m</td>
-                        <td className="item-value">2817m</td>
-                        <td className="item-value">3,378m</td>
-                        <td className="item-value">6,738m</td>
-                    </tr>
-                    <tr className="location-total-row">
-                        <td className="row-title">누전 굴진율</td>
-                        <td className="item-value">40.1%</td>
-                        <td className="item-value">26%</td>
-                        <td className="item-value">36.7%</td>
-                        <td className="item-value">0</td>
-                        <td className="item-value">0</td>
-                        <td className="item-value">0</td>
-                        <td className="item-value">18%</td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <td rowSpan="2" className="row-title">구분</td>
+                            <td colSpan="3" className="colunm-title">
+                                <span className="location-name">함양</span>
+                                <span className="location-value">L=3,359m (개착 24m, NATM 3,335m)</span>
+                            </td>
+                            <td colSpan="3" className="colunm-title">
+                                <span className="location-name">울산</span>
+                                <span className="location-value">L=3,379m (개착 24m, NATM 3,335m)</span>
+                            </td>
+                            <td className="colunm-title">
+                                <span className="location-name">신원터널</span>
+                                <span className="location-value">L=6,738m</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="location-name">시점 함양</td>
+                            <td className="location-name">종점 함양</td>
+                            <td className="location-name">함양 합계</td>
+                            <td className="location-name">시점 울산</td>
+                            <td className="location-name">종점 울산</td>
+                            <td className="location-name">울산 합계</td>
+                            <td className="location-name">전체 합계</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="">
+                            <td className="row-title">총 계획 연장</td>
+                            <td className="item-value">2,542m</td>
+                            <td className="item-value">817m</td>
+                            <td className="item-value">3,359m</td>
+                            <td className="item-value">2,562m</td>
+                            <td className="item-value">2817m</td>
+                            <td className="item-value">3,378m</td>
+                            <td className="item-value">6,738m</td>
+                        </tr>
+                        <tr>
+                            <td className="row-title">누적 굴진량(거리)</td>
+                            <td className="item-value">2,542m</td>
+                            <td className="item-value">817m</td>
+                            <td className="item-value">3,359m</td>
+                            <td className="item-value">2,562m</td>
+                            <td className="item-value">2817m</td>
+                            <td className="item-value">3,378m</td>
+                            <td className="item-value">6,738m</td>
+                        </tr>
+                        <tr className="location-total-row">
+                            <td className="row-title">누전 굴진율</td>
+                            <td className="item-value">40.1%</td>
+                            <td className="item-value">26%</td>
+                            <td className="item-value">36.7%</td>
+                            <td className="item-value">0</td>
+                            <td className="item-value">0</td>
+                            <td className="item-value">0</td>
+                            <td className="item-value">18%</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </RateCompo>

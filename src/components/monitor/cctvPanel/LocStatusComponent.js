@@ -92,7 +92,34 @@ const LocStatusCompo = styled.div`
     }
 `;
 
-const LocStatusComponent = ({ processCode, planLength, digLength }) => {
+const LocStatusComponent = ({ processCode, planLength, digLength, bleData }) => {
+
+    const [bleCount, setCount] = useState({
+        worker: 0,
+        vehicle: 0
+    });
+
+    const setBleCountBinding = () => {
+        console.log('setBleCountBinding->', bleData);
+        let wkCount = 0;
+        let vhCount = 0;
+        bleData.map(item => {
+            if (item.wk_id) {
+                wkCount += 1;
+            }
+            else if (item.vh_id) {
+                vhCount += 1;
+            }
+            return item;
+        });
+        setCount({
+            worker: wkCount,
+            vehicle: vhCount
+        })
+
+    }
+
+
 
     const [process, setProcess] = useState({
         1: { name: '미착공', color: '#286e41' },
@@ -121,8 +148,11 @@ const LocStatusComponent = ({ processCode, planLength, digLength }) => {
         setState({
             name: process[processCode].name,
             color: process[processCode].color,
-        })
-    }, [processCode]);
+        });
+        if (bleData) {
+            setBleCountBinding();
+        }
+    }, [processCode, bleData]);
 
 
 
@@ -137,13 +167,13 @@ const LocStatusComponent = ({ processCode, planLength, digLength }) => {
             <div className="state-box worker-box">
                 <div className="contents-box">
                     <p className="title-icon worker-icon"><FontAwesomeIcon icon={faUserHardHat} /></p>
-                    <p className="current-value worker-value">04</p>
+                    <p className="current-value worker-value">{bleCount.worker < 10 ? `0${bleCount.worker}` : bleCount.worker}</p>
                 </div>
             </div>
             <div className="state-box vehicle-box">
                 <div className="contents-box">
                     <p className="title-icon vehicle-icon"><FontAwesomeIcon icon={faTruck} /></p>
-                    <p className="current-value vehicle-value">04</p>
+                    <p className="current-value vehicle-value">{bleCount.vehicle < 10 ? `0${bleCount.vehicle}` : bleCount.vehicle}</p>
                 </div>
             </div>
             <div className="state-box progress-box">

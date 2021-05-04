@@ -23,8 +23,7 @@ const NoticeCompo = styled.div`
         align-items: center;
         justify-content:center;
         font-size:15px;
-        color:#FFFFFF;
-        opacity:0.5;
+        color:rgba(255,255,255,0.5);
         padding-right: 10.7px;
         padding-left: 10.7px;
         .rolling_box{
@@ -62,15 +61,14 @@ const NoticeCompo = styled.div`
         .card_sliding{
             top: 0 !important;
             z-index: 100 !important;
-            color:#ffffff !important;
-            opacity:0.5;
+            color: rgba(255, 255, 255, 0.7) !important;
         } 
 
         .card_sliding_after{
             top: -100% !important;
             z-index: 10 !important;
-            color: #000000;
-            opacity: 0.7;
+            color: rgba(0, 0, 0, 0.7);
+            /* opacity: 0.7; */
         }
 
         .rolling_box ul li p {

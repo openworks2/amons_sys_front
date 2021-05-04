@@ -26,7 +26,6 @@ const digital = {
         const currentDate = new Date(); // 현재시간
         const currentMonth = currentDate.getMonth() + 1;
         const currentDay = currentDate.getDate();
-
         const calendar = currentDate.getFullYear() + "-"
             + (currentMonth < 10 ? "0" + currentMonth : currentMonth)
             + "-" + (currentDay < 10 ? "0" + currentDay : currentDay) // 현재 날짜

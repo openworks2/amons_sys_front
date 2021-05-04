@@ -7,6 +7,7 @@ import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { getCompanies } from "../modules/companies";
 import { Redirect } from "react-router";
+import { setRatePanel } from "../modules/monitor";
 
 
 
@@ -21,6 +22,8 @@ const HomeCompo = styled.div`
 `;
 
 const HomeContainer = () => {
+
+  const dispatch = useDispatch();
 
   // 전체화면 설정
   const openFullScreenMode = () => {
@@ -65,10 +68,11 @@ const HomeContainer = () => {
   // console.log(urllocation);
 
   // target-DrillRatePanel.js
-  const [ratePanelOpen, setPanelOpen] = useState(false);
+  // const [ratePanelOpen, setPanelOpen] = useState(false);
 
-  const setRatePanelHandler= ()=>{
-    setPanelOpen(!ratePanelOpen)
+  const setRatePanelHandler = () => {
+    // setPanelOpen(!ratePanelOpen)
+    dispatch(setRatePanel());
   }
 
 
@@ -85,7 +89,7 @@ const HomeContainer = () => {
         currentMenu={currentMenu}
       />
       {/* <ContentsCompo> */}
-      <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} ratePanelOpen={ratePanelOpen} />
+      <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} />
       {/* </ContentsCompo> */}
     </HomeCompo>
   );

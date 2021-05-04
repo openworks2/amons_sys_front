@@ -3,7 +3,16 @@ import styled from 'styled-components';
 import analog from '../../lib/clock/analog';
 import digital from '../../lib/clock/digital';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faCloudSun, faCloud, faCloudShowers, faCloudSleet } from "@fortawesome/pro-duotone-svg-icons";
+import {
+    faSun,
+    faCloudSun,
+    faCloud,
+    faCloudShowers,
+    faCloudSleet,
+    faCloudSnow,
+    faCloudShowersHeavy,
+    faCloudRain
+} from "@fortawesome/pro-duotone-svg-icons";
 
 const TodayInfoCompo = styled.div`
     width: 100%;
@@ -174,18 +183,153 @@ const TodayInfoCompo = styled.div`
     }
 `;
 
-const TodayInfoComponent = () => {
-
-    const [weather, setWeather] = useState({
+const TodayInfoComponent = ({ weather }) => {
+    const [weatherItem, setWeather] = useState({
+        category: '',
+        code: undefined,
         icon: faSun,
         name: '맑음'
     });
+    const [temperature, setTemperature] = useState(null);
+    const [humidity, setHumidity] = useState(null);
+    const [windDirection, setDirection] = useState(null);
+    const [windSpeed, setSpeed] = useState({
+        UUU: 0, //풍속(동서성분)
+        VVV: 0  //풍속(남북성분
+    });
+
+    const onWeatherBinding = (items = []) => {
+        items.map((item) => {
+            const _category = item.category;
+            const _fcstValue = Number(item.fcstValue);
+
+            switch (_category) {
+                case 'PTY':
+                    if (_fcstValue !== 0) {
+                        setPTYNSKY(item);
+                    }
+                    break;
+                case 'SKY':
+                    setPTYNSKY(item);
+                    break;
+                case 'T3H':
+                    setTemperature(_fcstValue);
+                    break;
+                case 'REH':
+                    setHumidity(_fcstValue);
+                    break;
+                case 'VEC':
+                    let position = '';
+                    if (_fcstValue >= 0 && _fcstValue < 90) {
+                        position = '북동풍'
+                    }
+                    else if (_fcstValue >= 90 && _fcstValue < 180) {
+                        position = '남동풍'
+                    }
+                    else if (_fcstValue >= 180 && _fcstValue < 270) {
+                        position = '남서풍'
+                    }
+                    else if (_fcstValue >= 270 && _fcstValue < 360) {
+                        position = '북서풍'
+                    }
+                    setDirection(position)
+                    break;
+                case 'UUU':
+                    setSpeed({
+                        ...windSpeed,
+                        UUU: _fcstValue
+                    })
+                    break;
+                case 'VVV':
+                    setSpeed({
+                        ...windSpeed,
+                        VVV: _fcstValue
+                    })
+                    break;
+                default:
+                    return item;
+            }
+        });
+    }
+    const setPTYNSKY = (item) => {
+        const _category = item.category;
+        const _fcstValue = Number(item.fcstValue);
+        console.log('-->',item)
+        let icon = null;
+        let name = '';
+        if (_category === 'SKY') {
+            switch (_fcstValue) {
+                case 1:
+                    icon = faSun;
+                    name = '맑음';
+                    break;
+                case 3:
+                    icon = faCloudSun;
+                    name = '구름많음';
+                    break;
+                case 4:
+                    icon = faCloud;
+                    name = '흐림';
+                    break;
+                default:
+                    break;
+            }
+            console.log(_fcstValue, icon, '/', name)
+            if(weatherItem.code === 0){
+                setWeather({
+                    category: _category,
+                    code: _fcstValue,
+                    icon,
+                    name
+                })
+            }
+
+        } else {
+            console.log(item)
+            switch (_fcstValue) {
+                case 1:
+                    icon = faCloudShowers;
+                    name = '비';
+                    break;
+                case 2:
+                    icon = faCloudSleet;
+                    name = '비/눈';
+                    break;
+                case 3:
+                    icon = faCloudSnow;
+                    name = '눈';
+                    break;
+                case 4:
+                    icon = faCloudShowersHeavy;
+                    name = '소나기';
+                    break;
+                case 5:
+                    icon = faCloudRain;
+                    name = '빗방울';
+                    break;
+                case 7:
+                    icon = faCloudSnow;
+                    name = '눈날림';
+                    break;
+                default:
+                    break;
+                }
+                setWeather({
+                    category: _category,
+                    code: _fcstValue,
+                    icon,
+                    name
+                })
+            }
+    }
 
     useEffect(() => {
         analog.init('canvas_clock')
         digital.init('digitalClock')
-
-    }, []);
+        if (weather.data.body) {
+            onWeatherBinding(weather.data.body)
+        }
+    }, [weather]);
 
     return (
         <TodayInfoCompo className="todayinfo-component">
@@ -202,8 +346,8 @@ const TodayInfoComponent = () => {
             <div className="right-area">
                 <div className="weather-info-box">
                     <div className="contents">
-                        <div className="icon"><FontAwesomeIcon icon={weather.icon} /></div>
-                        <div className="text">{weather.name}</div>
+                        <div className="icon"><FontAwesomeIcon icon={weatherItem.icon} /></div>
+                        <div className="text">{weatherItem.name}</div>
                     </div>
                 </div>
                 <div className="temperature-info-box">
@@ -211,7 +355,7 @@ const TodayInfoComponent = () => {
                         <div className="temp-icon">
                             <img src="../../images/todayInfo/icon-temp.png" alt="temp" />
                         </div>
-                        <div className="temp-value">25</div>
+                        <div className="temp-value">{temperature}</div>
                         <div className="temp-unit">℃</div>
                         <div></div>
                     </div>
@@ -221,7 +365,7 @@ const TodayInfoComponent = () => {
                         </div>
                         <div className="humi-contents">
                             <span className="name">습도</span>
-                            <span className="value">30</span>
+                            <span className="value">{humidity}</span>
                             <span className="unit">%</span>
                         </div>
                     </div>
@@ -229,8 +373,8 @@ const TodayInfoComponent = () => {
                 </div>
                 <div className="wind-info-box">
                     <div className="wind-contents">
-                        <span className="wind-direction">북서풍</span><br />
-                        <span className="wind-value">7</span>
+                        <span className="wind-direction">{windDirection}</span><br />
+                        <span className="wind-value">{windSpeed.UUU > windSpeed.VVV ? windSpeed.UUU : windSpeed.VVV}</span>
                         <span className="wind-unit">m/s</span>
                     </div>
                 </div>
