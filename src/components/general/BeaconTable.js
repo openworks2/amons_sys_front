@@ -315,7 +315,8 @@ const BeaconTable = ({
         (tempData2 = tempData2.filter((item) =>
           item.vh_name.includes(searchValue)
         ));
-      setCurrentData(data);
+      let combineTempData = [...tempData1, ...tempData2];
+      setCurrentData(combineTempData);
     } else if (categorieValue === 1) {
       // 인원
       tempData1 !== [] &&
