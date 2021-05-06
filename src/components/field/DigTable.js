@@ -256,6 +256,7 @@ const DigTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  initPage,
   localData,
   addComma,
   addZero,
@@ -272,6 +273,9 @@ const DigTable = ({
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, value) => {
+    initActiveRow();
+    initFormData();
+    initPage();
     const _value = value.value;
     setCategorieValue(_value);
   };

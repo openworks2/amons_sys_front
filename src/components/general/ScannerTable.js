@@ -313,6 +313,7 @@ const ScannerTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  initPage,
   localData,
   addComma,
   addZero,
@@ -329,6 +330,9 @@ const ScannerTable = ({
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, value) => {
+    initActiveRow();
+    initFormData();
+    initPage();
     const _value = value.value;
     setCategorieValue(_value);
   };
@@ -383,7 +387,7 @@ const ScannerTable = ({
     }
     initActiveRow();
     initFormData();
-    activePage = 1;
+    initPage();
   };
 
   const splitByColonInput = (str) => {

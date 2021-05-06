@@ -238,6 +238,9 @@ const PreviewBox = styled.div`
     opacity: 1;
     padding: 4px;
     color: #ffffff;
+    &.null {
+      opacity: 0;
+    }
   }
   .preview.next-state-box {
     display: inline-block;
@@ -257,6 +260,9 @@ const PreviewBox = styled.div`
     opacity: 1;
     padding: 4px;
     color: #ffffff;
+    &.null {
+      opacity: 0;
+    }
   }
 `;
 
@@ -269,9 +275,12 @@ const ProcessInput = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  localData,
   localList,
   localError,
   onRadioChange,
+  stateToString,
+  stateError,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -281,7 +290,7 @@ const ProcessInput = ({
     modified_date,
     prev_pcs_state,
     pcs_state,
-    description,
+    pcs_description,
     local_index,
   } = formData;
 
@@ -311,16 +320,38 @@ const ProcessInput = ({
           />
           {localError && <InputError>{localError}</InputError>}
           <Form.Field className="process-input-form description">
-            <label className="input-form title">미리보기</label>
+            <label className="input-form title">
+              {selectedRow.selectedId ? "이력조회" : "미리보기"}
+            </label>
             <PreviewBox>
               <div className="preview current-state-box">
-                현재상태
-                <div className="preview current-state">{"0165165"}</div>
+                {selectedRow.selectedId ? "이전상태" : "현재상태"}
+                {selectedRow.selectedId && (
+                  <div className="preview current-state">
+                    {formData.prev_pcs_state
+                      ? stateToString(formData.prev_pcs_state)
+                      : "미착공"}
+                  </div>
+                )}
+                {!selectedRow.selectedId && local_index && (
+                  <div className="preview current-state">
+                    {stateToString(formData.prev_pcs_state)}
+                  </div>
+                )}
+                {!selectedRow.selectedId && !local_index && (
+                  <div className="preview current-state null"> </div>
+                )}
               </div>
               <div className="tri-angle" />
               <div className="preview next-state-box">
                 변경상태
-                <div className="preview next-state">{"0165165"}</div>
+                {formData.pcs_state ? (
+                  <div className="preview next-state">
+                    {formData.pcs_state && stateToString(formData.pcs_state)}
+                  </div>
+                ) : (
+                  <div className="preview next-state null"> </div>
+                )}
               </div>
             </PreviewBox>
           </Form.Field>
@@ -331,41 +362,46 @@ const ProcessInput = ({
                 label="미착공"
                 className="radio-row one"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={1}
+                checked={pcs_state && pcs_state === 1}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="발파"
                 className="radio-row one"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={4}
+                checked={pcs_state && pcs_state === 4}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="강지보"
                 className="radio-row one"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={7}
+                checked={pcs_state && pcs_state === 7}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="방수시트"
                 className="radio-row one"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={10}
+                checked={pcs_state && pcs_state === 10}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="장비점검"
                 className="radio-row one"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={13}
+                checked={pcs_state && pcs_state === 13}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
             </div>
             <div className="radio-grouper row2">
@@ -373,41 +409,46 @@ const ProcessInput = ({
                 label="천공"
                 className="radio-row two"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={2}
+                checked={pcs_state && pcs_state === 2}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="버력처리"
                 className="radio-row two"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={5}
+                checked={pcs_state && pcs_state === 5}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="격자지보"
                 className="radio-row two"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={8}
+                checked={pcs_state && pcs_state === 8}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="라이닝"
                 className="radio-row two"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={11}
+                checked={pcs_state && pcs_state === 11}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="기타"
                 className="radio-row two"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={14}
+                checked={pcs_state && pcs_state === 14}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
             </div>
             <div className="radio-grouper row3">
@@ -415,46 +456,51 @@ const ProcessInput = ({
                 label="장약"
                 className="radio-row three"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={3}
+                checked={pcs_state && pcs_state === 3}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="숏크리트"
                 className="radio-row three"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={6}
+                checked={pcs_state && pcs_state === 6}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
 
               <Radio
                 label="록볼트"
                 className="radio-row three"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={9}
+                checked={pcs_state && pcs_state === 9}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <Radio
                 label="근무교대"
                 className="radio-row three"
                 name="radioGroup"
-                value={0}
-                checked={pcs_state && pcs_state === 0}
+                value={12}
+                checked={pcs_state && pcs_state === 12}
                 onChange={(e, target) => onRadioChange(e, target)}
+                disabled={selectedRow.selectedId}
               />
               <div className="blank-place"> </div>
             </div>
+            {stateError && <InputError>{stateError}</InputError>}
           </Form.Field>
           <Form.Field className="process-input-form description">
             <label className="input-form title">비고</label>
             <textarea
               className="input-form description"
-              id="description"
-              name="description"
+              id="pcs_description"
+              name="pcs_description"
               placeholder="비고 입력란"
-              value={description ? description : ""}
+              value={pcs_description ? pcs_description : ""}
               onChange={onChange}
             />
           </Form.Field>

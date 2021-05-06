@@ -273,6 +273,7 @@ const VehicleTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  initPage,
   companyData,
   companySearchList,
   addZero,
@@ -319,7 +320,7 @@ const VehicleTable = ({
     }
     initActiveRow();
     initFormData();
-    activePage = 1;
+    initPage();
   };
 
   useEffect(() => {

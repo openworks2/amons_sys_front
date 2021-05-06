@@ -267,6 +267,7 @@ const BeaconTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  initPage,
   addZero,
 }) => {
   const options = [
@@ -281,7 +282,6 @@ const BeaconTable = ({
   const dispatch = useDispatch();
 
   // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
   const [categorieValue, setCategorieValue] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [currentData, setCurrentData] = useState([]);
@@ -315,7 +315,7 @@ const BeaconTable = ({
         (tempData2 = tempData2.filter((item) =>
           item.vh_name.includes(searchValue)
         ));
-      setCurrentData([...tempData1, ...tempData2]);
+      setCurrentData(data);
     } else if (categorieValue === 1) {
       // 인원
       tempData1 !== [] &&
@@ -332,20 +332,12 @@ const BeaconTable = ({
     }
     initActiveRow();
     initFormData();
-    activePage = 1;
+    initPage();
   };
 
   useEffect(() => {
     const _data = data;
     setCurrentData(_data);
-    // 카테고리 별 데이터 변경 시
-    // let tempData = [];
-    // if (categorieValue === null) {
-    //   setCurrentData(_data);
-    // } else {
-    //   tempData = _data.filter((item) => item.co_index === categorieValue);
-    //   setCurrentData(tempData);
-    // }
   }, [data]);
 
   // 테이블

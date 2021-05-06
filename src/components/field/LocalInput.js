@@ -161,7 +161,7 @@ const LocalInput = ({
     modified_date,
     local_name,
     plan_length,
-    description,
+    local_description,
   } = formData;
 
   return (
@@ -202,10 +202,10 @@ const LocalInput = ({
             <label className="input-form title">비고</label>
             <textarea
               className="input-form description"
-              id="description"
-              name="description"
+              id="local_description"
+              name="local_description"
               placeholder={"비고 입력란"}
-              value={description ? description : ""}
+              value={local_description ? local_description : ""}
               onChange={onChange}
             />
           </Form.Field>

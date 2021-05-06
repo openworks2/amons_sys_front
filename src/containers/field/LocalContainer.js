@@ -92,7 +92,7 @@ const LocalContainer = () => {
     local_name: "",
     plan_length: "",
     process: null,
-    description: "",
+    local_description: "",
     local_used: 1,
   });
 
@@ -151,7 +151,7 @@ const LocalContainer = () => {
       local_name: "",
       plan_length: "",
       process: null,
-      description: "",
+      local_description: "",
       local_used: 1,
     });
   };
@@ -178,7 +178,7 @@ const LocalContainer = () => {
         modified_date: findItem.modified_date,
         local_name: findItem.local_name,
         plan_length: findItem.plan_length,
-        description: findItem.description,
+        local_description: findItem.local_description,
         local_used: findItem.local_used,
       });
     }

@@ -247,7 +247,7 @@ const LocalTable = ({
             {item && item.plan_length && addComma(item.plan_length) + "m"}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
-            {item && item.description}
+            {item && item.local_description}
           </Table.Cell>
           <Table.Cell className="table-cell created-date" name="created_date">
             {item && moment(item.created_date).format("YYYY-MM-DD")}

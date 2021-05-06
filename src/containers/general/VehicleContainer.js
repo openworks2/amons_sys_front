@@ -370,6 +370,13 @@ const VehicleContainer = () => {
     itemsPerPage: 14, // 페이지 당 item 수
   });
 
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
   const onPageChange = (e, { activePage }) => {
     e.preventDefault();
     let _activePage = Math.ceil(activePage);
@@ -488,6 +495,7 @@ const VehicleContainer = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
+              initPage={initPage}
               companyData={companyData}
               companyList={companyList}
               companySearchList={companySearchList}

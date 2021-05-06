@@ -6,45 +6,18 @@ import {
   Table,
   Pagination,
   Modal,
-  Menu,
+  Checkbox,
+  Dropdown,
+  Input,
 } from "semantic-ui-react";
-import { FaTrash, FaMinusCircle } from "react-icons/fa";
-import moment from "moment";
-import "moment/locale/ko";
-
-const CategorieMenuCompo = styled.div`
-  .ui.pointing.table-categorie-menu-box.menu {
-    margin-left: 18px !important;
-    margin-right: 18px !important;
-    margin-top: 8px !important;
-    margin-bottom: 0px !important;
-    height: 40px;
-    text-align: center !important;
-  }
-  .table-categorie-menu {
-    width: 123px;
-
-    &.all {
-      width: 80px;
-    }
-  }
-  .ui.menu .item > .input input {
-    &:focus {
-      border-color: #f1592a !important;
-    }
-  }
-  .ui.menu:not(.vertical) .item {
-    display: inline-block;
-  }
-  .ui.pointing.menu .item:after {
-    width: 1.3em;
-    height: 1.3em;
-  }
-`;
+import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
+import { getWorkers } from "../../modules/workers";
+import { useDispatch } from "react-redux";
 
 const TableCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
+  margin-top: -8px;
   margin-bottom: 18px;
   .ui.table {
     margin-top: 5px;
@@ -64,29 +37,15 @@ const TableCompo = styled.div`
     padding-right: 15px !important;
     &.no {
       width: 52px;
-      @media screen and (max-height: 937px) {
-        width: 51px;
-      }
     }
-    &.local {
-      width: 141px;
+    &.company {
+      width: 152px;
       text-align: left;
-    }
-    &.prev {
-      width: 127px;
-    }
-    &.state {
-      width: 127px;
-    }
-    &.date {
-      width: 200px;
-    }
-    &.description {
-      width: 486px;
       @media screen and (max-height: 937px) {
-        width: 478px;
+        width: 160px;
       }
     }
+
     &.trash-icon {
       width: 55px !important ;
       color: #7d7d7d;
@@ -96,7 +55,6 @@ const TableCompo = styled.div`
       width: 25px;
       border: 0px;
     }
-
     @media screen and (max-height: 937px) {
       &.trash-icon {
         width: 64px !important;
@@ -120,7 +78,7 @@ const TableCompo = styled.div`
         -webkit-appearance: none;
         margin: 0px;
       }
-
+      .sms-check,
       .ui.checkbox input.hidden + label {
         cursor: default !important;
       }
@@ -141,50 +99,13 @@ const TableCompo = styled.div`
           padding-left: 15px;
           padding-right: 15px;
           vertical-align: middle;
-          background: inherit;
           &.no {
             width: 53px;
             @media screen and (max-height: 937px) {
               width: 52px;
             }
           }
-          &.local {
-            width: 141px;
-            text-align: left;
-            @media screen and (max-height: 937px) {
-              width: 142px;
-            }
-          }
-          &.prev {
-            width: 127px;
-            #tri-angle {
-              position: absolute;
-              left: 321px;
-              @media screen and (max-height: 937px) {
-                left: 320px;
-              }
-              margin-top: -9px;
-              width: 17px;
-              height: 17px;
-              background-color: inherit;
-              transform: translateX(-50%) translateY(-50%) rotate(45deg);
-              border: none;
-              border-top: 1px solid #d8d8d8;
-              border-right: 1px solid #d8d8d8;
-            }
-          }
-          &.state {
-            width: 127px;
-          }
-          &.date {
-            width: 200px;
-          }
-          &.description {
-            width: 486px;
-            @media screen and (max-height: 937px) {
-              width: 478px;
-            }
-          }
+
           &.trash-icon {
             width: 55px !important ;
             color: #7d7d7d;
@@ -228,6 +149,7 @@ const TableCompo = styled.div`
       background: #f9fafb !important;
     }
   }
+
   .ui.checkbox input:checked ~ label:after {
     background-color: #2e2e2e;
     border-radius: 4px;
@@ -244,13 +166,65 @@ const TableCompo = styled.div`
     color: #7c7c7c;
     opacity: 1;
     margin: 0px;
-    margin-top: 18px;
+    margin-top: 25px;
     margin-bottom: 10px;
     padding: 0px;
   }
 `;
 
-const ProcessTable = ({
+const SearchCompo = styled.div`
+  padding: 0px;
+  margin-top: 9px;
+  margin-left: 20px;
+  display: block;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+
+  .ui.input > input {
+    display: block;
+    width: 310px;
+  }
+  .search-box {
+    height: 40px;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+  .search-icon {
+    position: absolute;
+    left: 405px;
+    top: 13px;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover {
+      color: #f1592a;
+    }
+  }
+  .dropdown {
+    display: block;
+    width: 123px;
+  }
+  .ui.basic.button.dropdown {
+    background: #f2f2f2 0% 0% no-repeat padding-box !important;
+    opacity: 1;
+    font-size: 13px;
+  }
+  .ui.input > input {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.dropdown > .dropdown.icon,
+  &:before,
+  &:after {
+    left: 80px;
+    font-size: 20px;
+    position: absolute;
+    color: #2e2e2e !important;
+    opacity: 0.8;
+  }
+`;
+
+const AccountTable = ({
   pageInfo,
   data,
   activeHandler,
@@ -259,11 +233,17 @@ const ProcessTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
-  initPage,
-  localData,
-  stateToString,
+  companyData,
+  companySearchList,
+  addZero,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
+
+  const idSearchOptions = [
+    { key: "0", value: null, text: "아이디 전체" },
+    { key: "1", value: 1, text: "관리자" },
+    { key: "2", value: 2, text: "사용자" },
+  ];
 
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -271,28 +251,47 @@ const ProcessTable = ({
   // 검색 기능 table 데이터 처리
   // 검색하고 curreunt page 1 로 이동시켜줘야 함.
   const [categorieValue, setCategorieValue] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
   const [currentData, setCurrentData] = useState([]);
 
-  const onClickCategorie = (e, target) => {
-    initActiveRow();
-    initFormData();
-    initPage();
-    const _target = target.value;
-    setCategorieValue(_target);
+  const onChangeCategorie = (e, value) => {
+    const _value = value.value;
+    setCategorieValue(_value);
   };
-  useEffect(() => {
-    let _data = data;
-    _data = data.sort((a, b) => b.created_date.localeCompare(a.created_date)); // 최신 입력일 순으로
-    setCurrentData(data);
 
+  // serach input 입력
+  const onSearchChange = (e) => {
+    const _searchValue = e.target.value;
+    setSearchValue(_searchValue);
+  };
+
+  const dispatch = useDispatch();
+
+  const onSearch = (e) => {
+    const _data = data;
     let tempData = [];
+    if (!searchValue) {
+      dispatch(getWorkers());
+    }
     if (categorieValue === null) {
-      setCurrentData(_data);
+      // 전체검색
+      tempData = _data.filter((item) => item.wk_name.includes(searchValue));
+      setCurrentData(tempData);
     } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
+      // 검색
+      tempData = _data.filter((item) => item.co_index === categorieValue);
+      tempData = tempData.filter((item) => item.wk_name.includes(searchValue));
       setCurrentData(tempData);
     }
-  }, [data, categorieValue, onClickCategorie]);
+    initActiveRow();
+    initFormData();
+    activePage = 1;
+  };
+
+  useEffect(() => {
+    const _data = data;
+    setCurrentData(_data);
+  }, [data]);
 
   // 테이블
 
@@ -315,41 +314,20 @@ const ProcessTable = ({
           className="table-row"
           key={index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.pcs_seq))}
+          onClick={item && ((e) => activeHandler(e, index, item.wk_id))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
           </Table.Cell>
-          <Table.Cell className="table-cell local" name="local">
+          <Table.Cell className="table-cell company" name="company">
             {item &&
-              item.local_index &&
-              localData &&
-              localData.find((el) => el.local_index === item.local_index) &&
-              (localData.find((el) => el.local_index === item.local_index)
-                .local_used === 0
-                ? localData.find((el) => el.local_index === item.local_index)
-                    .local_name + "(삭제됨)"
-                : localData.find((el) => el.local_index === item.local_index)
-                    .local_name)}
+              companyData &&
+              companyData.find((el) => el.co_index === item.co_index).co_name}
           </Table.Cell>
-          <Table.Cell className="table-cell prev" name="prev">
-            {item && item.prev_pcs_state && stateToString(item.prev_pcs_state)}
-            {item && item.prev_pcs_state && <div id="tri-angle" />}
-          </Table.Cell>
-          <Table.Cell className="table-cell state" name="state">
-            {item && item.pcs_state && stateToString(item.pcs_state)}
-          </Table.Cell>
-          <Table.Cell className="table-cell date" name="date">
-            {item &&
-              item.created_date &&
-              moment(item.created_date).format("YYYY-MM-DD HH:MM:SS")}
-          </Table.Cell>
-          <Table.Cell className="table-cell description" name="description">
-            {item && item.pcs_description && item.pcs_description}
-          </Table.Cell>
+
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.pcs_seq === selectedId && (
+            {item && selectedId && item.wk_id === selectedId && (
               <Button
                 className="trash-icon-button"
                 onClick={(e) => {
@@ -368,58 +346,59 @@ const ProcessTable = ({
     });
   };
 
-  const TopMenuRender = (localData = []) => {
-    if (!localData) {
-      localData = [];
-    }
-    let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 7);
-    return _localData.map((item, index) => {
-      return (
-        <Menu.Item
-          className="table-categorie-menu categorie"
-          name={item.local_name && item.local_name}
-          active={categorieValue === item.local_index}
-          value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
-        />
-      );
-    });
-  };
-
   return (
     <>
-      <CategorieMenuCompo className="table-categorie-menu-compo">
-        <Menu pointing className="table-categorie-menu-box" compact>
-          <Menu.Item
-            className="table-categorie-menu all"
-            name="전체"
-            active={categorieValue === null}
-            value={null}
-            onClick={onClickCategorie}
-          />
-          {TopMenuRender(localData)}
-        </Menu>
-      </CategorieMenuCompo>
+      <SearchCompo className="search-compo">
+        <Input
+          className="search-box"
+          action={
+            <Dropdown
+              button
+              basic
+              options={idSearchOptions}
+              className="dropdown"
+              placeholder="아이디 전체"
+              position="left"
+              name="searchCategorie"
+              onChange={(e, value) => {
+                onChangeCategorie(e, value);
+              }}
+            />
+          }
+          actionPosition="left"
+          placeholder="아이디를 검색해 주세요."
+          value={searchValue}
+          onChange={onSearchChange}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              onSearch();
+            }
+          }}
+          icon={<FaSearch onClick={onSearch} className="search-icon" />}
+        />
+      </SearchCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">공정상태 변경 이력</p>
+        <p className="subtitle">계정 목록</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">
                 NO
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header local">
-                노선
+              <Table.HeaderCell singleLine className="table-header role">
+                권한
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header prev">
-                이전 공정상태
+              <Table.HeaderCell singleLine className="table-header id">
+                아이디
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header state">
-                현재 공정상태
+              <Table.HeaderCell singleLine className="table-header name">
+                이름
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header date">
-                등록일시
+              <Table.HeaderCell singleLine className="table-header phone">
+                핸드폰
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header mail">
+                이메일
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header description">
                 비고
@@ -486,24 +465,8 @@ const ProcessTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem &&
-                  `${moment(selectedItem.created_date).format(
-                    "YYYY년MM월DD일 HH시 MM분 SS초"
-                  )} `}
-              </p>
-              <p className="confirm-modal text">
-                이전 공정상태 (
-                {selectedItem &&
-                  selectedItem.prev_pcs_state &&
-                  selectedItem.prev_pcs_state}
-                ) 현재 공정상태 (
-                {selectedItem &&
-                  selectedItem.pcs_state &&
-                  selectedItem.pcs_state}
-                )
-              </p>
-              <p className="confirm-modal text">
-                {`공정 상태 변경 이력을 삭제하시겠습니까?`}
+                {selectedItem && `${selectedItem.acc_user_id}`} 계정을
+                삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>
@@ -537,4 +500,4 @@ const ProcessTable = ({
   );
 };
 
-export default ProcessTable;
+export default AccountTable;

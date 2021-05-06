@@ -310,6 +310,7 @@ const WorkerTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  initPage,
   companyData,
   companySearchList,
   addZero,
@@ -356,7 +357,7 @@ const WorkerTable = ({
     }
     initActiveRow();
     initFormData();
-    activePage = 1;
+    initPage();
   };
 
   useEffect(() => {

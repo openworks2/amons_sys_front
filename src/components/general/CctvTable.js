@@ -296,6 +296,7 @@ const CctvTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
+  initPage,
   localData,
   addComma,
   addZero,
@@ -312,6 +313,9 @@ const CctvTable = ({
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, value) => {
+    initActiveRow();
+    initFormData();
+    initPage();
     const _value = value.value;
     setCategorieValue(_value);
   };
@@ -319,7 +323,6 @@ const CctvTable = ({
   useEffect(() => {
     const _data = data;
     setCurrentData(_data);
-
     let tempData = [];
     if (categorieValue === null) {
       setCurrentData(_data);
@@ -345,29 +348,21 @@ const CctvTable = ({
     }
     if (categorieValue === null) {
       // 전체검색
-      let _searchValue = searchValue.replace(/\:/g, "");
-      _searchValue = _searchValue.toUpperCase();
-      _searchValue = _searchValue.substring(0, 12);
-      tempData = _data.filter((item) =>
-        item.scn_address.includes(_searchValue)
-      );
+      let _searchValue = searchValue;
+      tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
       setSearchValue("");
       setCurrentData(tempData);
     } else {
       // 검색
       tempData = _data.filter((item) => item.local_index === categorieValue);
       let _searchValue = searchValue;
-      _searchValue = _searchValue.toUpperCase();
-      _searchValue = _searchValue.substring(0, 12);
-      tempData = tempData.filter((item) =>
-        item.scn_address.includes(_searchValue)
-      );
+      tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
       setSearchValue("");
       setCurrentData(tempData);
     }
     initActiveRow();
     initFormData();
-    activePage = 1;
+    initPage();
   };
 
   // 테이블

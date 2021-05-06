@@ -87,7 +87,7 @@ const ProcessContainer = () => {
     prev_pcs_state: null,
     pcs_state: null,
     local_index: null,
-    description: "",
+    pcs_description: "",
   });
   const [localList, setLocalList] = useState([]);
 
@@ -109,7 +109,6 @@ const ProcessContainer = () => {
           key: index,
           text: item.local_name,
           value: item.local_index,
-          name: item.local_name,
         });
       });
       setLocalList(_localList);
@@ -121,8 +120,9 @@ const ProcessContainer = () => {
     console.log(target.value);
 
     let _pcs_state = target.value;
+
     if (_pcs_state === formData.pcs_state) {
-      _pcs_state = null;
+      _pcs_state = 14;
     }
     setFormData({
       ...formData,
@@ -181,7 +181,7 @@ const ProcessContainer = () => {
         str = "기타";
         break;
       default:
-        str = "error";
+        str = "미착공";
     }
     return str;
   };
@@ -191,10 +191,14 @@ const ProcessContainer = () => {
     const name = seletedValue.name;
     const value = seletedValue.value;
 
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    let findItem = localData.find((el) => el.local_index === value);
+    if (findItem) {
+      setFormData({
+        ...formData,
+        [name]: value,
+        prev_pcs_state: findItem.pcs_state,
+      });
+    }
   };
 
   useEffect(() => {
@@ -237,7 +241,7 @@ const ProcessContainer = () => {
       prev_pcs_state: null,
       pcs_state: null,
       local_index: null,
-      description: "",
+      pcs_description: "",
     });
   };
 
@@ -265,7 +269,7 @@ const ProcessContainer = () => {
         prev_pcs_state: findItem.prev_pcs_state,
         pcs_state: findItem.pcs_state,
         local_index: findItem.local_index,
-        description: findItem.description,
+        pcs_description: findItem.pcs_description,
       });
     }
   };
@@ -288,6 +292,13 @@ const ProcessContainer = () => {
     itemsPerPage: 14, // 페이지 당 item 수
   });
 
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
   const onPageChange = (e, { activePage }) => {
     e.preventDefault();
     let _activePage = Math.ceil(activePage);
@@ -302,20 +313,36 @@ const ProcessContainer = () => {
   };
 
   const [localError, setLocalError] = useState(undefined);
+  const [stateError, setStateError] = useState(undefined);
 
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
+
+    // 기존 노선의 state 값 대입
 
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 1350);
+    } else if (!formData.pcs_state) {
+      setStateError("*공정 상태를 선택해 주세요.");
+      setTimeout(() => {
+        setStateError(undefined);
+      }, 1350);
     } else {
       let newProcess = {
         ...formData,
       };
+
+      if (!formData.prev_pcs_state) {
+        newProcess = {
+          ...formData,
+          prev_pcs_state: 1,
+        };
+      }
+
       dispatch(postProcess(newProcess));
       initActiveRow();
       initFormData();
@@ -326,21 +353,12 @@ const ProcessContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    if (!formData.local_index) {
-      setLocalError("*노선을 선택해 주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 1350);
-    } else {
-      // 성공
-      const findItem = selectedRow.selectedItem;
-
-      let newProcess = {
-        ...formData,
-        modified_date: today,
-      };
-      dispatch(putProcess(newProcess.pcs_seq, newProcess));
-    }
+    // 성공
+    let newProcess = {
+      ...formData,
+      modified_date: today,
+    };
+    dispatch(putProcess(newProcess.pcs_seq, newProcess));
   };
 
   // DELETE
@@ -378,6 +396,7 @@ const ProcessContainer = () => {
             localInfo={localInfo}
             onRadioChange={onRadioChange}
             stateToString={stateToString}
+            stateError={stateError}
           />
         </div>
         <div className="table-box">
@@ -392,8 +411,8 @@ const ProcessContainer = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
+              initPage={initPage}
               localData={localData}
-              localList={localList}
               stateToString={stateToString}
             />
           )}
