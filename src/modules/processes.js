@@ -6,6 +6,7 @@ import {
   reducerUtils,
   createPromiseThunkOfPost,
   handleAsyncActionsOfPost,
+  handleAsyncActionsOfPostOrderByTime,
   createPromiseThunkOfPut,
   handleAsyncActionsOfPut,
 } from "../lib/asyncUtils";
@@ -76,7 +77,7 @@ const getProcessesReducer = handleAsyncActions(
   true
 );
 const getProcessReducer = handleAsyncActionsById(GET_PROCESS, "process", true);
-const postProcessReducer = handleAsyncActionsOfPost(
+const postProcessReducer = handleAsyncActionsOfPostOrderByTime(
   POST_PROCESS,
   "processes",
   true

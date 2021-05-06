@@ -282,8 +282,6 @@ const ProcessTable = ({
   };
   useEffect(() => {
     let _data = data;
-    _data = data.sort((a, b) => b.created_date.localeCompare(a.created_date)); // 최신 입력일 순으로
-    setCurrentData(data);
 
     let tempData = [];
     if (categorieValue === null) {
@@ -292,15 +290,22 @@ const ProcessTable = ({
       tempData = _data.filter((item) => item.local_index === categorieValue);
       setCurrentData(tempData);
     }
-  }, [data, categorieValue, onClickCategorie]);
+  }, [data, categorieValue]);
 
   // 테이블
+  function date_descending(a, b) {
+    var dateA = new Date(a["created_date"]).getTime();
+    var dateB = new Date(b["created_date"]).getTime();
+    return dateA < dateB ? 1 : -1;
+  }
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
-  );
+  const viewItems = currentData
+    .sort(date_descending)
+    .slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
@@ -343,7 +348,7 @@ const ProcessTable = ({
           <Table.Cell className="table-cell date" name="date">
             {item &&
               item.created_date &&
-              moment(item.created_date).format("YYYY-MM-DD HH:MM:SS")}
+              moment(item.created_date).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
             {item && item.pcs_description && item.pcs_description}

@@ -83,14 +83,14 @@ export const createPromiseThunkOfPut = (
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
 
   return (param, data) => async (dispatch) => {
-    console.log('data-->',data);
+    console.log("data-->", data);
     const id = idSelector(param);
     dispatch({ type, meta: id });
     try {
       const payload = await promiseCreator(param, data);
-      console.log('id-->',id)
-      console.log('payload-->', payload)
-      console.log('SUCCESS-->', payload)
+      console.log("id-->", id);
+      console.log("payload-->", payload);
+      console.log("SUCCESS-->", payload);
       dispatch({ type: SUCCESS, payload, meta: id });
     } catch (e) {
       dispatch({
@@ -210,13 +210,58 @@ export const handleAsyncActionsOfPost = (type, key, keepData) => {
 };
 
 /**
+ * @description Item 등록 최신 최상단으로 - 리듀서
+ */
+export const handleAsyncActionsOfPostOrderByTime = (type, key, keepData) => {
+  const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case type:
+        return {
+          ...state,
+          [key]: reducerUtils.loading(keepData ? state[key].data : null),
+        };
+      case SUCCESS:
+        let newArray = [action.payload].concat(state[key].data);
+        function date_descending(a, b) {
+          var dateA = new Date(a["created_date"]).getTime();
+          var dateB = new Date(b["created_date"]).getTime();
+          return dateA < dateB ? 1 : -1;
+        }
+        newArray = newArray.sort(date_descending);
+        return {
+          ...state,
+          [key]: {
+            loading: false,
+            data: newArray,
+            error: null,
+          },
+        };
+      case ERROR:
+        return {
+          ...state,
+          [key]: {
+            loading: false,
+            data: keepData ? state[key].data : null,
+            error: null,
+          },
+        };
+      default:
+        return state;
+    }
+  };
+  return reducer;
+};
+
+/**
  * @description Item 수정- 리듀서
  */
 export const handleAsyncActionsOfPut = (type, key, index, keepData) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
-  console.log('PUT!!!')
+  console.log("PUT!!!");
 
-  console.log('>>>>>>>>>>key->', key)
+  console.log(">>>>>>>>>>key->", key);
   return (state, action) => {
     switch (action.type) {
       case type:
@@ -225,14 +270,16 @@ export const handleAsyncActionsOfPut = (type, key, index, keepData) => {
           [key]: reducerUtils.loading(keepData ? state[key].data : null),
         };
       case SUCCESS:
-        console.log('state->',state)
-        console.log('payload->',action.payload)
+        console.log("state->", state);
+        console.log("payload->", action.payload);
         return {
           ...state,
           [key]: {
             loading: false,
-            data: state[key].data.map((item) =>{
-              return item[index] === action.payload[index] ? action.payload : item;
+            data: state[key].data.map((item) => {
+              return item[index] === action.payload[index]
+                ? action.payload
+                : item;
             }),
             error: null,
           },
