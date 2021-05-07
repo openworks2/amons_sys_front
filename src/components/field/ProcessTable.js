@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   Button,
@@ -64,7 +64,7 @@ const TableCompo = styled.div`
     padding-right: 15px !important;
     &.no {
       width: 52px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 51px;
       }
     }
@@ -83,7 +83,7 @@ const TableCompo = styled.div`
     }
     &.description {
       width: 486px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 478px;
       }
     }
@@ -97,7 +97,7 @@ const TableCompo = styled.div`
       border: 0px;
     }
 
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -112,7 +112,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -144,14 +144,14 @@ const TableCompo = styled.div`
           background: inherit;
           &.no {
             width: 53px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 52px;
             }
           }
           &.local {
             width: 141px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 142px;
             }
           }
@@ -160,7 +160,7 @@ const TableCompo = styled.div`
             #tri-angle {
               position: absolute;
               left: 321px;
-              @media screen and (max-height: 937px) {
+              @media screen and (max-height: 970px) {
                 left: 320px;
               }
               margin-top: -9px;
@@ -181,7 +181,7 @@ const TableCompo = styled.div`
           }
           &.description {
             width: 486px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 478px;
             }
           }

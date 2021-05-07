@@ -90,13 +90,13 @@ const TableCompo = styled.div`
     padding-right: 15px !important;
     &.no {
       width: 52px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 51px;
       }
     }
     &.local {
       width: 101px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 99px;
       }
     }
@@ -116,7 +116,7 @@ const TableCompo = styled.div`
     &.ip {
       width: 223px;
       text-align: left;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 221px;
       }
     }
@@ -125,7 +125,7 @@ const TableCompo = styled.div`
     }
     &.description {
       width: 258px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 254px;
       }
     }
@@ -139,7 +139,7 @@ const TableCompo = styled.div`
       border: 0px;
     }
 
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -154,7 +154,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -185,57 +185,57 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 53px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 52px;
             }
           }
           &.local {
             width: 102px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 101px;
             }
           }
           &.pos-x {
             width: 101px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 103px;
             }
           }
           &.kind {
             width: 90px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 91px;
             }
           }
           &.group {
             width: 75px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 75px;
             }
           }
           &.address {
             width: 162px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 164px;
             }
           }
           &.ip {
             width: 223px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 224px;
             }
           }
           &.port {
             width: 72px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 71px;
             }
           }
           &.description {
             width: 258px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 257px;
             }
           }

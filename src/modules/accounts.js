@@ -61,14 +61,10 @@ export const deleteAccount = (id) => async (dispatch) => {
     dispatch({ type: DELETE_ACCOUNT_ERROR, error: e });
   }
 };
-export const doubleCheckAccount = createPromiseThunkOfPost(
-  POST_ACCOUNT,
-  accountsAPI.doubleCheckAccount
-);
-
 const initialState = {
   accounts: reducerUtils.initial(),
   account: {},
+  auth: {},
 };
 
 const getAccountsReducer = handleAsyncActions(GET_ACCOUNTS, "accounts", true);
@@ -82,11 +78,6 @@ const putAccountReducer = handleAsyncActionsOfPut(
   PUT_ACCOUNT,
   "accounts",
   "acc_id",
-  true
-);
-const doubleCheckAccountReducer = handleAsyncActionsOfPost(
-  POST_ACCOUNT,
-  "accounts",
   true
 );
 
@@ -108,10 +99,6 @@ export default function accounts(state = initialState, action) {
     case PUT_ACCOUNT_SUCCESS:
     case PUT_ACCOUNT_ERROR:
       return putAccountReducer(state, action);
-    case POST_DOUBLECHECKACCOUNT:
-    case POST_DOUBLECHECKACCOUNT_SUCCESS:
-    case POST_DOUBLECHECKACCOUNT_ERROR:
-      return postAccountReducer(state, action);
     case DELETE_ACCOUNT:
       return {
         ...state,

@@ -176,7 +176,6 @@ export const handleAsyncActionsById = (type, key, keepData) => {
  */
 export const handleAsyncActionsOfPost = (type, key, keepData) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
-
   const reducer = (state, action) => {
     switch (action.type) {
       case type:

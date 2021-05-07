@@ -37,13 +37,13 @@ const TableCompo = styled.div`
     }
     &.preview {
       width: 115px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 110px;
       }
     }
     &.date {
       width: 124px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 120px;
       }
     }
@@ -57,7 +57,7 @@ const TableCompo = styled.div`
       border: 0px;
     }
 
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -72,7 +72,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -99,33 +99,33 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 52px;
             }
           }
           &.title {
             text-align: left;
             width: 421px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 421px;
             }
           }
           &.contents {
             text-align: left;
             width: 421px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 421px;
             }
           }
           &.preview {
             width: 115px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 109px;
             }
           }
           &.date {
             width: 124px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 120px;
             }
           }
@@ -181,7 +181,7 @@ const TableCompo = styled.div`
     color: #7c7c7c;
     opacity: 1;
     margin: 0px;
-    margin-top: 36px;
+    margin-top: 17px;
     margin-bottom: 10px;
     padding: 0px;
   }

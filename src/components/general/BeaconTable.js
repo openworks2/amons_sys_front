@@ -54,7 +54,7 @@ const TableCompo = styled.div`
     }
     &.description {
       width: 368px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 359px;
       }
     }
@@ -62,7 +62,7 @@ const TableCompo = styled.div`
       width: 55px !important ;
       color: #7d7d7d;
     }
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -77,7 +77,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -104,27 +104,27 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 53px;
             }
           }
           &.address {
             width: 176px !important;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 179px !important;
             }
           }
           &.id {
             width: 81px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 82px;
             }
           }
           &.used-type {
             width: 159px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 161px;
             }
           }
@@ -133,13 +133,13 @@ const TableCompo = styled.div`
           }
           &.battery-time {
             width: 178px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 180px;
             }
           }
           &.description {
             width: 368px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 362px;
             }
           }

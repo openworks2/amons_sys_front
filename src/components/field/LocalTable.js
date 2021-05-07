@@ -30,7 +30,7 @@ const TableCompo = styled.div`
     &.name {
       text-align: left;
       width: 171px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 169px;
       }
     }
@@ -39,7 +39,7 @@ const TableCompo = styled.div`
     }
     &.description {
       width: 569px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 562px;
       }
     }
@@ -59,7 +59,7 @@ const TableCompo = styled.div`
       border: 0px;
     }
 
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -74,7 +74,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -101,14 +101,14 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 53px;
             }
           }
           &.name {
             width: 171px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 172px;
             }
           }
@@ -117,19 +117,19 @@ const TableCompo = styled.div`
           }
           &.description {
             width: 567px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 573px;
             }
           }
           &.created-date {
             width: 130px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 131px;
             }
           }
           &.modified-date {
             width: 130px !important;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 130px;
             }
           }
@@ -185,7 +185,7 @@ const TableCompo = styled.div`
     color: #7c7c7c;
     opacity: 1;
     margin: 0px;
-    margin-top: 36px;
+    margin-top: 17px;
     margin-bottom: 10px;
     padding: 0px;
   }

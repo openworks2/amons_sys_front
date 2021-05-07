@@ -11,7 +11,7 @@ import {
   Input,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { getWorkers } from "../../modules/workers";
+import { getAccounts } from "../../modules/accounts";
 import { useDispatch } from "react-redux";
 
 const TableCompo = styled.div`
@@ -38,14 +38,30 @@ const TableCompo = styled.div`
     &.no {
       width: 52px;
     }
-    &.company {
-      width: 152px;
-      text-align: left;
-      @media screen and (max-height: 937px) {
-        width: 160px;
+    &.role {
+      width: 88px;
+      @media screen and (max-height: 970px) {
       }
     }
-
+    &.id {
+      width: 200px;
+      text-align: left;
+    }
+    &.name {
+      width: 150px;
+    }
+    &.phone {
+      width: 140px;
+    }
+    &.mail {
+      width: 234px;
+    }
+    &.description {
+      width: 269px;
+      @media screen and (max-height: 970px) {
+        width: 260px;
+      }
+    }
     &.trash-icon {
       width: 55px !important ;
       color: #7d7d7d;
@@ -55,7 +71,7 @@ const TableCompo = styled.div`
       width: 25px;
       border: 0px;
     }
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -70,7 +86,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -101,13 +117,40 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 53px;
-            @media screen and (max-height: 937px) {
-              width: 52px;
+            @media screen and (max-height: 970px) {
+              width: 53px;
             }
           }
-
+          &.role {
+            width: 88px;
+          }
+          &.id {
+            width: 200px;
+            text-align: left;
+            @media screen and (max-height: 970px) {
+              width: 201px;
+            }
+          }
+          &.name {
+            width: 150px;
+            @media screen and (max-height: 970px) {
+              width: 151px;
+            }
+          }
+          &.phone {
+            width: 140px;
+          }
+          &.mail {
+            width: 234px;
+          }
+          &.description {
+            width: 269px;
+            @media screen and (max-height: 970px) {
+              width: 261px;
+            }
+          }
           &.trash-icon {
-            width: 55px !important ;
+            width: 54px !important ;
             color: #7d7d7d;
           }
           &.trash-icon-button {
@@ -233,9 +276,7 @@ const AccountTable = ({
   selectedRow,
   initFormData,
   initActiveRow,
-  companyData,
-  companySearchList,
-  addZero,
+  initPage,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -271,27 +312,39 @@ const AccountTable = ({
     const _data = data;
     let tempData = [];
     if (!searchValue) {
-      dispatch(getWorkers());
+      dispatch(getAccounts());
     }
     if (categorieValue === null) {
       // 전체검색
-      tempData = _data.filter((item) => item.wk_name.includes(searchValue));
+      tempData = _data.filter((item) => item.acc_user_id.includes(searchValue));
       setCurrentData(tempData);
     } else {
       // 검색
-      tempData = _data.filter((item) => item.co_index === categorieValue);
-      tempData = tempData.filter((item) => item.wk_name.includes(searchValue));
+      tempData = _data.filter((item) => item.acc_role === categorieValue);
+      tempData = tempData.filter((item) =>
+        item.acc_user_id.includes(searchValue)
+      );
       setCurrentData(tempData);
     }
     initActiveRow();
     initFormData();
-    activePage = 1;
+    initPage();
   };
 
   useEffect(() => {
     const _data = data;
     setCurrentData(_data);
   }, [data]);
+
+  const roleStrReturn = (role) => {
+    let str = "";
+    if (role === 2) {
+      str = "사용자";
+    } else {
+      str = "관리자";
+    }
+    return str;
+  };
 
   // 테이블
 
@@ -314,20 +367,32 @@ const AccountTable = ({
           className="table-row"
           key={index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.wk_id))}
+          onClick={item && ((e) => activeHandler(e, index, item.acc_id))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
           </Table.Cell>
-          <Table.Cell className="table-cell company" name="company">
-            {item &&
-              companyData &&
-              companyData.find((el) => el.co_index === item.co_index).co_name}
+          <Table.Cell className="table-cell role" name="role">
+            {item && roleStrReturn(item.acc_role)}
           </Table.Cell>
-
+          <Table.Cell className="table-cell id" name="id">
+            {item && item.acc_user_id && item.acc_user_id}
+          </Table.Cell>
+          <Table.Cell className="table-cell name" name="name">
+            {item && item.acc_name && item.acc_name}
+          </Table.Cell>
+          <Table.Cell className="table-cell phone" name="phone">
+            {item && item.acc_phone && item.acc_phone}
+          </Table.Cell>
+          <Table.Cell className="table-cell mail" name="mail">
+            {item && item.acc_mail && item.acc_mail}
+          </Table.Cell>
+          <Table.Cell className="table-cell description" name="description">
+            {item && item.description && item.description}
+          </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.wk_id === selectedId && (
+            {item && selectedId && item.acc_id === selectedId && (
               <Button
                 className="trash-icon-button"
                 onClick={(e) => {

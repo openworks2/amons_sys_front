@@ -11,6 +11,8 @@ import workers from "./workers";
 import vehicles from "./vehicles";
 import scanners from "./scanners";
 import cctvs from "./cctvs";
+//계정관리
+import accounts from "./accounts";
 
 const rootReducer = combineReducers({
   //현장관리
@@ -25,6 +27,8 @@ const rootReducer = combineReducers({
   vehicles,
   scanners,
   cctvs,
+  //계정관리
+  accounts,
 });
 
 export default rootReducer;

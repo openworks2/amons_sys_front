@@ -47,14 +47,14 @@ const InputCompo = styled.div`
     margin-top: 20px;
     .resizable-area {
       height: 738px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 68vh;
       }
       &::-webkit-scrollbar {
         display: none;
       }
       overflow: auto;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 67.5vh;
       }
       .input-form {
@@ -200,7 +200,7 @@ const InputCompo = styled.div`
     opacity: 1;
     position: absolute;
     top: 70.1vh;
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       top: 68vh;
     }
   }
@@ -215,7 +215,7 @@ const InputCompo = styled.div`
     color: #ffffff;
     position: absolute;
     top: 70.1vh;
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       top: 68vh;
     }
   }
@@ -291,7 +291,7 @@ const AccountInput = ({
             <Radio
               label="관리자"
               className="radio-row one"
-              id="acc_role"
+              id="admin"
               name="radioGroup"
               value={1}
               checked={acc_role && acc_role === 1}
@@ -300,7 +300,7 @@ const AccountInput = ({
             <Radio
               label="사용자"
               className="radio-row two"
-              id="acc_role"
+              id="user"
               name="radioGroup"
               value={2}
               checked={acc_role && acc_role === 2}
@@ -314,10 +314,7 @@ const AccountInput = ({
             name="acc_name"
             placeholder="이름을 입력해주세요."
             required
-            value={
-              acc_name &&
-              acc_name.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")
-            }
+            value={acc_name && acc_name}
             onChange={onChange}
           />
           <div className="id-area">
@@ -340,9 +337,7 @@ const AccountInput = ({
                 name="acc_user_id"
                 placeholder="아이디를 입력해주세요."
                 required
-                value={
-                  acc_user_id && acc_user_id.replace(/[^a-z|^A-Z|^0-9]*$/g, "")
-                }
+                value={acc_user_id && acc_user_id}
                 onChange={onChange}
               />
             )}
@@ -367,14 +362,11 @@ const AccountInput = ({
             name="acc_password"
             type="password"
             placeholder="비밀번호를 입력해주세요."
-            minlength="4"
             required
-            value={acc_password.replace(
-              /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
-              ""
-            )}
+            value={acc_password && acc_password}
             onChange={onChange}
           />
+          {passwordError && <InputError>{passwordError}</InputError>}
           <Form.Input
             label="비밀번호 확인"
             className="input-form password"
@@ -382,14 +374,11 @@ const AccountInput = ({
             name="acc_password_check"
             type="password"
             placeholder="비밀번호를 한 번 더 입력해주세요."
-            minlength="4"
             required
-            value={acc_password_check.replace(
-              /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
-              ""
-            )}
+            value={acc_password_check && acc_password_check}
             onChange={onChange}
           />
+          {passwordCheckError && <InputError>{passwordCheckError}</InputError>}
           <div className="phone-area">
             <div className="form-title phone">핸드폰</div>
             <NumberFormat

@@ -30,7 +30,7 @@ const CompanyTableCompo = styled.div`
     }
     &.description {
       width: 680px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 671px;
       }
     }
@@ -38,7 +38,7 @@ const CompanyTableCompo = styled.div`
       width: 55px !important ;
       color: #7d7d7d;
     }
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -75,26 +75,26 @@ const CompanyTableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 53px;
             }
           }
           &.company {
             width: 201px;
             text-align: left !important;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 202px;
             }
           }
           &.sector {
             width: 200px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 202px;
             }
           }
           &.description {
             width: 695px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 678px;
             }
           }
@@ -103,7 +103,7 @@ const CompanyTableCompo = styled.div`
             width: 55px !important ;
             margin: 0px;
             padding: 0px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 53px !important;
             }
           }
@@ -159,11 +159,11 @@ const CompanyTableCompo = styled.div`
     letter-spacing: 0px;
     color: #7c7c7c;
     opacity: 1;
-    margin-top: 25px;
+    margin-top: 5px;
     margin-bottom: 38px;
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       margin-bottom: 25px;
-      margin-top: 15px;
+      margin-top: 0px;
     }
   }
 `;

@@ -106,7 +106,7 @@ const TableCompo = styled.div`
     &.ip {
       width: 203px;
       text-align: left;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 193px;
       }
     }
@@ -121,7 +121,7 @@ const TableCompo = styled.div`
     }
     &.description {
       width: 182px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 183px;
       }
     }
@@ -135,7 +135,7 @@ const TableCompo = styled.div`
       border: 0px;
     }
 
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -150,7 +150,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -181,19 +181,19 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 53px;
             }
           }
           &.local {
             width: 101px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 102px;
             }
           }
           &.pos-x {
             width: 101px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 101px;
             }
           }
@@ -206,7 +206,7 @@ const TableCompo = styled.div`
           &.ip {
             width: 203px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 193px;
             }
           }

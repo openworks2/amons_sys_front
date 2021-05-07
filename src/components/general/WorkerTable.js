@@ -41,21 +41,21 @@ const TableCompo = styled.div`
     &.company {
       width: 152px;
       text-align: left;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 160px;
       }
     }
     &.position {
       width: 163px;
       text-align: left;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 155px;
       }
     }
     &.name {
       width: 163px;
       text-align: left;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 155px;
       }
     }
@@ -71,7 +71,7 @@ const TableCompo = styled.div`
     &.nation {
       width: 153px;
       text-align: left;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         width: 152px;
       }
     }
@@ -87,7 +87,7 @@ const TableCompo = styled.div`
       width: 25px;
       border: 0px;
     }
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -102,7 +102,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -133,28 +133,28 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 53px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 52px;
             }
           }
           &.company {
             width: 154px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 160px;
             }
           }
           &.position {
             width: 164px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 155px;
             }
           }
           &.name {
             width: 164px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 155px;
             }
           }
@@ -166,20 +166,20 @@ const TableCompo = styled.div`
           }
           &.blood {
             width: 100px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 100px;
             }
           }
           &.nation {
             width: 154px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 152px;
             }
           }
           &.beacon {
             width: 230px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 228px;
             }
           }

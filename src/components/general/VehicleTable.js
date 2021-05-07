@@ -66,7 +66,7 @@ const TableCompo = styled.div`
       border: 0px;
     }
 
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       &.trash-icon {
         width: 64px !important;
       }
@@ -81,7 +81,7 @@ const TableCompo = styled.div`
       position: relative;
       overflow: auto;
       height: 60.9vh;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 58.2vh;
       }
       /* overflow-y: scroll; */
@@ -116,34 +116,34 @@ const TableCompo = styled.div`
           &.company {
             width: 167px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 170px;
             }
           }
           &.name {
             width: 156px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 159px;
             }
           }
           &.number {
             width: 157px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 160px;
             }
           }
           &.beacon {
             width: 215px;
             text-align: left;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 219px;
             }
           }
           &.description {
             width: 388px;
-            @media screen and (max-height: 937px) {
+            @media screen and (max-height: 970px) {
               width: 385px;
             }
           }

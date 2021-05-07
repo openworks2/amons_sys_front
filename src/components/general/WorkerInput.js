@@ -108,14 +108,14 @@ const InputCompo = styled.div`
     margin-top: 20px;
     .resizable-area {
       height: 738px;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 68vh;
       }
       &::-webkit-scrollbar {
         display: none;
       }
       overflow: auto;
-      @media screen and (max-height: 937px) {
+      @media screen and (max-height: 970px) {
         height: 67.5vh;
       }
       .input-form {
@@ -331,7 +331,7 @@ const InputCompo = styled.div`
     opacity: 1;
     position: absolute;
     top: 70.1vh;
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       top: 68vh;
     }
   }
@@ -346,7 +346,7 @@ const InputCompo = styled.div`
     color: #ffffff;
     position: absolute;
     top: 70.1vh;
-    @media screen and (max-height: 937px) {
+    @media screen and (max-height: 970px) {
       top: 68vh;
     }
   }

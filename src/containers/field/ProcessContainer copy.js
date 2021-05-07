@@ -100,12 +100,11 @@ const ProcessContainer = () => {
     makeLocalList(localData);
   }, [localData, formData.local_index]);
 
-  useEffect(() => {
-    dispatch(getLocals());
-  });
+  // useEffect(() => {
+  //   dispatch(getLocals());
+  // });
 
   const makeLocalList = (data) => {
-    debugger;
     if (data) {
       let _localList = [];
       const _data = data.filter((el) => el.local_used !== 0);
@@ -114,6 +113,7 @@ const ProcessContainer = () => {
           key: index,
           text: item.local_name,
           value: item.local_index,
+          pcs_state: item.pcs_state,
         });
       });
       setLocalList(_localList);
@@ -347,6 +347,18 @@ const ProcessContainer = () => {
           prev_pcs_state: 1,
         };
       }
+      console.log("_00.formData-->", formData);
+      const _setLocalopt = localList.map((item) => {
+        if (item.value === formData.local_index) {
+          console.log(item.value);
+          const tempItem = {
+            pcs_state: formData.pcs_state,
+          };
+          return tempItem;
+        }
+        return item;
+      });
+      setLocalList(_setLocalopt);
 
       dispatch(postProcess(newProcess));
       initActiveRow();

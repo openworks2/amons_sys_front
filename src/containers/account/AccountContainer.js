@@ -5,11 +5,11 @@ import AccountTable from "../../components/account/AccountTable";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getWorkers,
-  postWorker,
-  deleteWorker,
-  putWorker,
-} from "../../modules/workers";
+  getAccounts,
+  postAccount,
+  deleteAccount,
+  putAccount,
+} from "../../modules/accounts";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -67,17 +67,15 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const AccountContatiner = () => {
-  // const { data, loading, error } = useSelector(
-  //   (state) => state.workers.workers
-  // );
+  const { data, loading, error } = useSelector(
+    (state) => state.accounts.accounts
+  );
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(getWorkers());
-  // }, [dispatch]);
-
-  const data = [];
+  useEffect(() => {
+    dispatch(getAccounts());
+  }, [dispatch]);
 
   const today = new Date();
 
@@ -113,6 +111,12 @@ const AccountContatiner = () => {
       setFormData({
         ...formData,
         acc_user_id: _acc_user_id,
+      });
+    } else if (name === "acc_name") {
+      let _acc_name = value.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "");
+      setFormData({
+        ...formData,
+        acc_name: _acc_name,
       });
     } else {
       setFormData({
@@ -211,6 +215,13 @@ const AccountContatiner = () => {
     itemsPerPage: 14, // 페이지 당 item 수
   });
 
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
   const onPageChange = (e, { activePage }) => {
     e.preventDefault();
     let _activePage = Math.ceil(activePage);
@@ -229,13 +240,12 @@ const AccountContatiner = () => {
   const [passwordCheckError, setPasswordCheckError] = useState(undefined);
   const [duplicationCheck, setDuplicationCheck] = useState(true);
 
-  const duplicationCheckHandler = () => {
-    let _data = data;
-
-    // 아이디 수정 시, 자기자신을 제외한 필터
-    if (selectedRow.selectedId) {
-      _data = _data.filter((el) => el.acc_id !== formData.acc_id);
-    }
+  const duplicationCheckHandler = async () => {
+    let auth = false;
+    try {
+      const response = await axios.post(`/api/account/doublecheck/`, formData);
+      auth = response.data.auth;
+    } catch (e) {}
 
     if (formData.acc_user_id === "" || !formData.acc_user_id) {
       setDuplicationCheck(false);
@@ -243,7 +253,7 @@ const AccountContatiner = () => {
       setTimeout(() => {
         setIdError(undefined);
       }, 1350);
-    } else if (_data.find((el) => el.acc_user_id === formData.acc_user_id)) {
+    } else if (!auth) {
       setDuplicationCheck(false);
       setIdError("*사용할 수 없는 아이디 입니다.");
       setTimeout(() => {
@@ -257,15 +267,26 @@ const AccountContatiner = () => {
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
-    if (!formData.co_index) {
-      // setCompanyError("*소속사를 선택해 주세요.");
+    if (!duplicationCheck) {
+      setIdError("*중복 확인을 먼저 해주세요.");
       setTimeout(() => {
-        // setCompanyError(undefined);
+        setIdError(undefined);
+      }, 1350);
+    } else if (formData.acc_password_check !== formData.acc_password) {
+      setPasswordCheckError("*비밀번호가 일치하지 않습니다.");
+      setTimeout(() => {
+        setPasswordCheckError(undefined);
+      }, 1350);
+    } else if (formData.acc_password.length < 4) {
+      setPasswordError("*비밀번호는 4자리 이상이어야 합니다.");
+      setTimeout(() => {
+        setPasswordError(undefined);
       }, 1350);
     } else {
-      const createData = new FormData();
-
-      dispatch(postWorker(createData));
+      let newAccount = {
+        ...formData,
+      };
+      dispatch(postAccount(newAccount));
       initActiveRow();
       initFormData();
     }
@@ -291,24 +312,24 @@ const AccountContatiner = () => {
       });
       const putData = new FormData();
 
-      dispatch(putWorker(formData.wk_index, putData));
+      dispatch(putAccount(formData.wk_index, putData));
     }
   };
 
   // DELETE
-  const deleteHandler = (e, wk_id) => {
-    dispatch(deleteWorker(wk_id));
+  const deleteHandler = (e, acc_id) => {
+    dispatch(deleteAccount(acc_id));
     initActiveRow();
     initFormData();
   };
 
-  // if (error) {
-  //   return (
-  //     <ErrMsg className="err-msg">
-  //       통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.
-  //     </ErrMsg>
-  //   );
-  // }
+  if (error) {
+    return (
+      <ErrMsg className="err-msg">
+        통신 에러가 발생했습니다. 새로고침 버튼을 눌러보세요.
+      </ErrMsg>
+    );
+  }
 
   return (
     <ContentsCompo className="contents-compo">
@@ -344,6 +365,7 @@ const AccountContatiner = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
+              initPage={initPage}
             />
           )}
         </div>

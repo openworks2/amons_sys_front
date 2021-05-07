@@ -29,9 +29,3 @@ export const deleteAccount = async (id) => {
   const response = await axios.delete(`/api/account/accounts/${id}`);
   return response.data;
 };
-
-// 중복확인
-export const doubleCheckAccount = async (data) => {
-  const response = await axios.post(`/api/account/doublecheck/`, data);
-  return response.data;
-};
