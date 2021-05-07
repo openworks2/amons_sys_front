@@ -281,6 +281,7 @@ const ProcessInput = ({
   onRadioChange,
   stateToString,
   stateError,
+  data,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -294,6 +295,11 @@ const ProcessInput = ({
     local_index,
   } = formData;
 
+  function date_descending(a, b) {
+    var dateA = new Date(a["created_date"]).getTime();
+    var dateB = new Date(b["created_date"]).getTime();
+    return dateA < dateB ? 1 : -1;
+  }
   return (
     <InputCompo className="input-compo">
       <p className="subtitle">공정상태 변경</p>
@@ -326,6 +332,7 @@ const ProcessInput = ({
             <PreviewBox>
               <div className="preview current-state-box">
                 {selectedRow.selectedId ? "이전상태" : "현재상태"}
+                {/* 이전상태 */}
                 {selectedRow.selectedId && (
                   <div className="preview current-state">
                     {formData.prev_pcs_state
@@ -333,9 +340,20 @@ const ProcessInput = ({
                       : "미착공"}
                   </div>
                 )}
+                {/* 현재상태 */}
                 {!selectedRow.selectedId && local_index && (
                   <div className="preview current-state">
-                    {stateToString(formData.prev_pcs_state)}
+                    {data
+                      .filter((el) => el.local_index === formData.local_index)
+                      .sort(date_descending)[0]
+                      ? stateToString(
+                          data
+                            .filter(
+                              (el) => el.local_index === formData.local_index
+                            )
+                            .sort(date_descending)[0].pcs_state
+                        )
+                      : "미착공"}
                   </div>
                 )}
                 {!selectedRow.selectedId && !local_index && (

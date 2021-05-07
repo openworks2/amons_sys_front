@@ -281,7 +281,8 @@ const AccountTable = ({
   let { activePage, itemsPerPage } = pageInfo;
 
   const idSearchOptions = [
-    { key: "0", value: null, text: "아이디 전체" },
+    { key: "4", value: null, text: "아이디 전체" },
+    { key: "0", value: 0, text: "super" },
     { key: "1", value: 1, text: "관리자" },
     { key: "2", value: 2, text: "사용자" },
   ];

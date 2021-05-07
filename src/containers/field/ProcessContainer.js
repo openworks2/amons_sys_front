@@ -402,6 +402,7 @@ const ProcessContainer = () => {
             onRadioChange={onRadioChange}
             stateToString={stateToString}
             stateError={stateError}
+            data={data}
           />
         </div>
         <div className="table-box">
