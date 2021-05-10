@@ -58,6 +58,12 @@ const InputCompo = styled.div`
     /* ui focus 색상변경 끝 */
   }
   /* date picker customize 시작 */
+  .saturday {
+    color: rgb(0, 0, 255);
+  }
+  .sunday {
+    color: rgb(255, 0, 0);
+  }
   .react-datepicker {
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
@@ -69,6 +75,7 @@ const InputCompo = styled.div`
     .react-datepicker__day--keyboard-selected {
       border-color: #f1592a !important;
       background-color: #f1592a !important;
+      color: #ffffff;
     }
   }
   .increase-button,
@@ -349,7 +356,7 @@ const DigInput = ({
     local_index,
   } = formData;
 
-  const years = _.range(2019, getYear(new Date()) + 1, 1); // 수정
+  const years = _.range(2019, getYear(new Date()) + 3, 1); // 수정
   const months = [
     "1월",
     "2월",
@@ -364,6 +371,17 @@ const DigInput = ({
     "11월",
     "12월",
   ];
+
+  // 요일 반환
+  const getDayName = (date) => {
+    return date.toLocaleDateString("ko-KR", { weekday: "long" }).substr(0, 1);
+  };
+  // 날짜 비교시 년 월 일까지만 비교하게끔
+  const createDate = (date) => {
+    return new Date(
+      new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+    );
+  };
 
   return (
     <InputCompo className="input-compo">
@@ -540,6 +558,13 @@ const DigInput = ({
                     placeholder="입력일을 선택해주세요."
                     onChange={(date) => onChangeDate(date)}
                     required
+                    dayClassName={(date) =>
+                      getDayName(createDate(date)) === "토"
+                        ? "saturday"
+                        : getDayName(createDate(date)) === "일"
+                        ? "sunday"
+                        : undefined
+                    }
                   />
                 </div>
               </div>

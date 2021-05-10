@@ -230,6 +230,14 @@ const DigContainer = () => {
     });
   };
 
+  const initSeq = () => {
+    setFormData({
+      ...formData,
+      dig_seq: null,
+      record_date: moment(formData.record_date).format("YYYY.MM.DD"),
+    });
+  };
+
   // table row 클릭 핸들러
   const activeHandler = (e, index, selectedId) => {
     if (index === selectedRow.clickedIndex) {
@@ -412,6 +420,7 @@ const DigContainer = () => {
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
+              initSeq={initSeq}
               initPage={initPage}
               localData={localData}
               localList={localList}

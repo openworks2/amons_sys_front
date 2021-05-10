@@ -269,17 +269,17 @@ const ProcessTable = ({
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
   const [categorieValue, setCategorieValue] = useState(null);
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, target) => {
     initActiveRow();
-    initFormData();
     initPage();
+    initFormData();
     const _target = target.value;
     setCategorieValue(_target);
   };
+
   useEffect(() => {
     let _data = data;
 

@@ -1,5 +1,7 @@
 import React from "react";
 import { Route } from "react-router";
+// log (이력조회)
+import DigLogContatiner from "../containers/log/DigLogContainer";
 // field (현장관리)
 import LocalContatiner from "../containers/field/LocalContainer";
 import AnnounceContainer from "../containers/field/AnnounceContainer";
@@ -14,7 +16,6 @@ import ScannerContainer from "../containers/general/ScannerContainer";
 import CctvContainer from "../containers/general/CctvContainer";
 //
 import HomeShortcut from "../components/home/HomeShortcut";
-//
 // account(계정관리)
 import AccountContainer from "../containers/account/AccountContainer";
 
@@ -22,6 +23,8 @@ const Contents = () => {
   return (
     <>
       <Route path="/amons/home/" component={HomeShortcut} exact />
+      {/* *******************************log 이력조회****************************** */}
+      <Route path="/amons/home/log/diglog" component={DigLogContatiner} />
       {/* *****************************field 현장관리******************************** */}
       <Route path="/amons/home/field/local" component={LocalContatiner} />
       <Route path="/amons/home/field/announce" component={AnnounceContainer} />
@@ -36,7 +39,6 @@ const Contents = () => {
       <Route path="/amons/home/general/cctv" component={CctvContainer} />
       {/* *****************************account 계정관리****************************** */}
       <Route path="/amons/home/account" component={AccountContainer} />
-      {/* *****************************account 계정관리****************************** */}
     </>
   );
 };

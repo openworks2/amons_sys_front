@@ -229,7 +229,7 @@ const PreviewBox = styled.div`
     border-radius: 4px;
   }
   .preview.current-state {
-    background: #375795 0% 0% no-repeat padding-box;
+    /* background: #375795 0% 0% no-repeat padding-box; */
     margin: auto;
     margin-top: 8px;
     width: 70px;
@@ -238,10 +238,12 @@ const PreviewBox = styled.div`
     opacity: 1;
     padding: 4px;
     color: #ffffff;
+    background: ${(props) => props.prevBackground || "#ffffff"};
     &.null {
       opacity: 0;
     }
   }
+
   .preview.next-state-box {
     display: inline-block;
     width: 158px;
@@ -251,7 +253,7 @@ const PreviewBox = styled.div`
     border-radius: 0px 4px 4px 0px;
   }
   .preview.next-state {
-    background: #7c3795 0% 0% no-repeat padding-box;
+    /* background: #7c3795 0% 0% no-repeat padding-box; */
     margin: auto;
     margin-top: 8px;
     width: 70px;
@@ -260,6 +262,7 @@ const PreviewBox = styled.div`
     opacity: 1;
     padding: 4px;
     color: #ffffff;
+    background: ${(props) => props.nextBackground || "#f2f2f2"};
     &.null {
       opacity: 0;
     }
@@ -294,6 +297,21 @@ const ProcessInput = ({
     pcs_description,
     local_index,
   } = formData;
+
+  // 미착공  #286e41
+  // 천공 #7c3795
+  // 장약 #636363
+  // 발파 #971717
+  // 버력처리 #v
+  // 숏크리트 #7c4c17
+  // 강지보 #707017
+  // 격자지보 #a1922b
+  // 록볼트 #175c59
+  // 방수시트 #1b2f54
+  // 라이닝 #3c3a3a
+  // 근무교대 #407d23
+  // 장비점검 #4c7e7c
+  // 기타 #351c3e
 
   function date_descending(a, b) {
     var dateA = new Date(a["created_date"]).getTime();

@@ -100,12 +100,7 @@ const ProcessContainer = () => {
     makeLocalList(localData);
   }, [localData, formData.local_index]);
 
-  useEffect(() => {
-    dispatch(getLocals());
-  });
-
   const makeLocalList = (data) => {
-    debugger;
     if (data) {
       let _localList = [];
       const _data = data.filter((el) => el.local_used !== 0);
@@ -191,17 +186,32 @@ const ProcessContainer = () => {
     return str;
   };
 
+  function date_descending(a, b) {
+    var dateA = new Date(a["created_date"]).getTime();
+    var dateB = new Date(b["created_date"]).getTime();
+    return dateA < dateB ? 1 : -1;
+  }
+
   // form onSelectChant Event
   const onSelectChange = (e, seletedValue) => {
     const name = seletedValue.name;
     const value = seletedValue.value;
 
-    let findItem = localData.find((el) => el.local_index === value);
+    let findItem = data
+      .filter((el) => el.local_index === value)
+      .sort(date_descending)[0];
+
     if (findItem) {
       setFormData({
         ...formData,
         [name]: value,
         prev_pcs_state: findItem.pcs_state,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+        prev_pcs_state: 1,
       });
     }
   };
@@ -347,7 +357,6 @@ const ProcessContainer = () => {
           prev_pcs_state: 1,
         };
       }
-
       dispatch(postProcess(newProcess));
       initActiveRow();
       initFormData();

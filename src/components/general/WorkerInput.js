@@ -49,6 +49,12 @@ const InputCompo = styled.div`
   }
 
   /* date picker customize 시작 */
+  .saturday {
+    color: rgb(0, 0, 255);
+  }
+  .sunday {
+    color: rgb(255, 0, 0);
+  }
   .react-datepicker {
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
@@ -60,6 +66,10 @@ const InputCompo = styled.div`
     .react-datepicker__day--keyboard-selected {
       border-color: #f1592a !important;
       background-color: #f1592a !important;
+      color: #ffffff;
+    }
+    .react-datepicker__day--disabled {
+      color: #ccc !important;
     }
   }
   .increase-button,
@@ -430,6 +440,16 @@ const WorkerInput = ({
     "11월",
     "12월",
   ];
+  // 요일 반환
+  const getDayName = (date) => {
+    return date.toLocaleDateString("ko-KR", { weekday: "long" }).substr(0, 1);
+  };
+  // 날짜 비교시 년 월 일까지만 비교하게끔
+  const createDate = (date) => {
+    return new Date(
+      new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+    );
+  };
 
   return (
     <InputCompo className="input-compo" selectedState={wk_id}>
@@ -577,6 +597,13 @@ const WorkerInput = ({
                   placeholder="생년월일을 입력해주세요."
                   onChange={(date) => onChangeDate(date)}
                   required
+                  dayClassName={(date) =>
+                    getDayName(createDate(date)) === "토"
+                      ? "saturday"
+                      : getDayName(createDate(date)) === "일"
+                      ? "sunday"
+                      : undefined
+                  }
                 />
               </div>
             </div>
