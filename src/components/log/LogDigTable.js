@@ -363,7 +363,7 @@ const TableCompo = styled.div`
   }
 `;
 
-const DigLogTable = ({
+const LogDigTable = ({
   pageInfo,
   data,
   onPageChange,
@@ -411,10 +411,13 @@ const DigLogTable = ({
   const [endDate, setEndDate] = useState(new Date());
 
   const onChangeStartDate = (date) => {
-    setStartDate(date);
+    let _date = moment(date).format("YYYY-MM-DD");
+    setStartDate(_date);
+    alert(startDate);
   };
   const onChangeEndDate = (date) => {
     setEndDate(date);
+    alert(endDate);
   };
 
   const StartDateInput = ({ value, onClick }) => (
@@ -700,7 +703,7 @@ const DigLogTable = ({
                   )}
                   className="date-picker-input end"
                   locale={ko}
-                  name="wk_birth"
+                  name="day_end"
                   useWeekdaysShort
                   onChange={(date) => onChangeEndDate(date)}
                   minDate={startDate}
@@ -796,4 +799,4 @@ const DigLogTable = ({
   );
 };
 
-export default DigLogTable;
+export default LogDigTable;

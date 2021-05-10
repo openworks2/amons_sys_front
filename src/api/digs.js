@@ -29,3 +29,15 @@ export const deleteDig = async (id) => {
   const response = await axios.delete(`/api/dig/digs/${id}`);
   return response.data;
 };
+
+// 굴진 이력 조회 (log) 현재 일시로 부터 한 달 전까지
+export const getLogDigMonth = async () => {
+  const response = await axios.get("/api/dig/digs/local");
+  return response.data;
+};
+
+// 굴진 이력 조회 (log) 노선 기간 검색
+export const postLogDigSearch = async (data) => {
+  const response = await axios.post(`/api/dig/digs/search`, data);
+  return response.data;
+};

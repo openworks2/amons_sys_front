@@ -30,7 +30,15 @@ const DELETE_DIG = "dig/DELETE_DIG";
 const DELETE_DIG_SUCCESS = "dig/DELETE_DIG_SUCCESS";
 const DELETE_DIG_ERROR = "dig/DELETE_DIG_ERROR";
 
-const CLEAR_ANNOUNCE = "dig/CLEAR_ANNOUNCE";
+const GET_LOGDIGMONTH = "dig/GET_LOGDIGMONTH";
+const GET_LOGDIGMONTH_SUCCESS = "dig/GET_LOGDIGMONTH_SUCCESS";
+const GET_LOGDIGMONTH_ERROR = "dig/GET_LOGDIGMONTH_ERROR";
+
+const POST_LOGDIGSEARCH = "dig/POST_LOGDIGSEARCH";
+const POST_LOGDIGSEARCH_SUCCESS = "dig/POST_LOGDIGSEARCH_SUCCESS";
+const POST_LOGDIGSEARCH_ERROR = "dig/POST_LOGDIGSEARCH_ERROR";
+
+const CLEAR_DIG = "dig/CLEAR_DIG";
 
 export const getDigs = createPromiseThunk(GET_DIGS, digsAPI.getDigs);
 export const getDig = handleAsyncActionsById(GET_DIG, digsAPI.getDigById);
@@ -49,16 +57,35 @@ export const deleteDig = (id) => async (dispatch) => {
     dispatch({ type: DELETE_DIG_ERROR, error: e });
   }
 };
+export const getLogDigMonth = createPromiseThunk(
+  GET_LOGDIGMONTH,
+  digsAPI.getLogDigMonth
+);
+export const postLogDigSearch = createPromiseThunkOfPost(
+  POST_LOGDIGSEARCH,
+  digsAPI.postLogDigSearch
+);
 
 const initialState = {
   digs: reducerUtils.initial(),
   dig: {},
+  logDigs: reducerUtils.initial(),
 };
 
 const getDigsReducer = handleAsyncActions(GET_DIGS, "digs", true);
 const getDigReducer = handleAsyncActionsById(GET_DIG, "dig", true);
 const postDigReducer = handleAsyncActionsOfPost(POST_DIG, "digs", true);
 const putDigReducer = handleAsyncActionsOfPut(PUT_DIG, "digs", "dig_seq", true);
+const getLogDigMonthReducer = handleAsyncActions(
+  GET_LOGDIGMONTH,
+  "logDigs",
+  true
+);
+const postLogDigSearchReducer = handleAsyncActionsOfPost(
+  POST_LOGDIGSEARCH,
+  "logDigs",
+  true
+);
 
 export default function digs(state = initialState, action) {
   switch (action.type) {
@@ -78,6 +105,14 @@ export default function digs(state = initialState, action) {
     case PUT_DIG_SUCCESS:
     case PUT_DIG_ERROR:
       return putDigReducer(state, action);
+    case GET_LOGDIGMONTH:
+    case GET_LOGDIGMONTH_SUCCESS:
+    case GET_LOGDIGMONTH_ERROR:
+      return getLogDigMonthReducer(state, action);
+    case POST_LOGDIGSEARCH:
+    case POST_LOGDIGSEARCH_SUCCESS:
+    case POST_LOGDIGSEARCH_ERROR:
+      return postLogDigSearchReducer(state, action);
     case DELETE_DIG:
       return {
         ...state,
@@ -91,14 +126,6 @@ export default function digs(state = initialState, action) {
       const items = state.digs.data;
       const _id = parseInt(action.payload.param);
       const filterData = items.filter((item) => item.dig_seq !== _id);
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log(items);
-      console.log(_id);
-      console.log(action);
-      console.log(action.payload.param);
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       return {
         ...state,
         digs: {
@@ -109,14 +136,6 @@ export default function digs(state = initialState, action) {
         },
       };
     case DELETE_DIG_ERROR:
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      // console.log(items);
-      // console.log(_id);
-      console.log(action);
-      console.log(action.payload.param);
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       return {
         ...state,
         digs: {
@@ -125,7 +144,7 @@ export default function digs(state = initialState, action) {
           error: action.error,
         },
       };
-    case CLEAR_ANNOUNCE:
+    case CLEAR_DIG:
       return {
         ...state,
         dig: {},
