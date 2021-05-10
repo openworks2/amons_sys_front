@@ -137,7 +137,7 @@ const InputCompo = styled.div`
     }
   }
   .phone {
-    color: black;
+    color: black !important;
     &:focus {
       border-color: #f1592a !important;
     }
@@ -145,6 +145,7 @@ const InputCompo = styled.div`
   .ui.form textarea {
     &:focus {
       border-color: #f1592a !important;
+      color: black;
     }
   }
   #delete-icon {
@@ -187,6 +188,7 @@ const InputCompo = styled.div`
 
   .input-form.description {
     height: 105px !important;
+    color: black !important;
   }
 
   .submit-button {

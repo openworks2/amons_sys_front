@@ -175,6 +175,7 @@ const AccountContatiner = () => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
+      setDuplicationCheck(false);
     } else {
       const findItem = data.find((account) => account.acc_id === selectedId);
 
@@ -191,15 +192,15 @@ const AccountContatiner = () => {
         modified_date: findItem.modified_date,
         acc_name: findItem.acc_name,
         acc_user_id: findItem.acc_user_id,
-        acc_password: findItem.acc_password,
-        acc_password_check: findItem.acc_password,
-        acc_salt: findItem.acc_salt,
         acc_phone: findItem.acc_phone,
         acc_tel: findItem.acc_tel,
         acc_mail: findItem.acc_mail,
         acc_role: findItem.acc_role,
         description: findItem.description,
       });
+      setTimeout(() => {
+        setDuplicationCheck(true);
+      }, 10);
     }
 
     console.log("formData");
@@ -246,7 +247,6 @@ const AccountContatiner = () => {
       const response = await axios.post(`/api/account/doublecheck/`, formData);
       auth = response.data.auth;
     } catch (e) {}
-
     if (formData.acc_user_id === "" || !formData.acc_user_id) {
       setDuplicationCheck(false);
       setIdError("*아이디를 입력해주세요.");
@@ -261,6 +261,11 @@ const AccountContatiner = () => {
       }, 1350);
     } else {
       setDuplicationCheck(true);
+    }
+    if (selectedRow && selectedRow.selectedId) {
+      data.find((el) => el.acc_id === selectedRow.selectedId).acc_user_id ===
+        formData.acc_user_id && setDuplicationCheck(true);
+      setIdError(undefined);
     }
   };
 
@@ -294,25 +299,27 @@ const AccountContatiner = () => {
 
   // UPDATE
   const updateHandler = (e) => {
-    // let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
-    // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
-    if (!formData.co_index) {
-      // setCompanyError("*소속사를 선택해 주세요.");
+    if (!duplicationCheck) {
+      setIdError("*중복 확인을 먼저 해주세요.");
       setTimeout(() => {
-        // setCompanyError(undefined);
+        setIdError(undefined);
+      }, 1350);
+    } else if (formData.acc_password_check !== formData.acc_password) {
+      setPasswordCheckError("*비밀번호가 일치하지 않습니다.");
+      setTimeout(() => {
+        setPasswordCheckError(undefined);
+      }, 1350);
+    } else if (formData.acc_password.length < 4) {
+      setPasswordError("*비밀번호는 4자리 이상이어야 합니다.");
+      setTimeout(() => {
+        setPasswordError(undefined);
       }, 1350);
     } else {
-      // 성공
       const findItem = selectedRow.selectedItem;
-      setFormData({
+      let newAccount = {
         ...formData,
-        wk_io_state: findItem.wk_io_state,
-        created_date: findItem.wk_create_date,
-        modified_date: today,
-      });
-      const putData = new FormData();
-
-      dispatch(putAccount(formData.wk_index, putData));
+      };
+      dispatch(putAccount(formData.acc_id, newAccount));
     }
   };
 
