@@ -355,8 +355,10 @@ const WorkerTable = ({
       tempData = tempData.filter((item) => item.wk_name.includes(searchValue));
       setCurrentData(tempData);
     }
-    initActiveRow();
-    initFormData();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     initPage();
   };
 

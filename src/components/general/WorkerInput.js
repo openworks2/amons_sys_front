@@ -50,10 +50,10 @@ const InputCompo = styled.div`
 
   /* date picker customize 시작 */
   .saturday {
-    color: rgb(0, 0, 255);
+    color: #305a70;
   }
   .sunday {
-    color: rgb(255, 0, 0);
+    color: #ce3f3f;
   }
   .react-datepicker {
     font-family: "NotoSansKR-Regular";

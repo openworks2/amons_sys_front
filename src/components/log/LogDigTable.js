@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { Icon, Table, Pagination } from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import "moment/locale/ko";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -171,12 +172,13 @@ const TableCompo = styled.div`
   }
 
   .saturday {
-    color: rgb(0, 0, 255);
+    color: #305a70;
   }
   .sunday {
-    color: rgb(255, 0, 0);
+    color: #ce3f3f;
   }
   .react-datepicker {
+    margin: 20px;
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
     .react-datepicker__day-names {
@@ -375,17 +377,14 @@ const LogDigTable = ({
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
-  // 삭제 모달
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
   const [currentData, setCurrentData] = useState([]);
 
   useEffect(() => {
-    let _data = data;
-    let tempData = [];
-
-    tempData = _data.filter((item) => item.local_index);
-    setCurrentData(tempData);
+    if (!data) {
+      setCurrentData([]);
+    } else {
+      setCurrentData(data);
+    }
   }, [data]);
 
   const years = _.range(2020, getYear(new Date()) + 3, 1); // 수정
@@ -405,19 +404,14 @@ const LogDigTable = ({
   ];
   const today = new Date();
 
-  const [dateError, setDateError] = useState(undefined);
-
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
   const onChangeStartDate = (date) => {
-    let _date = moment(date).format("YYYY-MM-DD");
-    setStartDate(_date);
-    alert(startDate);
+    setStartDate(date);
   };
   const onChangeEndDate = (date) => {
     setEndDate(date);
-    alert(endDate);
   };
 
   const StartDateInput = ({ value, onClick }) => (
@@ -446,6 +440,53 @@ const LogDigTable = ({
       </div>
     </>
   );
+
+  const searchByDate = async () => {
+    const searchCondition = {
+      local_index: localData ? localData.local_index : null,
+      from_date: new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate(),
+        0,
+        0,
+        0
+      ).toISOString(),
+      to_date: new Date(
+        endDate.getFullYear(),
+        endDate.getMonth(),
+        endDate.getDate(),
+        23,
+        59,
+        59
+      ).toISOString(),
+    };
+    let searchData = [];
+    try {
+      const response = await axios.post(
+        `/api/dig/digs/search`,
+        searchCondition
+      );
+      searchData = response.data;
+      console.log("searchData response !!!");
+      console.log(response);
+      console.log("searchData response!!!");
+    } catch (e) {
+      console.log("굴진 기간 조회 서버 통신 에러");
+    }
+    if (!searchData) {
+      searchData = [];
+    }
+    console.log("searchData !!!");
+    console.log(searchData);
+    console.log("searchCondition");
+    console.log(searchCondition);
+    console.log(searchData);
+    console.log("searchData !!!");
+
+    setCurrentData(searchData);
+  };
+
   // 요일 반환
   const getDayName = (date) => {
     return date.toLocaleDateString("ko-KR", { weekday: "long" }).substr(0, 1);
@@ -472,49 +513,6 @@ const LogDigTable = ({
       (activePage - 1) * itemsPerPage + itemsPerPage
     );
 
-  // const TopMenuRender = (localData = []) => {
-  //   if (!localData) {
-  //     localData = [];
-  //   }
-  //   let _localData = localData.filter((el) => el.local_used !== 0);
-  //   _localData = _localData.slice(0, 7);
-  //   return _localData.map((item, index) => {
-  //     return (
-  //       <Menu.Item
-  //         className="table-categorie-menu categorie"
-  //         name={item.local_name && item.local_name}
-  //         active={categorieValue === item.local_index}
-  //         value={item.local_index && item.local_index}
-  //         onClick={onClickCategorie}
-  //       />
-  //     );
-  //   });
-  // };
-
-  // <Table.Cell className="table-cell local" name="local">
-  //           {item &&
-  //             item.local_index &&
-  //             localData.find((el) => el.local_index === item.local_index) &&
-  //             (localData.find((el) => el.local_index === item.local_index)
-  //               .local_used === 0
-  //               ? localData.find((el) => el.local_index === item.local_index)
-  //                   .local_name + `(삭제됨)`
-  //               : localData.find((el) => el.local_index === item.local_index)
-  //                   .local_name)}
-  //         </Table.Cell>
-
-  //   <Table.Cell className="table-cell plan" name="plan">
-  //   {item &&
-  //     localData.find((el) => el.local_index === item.local_index) &&
-  //     addComma(
-  //       addZero(
-  //         localData.find((el) => el.local_index === item.local_index)
-  //           .plan_length,
-  //         3
-  //       )
-  //     ) + "m"}
-  // </Table.Cell>
-
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
@@ -538,12 +536,8 @@ const LogDigTable = ({
           <Table.Cell className="table-cell percent" name="percent">
             {item &&
               item.dig_length &&
-              localData.find((el) => el.local_index === item.local_index) &&
-              getDigAmountPercent(
-                localData.find((el) => el.local_index === item.local_index)
-                  .plan_length,
-                item.dig_length
-              )}
+              localData &&
+              getDigAmountPercent(localData.plan_length, item.dig_length)}
           </Table.Cell>
         </Table.Row>
       );
@@ -554,8 +548,12 @@ const LogDigTable = ({
     <>
       <TableCompo className="table-compo">
         <div className="table-title-box">
-          <div id="table-title-box-title">시점 함양</div>
-          <div id="table-title-box-plan">L=2,542m</div>
+          <div id="table-title-box-title">
+            {localData && localData.local_name}
+          </div>
+          <div id="table-title-box-plan">
+            {localData && "L=" + addComma(localData.plan_length) + "m"}
+          </div>
         </div>
         <div className="date-area">
           <div className="date-box">
@@ -573,7 +571,7 @@ const LogDigTable = ({
                 }) => (
                   <>
                     <p className="cal-subtitle">시작일을 선택하세요.</p>
-                    <div className="border-line" />
+                    {/* <div className="border-line" /> */}
                     <div
                       style={{
                         margin: 10,
@@ -651,7 +649,7 @@ const LogDigTable = ({
                   }) => (
                     <>
                       <p className="cal-subtitle">종료일을 선택하세요.</p>
-                      <div className="border-line" />
+                      {/* <div className="border-line" /> */}
                       <div
                         style={{
                           margin: 10,
@@ -719,7 +717,7 @@ const LogDigTable = ({
                   }
                 ></DatePicker>
               </div>
-              <div className="data-picker-label">
+              <div className="data-picker-label" onClick={searchByDate}>
                 조회
                 <FaSearch className="label-icon" />
               </div>

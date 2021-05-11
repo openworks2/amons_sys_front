@@ -313,9 +313,11 @@ const CctvTable = ({
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, value) => {
-    initActiveRow();
-    initFormData();
     initPage();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     const _value = value.value;
     setCategorieValue(_value);
   };
@@ -360,8 +362,10 @@ const CctvTable = ({
       setSearchValue("");
       setCurrentData(tempData);
     }
-    initActiveRow();
-    initFormData();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     initPage();
   };
 

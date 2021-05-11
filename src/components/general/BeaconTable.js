@@ -331,8 +331,10 @@ const BeaconTable = ({
         ));
       setCurrentData(tempData2);
     }
-    initActiveRow();
-    initFormData();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     initPage();
   };
 

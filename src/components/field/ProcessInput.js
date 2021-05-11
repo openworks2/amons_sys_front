@@ -302,7 +302,7 @@ const ProcessInput = ({
   // 천공 #7c3795
   // 장약 #636363
   // 발파 #971717
-  // 버력처리 #v
+  // 버력처리 #375795
   // 숏크리트 #7c4c17
   // 강지보 #707017
   // 격자지보 #a1922b
@@ -312,6 +312,61 @@ const ProcessInput = ({
   // 근무교대 #407d23
   // 장비점검 #4c7e7c
   // 기타 #351c3e
+
+  const returnColor = (pcsState) => {
+    let colorValue = "#286e41";
+
+    switch (pcsState) {
+      case 1: // 미착공
+        colorValue = "#286e41";
+        break;
+      case 2: // 천공
+        colorValue = "#7c3795";
+        break;
+      case 3: // 장약
+        colorValue = "#636363";
+        break;
+      case 4: // 발파
+        colorValue = "#971717";
+        break;
+      case 5: // 버력처리
+        colorValue = "#375795";
+        break;
+      case 6: // 숏크리트
+        colorValue = "#7c4c17";
+        break;
+      case 7: // 강지보
+        colorValue = "#707017";
+        break;
+      case 8: // 격자지보
+        colorValue = "#a1922b";
+        break;
+      case 9: // 록볼트
+        colorValue = "#175c59";
+        break;
+      case 10: // 방수시트
+        colorValue = "#1b2f54";
+        break;
+      case 11: //라이닝
+        colorValue = "#3c3a3a";
+        break;
+      case 12: // 근무교대
+        colorValue = "#407d23";
+        break;
+      case 13: // 장비점검
+        colorValue = "#4c7e7c";
+        break;
+      case 14: // 기타
+        colorValue = "#351c3e";
+        break;
+    }
+
+    return colorValue;
+  };
+
+  const colorStyle = (pcsState) => {
+    return { backgroundColor: returnColor(pcsState) };
+  };
 
   function date_descending(a, b) {
     var dateA = new Date(a["created_date"]).getTime();
@@ -352,7 +407,10 @@ const ProcessInput = ({
                 {selectedRow.selectedId ? "이전상태" : "현재상태"}
                 {/* 이전상태 */}
                 {selectedRow.selectedId && (
-                  <div className="preview current-state">
+                  <div
+                    className="preview current-state"
+                    style={colorStyle(prev_pcs_state)}
+                  >
                     {formData.prev_pcs_state
                       ? stateToString(formData.prev_pcs_state)
                       : "미착공"}
@@ -360,7 +418,19 @@ const ProcessInput = ({
                 )}
                 {/* 현재상태 */}
                 {!selectedRow.selectedId && local_index && (
-                  <div className="preview current-state">
+                  <div
+                    className="preview current-state"
+                    style={colorStyle(
+                      data
+                        .filter((el) => el.local_index === formData.local_index)
+                        .sort(date_descending)[0] &&
+                        data
+                          .filter(
+                            (el) => el.local_index === formData.local_index
+                          )
+                          .sort(date_descending)[0].pcs_state
+                    )}
+                  >
                     {data
                       .filter((el) => el.local_index === formData.local_index)
                       .sort(date_descending)[0]
@@ -382,7 +452,10 @@ const ProcessInput = ({
               <div className="preview next-state-box">
                 변경상태
                 {formData.pcs_state ? (
-                  <div className="preview next-state">
+                  <div
+                    className="preview next-state"
+                    style={colorStyle(formData.pcs_state)}
+                  >
                     {formData.pcs_state && stateToString(formData.pcs_state)}
                   </div>
                 ) : (

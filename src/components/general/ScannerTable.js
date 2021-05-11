@@ -330,8 +330,10 @@ const ScannerTable = ({
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, value) => {
-    initActiveRow();
-    initFormData();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     initPage();
     const _value = value.value;
     setCategorieValue(_value);
@@ -385,8 +387,10 @@ const ScannerTable = ({
       setSearchValue("");
       setCurrentData(tempData);
     }
-    initActiveRow();
-    initFormData();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     initPage();
   };
 

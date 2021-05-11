@@ -246,7 +246,9 @@ const AccountContatiner = () => {
     try {
       const response = await axios.post(`/api/account/doublecheck/`, formData);
       auth = response.data.auth;
-    } catch (e) {}
+    } catch (e) {
+      console.log("중복확인 서버 통신 에러");
+    }
     if (formData.acc_user_id === "" || !formData.acc_user_id) {
       setDuplicationCheck(false);
       setIdError("*아이디를 입력해주세요.");

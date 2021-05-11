@@ -318,8 +318,10 @@ const VehicleTable = ({
       tempData = tempData.filter((item) => item.vh_name.includes(searchValue));
       setCurrentData(tempData);
     }
-    initActiveRow();
-    initFormData();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     initPage();
   };
 

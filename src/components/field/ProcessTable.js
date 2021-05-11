@@ -273,9 +273,11 @@ const ProcessTable = ({
   const [currentData, setCurrentData] = useState([]);
 
   const onClickCategorie = (e, target) => {
-    initActiveRow();
     initPage();
-    initFormData();
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
     const _target = target.value;
     setCategorieValue(_target);
   };
