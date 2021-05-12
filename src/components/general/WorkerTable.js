@@ -299,6 +299,13 @@ const SearchCompo = styled.div`
     color: #2e2e2e !important;
     opacity: 0.8;
   }
+  .divider,
+  .text {
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 13px !important;
+    vertical-align: middle;
+    padding: 1px;
+  }
 `;
 
 const WorkerTable = ({

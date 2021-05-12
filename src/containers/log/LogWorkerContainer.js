@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import AlarmInput from "../../components/log/AlarmInput";
-import AlarmTable from "../../components/log/AlarmTable";
+import LogWorkerTable from "../../components/log/LogWorkerTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
+import { getCompanies } from "../../modules/companies";
 import { getAlarms, postAlarmSearch, putAlarm } from "../../modules/alarms";
 import moment from "moment";
 import "moment/locale/ko";
@@ -30,24 +30,12 @@ const ContentsBodyCompo = styled.div`
     margin: 0px;
     display: none;
   }
-
-  .input-box {
-    background: #ffffff 0% 0% no-repeat padding-box;
-    border: 1px solid #c5c9cf;
-    width: 368px;
-    height: 82.5vh;
-    min-height: 683px;
-    padding-top: 22px;
-    display: inline-block;
-    vertical-align: top;
-  }
   .table-box {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;
-    width: 1236px;
+    width: 1620px;
     height: 82.5vh;
     min-height: 683px;
-    margin-left: 20px;
     padding-top: 10px;
     display: inline-block;
     vertical-align: top;
@@ -63,10 +51,11 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const AlarmContainer = () => {
+const LogWorkerContainer = () => {
   const { data, loading, error } = useSelector((state) => state.alarms.alarms);
 
   const localData = useSelector((state) => state.locals.locals.data);
+  const companyData = useSelector((state) => state.companies.companies.data);
 
   const dispatch = useDispatch();
 
@@ -76,25 +65,18 @@ const AlarmContainer = () => {
 
   useEffect(() => {
     dispatch(getLocals());
+    dispatch(getCompanies());
   }, [dispatch]);
 
   console.log(data);
 
-  const [formData, setFormData] = useState({
-    emg_seq: null,
-    emg_writer: "",
-    emg_result: "",
-  });
-
   useEffect(() => {
     makeLocalList(localData);
-  }, [localData, formData.local_index]);
+  }, [localData]);
 
   useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
+    makeCompanyList(companyData);
+  }, [companyData]);
 
   const [localList, setLocalList] = useState([]);
 
@@ -115,67 +97,26 @@ const AlarmContainer = () => {
     }
   };
 
-  // form onChange Event
-  const onChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    // 입력값 state 에 저장
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const [companyList, setCompanyList] = useState([]);
+  const makeCompanyList = (data) => {
+    if (data) {
+      let _companyList = [];
 
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
-
-  const initActiveRow = () => {
-    setSelectedRow({
-      selectedId: null,
-      selectedItem: undefined,
-      clickedIndex: null,
-    });
-  };
-  const initFormData = () => {
-    setFormData({
-      ...formData,
-      emg_seq: null,
-      emg_writer: "",
-      emg_result: "",
-    });
-  };
-
-  // table row 클릭 핸들러
-  const activeHandler = (e, index, selectedId) => {
-    if (index === selectedRow.clickedIndex) {
-      initActiveRow();
-      initFormData();
-    } else {
-      const findItem = data.find((alarm) => alarm.emg_seq === selectedId);
-
-      setSelectedRow({
-        selectedId: findItem.emg_seq,
-        selectedItem: findItem,
-        clickedIndex: index,
+      _companyList.push({
+        key: "all",
+        text: "소속사 전체",
+        value: null,
       });
 
-      setFormData({
-        ...formData,
-        emg_seq: findItem.emg_seq,
-        emg_writer: findItem.emg_writer,
-        emg_result: findItem.emg_result,
+      data.map((item, index) => {
+        _companyList.push({
+          key: index,
+          text: item.co_name,
+          value: item.co_index,
+        });
       });
+      setCompanyList(_companyList);
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션
@@ -198,9 +139,6 @@ const AlarmContainer = () => {
       ...PreState,
       activePage: _activePage,
     });
-    // 활성화된 로우 초기화
-    initActiveRow();
-    initFormData();
   };
 
   const today = new Date();
@@ -227,19 +165,6 @@ const AlarmContainer = () => {
     dispatch(postAlarmSearch(searchCondition));
   };
 
-  // UPDATE
-  const updateHandler = (e) => {
-    e.preventDefault();
-
-    // 성공
-    const findItem = selectedRow.selectedItem;
-
-    let newAlarm = {
-      ...formData,
-    };
-    dispatch(putAlarm(newAlarm.alarm_seq, newAlarm));
-  };
-
   if (error) {
     return (
       <ErrMsg className="err-msg">
@@ -251,39 +176,22 @@ const AlarmContainer = () => {
   return (
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
-        <div className="input-box">
-          <AlarmInput
-            className="alarm-input-box"
-            onChange={onChange}
-            formData={formData}
-            updateHandler={updateHandler}
-            selectedRow={selectedRow}
-            initFormData={initFormData}
-            initActiveRow={initActiveRow}
-            localList={localList}
-          />
-        </div>
         <div className="table-box">
-          {data && (
-            <AlarmTable
-              className="alarm-table-box"
-              pageInfo={pageInfo}
-              data={data}
-              activeHandler={activeHandler}
-              onPageChange={onPageChange}
-              selectedRow={selectedRow}
-              initFormData={initFormData}
-              initActiveRow={initActiveRow}
-              initPage={initPage}
-              localData={localData}
-              localList={localList}
-              onSearch={onSearch}
-            />
-          )}
+          <LogWorkerTable
+            className="alarm-table-box"
+            pageInfo={pageInfo}
+            data={data}
+            onPageChange={onPageChange}
+            initPage={initPage}
+            localData={localData}
+            localList={localList}
+            companyList={companyList}
+            onSearch={onSearch}
+          />
         </div>
       </ContentsBodyCompo>
     </ContentsCompo>
   );
 };
 
-export default AlarmContainer;
+export default LogWorkerContainer;

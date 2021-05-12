@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  Button,
-  Icon,
-  Table,
-  Pagination,
-  Modal,
-  Menu,
-  Input,
-} from "semantic-ui-react";
+import { Icon, Table, Pagination, Menu, Dropdown } from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt, FaFileDownload } from "react-icons/fa";
-import { getCctvs } from "../../modules/cctvs";
-import { useDispatch } from "react-redux";
 import moment from "moment";
 import "moment/locale/ko";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -23,6 +13,8 @@ registerLocale("ko", ko);
 const _ = require("lodash");
 
 const CategorieMenuCompo = styled.div`
+  font-family: "NotoSansKR-Regular" !important;
+  font-size: 13px !important;
   /* date picker customize 시작 */
   .cal-icon {
     top: 12px;
@@ -176,6 +168,9 @@ const CategorieMenuCompo = styled.div`
     &.all {
       width: 80px;
     }
+    &.company-select {
+      background: #f2f2f2 0% 0% no-repeat padding-box;
+    }
   }
   .ui.menu .item > .input input {
     &:focus {
@@ -231,6 +226,47 @@ const CategorieMenuCompo = styled.div`
       }
     }
   }
+  .divider,
+  .text {
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 13px !important;
+    vertical-align: middle;
+    padding: 1px;
+  }
+  .table-company-dropdown {
+    width: 140px !important;
+    background: #f2f2f2 0% 0% no-repeat padding-box;
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 13px !important;
+    .ui.basic.button {
+      border: 0px !important;
+      border-radius: 0px;
+      box-shadow: none;
+      display: flex;
+      width: 100%;
+    }
+    .ui.dropdown > .dropdown.icon,
+    &:before,
+    &:after {
+      left: 95px;
+      font-size: 20px;
+      position: absolute;
+      color: #2e2e2e !important;
+      opacity: 0.8;
+    }
+    .ui.basic.button:hover,
+    .ui.basic.buttons .button:hover,
+    .ui.basic.button:focus,
+    .ui.basic.buttons .button:focus {
+      background: #f2f2f2 0% 0% no-repeat padding-box !important;
+    }
+    .active.selected.item {
+      display: none;
+    }
+    .item {
+      width: 140px !important;
+    }
+  }
 `;
 
 const TableCompo = styled.div`
@@ -250,39 +286,42 @@ const TableCompo = styled.div`
     color: #000000;
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
-    text-align: center;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    text-align: left;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
     &.local {
-      width: 90px;
+      width: 110px;
+      text-align: center;
     }
     &.name {
-      width: 100px;
+      width: 150px;
     }
     &.company {
-      width: 110px;
-      text-align: left;
+      width: 150px;
     }
-    &.age {
-      width: 70px;
-    }
-    &.phone {
+    &.position {
       width: 140px;
     }
-    &.receive-time {
+    &.nation {
+      width: 130px;
+    }
+    &.input-time {
+      width: 210px;
+      text-align: center;
+    }
+    &.out-time {
+      width: 210px;
+      text-align: center;
+    }
+    &.remain-time {
       width: 180px;
+      text-align: center;
     }
-    &.writer {
-      width: 100px;
-      color: #ce3f3f;
-    }
-    &.emg-end-time {
-      width: 180px;
-      color: #ce3f3f;
-    }
-    &.result {
-      width: 218px;
-      color: #ce3f3f;
+    &.blank {
+      width: 292px;
+      @media screen and (max-height: 970px) {
+        width: 292px;
+      }
     }
   }
 
@@ -317,50 +356,44 @@ const TableCompo = styled.div`
         opacity: 1;
         height: 47px;
         .table-cell {
-          text-align: center;
+          text-align: left;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 20px;
+          padding-right: 20px;
           vertical-align: middle;
-          &.no {
-            width: 52px;
-            @media screen and (max-height: 970px) {
-              width: 53px;
-            }
-          }
           &.local {
-            width: 90px;
+            width: 110px;
+            text-align: center;
           }
           &.name {
-            width: 100px;
+            width: 150px;
           }
           &.company {
-            width: 110px;
-            text-align: left;
+            width: 150px;
           }
-          &.age {
-            width: 70px;
-          }
-          &.phone {
+          &.position {
             width: 140px;
           }
-          &.receive-time {
+          &.nation {
+            width: 130px;
+          }
+          &.input-time {
+            width: 210px;
+            text-align: center;
+          }
+          &.out-time {
+            width: 210px;
+            text-align: center;
+          }
+          &.remain-time {
             width: 180px;
+            text-align: center;
           }
-          &.writer {
-            width: 100px;
-            color: #ce3f3f;
-          }
-          &.emg-end-time {
-            width: 180px;
-            color: #ce3f3f;
-          }
-          &.result {
-            width: 218px;
-            color: #ce3f3f;
+          &.blank {
+            width: 292px;
             @media screen and (max-height: 970px) {
-              width: 208px;
+              width: 282px;
             }
           }
         }
@@ -390,21 +423,6 @@ const TableCompo = styled.div`
     }
   }
 
-  .ui.table td.active,
-  .ui.table tr.active {
-    background: #f9fafb !important;
-    &:hover {
-      background: #f9fafb !important;
-    }
-  }
-  .ui.checkbox input:checked ~ label:after {
-    background-color: #2e2e2e;
-    border-radius: 4px;
-    border-color: #929292;
-    color: #ffffff;
-    font-size: 12px;
-  }
-
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -419,16 +437,16 @@ const TableCompo = styled.div`
   }
 `;
 
-const AlarmTable = ({
+const LogWorkerTable = ({
   pageInfo,
   data,
   activeHandler,
   onPageChange,
   selectedRow,
-  initFormData,
-  initActiveRow,
   initPage,
   localData,
+  localList,
+  companyList,
   onSearch,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
@@ -438,12 +456,18 @@ const AlarmTable = ({
   const [categorieValue, setCategorieValue] = useState(null);
   const [currentData, setCurrentData] = useState([]);
 
+  const onSelectChange = (e, seletedValue) => {
+    const name = seletedValue.name;
+    const value = seletedValue.value;
+
+    // setFormData({
+    //   ...formData,
+    //   [name]: !value,
+    // });
+  };
+
   const onClickCategorie = (e, value) => {
     initPage();
-    if (selectedRow.selectedId) {
-      initActiveRow();
-      initFormData();
-    }
     const _value = value.value;
     setCategorieValue(_value);
   };
@@ -478,8 +502,6 @@ const AlarmTable = ({
       (activePage - 1) * itemsPerPage + itemsPerPage
     );
 
-  const { selectedId, selectedItem, clickedIndex } = selectedRow;
-
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
@@ -487,12 +509,7 @@ const AlarmTable = ({
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
       return (
-        <Table.Row
-          className="table-row"
-          key={index}
-          active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.emg_seq))}
-        >
+        <Table.Row className="table-row" key={index}>
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell local" name="local">
             {item &&
@@ -509,30 +526,30 @@ const AlarmTable = ({
             {item && item.wk_name && item.wk_name}
           </Table.Cell>
           <Table.Cell className="table-cell company" name="company">
-            {item && item.co_name && item.co_name}
+            {item && item.wk_co_name && item.wk_co_name}
           </Table.Cell>
-          <Table.Cell className="table-cell age" name="age">
-            {item && item.wk_birth && calAge(item.wk_name)}
+          <Table.Cell className="table-cell position" name="position">
+            {item && item.wk_position && calAge(item.wk_position)}
           </Table.Cell>
-          <Table.Cell className="table-cell phone" name="phone">
-            {item && item.wk_phone && item.wk_phone}
+          <Table.Cell className="table-cell nation" name="nation">
+            {item && item.wk_nation && item.wk_nation}
           </Table.Cell>
-          <Table.Cell className="table-cell receive-time" name="receive-time">
+          <Table.Cell className="table-cell input-time" name="input-time">
             {item &&
               item.bc_receive_time &&
               moment(item.bc_receive_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
-          <Table.Cell className="table-cell writer" name="writer">
-            {item && item.emg_writer && item.emg_writer}
+          <Table.Cell className="table-cell out-time" name="out-time">
+            {item &&
+              item.bc_receive_time &&
+              moment(item.bc_receive_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
-          <Table.Cell className="table-cell emg-end-time" name="emg-end-time">
+          <Table.Cell className="table-cell remain-time" name="remain-time">
             {item &&
               item.emg_end_time &&
               moment(item.emg_end_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
-          <Table.Cell className="table-cell result" name="result">
-            {item && item.emg_result && item.emg_result}
-          </Table.Cell>
+          <Table.Cell className="table-cell blank" name="blank"></Table.Cell>
         </Table.Row>
       );
     });
@@ -617,6 +634,7 @@ const AlarmTable = ({
   const getDayName = (date) => {
     return date.toLocaleDateString("ko-KR", { weekday: "long" }).substr(0, 1);
   };
+
   // 날짜 비교시 년 월 일까지만 비교하게끔
   const createDate = (date) => {
     return new Date(
@@ -626,8 +644,8 @@ const AlarmTable = ({
 
   // 테이블
   function date_descending(a, b) {
-    var dateA = new Date(a["bc_receive_time"]).getTime();
-    var dateB = new Date(b["bc_receive_time"]).getTime();
+    var dateA = new Date(a["record_date"]).getTime();
+    var dateB = new Date(b["record_date"]).getTime();
     return dateA < dateB ? 1 : -1;
   }
 
@@ -643,7 +661,19 @@ const AlarmTable = ({
             onClick={onClickCategorie}
           />
           {TopMenuRender(localData)}
-
+          <Menu.Menu className="table-company-dropdown">
+            <Dropdown
+              button
+              basic
+              id="co_index"
+              name="co_index"
+              options={companyList}
+              className="dropdown"
+              placeholder="소속사 전체"
+              name="searchCategorie"
+              onChange={(e, value) => onSelectChange(e, value)}
+            />
+          </Menu.Menu>
           <Menu.Menu>
             <Menu.Item className="table-categorie-menu datepicker-start">
               <FaRegCalendarAlt className="cal-icon" />
@@ -832,7 +862,7 @@ const AlarmTable = ({
         </Menu>
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">알람이력 : 작업자의 조회결과</p>
+        <p className="subtitle">막장 잔류이력 : 작업자의 조회결과</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
@@ -845,30 +875,25 @@ const AlarmTable = ({
               <Table.HeaderCell singleLine className="table-header company">
                 소속사
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header age">
-                나이
+              <Table.HeaderCell singleLine className="table-header position">
+                직위
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header phone">
-                핸드폰
+              <Table.HeaderCell singleLine className="table-header nation">
+                국적
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header input-time">
+                진입일시
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header out-time">
+                퇴출일시
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header remain-time">
+                막장 체류시간
               </Table.HeaderCell>
               <Table.HeaderCell
                 singleLine
-                className="table-header receive-time"
-              >
-                수신일시
-              </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header writer">
-                작성자
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header emg-end-time"
-              >
-                조치일시
-              </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header result">
-                내용
-              </Table.HeaderCell>
+                className="table-header blank"
+              ></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
@@ -921,4 +946,4 @@ const AlarmTable = ({
   );
 };
 
-export default AlarmTable;
+export default LogWorkerTable;

@@ -1,8 +1,10 @@
 import React from "react";
 import { Route } from "react-router";
 // log (이력조회)
-import LogDigContatiner from "../containers/log/LogDigContainer";
 import AlarmContainer from "../containers/log/AlarmContainer";
+import LogWorkerContainer from "../containers/log/LogWorkerContainer";
+// import LogVehicleContainer from "../containers/log/LogVehicleContainer";
+import LogDigContatiner from "../containers/log/LogDigContainer";
 // field (현장관리)
 import LocalContatiner from "../containers/field/LocalContainer";
 import AnnounceContainer from "../containers/field/AnnounceContainer";
@@ -26,6 +28,8 @@ const Contents = () => {
       <Route path="/amons/home/" component={HomeShortcut} exact />
       {/* *******************************log 이력조회****************************** */}
       <Route path="/amons/home/log/diglog" component={LogDigContatiner} />
+      <Route path="/amons/home/log/workerlog" component={LogWorkerContainer} />
+      {/* <Route path="/amons/home/log/vehiclelog" component={LogVehicleContatiner} /> */}
       <Route path="/amons/home/log/alarm" component={AlarmContainer} />
       {/* *****************************field 현장관리******************************** */}
       <Route path="/amons/home/field/local" component={LocalContatiner} />

@@ -394,7 +394,7 @@ const DigTable = ({
       localData = [];
     }
     let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 7);
+    _localData = _localData.slice(0, 4);
     return _localData.map((item, index) => {
       return (
         <Menu.Item

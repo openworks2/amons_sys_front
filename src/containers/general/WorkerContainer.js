@@ -228,13 +228,6 @@ const WorkerContatiner = () => {
   // form onSelectChant Event
 
   const onSelectChange = (e, seletedValue) => {
-    console.log("*****************************");
-    console.log("e");
-    console.log(e);
-    console.log(e.target);
-    console.log("value");
-    console.log("*****************************");
-    console.log(seletedValue.options);
     const name = seletedValue.name;
     const value = seletedValue.value;
     if (formData.wk_blood_type) {
@@ -264,9 +257,6 @@ const WorkerContatiner = () => {
         [name]: value,
       });
     }
-    console.log("formData");
-    console.log(formData);
-    console.log("*****************************");
   };
 
   // datepicker
