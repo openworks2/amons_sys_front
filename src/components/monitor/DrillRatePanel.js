@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 const RateCompo = styled.div`
@@ -54,8 +54,19 @@ const RateCompo = styled.div`
 `;
 
 
-const DrillRatePanel = ({ data }) => {
-    console.log('DrillRatePanel-->',data);
+const DrillRatePanel = ({ data, numberOfDigitsHandler }) => {
+
+    const percentCalc = useCallback((dig, plan) => {
+        const percent = (dig / plan) * 100;
+        const diviPercent = Math.round(percent * 10) / 10;
+        return diviPercent;
+    }, []);
+
+    useEffect(() => {
+
+    }, [data]);
+
+
     return (
         <RateCompo className="rate-component">
             <div className="contents-container">
@@ -65,23 +76,23 @@ const DrillRatePanel = ({ data }) => {
                             <td rowSpan="2" className="row-title">구분</td>
                             <td colSpan="3" className="colunm-title">
                                 <span className="location-name">함양</span>
-                                <span className="location-value">L=3,359m (개착 24m, NATM 3,335m)</span>
+                                <span className="location-value">{`L=${numberOfDigitsHandler(data[0].plan_length + data[1].plan_length)}m (개착 24m, NATM 3,335m)`}</span>
                             </td>
                             <td colSpan="3" className="colunm-title">
                                 <span className="location-name">울산</span>
-                                <span className="location-value">L=3,379m (개착 24m, NATM 3,335m)</span>
+                                <span className="location-value">{`L=${numberOfDigitsHandler(data[2].plan_length + data[3].plan_length)}m (개착 24m, NATM 3,355m)`}</span>
                             </td>
                             <td className="colunm-title">
                                 <span className="location-name">신원터널</span>
-                                <span className="location-value">L=6,738m</span>
+                                <span className="location-value">{`L=${numberOfDigitsHandler(data[0].plan_length + data[1].plan_length + data[2].plan_length + data[3].plan_length)}m`}</span>
                             </td>
                         </tr>
                         <tr>
-                            <td className="location-name">시점 함양</td>
-                            <td className="location-name">종점 함양</td>
+                            <td className="location-name">{data[0].local_name}</td>
+                            <td className="location-name">{data[1].local_name}</td>
                             <td className="location-name">함양 합계</td>
-                            <td className="location-name">시점 울산</td>
-                            <td className="location-name">종점 울산</td>
+                            <td className="location-name">{data[2].local_name}</td>
+                            <td className="location-name">{data[3].local_name}</td>
                             <td className="location-name">울산 합계</td>
                             <td className="location-name">전체 합계</td>
                         </tr>
@@ -89,33 +100,33 @@ const DrillRatePanel = ({ data }) => {
                     <tbody>
                         <tr className="">
                             <td className="row-title">총 계획 연장</td>
-                            <td className="item-value">2,542m</td>
-                            <td className="item-value">817m</td>
-                            <td className="item-value">3,359m</td>
-                            <td className="item-value">2,562m</td>
-                            <td className="item-value">2817m</td>
-                            <td className="item-value">3,378m</td>
-                            <td className="item-value">6,738m</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[0].plan_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[1].plan_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[0].plan_length + data[1].plan_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[2].plan_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[3].plan_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[2].plan_length + data[3].plan_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[0].plan_length + data[1].plan_length + data[2].plan_length + data[3].plan_length)}m`}</td>
                         </tr>
                         <tr>
                             <td className="row-title">누적 굴진량(거리)</td>
-                            <td className="item-value">2,542m</td>
-                            <td className="item-value">817m</td>
-                            <td className="item-value">3,359m</td>
-                            <td className="item-value">2,562m</td>
-                            <td className="item-value">2817m</td>
-                            <td className="item-value">3,378m</td>
-                            <td className="item-value">6,738m</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[0].dig_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[1].dig_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[0].dig_length + data[1].dig_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[2].dig_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[3].dig_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[2].dig_length + data[3].dig_length)}m`}</td>
+                            <td className="item-value">{`${numberOfDigitsHandler(data[0].dig_length + data[1].dig_length + data[2].dig_length + data[3].dig_length)}m`}</td>
                         </tr>
                         <tr className="location-total-row">
                             <td className="row-title">누전 굴진율</td>
-                            <td className="item-value">40.1%</td>
-                            <td className="item-value">26%</td>
-                            <td className="item-value">36.7%</td>
-                            <td className="item-value">0</td>
-                            <td className="item-value">0</td>
-                            <td className="item-value">0</td>
-                            <td className="item-value">18%</td>
+                            <td className="item-value">{`${percentCalc(data[0].dig_length, data[0].plan_length)}%`}</td>
+                            <td className="item-value">{`${percentCalc(data[1].dig_length, data[1].plan_length)}%`}</td>
+                            <td className="item-value">{`${percentCalc((data[0].dig_length + data[1].dig_length), (data[0].plan_length + data[1].plan_length))}%`}</td>
+                            <td className="item-value">{`${percentCalc(data[2].dig_length, data[2].plan_length)}%`}</td>
+                            <td className="item-value">{`${percentCalc(data[3].dig_length, data[3].plan_length)}%`}</td>
+                            <td className="item-value">{`${percentCalc((data[2].dig_length + data[3].dig_length), (data[2].plan_length + data[3].plan_length))}%`}</td>
+                            <td className="item-value">{`${percentCalc((data[0].dig_length + data[1].dig_length + data[2].dig_length + data[3].dig_length), (data[0].plan_length + data[1].plan_length + data[2].plan_length + data[3].plan_length))}%`}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -124,4 +135,4 @@ const DrillRatePanel = ({ data }) => {
     );
 };
 
-export default DrillRatePanel;
+export default React.memo(DrillRatePanel);

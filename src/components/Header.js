@@ -165,7 +165,12 @@ const HeaderCompo = styled.div`
 
 
 
-const Header = ({ callSideMenuHandler, setRatePanelHandler }) => {
+const Header = ({
+  callSideMenuHandler,
+  setRatePanelHandler,
+  triggerFull,
+  exitFull
+}) => {
   return (
     <HeaderCompo className="header-component">
       <div className="left-area">
@@ -206,13 +211,13 @@ const Header = ({ callSideMenuHandler, setRatePanelHandler }) => {
             <div className="button-name">굴진율</div>
           </div>
           <div className="shortcut-button-box">
-            <div className="shortcut-button general-screen">
+            <div className="shortcut-button general-screen" onClick={exitFull}>
               <FontAwesomeIcon icon={faCompressArrowsAlt} />
             </div>
             <div className="button-name">일반화면</div>
           </div>
           <div className="shortcut-button-box">
-            <div className="shortcut-button full-screen">
+            <div className="shortcut-button full-screen" onClick={triggerFull}>
               <FontAwesomeIcon icon={faExpandArrowsAlt} />
             </div>
             <div className="button-name">전체화면</div>

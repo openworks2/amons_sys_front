@@ -53,32 +53,12 @@ const ExpandMapCompo = styled.div`
                     height: 44px;
                     top: 100px;
                     left: 75px;
-                    .worker-count-box {
-                        position: absolute;
-                        top: -24px;
-                        left: 22px;
-                        background: #171717;
-                        color: #fff;
-                        width: 22px;
-                        height: 22px;
-                        text-align: center;
-                    }
                 }
                 .vehicle-icon{
                     width: 62px;
                     height: 52px;
                     top: 131px;
                     left: 111px;
-                    .vehicle-count-box {
-                        position: absolute;
-                        top: -21px;
-                        left: 38px;
-                        background: #171717;
-                        color: #fff;
-                        width: 22px;
-                        height: 22px;
-                        text-align: center;
-                    }
                 }
                 .scanner-icon{
                     right: 132px;
@@ -401,16 +381,10 @@ const ExpandMapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
                     backgroundRepeat: 'no-repeat',
                 }
 
-                return <div className="block block " id={`block-${item.value}`} key={index} style={_blockStyled}>
+                return <div className="block" id={`block-${item.value}`} key={index} style={_blockStyled}>
                     <img src={item.open ? `../../map/expand_open.png` : `../../map/expand_close.png`} alt="close" style={_imgStyled} />
-                    {item.show['worker'] && item.open && item.worker
-                        && <div className="worker-icon" style={workerStyled}>
-                            <div className="worker-count-box">{item.worker_count}</div>
-                        </div>}
-                    {item.show['vehicle'] && item.open && item.vehicle
-                        && <div className="vehicle-icon" style={vehicleStyled}>
-                            <div className="vehicle-count-box">{item.vehicle_count}</div>
-                        </div>}
+                    {item.show['worker'] && item.open && item.worker && <div className="worker-icon" style={workerStyled}></div>}
+                    {item.show['vehicle'] && item.open && item.vehicle && <div className="vehicle-icon" style={vehicleStyled}></div>}
                     {item.show['scanner'] && item.open && item.scanner && <div className="scanner-icon">
                         <div className="scanner-img"></div>
                         <div className="scanner-device-box"></div>

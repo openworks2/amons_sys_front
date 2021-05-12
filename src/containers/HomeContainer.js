@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Contents from "../components/Contents";
@@ -8,6 +8,7 @@ import SideMenu from "../components/SideMenu";
 import { getCompanies } from "../modules/companies";
 import { Redirect } from "react-router";
 import { setRatePanel } from "../modules/monitor";
+import useFullscreen from "../lib/useFullscrenn";
 
 
 
@@ -25,14 +26,32 @@ const HomeContainer = () => {
 
   const dispatch = useDispatch();
 
+
+  const [fullState, setState] = useState(false);
   // 전체화면 설정
   const openFullScreenMode = () => {
     console.log(2134234)
-    var docV = document.documentElement;
-    console.log('-->', docV)
-    docV.webkitRequestFullscreen();
+    let docV = document.documentElement;
+    // docV.webkitRequestFullscreen();
+    if (docV.requestFullscreen) {
+      docV.requestFullscreen();
+    } else if (docV.mozRequestFullScreen) {
+      docV.mozRequestFullScreen();
+    } else if (docV.webkitRequestFullscreen) {
+      docV.webkitRequestFullscreen();
+    } else if (docV.msRequestFullscreen) {
+      docV.msRequestFullscreen();
+    }
 
+    //   if (docV) {
+    //   }
+  };
+
+  const closeFullScreenMode = () => {
+    // var docV = document.documentElement;
+    document.webkitExitFullscreen();
   }
+
 
 
   // 사이드바 호출 버튼 핸들러
@@ -75,13 +94,17 @@ const HomeContainer = () => {
     dispatch(setRatePanel());
   }
 
-
   useEffect(() => {
   }, [])
 
   return (
     <HomeCompo className="Home-component">
-      <Header callSideMenuHandler={callSideMenuHandler} setRatePanelHandler={setRatePanelHandler} />
+      <Header
+        callSideMenuHandler={callSideMenuHandler}
+        setRatePanelHandler={setRatePanelHandler}
+        triggerFull={openFullScreenMode}
+        exitFull={closeFullScreenMode}
+      />
       <SideMenu
         callSideMenu={callSideMenu}
         callSideMenuHandler={callSideMenuHandler}

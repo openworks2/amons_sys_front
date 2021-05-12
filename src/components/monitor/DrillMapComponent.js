@@ -212,7 +212,7 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
             </div>
             {
                 ratePanelOpen &&
-                <DrillRatePanel data={data}/>
+                <DrillRatePanel data={data} numberOfDigitsHandler={numberOfDigitsHandler}/>
             }
         </DrillMapCompo>
     );

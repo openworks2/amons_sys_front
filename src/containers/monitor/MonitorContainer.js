@@ -192,7 +192,7 @@ const MonitorContainer = () => {
                     <div className="left-bottom-box map-box">
                         {
                             monitor.data &&
-                            <MapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} />
+                            <MapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} bleData={beacon.data && beacon.data} />
                         }
                     </div>
                 </div>
@@ -287,7 +287,7 @@ const MonitorContainer = () => {
                     </div>
                 </div>
                 {
-                    expandMap && <ExpandMapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} />
+                    expandMap && <ExpandMapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} bleData={beacon.data && beacon.data} />
                 }
             </BodyCompo>
             {
