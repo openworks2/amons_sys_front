@@ -21,6 +21,8 @@ import CctvContainer from "../containers/general/CctvContainer";
 import HomeShortcut from "../components/home/HomeShortcut";
 // account(계정관리)
 import AccountContainer from "../containers/account/AccountContainer";
+// ect(기타관리)
+import SettingsContainer from "../containers/ect/SettingsContainer";
 
 const Contents = () => {
   return (
@@ -45,6 +47,8 @@ const Contents = () => {
       <Route path="/amons/home/general/cctv" component={CctvContainer} />
       {/* *****************************account 계정관리****************************** */}
       <Route path="/amons/home/account" component={AccountContainer} />
+      {/* *******************************ect 기타관리****************************** */}
+      <Route path="/amons/home/ect/settings" component={SettingsContainer} />
     </>
   );
 };

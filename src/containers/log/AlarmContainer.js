@@ -224,20 +224,22 @@ const AlarmContainer = () => {
       to_date: moment(_endDate).format("YYYY.MM.DD HH:mm:ss"),
     };
 
+    console.log("searchCondition!!!");
+    console.log(searchCondition);
+    console.log("searchCondition!!!");
+
     dispatch(postAlarmSearch(searchCondition));
   };
 
-  // UPDATE
-  const updateHandler = (e) => {
+  // 등록
+  const createHandler = (e) => {
     e.preventDefault();
-
-    // 성공
-    const findItem = selectedRow.selectedItem;
 
     let newAlarm = {
       ...formData,
     };
-    dispatch(putAlarm(newAlarm.alarm_seq, newAlarm));
+
+    dispatch(putAlarm(newAlarm.emg_seq, newAlarm));
   };
 
   if (error) {
@@ -256,11 +258,10 @@ const AlarmContainer = () => {
             className="alarm-input-box"
             onChange={onChange}
             formData={formData}
-            updateHandler={updateHandler}
+            createHandler={createHandler}
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
-            localList={localList}
           />
         </div>
         <div className="table-box">

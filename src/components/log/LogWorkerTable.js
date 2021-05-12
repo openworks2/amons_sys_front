@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Icon, Table, Pagination, Menu, Dropdown } from "semantic-ui-react";
+import {
+  Icon,
+  Table,
+  Pagination,
+  Menu,
+  Dropdown,
+  Input,
+} from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt, FaFileDownload } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko";
@@ -184,28 +191,43 @@ const CategorieMenuCompo = styled.div`
     width: 1.3em;
     height: 1.3em;
   }
+  .ui.input > input,
+  .ui.input {
+    width: 200px;
+    border-radius: 0px;
+    border-color: #f2f2f2 !important;
+    border: 0px solid !important;
+  }
+
+  .search-box {
+    margin-top: 2px;
+    width: 202px;
+    height: 35px;
+    border-radius: 0px;
+    background-color: #f2f2f2;
+    &:hover,
+    &:focus {
+      background-color: #f1592a !important;
+    }
+  }
+  .search-icon {
+    position: absolute;
+    top: 12px;
+    left: 175px;
+    color: #3d3d3d;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+      color: #f1592a !important;
+    }
+  }
+
   .table-categorie-menu {
     font-family: "NotoSansKR-Regular";
     font-size: 13px;
     text-align: center;
     width: 110px;
-    &.search {
-      text-align: left;
-      background: #f2f2f2 0% 0% no-repeat padding-box;
-      cursor: pointer;
-      &.search-icon {
-        width: 30px;
-        position: absolute;
-        background-color: rgba(255, 255, 255, 0) !important;
-        left: 70px;
-        top: 13px;
-        font-size: 15px;
-        cursor: pointer;
-      }
-      &:hover {
-        color: #f1592a !important;
-      }
-    }
+
     &.download {
       text-align: left;
       cursor: pointer;
@@ -454,6 +476,7 @@ const LogWorkerTable = ({
   // 검색 기능 table 데이터 처리
   // 검색하고 curreunt page 1 로 이동시켜줘야 함.
   const [categorieValue, setCategorieValue] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
   const [currentData, setCurrentData] = useState([]);
 
   const onSelectChange = (e, seletedValue) => {
@@ -464,6 +487,12 @@ const LogWorkerTable = ({
     //   ...formData,
     //   [name]: !value,
     // });
+  };
+
+  // serach input 입력
+  const onSearchChange = (e) => {
+    const _searchValue = e.target.value;
+    setSearchValue(_searchValue);
   };
 
   const onClickCategorie = (e, value) => {
@@ -611,7 +640,7 @@ const LogWorkerTable = ({
           onClick();
         }}
       >
-        {moment(startDate).format("YYYY.MM.DD HH:mm")}
+        {moment(startDate).format("YYYY-MM-DD HH:mm")}
         <div className="custom-triangle start" />
       </div>
     </div>
@@ -624,7 +653,7 @@ const LogWorkerTable = ({
           onClick();
         }}
       >
-        {moment(endDate).format("YYYY.MM.DD HH:mm")}
+        {moment(endDate).format("YYYY-MM-DD HH:mm")}
         <div className="custom-triangle end" />
       </div>
     </div>
@@ -843,15 +872,21 @@ const LogWorkerTable = ({
             </Menu.Item>
           </Menu.Menu>
           <Menu.Menu position="right">
-            <Menu.Item
-              className="table-categorie-menu search"
-              onClick={() => {
-                onSearch(categorieValue, startDate, endDate);
-              }}
-            >
-              조회
-              <FaSearch className="table-categorie-menu search search-icon" />
-            </Menu.Item>
+            <div className="search-box">
+              <Input
+                className="search-input"
+                actionPosition="left"
+                placeholder="이름을 검색해 주세요."
+                value={searchValue}
+                onChange={onSearchChange}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    onSearch();
+                  }
+                }}
+                icon={<FaSearch onClick={onSearch} className="search-icon" />}
+              />
+            </div>
           </Menu.Menu>
           <Menu.Menu>
             <Menu.Item className="table-categorie-menu download">

@@ -19,6 +19,7 @@ import "../../react-datepicker.css";
 import ko from "date-fns/locale/ko";
 import getYear from "date-fns/getYear";
 import getMonth from "date-fns/getMonth";
+
 registerLocale("ko", ko);
 const _ = require("lodash");
 
@@ -432,7 +433,6 @@ const AlarmTable = ({
   onSearch,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
-
   // 검색 기능 table 데이터 처리
   // 검색하고 curreunt page 1 로 이동시켜줘야 함.
   const [categorieValue, setCategorieValue] = useState(null);
@@ -471,12 +471,10 @@ const AlarmTable = ({
   // 테이블
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData
-    .sort(date_descending)
-    .slice(
-      (activePage - 1) * itemsPerPage,
-      (activePage - 1) * itemsPerPage + itemsPerPage
-    );
+  const viewItems = currentData.slice(
+    (activePage - 1) * itemsPerPage,
+    (activePage - 1) * itemsPerPage + itemsPerPage
+  );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
@@ -486,6 +484,7 @@ const AlarmTable = ({
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
+      console.log(item);
       return (
         <Table.Row
           className="table-row"
@@ -497,6 +496,7 @@ const AlarmTable = ({
           <Table.Cell className="table-cell local" name="local">
             {item &&
               item.local_index &&
+              localData &&
               localData.find((el) => el.local_index === item.local_index) &&
               (localData.find((el) => el.local_index === item.local_index)
                 .local_used === 0
@@ -509,18 +509,18 @@ const AlarmTable = ({
             {item && item.wk_name && item.wk_name}
           </Table.Cell>
           <Table.Cell className="table-cell company" name="company">
-            {item && item.co_name && item.co_name}
+            {item && item.wk_co_name && item.wk_co_name}
           </Table.Cell>
           <Table.Cell className="table-cell age" name="age">
-            {item && item.wk_birth && calAge(item.wk_name)}
+            {item && item.wk_birth && calAge(item.wk_birth)}
           </Table.Cell>
           <Table.Cell className="table-cell phone" name="phone">
             {item && item.wk_phone && item.wk_phone}
           </Table.Cell>
           <Table.Cell className="table-cell receive-time" name="receive-time">
             {item &&
-              item.bc_receive_time &&
-              moment(item.bc_receive_time).format("YYYY-MM-DD HH:mm:ss")}
+              item.emg_start_time &&
+              moment(item.emg_start_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell writer" name="writer">
             {item && item.emg_writer && item.emg_writer}
@@ -594,7 +594,7 @@ const AlarmTable = ({
           onClick();
         }}
       >
-        {moment(startDate).format("YYYY.MM.DD HH:mm")}
+        {moment(startDate).format("YYYY-MM-DD HH:mm")}
         <div className="custom-triangle start" />
       </div>
     </div>
@@ -607,7 +607,7 @@ const AlarmTable = ({
           onClick();
         }}
       >
-        {moment(endDate).format("YYYY.MM.DD HH:mm")}
+        {moment(endDate).format("YYYY-MM-DD HH:mm")}
         <div className="custom-triangle end" />
       </div>
     </div>
@@ -623,13 +623,6 @@ const AlarmTable = ({
       new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
     );
   };
-
-  // 테이블
-  function date_descending(a, b) {
-    var dateA = new Date(a["bc_receive_time"]).getTime();
-    var dateB = new Date(b["bc_receive_time"]).getTime();
-    return dateA < dateB ? 1 : -1;
-  }
 
   return (
     <>

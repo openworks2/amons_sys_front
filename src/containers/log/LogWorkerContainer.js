@@ -163,6 +163,7 @@ const LogWorkerContainer = () => {
     };
 
     dispatch(postAlarmSearch(searchCondition));
+    initPage();
   };
 
   if (error) {

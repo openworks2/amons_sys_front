@@ -22,6 +22,11 @@ const TableCompo = styled.div`
   background: #ffffff 0% 0% no-repeat padding-box;
   border: 1px solid #c5c9cf;
   opacity: 1;
+  .ui.table {
+    margin-top: 5px;
+    table-layout: fixed;
+    word-break: break-all;
+  }
 
   .table-title-box {
     margin-left: -1px;
@@ -422,7 +427,7 @@ const LogDigTable = ({
           onClick();
         }}
       >
-        {moment(startDate).format("YYYY.MM.DD")}
+        {moment(startDate).format("YYYY-MM-DD")}
         <div className="custom-triangle start" />
       </div>
     </>
@@ -435,7 +440,7 @@ const LogDigTable = ({
           onClick();
         }}
       >
-        {moment(endDate).format("YYYY.MM.DD")}
+        {moment(endDate).format("YYYY-MM-DD")}
         <div className="custom-triangle end" />
       </div>
     </>
