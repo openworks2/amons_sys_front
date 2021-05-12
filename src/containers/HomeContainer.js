@@ -6,6 +6,11 @@ import Header from "../components/Header";
 import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { Redirect } from "react-router";
+import { setRatePanel } from "../modules/monitor";
+
+
+
+
 
 const HomeCompo = styled.div`
   height: 100%;
@@ -16,7 +21,18 @@ const HomeCompo = styled.div`
   overflow: auto;
 `;
 
-const HomeContainer = () => {
+const HomeContainer = ({ currentMenu }) => {
+  const dispatch = useDispatch();
+
+  // 전체화면 설정
+  const openFullScreenMode = () => {
+    console.log(2134234)
+    var docV = document.documentElement;
+    console.log('-->', docV)
+    docV.webkitRequestFullscreen();
+
+  }
+
   // 사이드바 호출 버튼 핸들러
   const [callSideMenu, setCallSideMenu] = useState(false);
   function callSideMenuHandler() {
@@ -32,10 +48,22 @@ const HomeContainer = () => {
     setCurrentUrl(location);
   });
 
+  // target-DrillRatePanel.js
+  // const [ratePanelOpen, setPanelOpen] = useState(false);
+
+  const setRatePanelHandler = () => {
+    // setPanelOpen(!ratePanelOpen)
+    dispatch(setRatePanel());
+  }
+
+
+  useEffect(() => {
+  }, [])
+
   return (
     <>
       <HomeCompo className="Home-component">
-        <Header callSideMenuHandler={callSideMenuHandler} />
+        <Header callSideMenuHandler={callSideMenuHandler} setRatePanelHandler={setRatePanelHandler} />
         <SideMenu
           callSideMenu={callSideMenu}
           callSideMenuHandler={callSideMenuHandler}
@@ -44,7 +72,7 @@ const HomeContainer = () => {
         {currentUrl && currentUrl !== "home" && currentUrl !== "monitering" && (
           <ContentTitle currentUrl={currentUrl}></ContentTitle>
         )}
-        <Contents />
+        <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} />
       </HomeCompo>
     </>
   );

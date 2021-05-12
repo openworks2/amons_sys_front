@@ -8,9 +8,10 @@ const MainComo = styled.div`
 `;
 
 const MainContainer = () => {
+
   return (
     <MainComo className="main-component">
-      <Redirect to="/amons/home" />
+      <Redirect to="/amons/signin" />
     </MainComo>
   );
 };

@@ -1,10 +1,11 @@
 import React from 'react';
+import LoginContainer from '../containers/LoginContainer';
 
 const LoginPage = () => {
     return (
-        <div>
-            로그인
-        </div>
+        <>
+            <LoginContainer />
+        </>
     );
 };
 
