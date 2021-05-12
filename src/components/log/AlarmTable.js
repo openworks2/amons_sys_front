@@ -9,7 +9,7 @@ import {
   Menu,
   Input,
 } from "semantic-ui-react";
-import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
+import { FaSearch, FaRegCalendarAlt, FaFileDownload } from "react-icons/fa";
 import { getCctvs } from "../../modules/cctvs";
 import { useDispatch } from "react-redux";
 import moment from "moment";
@@ -23,6 +23,145 @@ registerLocale("ko", ko);
 const _ = require("lodash");
 
 const CategorieMenuCompo = styled.div`
+  /* date picker customize 시작 */
+  .cal-icon {
+    top: 12px;
+    position: absolute;
+    color: #2e2e2e;
+    display: inline-block;
+    font-size: 15px;
+    vertical-align: middle;
+  }
+  .custom-triangle {
+    position: absolute;
+    top: 5px;
+    margin-left: 115px;
+    width: 0px;
+    height: 0px;
+    border-top: 6px solid #585858;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    &:hover {
+      border-top: 6px solid #f1592a;
+    }
+  }
+  .cal-subtitle {
+    font-family: "NotoSansKR-Medium";
+    font-size: 16px;
+    color: #f1592a;
+    padding: 0px;
+    margin: -5px;
+  }
+  .react-datepicker__triangle {
+    position: absolute;
+    margin-left: 80px !important;
+  }
+  .react-datepicker__input-time-container {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
+  .react-datepicker-time__input input[type="time"] {
+    width: 110px;
+    height: 30px;
+  }
+  .saturday {
+    color: #305a70;
+  }
+  .sunday {
+    color: #ce3f3f;
+  }
+  .react-datepicker {
+    margin-left: -40px;
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+    .react-datepicker__day-names {
+      font-family: "NotoSansKR-Medium";
+      font-size: 15px;
+    }
+    .react-datepicker__day--selected,
+    .react-datepicker__day--keyboard-selected {
+      border-color: #f1592a !important;
+      background-color: #f1592a !important;
+      color: #ffffff;
+    }
+    .react-datepicker__day--disabled {
+      color: #ccc !important;
+    }
+  }
+  .increase-button,
+  .decrease-button {
+    font-family: "NotoSansKR-Medium";
+    font-size: 20px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 5px;
+    padding-top: 0px;
+    margin: 5px;
+    border-radius: 200px;
+    height: 23px;
+    border: solid 1px rgba(34, 36, 38, 0.35);
+    display: inline-block;
+    font-weight: bolder;
+    cursor: pointer;
+    &:hover {
+      color: #f1592a !important;
+      background-color: #ffffff;
+    }
+  }
+  .ui.form select {
+    font-family: "NotoSansKR-Medium";
+    font-size: 14px;
+    padding: 5px;
+    width: 66px;
+    &:focus,
+    &:hover {
+      border-color: #f1592a;
+    }
+  }
+  .date-picker-custom-input.wrapper {
+    padding: 0px;
+    margin: 0px;
+    width: 160px;
+    height: 20px;
+    &:hover {
+      color: #f1592a;
+      border-color: #f1592a;
+    }
+  }
+
+  .date-picker-custom-input.start {
+    margin-left: 28px;
+  }
+  .table-categorie-menu {
+    display: inline-block;
+    &.datepicker-start {
+      text-align: left;
+      width: 175px !important;
+    }
+    &.datepicker-spliter {
+      .border-div {
+        position: absolute;
+        width: 40px;
+        height: 38px;
+        top: 0px;
+        left: -1px;
+        margin: auto;
+        text-align: left;
+        padding: 13px;
+        padding-left: 9px;
+        background-color: #ffffff;
+      }
+      text-align: left;
+      width: 10px !important;
+      padding: 0px;
+      border-color: red 3px !important;
+    }
+    &.datepicker-end {
+      text-align: left;
+      width: 160px !important;
+    }
+  }
+  /* date picker customize 종료 */
   .ui.pointing.table-categorie-menu-box.menu {
     margin-left: 18px !important;
     margin-right: 18px !important;
@@ -37,7 +176,7 @@ const CategorieMenuCompo = styled.div`
     &.all {
       width: 80px;
     }
-    &.search {
+    /* &.search {
       display: flex !important;
       width: 234px;
       margin: 0px !important;
@@ -61,7 +200,7 @@ const CategorieMenuCompo = styled.div`
           color: #f1592a;
         }
       }
-    }
+    } */
   }
   .ui.menu .item > .input input {
     &:focus {
@@ -74,6 +213,44 @@ const CategorieMenuCompo = styled.div`
   .ui.pointing.menu .item:after {
     width: 1.3em;
     height: 1.3em;
+  }
+  .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    text-align: left;
+    width: 110px;
+    &.search {
+      background: #f2f2f2 0% 0% no-repeat padding-box;
+      cursor: pointer;
+      &.search-icon {
+        width: 30px;
+        position: absolute;
+        left: 70px;
+        top: 13px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+      &:hover {
+        color: #f1592a;
+      }
+    }
+    &.download {
+      cursor: pointer;
+      border: 0px 0px 0px 1px solid #d8d8d8;
+      color: #d8d8d8;
+      .download-icon {
+        border: 0px;
+        width: 30px;
+        position: absolute;
+        left: 70px;
+        top: 12px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      &:hover {
+        color: #2e2e2e;
+      }
+    }
   }
 `;
 
@@ -307,48 +484,25 @@ const AlarmTable = ({
     }
   }, [data, categorieValue]);
 
-  // serach input 입력
-  const onSearchChange = (e) => {
-    const _searchValue = e.target.value;
-    setSearchValue(_searchValue);
-  };
-
   const dispatch = useDispatch();
 
-  const onSearch = (e) => {
-    const _data = data;
-    let tempData = [];
-    if (!searchValue) {
-      dispatch(getCctvs());
-    }
-    if (categorieValue === null) {
-      // 전체검색
-      let _searchValue = searchValue;
-      tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
-      setSearchValue("");
-      setCurrentData(tempData);
-    } else {
-      // 검색
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      let _searchValue = searchValue;
-      tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
-      setSearchValue("");
-      setCurrentData(tempData);
-    }
-    if (selectedRow.selectedId) {
-      initActiveRow();
-      initFormData();
-    }
-    initPage();
+  const today = new Date();
+
+  const calAge = (birth) => {
+    let currentYear = today.getFullYear();
+    let age = currentYear - birth.substring(0, 4) + 1;
+    return age;
   };
 
   // 테이블
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
-  );
+  const viewItems = currentData
+    .sort(date_descending)
+    .slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
@@ -417,6 +571,77 @@ const AlarmTable = ({
     });
   };
 
+  const years = _.range(2020, getYear(new Date()) + 3, 1); // 수정
+  const months = [
+    "1월",
+    "2월",
+    "3월",
+    "4월",
+    "5월",
+    "6월",
+    "7월",
+    "8월",
+    "9월",
+    "10월",
+    "11월",
+    "12월",
+  ];
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const onChangeStartDate = (date) => {
+    setStartDate(date);
+  };
+  const onChangeEndDate = (date) => {
+    setEndDate(date);
+  };
+
+  const StartDateInput = ({ value, onClick }) => (
+    <div className="date-picker-custom-input wrapper">
+      <div
+        className="date-picker-custom-input start"
+        onClick={() => {
+          onClick();
+        }}
+      >
+        {moment(startDate).format("YYYY.MM.DD HH:mm")}
+        <div className="custom-triangle start" />
+      </div>
+    </div>
+  );
+  const EndDateInput = ({ value, onClick }) => (
+    <div className="date-picker-custom-input wrapper">
+      <div
+        className="date-picker-custom-input end"
+        onClick={() => {
+          onClick();
+        }}
+      >
+        {moment(endDate).format("YYYY.MM.DD HH:mm")}
+        <div className="custom-triangle end" />
+      </div>
+    </div>
+  );
+
+  // 요일 반환
+  const getDayName = (date) => {
+    return date.toLocaleDateString("ko-KR", { weekday: "long" }).substr(0, 1);
+  };
+  // 날짜 비교시 년 월 일까지만 비교하게끔
+  const createDate = (date) => {
+    return new Date(
+      new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+    );
+  };
+
+  // 테이블
+  function date_descending(a, b) {
+    var dateA = new Date(a["record_date"]).getTime();
+    var dateB = new Date(b["record_date"]).getTime();
+    return dateA < dateB ? 1 : -1;
+  }
+
   return (
     <>
       <CategorieMenuCompo className="table-categorie-menu-compo">
@@ -431,24 +656,183 @@ const AlarmTable = ({
           {TopMenuRender(localData)}
 
           <Menu.Menu>
-            <Menu.Item className="table-categorie-menu cal">
-              <FaSearch onClick={onSearch} className="" />
-              달력
+            <Menu.Item className="table-categorie-menu datepicker-start">
+              <FaRegCalendarAlt className="cal-icon" />
+              <DatePicker
+                renderCustomHeader={({
+                  date,
+                  changeYear,
+                  changeMonth,
+                  decreaseMonth,
+                  increaseMonth,
+                  prevMonthButtonDisabled,
+                  nextMonthButtonDisabled,
+                }) => (
+                  <>
+                    <p className="cal-subtitle">시작일을 선택하세요.</p>
+                    {/* <div className="border-line" /> */}
+                    <div
+                      style={{
+                        margin: 10,
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <div
+                        className="decrease-button"
+                        onClick={decreaseMonth}
+                        disabled={prevMonthButtonDisabled}
+                      >
+                        {"<"}
+                      </div>
+
+                      <select
+                        value={getYear(date)}
+                        onChange={({ target: { value } }) => changeYear(value)}
+                      >
+                        {years.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        value={months[getMonth(date)]}
+                        onChange={({ target: { value } }) =>
+                          changeMonth(months.indexOf(value))
+                        }
+                      >
+                        {months.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="increase-button"
+                        onClick={increaseMonth}
+                        disabled={nextMonthButtonDisabled}
+                      >
+                        {">"}
+                      </div>
+                    </div>
+                  </>
+                )}
+                className="date-picker-input start"
+                locale={ko}
+                name="day_start"
+                useWeekdaysShort
+                selected={startDate}
+                onChange={(date) => onChangeStartDate(date)}
+                maxDate={endDate}
+                startDate={startDate}
+                customInput={<StartDateInput />}
+                dayClassName={(date) =>
+                  getDayName(createDate(date)) === "토"
+                    ? "saturday"
+                    : getDayName(createDate(date)) === "일"
+                    ? "sunday"
+                    : undefined
+                }
+                showTimeInput
+                timeInputLabel="시간선택 : "
+              ></DatePicker>
+            </Menu.Item>
+            <Menu.Item className="table-categorie-menu datepicker-spliter">
+              <div className="border-div">~</div>
+            </Menu.Item>
+            <Menu.Item className="table-categorie-menu datepicker-end">
+              <DatePicker
+                renderCustomHeader={({
+                  date,
+                  changeYear,
+                  changeMonth,
+                  decreaseMonth,
+                  increaseMonth,
+                  prevMonthButtonDisabled,
+                  nextMonthButtonDisabled,
+                }) => (
+                  <>
+                    <p className="cal-subtitle">종료일을 선택하세요.</p>
+                    {/* <div className="border-line" /> */}
+                    <div
+                      style={{
+                        margin: 10,
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <div
+                        className="decrease-button"
+                        onClick={decreaseMonth}
+                        disabled={prevMonthButtonDisabled}
+                      >
+                        {"<"}
+                      </div>
+
+                      <select
+                        value={getYear(date)}
+                        onChange={({ target: { value } }) => changeYear(value)}
+                      >
+                        {years.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        value={months[getMonth(date)]}
+                        onChange={({ target: { value } }) =>
+                          changeMonth(months.indexOf(value))
+                        }
+                      >
+                        {months.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="increase-button"
+                        onClick={increaseMonth}
+                        disabled={nextMonthButtonDisabled}
+                      >
+                        {">"}
+                      </div>
+                    </div>
+                  </>
+                )}
+                className="date-picker-input end"
+                locale={ko}
+                name="day_end"
+                useWeekdaysShort
+                onChange={(date) => onChangeEndDate(date)}
+                minDate={startDate}
+                selected={endDate}
+                endDate={endDate}
+                customInput={<EndDateInput />}
+                dayClassName={(date) =>
+                  getDayName(createDate(date)) === "토"
+                    ? "saturday"
+                    : getDayName(createDate(date)) === "일"
+                    ? "sunday"
+                    : undefined
+                }
+                showTimeInput
+                timeInputLabel="시간선택 : "
+              ></DatePicker>
             </Menu.Item>
           </Menu.Menu>
           <Menu.Menu position="right">
             <Menu.Item className="table-categorie-menu search">
               조회
-              <FaSearch
-                onClick={onSearch}
-                className="table-categorie-menu search search-icon"
-              />
+              <FaSearch className="table-categorie-menu search search-icon" />
             </Menu.Item>
           </Menu.Menu>
-          <Menu.Menu position="right">
+          <Menu.Menu>
             <Menu.Item className="table-categorie-menu download">
               다운로드
-              <FaSearch onClick={onSearch} className="n" />
+              <FaFileDownload className="table-categorie-menu download-icon" />
             </Menu.Item>
           </Menu.Menu>
         </Menu>

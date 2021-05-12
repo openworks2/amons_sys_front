@@ -117,10 +117,10 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/amons/home/log/emergencylog"
+          to="/amons/home/log/alarm"
           className="sidemenu-sub-title"
-          name="emergencylog"
-          active={currentUrl === "emergencylog"}
+          name="alarm"
+          active={currentUrl === "alarm"}
         >
           알람이력 : 작업자
         </Menu.Item>

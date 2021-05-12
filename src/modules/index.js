@@ -1,4 +1,6 @@
 import { combineReducers } from "redux";
+// 이력조회
+import alarms from "./alarms";
 // 현장관리
 import locals from "./locals";
 import announces from "./announces";
@@ -15,6 +17,8 @@ import cctvs from "./cctvs";
 import accounts from "./accounts";
 
 const rootReducer = combineReducers({
+  //이력조회
+  alarms,
   //현장관리
   locals,
   announces,

@@ -75,7 +75,7 @@ const ContentTitle = ({ currentUrl }) => {
         title = "";
         return;
       // ============이력조회=============
-      case "emergencylog":
+      case "alarm":
         title = "알람이력: 작업자";
         return <FaHardHat />;
       case "workerlog":
