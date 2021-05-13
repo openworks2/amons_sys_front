@@ -27,8 +27,6 @@ const HomeCompo = styled.div`
 const HomeContainer = () => {
   const { login } = useSelector(state => state.login)
 
-  const audioTune = new Audio('/sound/싸이렌_16bit_16KHz_-고화질용-5번반복.mp3');
-  const [playInLoop, setPlayInLoop] = useState(true);
   const dispatch = useDispatch();
 
 

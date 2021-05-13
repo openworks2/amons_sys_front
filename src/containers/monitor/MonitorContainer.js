@@ -9,6 +9,7 @@ import MapComponent from '../../components/monitor/MapComponent';
 import NoticeCompo from '../../components/monitor/Notice';
 import StatusInfo from '../../components/monitor/StatusInfo';
 import TodayInfoComponent from '../../components/monitor/TodayInfoComponent';
+import { getAnnounces } from '../../modules/announces';
 import { getBleBeacon, getMonitor, getScanner, getWeather, receiveMonitor, setSOSSituation, socketDisconnet } from '../../modules/monitor';
 
 const MonitorCompo = styled.div`
@@ -98,6 +99,10 @@ const MonitorContainer = () => {
         return state.monitor
     });
 
+    const { data: announceList } = useSelector(state => {
+        return state.announces.announces
+    });
+
 
     const dispatch = useDispatch();
 
@@ -141,7 +146,7 @@ const MonitorContainer = () => {
     const setOpenAlarmModal = () => {
         setOpenAlarmPanel(!alarmPanel);
     }
-   
+
 
     const setOpenExpandMapHandler = () => {
         setOpenExpandMap(!expandMap)
@@ -155,6 +160,7 @@ const MonitorContainer = () => {
         dispatch(getScanner());
         dispatch(getWeather());
         dispatch(getBleBeacon());
+        dispatch(getAnnounces());
     }
     const localScanner = (localIndex) => {
         const data = scanner.data;
@@ -171,6 +177,7 @@ const MonitorContainer = () => {
         getDispatch();
         // socket.emit("roomjoin", 'dong');  // been이라는 방 만들기
         // dispatch(receiveMonitor());
+
         return () => {
             console.log('12312321321312321213')
             dispatch(socketDisconnet());
@@ -182,7 +189,7 @@ const MonitorContainer = () => {
             const filterAlarm = beacon.data.filter(item => item.bc_emergency === 2 && item.wk_id && item);
             if (filterAlarm.length > 0) {
                 setOpenAlarmPanel(true);
-                
+
                 setBleAlarmList([
                     ...bleAlarmList,
                     ...filterAlarm
@@ -224,7 +231,10 @@ const MonitorContainer = () => {
                 <div className="right-compo">
                     <div className="right-left-box">
                         <div className="top-panel">
-                            <NoticeCompo />
+                            {
+                                announceList &&
+                                <NoticeCompo announceList={announceList} />
+                            }
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">

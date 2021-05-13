@@ -137,7 +137,6 @@ const HeaderCompo = styled.div`
           font-size:12px;
           text-align: center;
         }
-
     }
     .logout-button-box{
       height: 100%;
@@ -193,7 +192,7 @@ const Header = ({
         audioEl.loop = true;
         audioEl.play()
 
-      }, 1000);
+      }, 2000);
     } else {
       // pauseSound();
       audioEl.pause()
@@ -278,13 +277,9 @@ const Header = ({
           </Link>
         </div>
       </div>
-      {/* <ReactAudioPlayer
-        src="/sound/싸이렌_16bit_16KHz_-고화질용-2번반복.mp3"
-        autoPlay
-        controls
-      /> */}
+
       <audio className="audio-element">
-        <source src="/sound/싸이렌_16bit_16KHz_-고화질용-2번반복.mp3"></source>
+        <source src="/sound/siren_repeat_2.mp3"></source>
       </audio>
     </HeaderCompo>
   );

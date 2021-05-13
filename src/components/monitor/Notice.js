@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const NoticeCompo = styled.div`
@@ -85,16 +85,19 @@ const NoticeCompo = styled.div`
     }
 `;
 
-const Notice = () => {
+const Notice = ({ announceList }) => {
+
+    const [rollingData, setRollData] = useState([]);
 
     let intervalId = useRef();
     const rollingAction = () => {
-        let rollingData = [
-            '우리 현장에는 당신의 안전보다 우선인 작업이 없습니다. 제목만 2줄 까지 출력하고 클릭시 내용을 출력 합시다.',
-            '안전합시다!',
-            '관리항목에서 현장명, 시행사, 시공사를 넣었으면 좋겠다. 이것은 곧정으로 들어간다.'
-        ]    // 롤링할 데이터를 넣으면 됩니다 갯수 제한 없어요
+        // let rollingData = [
+        //     '우리 현장에는 당신의 안전보다 우선인 작업이 없습니다. 제목만 2줄 까지 출력하고 클릭시 내용을 출력 합시다.',
+        //     '안전합시다!',
+        //     '관리항목에서 현장명, 시행사, 시공사를 넣었으면 좋겠다. 이것은 곧정으로 들어간다.'
+        // ]    // 롤링할 데이터를 넣으면 됩니다 갯수 제한 없어요
 
+       
         let timer = 2000 // 롤링되는 주기 입니다 (1000 => 1초)
 
         let first = document.getElementById('first'),
@@ -107,7 +110,7 @@ const Notice = () => {
         //위 선언은 따로 완전히 수정하지 않는 한 조정할 필요는 없습니다.
 
         first.children[0].innerHTML = rollingData[0]
-        
+
         intervalId = setInterval(() => {
             if (move === 2) {
                 first.classList.remove('card_sliding')
@@ -162,12 +165,23 @@ const Notice = () => {
         }, timer);
     }
 
-    useEffect(() => {
+    const dataBinding=()=>{
+        let titleList = [];
+        announceList.map(item=>{
+            titleList.push(item.ann_title)
+            return item;
+        });
+        setRollData(titleList)
         rollingAction();
-        return ()=>{
+    };
+
+    useEffect(() => {
+        // rollingAction();
+        dataBinding();
+        return () => {
             clearInterval(intervalId);
         }
-    }, [])
+    }, [announceList])
 
     return (
         <NoticeCompo>

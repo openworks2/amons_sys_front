@@ -19,8 +19,8 @@ export const postCompany = async (data) => {
 };
 
 // 데이터 수정를 위한 put 비동기 함수
-export const putCompany = async (id, data) => {
-  const response = await axios.put(`/api/company/companies/${id}`, data);
+export const putCompany = async (index, data) => {
+  const response = await axios.put(`/api/company/companies/${index}`, data);
   return response.data;
 };
 

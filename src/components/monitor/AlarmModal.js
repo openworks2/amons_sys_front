@@ -168,7 +168,7 @@ const AlarmModal = ({ setOpenAlarmModal, bleAlarmList }) => {
             <>
                 {
                     item.wk_id &&
-                    <tr className="row item">
+                    <tr className="row item" key={item.bc_id}>
                         <td className="record-time">
                             <Moment format="YYYY-MM-DD HH:mm:ss">
                                 {item.bc_receive_time}

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import ContentSubTitle from "../ContentSubTitle";
 import styled from "styled-components";
-import { Form, Button, Header, Icon, Modal } from "semantic-ui-react";
+import { Form, Button, Modal } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 
 const CompanyInputCompo = styled.div`
@@ -10,31 +9,68 @@ const CompanyInputCompo = styled.div`
   margin-top: 5px;
   margin-bottom: 18px;
 
+  .ui.input > input {
+    /* ui focus 색상변경 */
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.dropdown {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.form input {
+    border-radius: 4px;
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.selection.active.dropdown .menu {
+    border-color: #f1592a !important;
+  }
+  .ui.dropdown .menu > .item {
+    /* border-color: #f1592a !important; */
+  }
+  .ui.form textarea {
+    &:focus {
+      border-color: #f1592a !important;
+    }
+  }
+  .ui.checkbox input:focus ~ label:before {
+    border-color: #f1592a !important;
+    /* ui focus 색상변경 끝 */
+  }
+
+  .subtitle {
+    font-family: "NotoSansKR-Medium";
+    font-size: 16px;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #7c7c7c;
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+  }
+
   .company-input-form-body {
     margin-top: 29px;
+    .resizable-area {
+      overflow: auto;
+    }
   }
-
   .input-form {
     font-family: "NotoSansKR-Regular";
-    font-size: 14px;
+    font-size: 24px;
     text-align: left;
     letter-spacing: 0px;
-    color: #929292;
-    opacity: 1;
-  }
-
-  .input-form.title {
-    font-family: "NotoSansKR-Medium";
-    font-size: 14px;
-    text-align: left;
-    letter-spacing: 0px;
-    color: #2e2e2e;
     opacity: 1;
   }
 
   .input-form.description {
     height: 105px !important;
   }
+
   .submit-button {
     width: 324px;
     height: 50px;
@@ -45,8 +81,12 @@ const CompanyInputCompo = styled.div`
     color: #ffffff;
     opacity: 1;
     position: absolute;
-    top: 68.3vh;
+    top: 69.3vh;
+    @media screen and (max-height: 970px) {
+      top: 68vh;
+    }
   }
+
   .modify-button {
     width: 324px;
     height: 50px;
@@ -56,11 +96,22 @@ const CompanyInputCompo = styled.div`
     letter-spacing: 0px;
     color: #ffffff;
     position: absolute;
-    top: 68.3vh;
+    top: 69.3vh;
+    @media screen and (max-height: 970px) {
+      top: 68vh;
+    }
   }
 
-  .form-body {
-    overflow: auto;
+  .label,
+  .ui.form .field > label,
+  .form-title {
+    margin-left: 5px;
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    letter-spacing: 0px;
+    opacity: 1;
+    font-weight: initial !important;
   }
 `;
 
@@ -69,24 +120,24 @@ const CompanyInput = ({
   createHandler,
   updateHandler,
   formData,
-  selectRow,
+  selectedRow,
   initFormData,
   initActiveRow,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
-
-  const { id, co_name, co_sectors, description } = formData;
+  const { selectedId, selectedItem, clickedIndex } = selectedRow;
+  const { co_id, co_index, co_name, co_sectors, description } = formData;
 
   return (
     <CompanyInputCompo className="company-input-compo">
-      <ContentSubTitle subTitle="소속사 등록" />
+      <p className="subtitle">소속사 등록</p>
       <Form
         className="company-input-form-body"
-        onSubmit={() => {
-          !selectRow.item && createHandler();
+        onSubmit={(e) => {
+          !selectedItem && createHandler(e);
         }}
       >
-        <div className="form-body">
+        <div className="resizable-area">
           <Form.Field className="company-input-form co-name">
             <label className="input-form title">소속사</label>
             <input
@@ -95,7 +146,10 @@ const CompanyInput = ({
               name="co_name"
               placeholder={"소속사를 입력해 주세요."}
               required
-              value={co_name}
+              value={co_name.replace(
+                /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
+                ""
+              )}
               onChange={onChange}
             />
           </Form.Field>
@@ -107,7 +161,10 @@ const CompanyInput = ({
               name="co_sectors"
               placeholder={"업종을 입력해 주세요."}
               required
-              value={co_sectors}
+              value={co_sectors.replace(
+                /[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g,
+                ""
+              )}
               onChange={onChange}
             />
           </Form.Field>
@@ -123,7 +180,7 @@ const CompanyInput = ({
             />
           </Form.Field>
         </div>
-        {selectRow.item ? (
+        {selectedItem ? (
           <Button
             className="modify-button"
             onClick={(e) => {
@@ -161,8 +218,8 @@ const CompanyInput = ({
             content="수정"
             labelPosition="right"
             icon="checkmark"
-            onClick={() => {
-              updateHandler();
+            onClick={(e) => {
+              updateHandler(e, selectedId);
               setModifyOpen(false);
             }}
           />

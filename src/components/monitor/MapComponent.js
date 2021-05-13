@@ -366,6 +366,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
 
     }
 
+
     useEffect(() => {
         bind(first, setStateDig1);
         bind(second, setStateDig2);

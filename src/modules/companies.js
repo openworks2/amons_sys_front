@@ -36,7 +36,7 @@ export const getCompanies = createPromiseThunk(
   GET_COMPANIES,
   companiesAPI.getCompanies
 );
-export const getCompany = createPromiseThunk(
+export const getCompany = handleAsyncActionsById(
   GET_COMPANY,
   companiesAPI.getCompanyById
 );
@@ -81,6 +81,7 @@ const postCompanyReducer = handleAsyncActionsOfPost(
 const putCompanyReducer = handleAsyncActionsOfPut(
   PUT_COMPANY,
   "companies",
+  "co_index",
   true
 );
 
@@ -113,7 +114,8 @@ export default function companies(state = initialState, action) {
       };
     case DELETE_COMPANY_SUCCESS:
       const items = state.companies.data;
-      const filterData = items.filter((item) => item.id !== action.payload.id);
+      const _id = parseInt(action.payload.param);
+      const filterData = items.filter((item) => item.co_id !== _id);
       return {
         ...state,
         companies: {
