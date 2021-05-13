@@ -226,7 +226,7 @@ const CctvComponent = ({
 
     useEffect(() => {
         // console.log('CctvComponent->', data);
-        console.log('bleData--->', bleData);
+        // console.log('bleData--->', bleData);
     }, [accessPanel, ctrlPanel, alarmPanel, expandMap, data, bleData]);
 
     return (

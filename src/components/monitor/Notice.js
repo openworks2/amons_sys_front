@@ -51,7 +51,7 @@ const NoticeCompo = styled.div`
             transition: top .75s;
             top: 100%;
             z-index: 1;
-            color: #000000;
+            color: #1c1c1c;
             opacity: 0.7;
             display:flex;
             align-items:center;

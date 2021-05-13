@@ -100,7 +100,6 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData }) => 
     });
 
     const setBleCountBinding = () => {
-        console.log('setBleCountBinding->', bleData);
         let wkCount = 0;
         let vhCount = 0;
         bleData.map(item => {
@@ -144,7 +143,6 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData }) => 
     })
 
     useEffect(() => {
-        console.log('processCode-->', processCode);
         setState({
             name: process[processCode].name,
             color: process[processCode].color,

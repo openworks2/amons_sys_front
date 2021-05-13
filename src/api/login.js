@@ -7,8 +7,8 @@ export const loginAccount = async (data) => {
   return response.data;
 };
 // LOGOUT POST 비동기 함수
-export const logoutAccount = async (data) => {
-  const response = await axios.post(`${API}/api/account/accounts/logout`, data, { withCredentials: true });
+export const logoutAccount = async () => {
+  const response = await axios.get(`${API}/api/account/logout`, { withCredentials: true });
   return response.data;
 };
 // 현재 서버에서 로그인 중인지 검증(서버측에 세션이 존재하는지 확인)

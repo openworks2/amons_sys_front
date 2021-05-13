@@ -150,10 +150,10 @@ const AccessDetailPanel = ({ bleData, localName }) => {
 
     const selectRowHandler = (e, index) => {
         console.log(index)
-        const findItem = bleList.list.find(item=>item.bc_index===index && item);
-        console.log('findItem=>',findItem)
+        const findItem = bleList.list.find(item => item.bc_index === index && item);
+        console.log('findItem=>', findItem)
         setItem({
-            type: findItem.wk_id ? 'worker': 'vehicle',
+            type: findItem.wk_id ? 'worker' : 'vehicle',
             bcIndex: index,
             item: findItem
         });
@@ -171,7 +171,7 @@ const AccessDetailPanel = ({ bleData, localName }) => {
                 {
                     <tr
                         className={item ? (selectItem.bcIndex === item.bc_index ? "table-item active" : "table-item") : "table-item"}
-                        key={item ? item.bc_index : index}
+                        key={item !== undefined ? item.bc_index : index}
                         onClick={item && ((e) => selectRowHandler(e, item.bc_index))}
                     >
                         {
@@ -266,8 +266,8 @@ const AccessDetailPanel = ({ bleData, localName }) => {
             </div>
             {
                 selectItem.type && (selectItem.type === 'worker'
-                    ? <WorkerDetailComponent selectItem={selectItem}/>
-                    : <VehicleDetailComponent selectItem={selectItem}/>
+                    ? <WorkerDetailComponent selectItem={selectItem} />
+                    : <VehicleDetailComponent selectItem={selectItem} />
                 )}
 
 

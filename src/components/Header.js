@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Image } from "semantic-ui-react";
 import styled from "styled-components";
 import ReactAudioPlayer from 'react-audio-player';
@@ -15,7 +15,8 @@ import {
   faQuestion,
   faSignOutAlt
 } from "@fortawesome/pro-solid-svg-icons"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setSOSSituation } from "../modules/monitor";
 
 const HeaderCompo = styled.div`
   position: fixed !important;
@@ -172,36 +173,38 @@ const Header = ({
   callSideMenuHandler,
   setRatePanelHandler,
   triggerFull,
-  exitFull
+  exitFull,
+  onLogout
 }) => {
   const { sosSituation } = useSelector(state => state.monitor);
-  const audioTune = new Audio('/sound/싸이렌_16bit_16KHz_-고화질용-2번반복.mp3');
-  const [playInLoop, setPlayInLoop] = useState(true);
+
+  const dispatch = useDispatch();
 
   // load audio file on component load
   useEffect(() => {
-    audioTune.load();
   }, [])
 
   // set the loop of audio tune
   useEffect(() => {
-    audioTune.loop = playInLoop;
-    // audioTune.loop = true;
-    playSound();
+    const audioEl = document.getElementsByClassName("audio-element")[0]
+    if (sosSituation) {
+      // playSound();
+      setTimeout(() => {
+        audioEl.loop = true;
+        audioEl.play()
+
+      }, 1000);
+    } else {
+      // pauseSound();
+      audioEl.pause()
+    }
   }, [sosSituation])
 
-  // play audio sound
-  const playSound = () => {
-    audioTune.play();
+
+  const sosAlarmOffHandler = () => {
+    dispatch(setSOSSituation(false))
   }
 
-  // pause audio sound
-  const pauseSound = () => {
-    console.log('asdfasdf')
-    setPlayInLoop(false)
-
-    audioTune.pause();
-  }
 
   return (
     <HeaderCompo className="header-component">
@@ -227,16 +230,19 @@ const Header = ({
           {
             sosSituation &&
             <div className="shortcut-button-box">
-              <div className="shortcut-button alarm" onClick={pauseSound}>
+              <div className="shortcut-button alarm" onClick={sosAlarmOffHandler}>
                 <FontAwesomeIcon icon={faVolumeSlash} />
               </div>
               <div className="button-name">알림음</div>
             </div>
           }
           <div className="shortcut-button-box">
-            <div className="shortcut-button home">
-              <FontAwesomeIcon icon={faHomeAlt} />
-            </div>
+            <Link to="/amons/home">
+              <div className="shortcut-button home">
+                <FontAwesomeIcon icon={faHomeAlt} />
+              </div>
+            </Link>
+
             <div className="button-name">HOME</div>
           </div>
           <div className="shortcut-button-box">
@@ -265,9 +271,11 @@ const Header = ({
           </div>
         </div>
         <div className="logout-button-box">
-          <div className="logout-button">
-            <FontAwesomeIcon icon={faSignOutAlt} />
-          </div>
+          <Link to="/amons/signin">
+            <div className="logout-button" onClick={onLogout}>
+              <FontAwesomeIcon icon={faSignOutAlt} />
+            </div>
+          </Link>
         </div>
       </div>
       {/* <ReactAudioPlayer
@@ -275,6 +283,9 @@ const Header = ({
         autoPlay
         controls
       /> */}
+      <audio className="audio-element">
+        <source src="/sound/싸이렌_16bit_16KHz_-고화질용-2번반복.mp3"></source>
+      </audio>
     </HeaderCompo>
   );
 };

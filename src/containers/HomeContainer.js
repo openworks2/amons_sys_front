@@ -7,8 +7,10 @@ import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { getCompanies } from "../modules/companies";
 import { Redirect } from "react-router";
-import { setRatePanel } from "../modules/monitor";
+import { setRatePanel, setSOSSituation } from "../modules/monitor";
 import useFullscreen from "../lib/useFullscrenn";
+import { loginCheckAsync, logOutAsync, setLogindInfoAsync } from "../modules/login";
+import storage from "../lib/starage";
 
 
 
@@ -23,7 +25,10 @@ const HomeCompo = styled.div`
 `;
 
 const HomeContainer = () => {
+  const { login } = useSelector(state => state.login)
 
+  const audioTune = new Audio('/sound/싸이렌_16bit_16KHz_-고화질용-5번반복.mp3');
+  const [playInLoop, setPlayInLoop] = useState(true);
   const dispatch = useDispatch();
 
 
@@ -71,32 +76,36 @@ const HomeContainer = () => {
 
   // URL 파라미터 받아오기
   const [currentUrl, setCurrentUrl] = useState("");
-  // const urlRefresh = ({ match }) => {
-  //   console.log("currentUrl prev");
-  //   console.log(currentUrl);
-  //   setCurrentUrl(match.param);
-  //   console.log("currentUrl");
-  //   console.log(currentUrl);
-  // };
-  let url = document.location.href;
-  console.log("url");
-  console.log(url);
-
-  // let { urllocation } = location;
-  // console.log("urllocation");
-  // console.log(urllocation);
-
-  // target-DrillRatePanel.js
-  // const [ratePanelOpen, setPanelOpen] = useState(false);
 
   const setRatePanelHandler = () => {
     // setPanelOpen(!ratePanelOpen)
     dispatch(setRatePanel());
   }
 
+  const initialUserInfo = useCallback(async () => {
+    const loggedInfo = storage.get("user"); // 로그인 정보를 로컬스토리지에서 가져오기
+    if (!loggedInfo) return; // 로그인 정보가 없다면 멈춤
+
+    dispatch(setLogindInfoAsync(loggedInfo));
+    try {
+      await dispatch(loginCheckAsync());
+    } catch (e) {
+      storage.remove("user");
+    }
+  }, [dispatch]);
+
+  const onLogout = () => {
+    dispatch(logOutAsync())
+    return <Redirect to="/amons/signin" />
+  }
+
+
   useEffect(() => {
+    console.log('login--->>', login)
+    initialUserInfo();
   }, [])
 
+  if (!storage.get("user")) return <Redirect to="/amons/signin" />
   return (
     <HomeCompo className="Home-component">
       <Header
@@ -104,6 +113,7 @@ const HomeContainer = () => {
         setRatePanelHandler={setRatePanelHandler}
         triggerFull={openFullScreenMode}
         exitFull={closeFullScreenMode}
+        onLogout={onLogout}
       />
       <SideMenu
         callSideMenu={callSideMenu}

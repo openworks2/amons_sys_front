@@ -4,7 +4,6 @@ import { createPromiseThunk, handleAsyncActions, reducerUtils } from "../lib/asy
 
 import io from "socket.io-client";   //모듈 가져오기
 
-const socket = io.connect("http://192.168.0.39:3000");  //3000번 포트 사용(서버)
 
 
 const GET_MONITOR = 'monitor/GET_MONITOR';
@@ -45,28 +44,32 @@ export const getBleBeacon = createPromiseThunk(
     monitorAPI.getBleBeacon
 )
 
-
+let socket;
 export const receiveMonitor = () => dispatch => {
+    socket = io.connect("http://192.168.0.39:3000");  //3000번 포트 사용(서버)
+
     socket.emit('getData', 'scanner')
     socket.on('getData', (data) => {
         dispatch({ type: GET_SCANNER_SOCKET, payload: data })
     });
 }
 
+export const socketDisconnet = () => dispatch => {
+    socket.disconnect();
+}
 
 export const setRatePanel = () => dispatch => {
     dispatch({ type: TOGGLE_DRILLRATE_PANEL });
 }
 
-export const setSOSSituation = () => dispatch => {
-    dispatch({ type: TOGGLE_SOS_SITUACTION });
+export const setSOSSituation = boolean => dispatch => {
+    dispatch({ type: TOGGLE_SOS_SITUACTION, payload: boolean });
 }
 
 export const getWeather = createPromiseThunk(
     GET_WEATHER,
     monitorAPI.getWeather
 )
-
 
 const initialState = {
     monitor: reducerUtils.initial(),
@@ -172,7 +175,7 @@ export default function monitor(state = initialState, action) {
         case TOGGLE_SOS_SITUACTION:
             return {
                 ...state,
-                sosSituation: !state.sosSituation
+                sosSituation: action.payload
             };
         default:
             return state;

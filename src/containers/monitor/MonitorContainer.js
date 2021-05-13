@@ -9,7 +9,7 @@ import MapComponent from '../../components/monitor/MapComponent';
 import NoticeCompo from '../../components/monitor/Notice';
 import StatusInfo from '../../components/monitor/StatusInfo';
 import TodayInfoComponent from '../../components/monitor/TodayInfoComponent';
-import { getBleBeacon, getMonitor, getScanner, getWeather, receiveMonitor, setSOSSituation } from '../../modules/monitor';
+import { getBleBeacon, getMonitor, getScanner, getWeather, receiveMonitor, setSOSSituation, socketDisconnet } from '../../modules/monitor';
 
 const MonitorCompo = styled.div`
     width: 100vw;
@@ -141,6 +141,7 @@ const MonitorContainer = () => {
     const setOpenAlarmModal = () => {
         setOpenAlarmPanel(!alarmPanel);
     }
+   
 
     const setOpenExpandMapHandler = () => {
         setOpenExpandMap(!expandMap)
@@ -148,9 +149,10 @@ const MonitorContainer = () => {
     // dispatch(getMonitor());
 
     const getDispatch = async () => {
+        console.log(12312123123)
+        dispatch(receiveMonitor());
         dispatch(getMonitor());
         dispatch(getScanner());
-        dispatch(receiveMonitor());
         dispatch(getWeather());
         dispatch(getBleBeacon());
     }
@@ -169,21 +171,26 @@ const MonitorContainer = () => {
         getDispatch();
         // socket.emit("roomjoin", 'dong');  // been이라는 방 만들기
         // dispatch(receiveMonitor());
+        return () => {
+            console.log('12312321321312321213')
+            dispatch(socketDisconnet());
+        }
     }, [dispatch]);
 
     useEffect(() => {
         if (beacon.data) {
-            const filterAlarm = beacon.data.filter(item => item.bc_emergency === 2&& item.wk_id && item);
+            const filterAlarm = beacon.data.filter(item => item.bc_emergency === 2 && item.wk_id && item);
             if (filterAlarm.length > 0) {
                 setOpenAlarmPanel(true);
+                
                 setBleAlarmList([
                     ...bleAlarmList,
                     ...filterAlarm
                 ])
-                if(!sosSituation){
-                    dispatch(setSOSSituation())
+                if (!sosSituation) {
+                    dispatch(setSOSSituation(true))
                 }
-                console.log('filterAlarm->',filterAlarm)
+                console.log('filterAlarm->', filterAlarm)
             }
         }
     }, [beacon]);
@@ -309,7 +316,7 @@ const MonitorContainer = () => {
                 }
             </BodyCompo>
             {
-                alarmPanel && <AlarmModal setOpenAlarmModal={setOpenAlarmModal} bleAlarmList={bleAlarmList}/>
+                alarmPanel && <AlarmModal setOpenAlarmModal={setOpenAlarmModal} bleAlarmList={bleAlarmList} />
             }
         </MonitorCompo>
     );
