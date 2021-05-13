@@ -175,7 +175,6 @@ const MapCompo = styled.div`
     }
 `;
 const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
-    // console.log('MapComponent-->', data)
     const [checkBox, setCheckBox] = useState(false);
     const [showItem, setItem] = useState({
         worker: true,
@@ -371,7 +370,6 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
         bind(first, setStateDig1);
         bind(second, setStateDig2);
         if (bleData && dig1 && dig2) {
-            console.log('bleData->>>', bleData)
             bleDataBinding(bleData, dig1, setDig1);
             bleDataBinding(bleData, dig2, setDig2);
         }

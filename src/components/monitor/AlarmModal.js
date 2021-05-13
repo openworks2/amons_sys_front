@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
 import styled from 'styled-components';
+import Moment from 'react-moment';
+import 'moment-timezone';
 
 const AlarmModalCompo = styled.div`
     width: 100%;
@@ -132,7 +134,58 @@ const AlarmModalCompo = styled.div`
     }
 `;
 
-const AlarmModal = ({ setOpenAlarmModal }) => {
+const AlarmModal = ({ setOpenAlarmModal, bleAlarmList }) => {
+
+    const birthCalculator = (birth) => {
+        const splitBirth = birth.split(".");
+        const Years =
+            Number(splitBirth[0]) >= 30 ? splitBirth[0] : "20" + splitBirth[0];
+        const Months = splitBirth[1];
+        const Days = splitBirth[2];
+        const today = new Date();
+        const birthDate = new Date(Years, Months, Days); // 2000년 8월 10일
+
+        let age = today.getFullYear() - birthDate.getFullYear() + 1;
+
+        return age;
+    };
+    const TransBloodType = (bloodType) => {
+        switch (bloodType) {
+            case 0:
+                return "A";
+            case 1:
+                return "B";
+            case 2:
+                return "O";
+            case 3:
+                return "AB";
+            default:
+                return null;
+        }
+    };
+    const tableRender = (items = []) => {
+        return items.map(item => (
+            <>
+                {
+                    item.wk_id &&
+                    <tr className="row item">
+                        <td className="record-time">
+                            <Moment format="YYYY-MM-DD HH:mm:ss">
+                                {item.bc_receive_time}
+                            </Moment>
+                        </td>
+                        <td className="location">{item.scn_name}</td>
+                        <td className="company">{item.wk_co_name}</td>
+                        <td className="name">{item.wk_name}</td>
+                        <td className="age">{`${birthCalculator(item.wk_birth)}세`}</td>
+                        <td className="blood">{`${TransBloodType(item.wk_blood_type)} ${item.wk_blood_group === 0 ? 'RH+' : 'RH-'}`}</td>
+                        <td className="phone">{item.wk_phone}</td>
+                    </tr>
+                }
+            </>
+        ));
+    }
+
     return (
         <AlarmModalCompo className="emergency-component">
             <div className="alarm-modal">
@@ -158,60 +211,8 @@ const AlarmModal = ({ setOpenAlarmModal }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="row item">
-                                <td className="record-time">2021-03-30 01:32:00</td>
-                                <td className="location">시점 함양</td>
-                                <td className="company">ㅇㅇ건설</td>
-                                <td className="name">김공사</td>
-                                <td className="age">45</td>
-                                <td className="blood">AB Rh-</td>
-                                <td className="phone">010-1234-9999</td>
-                            </tr>
-                            <tr className="row item">
-                                <td className="record-time">2021-03-30 01:32:00</td>
-                                <td className="location">시점 함양</td>
-                                <td className="company">ㅇㅇ건설</td>
-                                <td className="name">김공사</td>
-                                <td className="age">45</td>
-                                <td className="blood">AB Rh-</td>
-                                <td className="phone">010-1234-9999</td>
-                            </tr>
-                            <tr className="row item">
-                                <td className="record-time">2021-03-30 01:32:00</td>
-                                <td className="location">시점 함양</td>
-                                <td className="company">ㅇㅇ건설</td>
-                                <td className="name">김공사</td>
-                                <td className="age">45</td>
-                                <td className="blood">AB Rh-</td>
-                                <td className="phone">010-1234-9999</td>
-                            </tr>
-                            <tr className="row empty">
-                                <td className="record-time"></td>
-                                <td className="location"></td>
-                                <td className="company"></td>
-                                <td className="name"></td>
-                                <td className="age"></td>
-                                <td className="blood"></td>
-                                <td className="phone"></td>
-                            </tr>
-                            <tr className="row empty">
-                                <td className="record-time"></td>
-                                <td className="location"></td>
-                                <td className="company"></td>
-                                <td className="name"></td>
-                                <td className="age"></td>
-                                <td className="blood"></td>
-                                <td className="phone"></td>
-                            </tr>
-                            <tr className="row empty">
-                                <td className="record-time"></td>
-                                <td className="location"></td>
-                                <td className="company"></td>
-                                <td className="name"></td>
-                                <td className="age"></td>
-                                <td className="blood"></td>
-                                <td className="phone"></td>
-                            </tr>
+                            {tableRender(bleAlarmList)}
+
                             {/* <tr className="row">
                                     <td className="record-time">2021-03-30 01:32:00</td>
                                     <td className="location">시점 함양</td>

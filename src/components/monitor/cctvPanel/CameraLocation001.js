@@ -322,9 +322,9 @@ const CameraLocation001 = ({
                     </div>
                 </div>
             }
-            {
+            {/* {
                 accessPanel === id && <AccessDetailPanel />
-            }
+            } */}
         </CameraCompo>
     );
 };

@@ -6,6 +6,7 @@ import CameraLocation001 from './cctvPanel/CameraLocation001';
 import CameraLocation002 from './cctvPanel/CameraLocation002';
 import CameraLocation003 from './cctvPanel/CameraLocation003';
 import CameraLocation004 from './cctvPanel/CameraLocation004';
+import AccessDetailPanel from './cctvPanel/AccessDetailPanel';
 
 
 const CctvCompo = styled.div`
@@ -224,9 +225,9 @@ const CctvComponent = ({
 
 
     useEffect(() => {
-        console.log('CctvComponent->', data);
-        console.log('bleData--->',bleData);
-    }, [accessPanel, ctrlPanel, alarmPanel, expandMap, data]);
+        // console.log('CctvComponent->', data);
+        console.log('bleData--->', bleData);
+    }, [accessPanel, ctrlPanel, alarmPanel, expandMap, data, bleData]);
 
     return (
         <CctvCompo className="cctv-component">
@@ -305,6 +306,9 @@ const CctvComponent = ({
                     />
                 }
             </div>
+            {
+                accessPanel === id && bleData && <AccessDetailPanel bleData={bleData} localName={data && data.local_name}/>
+            }
         </CctvCompo>
     );
 };
