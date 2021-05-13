@@ -29,6 +29,7 @@ const GET_WEATHER_ERROR = 'monitor/GET_WEATHER_ERROR';
 const RECEIVE_MONITOR = 'monitor/RECEIVE_MONITOR';
 
 const TOGGLE_DRILLRATE_PANEL = 'monitor/TOGGLE_DRILLRATE_PANEL';
+const TOGGLE_SOS_SITUACTION = 'monitor/TOGGLE_SOS_SITUACTION';
 
 export const getMonitor = createPromiseThunk(
     GET_MONITOR,
@@ -57,6 +58,10 @@ export const setRatePanel = () => dispatch => {
     dispatch({ type: TOGGLE_DRILLRATE_PANEL });
 }
 
+export const setSOSSituation = () => dispatch => {
+    dispatch({ type: TOGGLE_SOS_SITUACTION });
+}
+
 export const getWeather = createPromiseThunk(
     GET_WEATHER,
     monitorAPI.getWeather
@@ -68,7 +73,8 @@ const initialState = {
     scanner: reducerUtils.initial(),
     beacon: reducerUtils.initial(),
     weather: reducerUtils.initial(),
-    ratePanel: false
+    ratePanel: false,
+    sosSituation: false,
 }
 
 const getMonitorReducer = handleAsyncActions(
@@ -162,6 +168,11 @@ export default function monitor(state = initialState, action) {
             return {
                 ...state,
                 ratePanel: !state.ratePanel
+            };
+        case TOGGLE_SOS_SITUACTION:
+            return {
+                ...state,
+                sosSituation: !state.sosSituation
             };
         default:
             return state;

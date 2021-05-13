@@ -20,6 +20,8 @@ import HomeShortcut from "../components/home/HomeShortcut";
 // account(계정관리)
 import AccountContainer from "../containers/account/AccountContainer";
 import MonitorContainer from "../containers/monitor/MonitorContainer";
+// import CompanyContatiner from "./general/CompanyContainer";
+// import HomeShortcut from "./home/HomeShortcut";
 
 const Contents = ({openFullScreenMode}) => {
   return (

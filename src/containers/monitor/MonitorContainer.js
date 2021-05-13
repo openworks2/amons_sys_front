@@ -9,7 +9,7 @@ import MapComponent from '../../components/monitor/MapComponent';
 import NoticeCompo from '../../components/monitor/Notice';
 import StatusInfo from '../../components/monitor/StatusInfo';
 import TodayInfoComponent from '../../components/monitor/TodayInfoComponent';
-import { getBleBeacon, getMonitor, getScanner, getWeather, receiveMonitor } from '../../modules/monitor';
+import { getBleBeacon, getMonitor, getScanner, getWeather, receiveMonitor, setSOSSituation } from '../../modules/monitor';
 
 const MonitorCompo = styled.div`
     width: 100vw;
@@ -94,7 +94,7 @@ const BodyCompo = styled.div`
 
 const MonitorContainer = () => {
 
-    const { monitor, scanner, weather, beacon, ratePanel } = useSelector(state => {
+    const { monitor, scanner, weather, beacon, ratePanel, sosSituation } = useSelector(state => {
         return state.monitor
     });
 
@@ -107,6 +107,7 @@ const MonitorContainer = () => {
     const [accessPanel, setOpenAccessPanel] = useState(null);
     // SOS 알람 
     const [alarmPanel, setOpenAlarmPanel] = useState(false);
+    const [bleAlarmList, setBleAlarmList] = useState([]);
     // 맵 확대
     const [expandMap, setOpenExpandMap] = useState(false);
 
@@ -164,12 +165,29 @@ const MonitorContainer = () => {
         return filterBeacons;
     }
 
-
     useEffect(() => {
         getDispatch();
         // socket.emit("roomjoin", 'dong');  // been이라는 방 만들기
         // dispatch(receiveMonitor());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (beacon.data) {
+            const filterAlarm = beacon.data.filter(item => item.bc_emergency === 2&& item.wk_id && item);
+            if (filterAlarm.length > 0) {
+                setOpenAlarmPanel(true);
+                setBleAlarmList([
+                    ...bleAlarmList,
+                    ...filterAlarm
+                ])
+                if(!sosSituation){
+                    dispatch(setSOSSituation())
+                }
+                console.log('filterAlarm->',filterAlarm)
+            }
+        }
+    }, [beacon]);
+
 
     return (
         <MonitorCompo className="monitor-component">
@@ -192,7 +210,7 @@ const MonitorContainer = () => {
                     <div className="left-bottom-box map-box">
                         {
                             monitor.data &&
-                            <MapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} />
+                            <MapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} bleData={beacon.data && beacon.data} />
                         }
                     </div>
                 </div>
@@ -287,11 +305,11 @@ const MonitorContainer = () => {
                     </div>
                 </div>
                 {
-                    expandMap && <ExpandMapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} />
+                    expandMap && <ExpandMapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} bleData={beacon.data && beacon.data} />
                 }
             </BodyCompo>
             {
-                alarmPanel && <AlarmModal setOpenAlarmModal={setOpenAlarmModal} />
+                alarmPanel && <AlarmModal setOpenAlarmModal={setOpenAlarmModal} bleAlarmList={bleAlarmList}/>
             }
         </MonitorCompo>
     );

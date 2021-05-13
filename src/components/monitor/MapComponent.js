@@ -174,8 +174,7 @@ const MapCompo = styled.div`
         }
     }
 `;
-const MapComponent = ({ setOpenExpandMapHandler, data }) => {
-    // console.log('MapComponent-->', data)
+const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     const [checkBox, setCheckBox] = useState(false);
     const [showItem, setItem] = useState({
         worker: true,
@@ -184,7 +183,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
     });
     /*
         const [first, setFirst] = useState({
-            total_Lenght: 3359, // 총 굴진거리
+            total_length: 3359, // 총 굴진거리
             forward_Length: 2547, // 정방향 굴진거리 (함양 시점 방향)
             forward_dig: 2500, // 정방향 진행 굴진거리
             revers_length: 812,// 역방향 굴진거리 (함양 종점 방향)
@@ -193,7 +192,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
         })
     
         const [second, setSecond] = useState({
-            total_Lenght: 3359, // 총 굴진거리
+            total_length: 3359, // 총 굴진거리
             forward_Length: 2547, // 정방향 굴진거리 (함양 시점 방향)
             forward_dig: 2547, // 정방향 진행 굴진거리
             revers_length: 812,// 역방향 굴진거리 (함양 종점 방향)
@@ -203,7 +202,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
     */
 
     const [first, setFirst] = useState({
-        total_Lenght: data[0].plan_length + data[1].plan_length, // 총 굴진거리
+        total_length: data[0].plan_length + data[1].plan_length, // 총 굴진거리
         forward_index: data[0].local_index,
         forward_Length: data[0].plan_length, // 정방향 굴진거리 (함양 시점 방향)
         forward_dig: data[0].dig_length, // 정방향 진행 굴진거리
@@ -221,7 +220,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
 
 
     const [second, setSecond] = useState({
-        total_Lenght: data[2].plan_length + data[3].plan_length, // 총 굴진거리
+        total_length: data[2].plan_length + data[3].plan_length, // 총 굴진거리
         forward_index: data[2].local_index,
         forward_Length: data[2].plan_length, // 정방향 굴진거리 (함양 시점 방향)
         forward_dig: data[2].dig_length, // 정방향 진행 굴진거리
@@ -245,24 +244,28 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
 
     const bind = (data, callback) => {
 
-        const block_Length = data.total_Lenght / data.block_Amount; // 1개 블록 당 거리
+        const block_Length = data.total_length / data.block_Amount; // 1개 블록 당 거리
 
         let mapArr = []
         for (let i = 1; i <= data.block_Amount; i++) {
             const obj = {
                 id: i,
                 value: i,
+                local_index: (block_Length * i) <= data.forward_Length ? data.forward_index : data.revers_index,
+                total_length: data.total_length,
                 open: (block_Length * i) <= data.forward_Length
                     ? (data.forward_dig >= (block_Length * i)
                         ? true  // 굴착   
                         : false   // 미굴착
                     )     //정방향 이라면 
-                    : (data.revers_dig + 306 >= (data.total_Lenght - (block_Length * (i - 1))) // 1블럭당 306m로 구간이 짧아 1블럭을 기본으로 추가 해준다.
+                    : (data.revers_dig + 306 >= (data.total_length - (block_Length * (i - 1))) // 1블럭당 306m로 구간이 짧아 1블럭을 기본으로 추가 해준다.
                         ? true // 굴착
                         : false // 미굴착
                     ),    //역방향 이라면
                 worker: false,
+                worker_count: 0,
                 vehicle: false,
+                vehicle_count: 0,
                 scanner: false,
                 cctv: (block_Length * i) <= data.forward_Length
                     ? (
@@ -270,10 +273,10 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
                             ? true
                             : false
                     )   //정방향 이라면 
-                    : (data.revers_dig + 306 >= (data.total_Lenght - (block_Length * (i - 1)))   // 1블럭당 306m로 구간이 짧아 1블럭을 기본으로 추가 해준다.
+                    : (data.revers_dig + 306 >= (data.total_length - (block_Length * (i - 1)))   // 1블럭당 306m로 구간이 짧아 1블럭을 기본으로 추가 해준다.
                         ? (
-                            (data.revers_device.cctv < (data.total_Lenght - (block_Length * (i - 1)))
-                                && data.revers_device.cctv > (data.total_Lenght - (block_Length * (i))))
+                            (data.revers_device.cctv < (data.total_length - (block_Length * (i - 1)))
+                                && data.revers_device.cctv > (data.total_length - (block_Length * (i))))
                                 ? true
                                 : false
                         )
@@ -303,10 +306,74 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
         setDig2(data);
     }
 
+    const bleDataBinding = (data, dig, callback) => {
+        const updateDig = dig.map((item, index, array) => {
+            let tempItem = {
+                ...item,
+                worker: false,
+                worker_count: 0,
+                vehicle: false,
+                vehicle_count: 0
+            };
+
+            data.map(bleItem => {
+                if (item.local_index === bleItem.local_index) {
+                    if (!tempItem.revers) {
+                        if (bleItem.scn_pos_x > tempItem.divisionLeng && bleItem.scn_pos_x < array[index + 1].divisionLeng) {
+                            if (bleItem.wk_id) {
+                                tempItem = {
+                                    ...tempItem,
+                                    worker: true,
+                                    worker_count: tempItem.worker_count + 1
+                                }
+                            }
+                            if (bleItem.vh_id) {
+                                tempItem = {
+                                    ...tempItem,
+                                    vehicle: true,
+                                    vehicle_count: tempItem.vehicle_count + 1
+                                }
+                            }
+                        }
+
+                    } else if (tempItem.revers) {
+                        if (bleItem.scn_pos_x > tempItem.total_length - tempItem.divisionLeng && array[index - 1] && bleItem.scn_pos_x < tempItem.total_length - array[index - 1].divisionLeng) {
+                            if (bleItem.wk_id) {
+                                tempItem = {
+                                    ...tempItem,
+                                    worker: true,
+                                    worker_count: tempItem.worker_count + 1
+                                }
+                            }
+                            if (bleItem.vh_id) {
+                                tempItem = {
+                                    ...tempItem,
+                                    vehicle: true,
+                                    vehicle_count: tempItem.vehicle_count + 1
+                                }
+                            }
+                        }
+                    }
+                }
+                return bleItem;
+            });
+
+            // console.log('tempItem--->', tempItem)
+            return tempItem;
+        });
+
+        callback(updateDig)
+
+    }
+
     useEffect(() => {
         bind(first, setStateDig1);
         bind(second, setStateDig2);
-    }, []);
+        if (bleData && dig1 && dig2) {
+            bleDataBinding(bleData, dig1, setDig1);
+            bleDataBinding(bleData, dig2, setDig2);
+        }
+    }, [bleData]);
 
     const setOpenCheckBox = () => {
         setCheckBox(!checkBox);
@@ -358,11 +425,11 @@ const MapComponent = ({ setOpenExpandMapHandler, data }) => {
                     <img src={item.open ? `../../map/open.png` : `../../map/close.png`} alt="close" style={_imgStyled} />
                     {item.show['worker'] && item.open && item.worker
                         && <div className="worker-icon" style={workerStyled}>
-                            <div className="worker-count-box">0</div>
+                            <div className="worker-count-box">{item.worker_count}</div>
                         </div>}
                     {item.show['vehicle'] && item.open && item.vehicle
                         && <div className="vehicle-icon" style={vehicleStyled}>
-                            <div className="vehicle-count-box">0</div>
+                            <div className="vehicle-count-box">{item.vehicle_count}</div>
                         </div>}
                     {item.show['scanner'] && item.open && item.scanner && <div className="scanner-icon">
                         <div className="scanner-img"></div>

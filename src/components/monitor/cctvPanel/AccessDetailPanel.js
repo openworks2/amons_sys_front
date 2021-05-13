@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VehicleDetailComponent from './VehicleDetailComponent';
 import WorkerDetailComponent from './WorkerDetailComponent';
+import Moment from 'react-moment';
 
 const AccessDetailCompo = styled.div`
     width: 834px;
@@ -14,6 +15,9 @@ const AccessDetailCompo = styled.div`
     padding-right: 3px;
     padding-bottom: 3px;
     z-index: 101;
+    top: -451px;
+    right: 834px;
+
     .left-area{
         width: 49.6%;
         height: 100%;
@@ -101,6 +105,9 @@ const AccessDetailCompo = styled.div`
                         background-color:#7C7C7C;
                         cursor: pointer;
                     }
+                    &.active {
+                        background-color:#7C7C7C;
+                    }
                 }
             }
         }
@@ -108,13 +115,109 @@ const AccessDetailCompo = styled.div`
 `;
 
 
-const AccessDetailPanel = () => {
+const AccessDetailPanel = ({ bleData, localName }) => {
+
+    const [bleList, setList] = useState({
+        list: [],
+        worker: [],
+        vehicle: []
+    });
+
+    const [selectItem, setItem] = useState({
+        type: null, //type:worker/vehicle
+        bcIndex: undefined,
+        item: undefined
+    });
+
+    useEffect(() => {
+        if (bleData) {
+            let _workerList = [];
+            let _vehicleList = [];
+            bleData.map(item => {
+                item.wk_id
+                    ? _workerList.push(item)
+                    : _vehicleList.push(item)
+                return item;
+            });
+            setList({
+                list: bleData,
+                worker: _workerList,
+                vehicle: _vehicleList
+            })
+        }
+
+    }, [bleData]);
+
+    const selectRowHandler = (e, index) => {
+        console.log(index)
+        const findItem = bleList.list.find(item=>item.bc_index===index && item);
+        console.log('findItem=>',findItem)
+        setItem({
+            type: findItem.wk_id ? 'worker': 'vehicle',
+            bcIndex: index,
+            item: findItem
+        });
+
+    }
+
+    const tableRender = (items = []) => {
+        const itemsLeng = items.length;
+        const tempItems = itemsLeng < 5 ? [...items, ...Array(5 - items.length)] : items;
+        console.log('leng-->', tempItems)
+        // const tempItems = [...items, ...Array(5 - items.length)];
+
+        return tempItems.map((item, index) => (
+            <>
+                {
+                    <tr
+                        className={item ? (selectItem.bcIndex === item.bc_index ? "table-item active" : "table-item") : "table-item"}
+                        key={item ? item.bc_index : index}
+                        onClick={item && ((e) => selectRowHandler(e, item.bc_index))}
+                    >
+                        {
+                            item ?
+                                item.wk_id ?
+                                    <>
+                                        <td>{item && item.wk_co_name}</td>
+                                        <td>{item && item.wk_name}</td>
+                                        <td>{item && item.wk_position}</td>
+                                        <td>
+                                            {
+                                                item &&
+                                                <Moment format="YYYY-MM-DD HH:mm:ss">
+                                                    {item.bc_input_time}
+                                                </Moment>
+                                            }
+                                        </td>
+                                    </>
+                                    :
+                                    <>
+                                        <td>{item && item.vh_co_name}</td>
+                                        <td>{item && item.vh_name}</td>
+                                        <td>{item && item.vh_number}</td>
+                                        <td>2021-02-19 01:15:00</td>
+                                    </>
+                                :
+                                <>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </>
+                        }
+                    </tr>
+                }
+            </>
+        ));
+    }
+
+
     return (
         <AccessDetailCompo className="access-detail-panel">
             <div className="left-area">
                 <div className="table-box worker-table-box">
                     <div className="table-top">
-                        <span className="location">시점 함양</span>&nbsp;&nbsp;
+                        <span className="location">{localName}</span>&nbsp;&nbsp;
                         <span className="worker-text">작업자</span>&nbsp;&nbsp;
                         <span className="name">잔류 현황</span>
                     </div>
@@ -129,36 +232,7 @@ const AccessDetailPanel = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>김공사</td>
-                                    <td>점보 운전원</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>김공사</td>
-                                    <td>점보 운전원</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>김공사</td>
-                                    <td>점보 운전원</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>김공사</td>
-                                    <td>점보 운전원</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>김공사</td>
-                                    <td>점보 운전원</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
+                                {tableRender(bleList.worker)}
                             </tbody>
                         </table>
                     </div>
@@ -167,7 +241,7 @@ const AccessDetailPanel = () => {
             <div className="right-area">
                 <div className="table-box">
                     <div className="table-top">
-                        <span className="location">시점 함양</span>&nbsp;&nbsp;
+                        <span className="location">{localName}</span>&nbsp;&nbsp;
                         <span className="vehicle-text">차량</span>&nbsp;&nbsp;
                         <span className="name">잔류 현황</span>
                     </div>
@@ -182,43 +256,21 @@ const AccessDetailPanel = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>백호 06W</td>
-                                    <td>경기99 가 8888</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>백호 06W</td>
-                                    <td>경기99 가 8888</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>백호 06W</td>
-                                    <td>경기99 가 8888</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>백호 06W</td>
-                                    <td>경기99 가 8888</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
-                                <tr className="table-item">
-                                    <td>OO건설</td>
-                                    <td>백호 06W</td>
-                                    <td>경기99 가 8888</td>
-                                    <td>2021-02-19 01:15:00</td>
-                                </tr>
+                                {
+                                    tableRender(bleList.vehicle)
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <WorkerDetailComponent />
-            <VehicleDetailComponent />
+            {
+                selectItem.type && (selectItem.type === 'worker'
+                    ? <WorkerDetailComponent selectItem={selectItem}/>
+                    : <VehicleDetailComponent selectItem={selectItem}/>
+                )}
+
+
         </AccessDetailCompo>
     );
 };

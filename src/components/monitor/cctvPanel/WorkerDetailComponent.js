@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import Moment from 'react-moment';
 
 const WorkerDetailCompo = styled.div`
     width: 330px;
@@ -13,7 +14,6 @@ const WorkerDetailCompo = styled.div`
     .left-worker-area {
         width: 48.2%;
         height: 100%;
-        background: aliceblue;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -21,6 +21,20 @@ const WorkerDetailCompo = styled.div`
             width: 120px;
             height: 120px;
             background-color:#2E2E2E;
+            img{
+                width: 120px;
+                height: 120px;
+            }
+            .empty-image-box {
+                width: 100%;
+                height: 100%;
+                background: #000000;
+                color: #ffffff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 16px;
+            }
         }
     }
     .right-worker-area{
@@ -28,7 +42,7 @@ const WorkerDetailCompo = styled.div`
         height: 100%;
         display: flex;
         align-items: center;
-        justify-content: center;
+        /* justify-content: center; */
         .worker-info-box {
            height: 129px;
             div{
@@ -66,38 +80,76 @@ const WorkerDetailCompo = styled.div`
     }
 `;
 
-const WorkerDetailComponent = () => {
+const WorkerDetailComponent = ({ selectItem }) => {
+    const { type, bcIndex, item } = selectItem;
+
+    useEffect(() => {
+
+    }, [selectItem]);
+    const birthCalculator = (birth) => {
+        const splitBirth = birth.split(".");
+        const Years =
+            Number(splitBirth[0]) >= 30 ? splitBirth[0] : "20" + splitBirth[0];
+        const Months = splitBirth[1];
+        const Days = splitBirth[2];
+        const today = new Date();
+        const birthDate = new Date(Years, Months, Days); // 2000년 8월 10일
+
+        let age = today.getFullYear() - birthDate.getFullYear() + 1;
+
+        return age;
+    };
+    const TransBloodType = (bloodType) => {
+        switch (bloodType) {
+            case 0:
+                return "A";
+            case 1:
+                return "B";
+            case 2:
+                return "O";
+            case 3:
+                return "AB";
+            default:
+                return null;
+        }
+    };
     return (
         <WorkerDetailCompo className="worker-detail-component">
             <div className="left-worker-area">
                 <div className="image-box">
-                    <img src="" alt="" />
+                    {
+                        item.wk_image ?
+                            <img src={`http://192.168.0.39:3000/uploads/${item.wk_image}`} alt="이미지" />
+                            : <div className="empty-image-box">사진없음</div>
+
+                    }
                 </div>
             </div>
             <div className="right-worker-area">
                 <div className="worker-info-box">
                     <div className="worker-title">
-                        <span>작업자(이름)님의 </span>
+                        <span>{item.wk_name}님의 </span>
                         <span>상세정보</span>
                     </div>
                     <div className="worker-info nation-info">
                         <label>국&nbsp;&nbsp;&nbsp;&nbsp;적: </label>
-                        <span>인도네시아</span>
+                        <span>{item.wk_nation}</span>
                     </div>
                     <div className="worker-info">
                         <label>나&nbsp;&nbsp;&nbsp;&nbsp;이: </label>
-                        <span>29세</span>
+                        <span>{`${birthCalculator(item.wk_birth)}세`}</span>
                     </div>
                     <div className="worker-info">
                         <label>핸드폰: </label>
-                        <span>010-9999-8888</span>
+                        <span>{item.wk_phone}</span>
                     </div>
                     <div className="worker-info">
                         <label>혈액형: </label>
-                        <span>AB Rh-</span>
+                        <span>{`${TransBloodType(item.wk_blood_type)} ${item.wk_blood_group === 0 ? 'RH+' : 'RH-'}`}-</span>
                     </div>
                     <div className="worker-info residence-time">
-                        <span>체류시간:06시간 23분</span>
+                        <span>체류시간:</span>
+                        <span>{<Moment fromNow format="HH시간 mm분">{item.bc_input_time}</Moment>}</span>
                     </div>
                 </div>
             </div>
