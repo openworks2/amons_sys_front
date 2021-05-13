@@ -124,6 +124,9 @@ const CategorieMenuCompo = styled.div`
     margin-left: 28px;
   }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     display: inline-block;
     &.datepicker-start {
       text-align: left;
@@ -162,6 +165,9 @@ const CategorieMenuCompo = styled.div`
     text-align: center !important;
   }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -182,6 +188,7 @@ const CategorieMenuCompo = styled.div`
   }
   .table-categorie-menu {
     font-family: "NotoSansKR-Regular";
+    font-size: 13px;
     font-size: 13px;
     text-align: center;
     width: 110px;

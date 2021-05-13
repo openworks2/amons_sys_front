@@ -217,13 +217,6 @@ const KickOutVehicleContainer = () => {
       vh_name: searchValue === "" ? null : searchValue,
       vh_co_index: selectedCompany === "" ? null : selectedCompany,
     };
-    console.log("search!@!@");
-    console.log("searchCondition");
-    console.log(searchCondition);
-    console.log(searchCondition);
-    console.log("searchCondition");
-    console.log("search!@!@");
-
     dispatch(postBleVehiclesSearch(searchCondition));
     initPage();
   };
@@ -255,7 +248,7 @@ const KickOutVehicleContainer = () => {
       <ContentsBodyCompo className="contents-body-compo">
         <div className="table-box">
           {currentData && localData && (
-            <LogVehicleTable
+            <KickOutVehicleTable
               className="logvehicle-table-box"
               pageInfo={pageInfo}
               currentData={currentData}

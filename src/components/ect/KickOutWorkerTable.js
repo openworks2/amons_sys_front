@@ -7,8 +7,9 @@ import {
   Menu,
   Dropdown,
   Input,
+  Button,
 } from "semantic-ui-react";
-import { FaSearch, FaRegCalendarAlt, FaFileDownload } from "react-icons/fa";
+import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -132,6 +133,9 @@ const CategorieMenuCompo = styled.div`
     margin-left: 28px;
   }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     display: inline-block;
     &.datepicker-start {
       text-align: left;
@@ -170,6 +174,9 @@ const CategorieMenuCompo = styled.div`
     text-align: center !important;
   }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -193,7 +200,7 @@ const CategorieMenuCompo = styled.div`
   }
   .ui.input > input,
   .ui.input {
-    width: 200px;
+    width: 300px;
     border-radius: 0px;
     border-color: #f2f2f2 !important;
     border: 0px solid !important;
@@ -201,7 +208,7 @@ const CategorieMenuCompo = styled.div`
 
   .search-box {
     margin-top: 2px;
-    width: 202px;
+    width: 302px;
     height: 35px;
     border-radius: 0px;
     background-color: #f2f2f2;
@@ -213,7 +220,7 @@ const CategorieMenuCompo = styled.div`
   .search-icon {
     position: absolute;
     top: 12px;
-    left: 175px;
+    left: 265px;
     color: #3d3d3d;
     cursor: pointer;
     &:hover,
@@ -221,9 +228,9 @@ const CategorieMenuCompo = styled.div`
       color: #f1592a !important;
     }
   }
-
   .table-categorie-menu {
     font-family: "NotoSansKR-Regular";
+    font-size: 13px;
     font-size: 13px;
     text-align: center;
     width: 110px;
@@ -332,8 +339,7 @@ const TableCompo = styled.div`
       padding-left: 40px !important;
     }
     &.out-time {
-      width: 210px;
-      padding-left: 40px !important;
+      width: 90px;
     }
     &.remain-time {
       width: 180px;
@@ -344,6 +350,11 @@ const TableCompo = styled.div`
       @media screen and (max-height: 970px) {
         width: 292px;
       }
+    }
+    &.kickout {
+      width: 120px;
+      text-align: center;
+      color: #ff0000;
     }
   }
 
@@ -405,7 +416,7 @@ const TableCompo = styled.div`
             text-align: center;
           }
           &.out-time {
-            width: 210px;
+            width: 90px;
             text-align: center;
           }
           &.remain-time {
@@ -414,8 +425,28 @@ const TableCompo = styled.div`
           }
           &.blank {
             width: 292px;
+          }
+          &.kickout {
+            width: 120px;
+            text-align: center;
             @media screen and (max-height: 970px) {
-              width: 282px;
+              width: 110px;
+            }
+            padding: 0px;
+            margin: 0px;
+            .kick-button {
+              width: 80px;
+              height: 29px;
+              background: #ff0000 0% 0% no-repeat padding-box !important;
+              border-radius: 4px;
+              opacity: 1;
+              color: #ffffff;
+              font-size: 14px;
+              font-family: "NotoSansKR-Regular";
+              font-weight: normal !important;
+              &:hover {
+                color: #d8d8d8 !important;
+              }
             }
           }
         }
@@ -471,7 +502,6 @@ const KickOutWorkerTable = ({
   onSearchChange,
   onClickCategorie,
   onSearch,
-  downloadHandler,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -550,6 +580,28 @@ const KickOutWorkerTable = ({
     );
   };
 
+  const getDiffTime = (bigTime, smallTime) => {
+    let _bigTime = moment(bigTime);
+    let _smallTime = moment(smallTime);
+    let day = moment.duration(_bigTime.diff(_smallTime)).days();
+    let hour = moment.duration(_bigTime.diff(_smallTime)).hours();
+    let minute = moment.duration(_bigTime.diff(_smallTime)).minutes();
+
+    let str = "";
+
+    if (day > 0) {
+      str += `${day}일 `;
+    }
+    if (hour > 0) {
+      str += `${hour}시간 `;
+    }
+    if (minute > 0) {
+      str += `${minute}분`;
+    }
+
+    return str;
+  };
+
   // 테이블
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData.slice(
@@ -595,28 +647,20 @@ const KickOutWorkerTable = ({
               moment(item.ble_input_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell out-time" name="out-time">
-            {item &&
-              item.ble_out_time &&
-              moment(item.ble_out_time).format("YYYY-MM-DD HH:mm:ss")}
+            {item && "∞"}
           </Table.Cell>
           <Table.Cell className="table-cell remain-time" name="remain-time">
             {item &&
               item.ble_input_time &&
               (item.ble_out_time
-                ? moment(
-                    moment(item.ble_out_time).diff(moment(item.ble_input_time))
-                  ).format("h시간 mm분")
-                : Math.floor(
-                    moment
-                      .duration(moment(today).diff(moment(item.ble_input_time)))
-                      .asHours()
-                  ) +
-                  "시간" +
-                  moment
-                    .utc(moment(today).diff(moment(item.ble_input_time)))
-                    .format("mm분"))}
+                ? getDiffTime(item.ble_out_time, item.ble_input_time)
+                : getDiffTime(today, item.ble_input_time))}
           </Table.Cell>
           <Table.Cell className="table-cell blank" name="blank"></Table.Cell>
+          <Table.Cell className="table-cell kickout" name="kickout">
+            {/* {item && */}
+            <Button className="kick-button">강제퇴출</Button>
+          </Table.Cell>
         </Table.Row>
       );
     });
@@ -857,17 +901,6 @@ const KickOutWorkerTable = ({
               />
             </div>
           </Menu.Menu>
-          <Menu.Menu>
-            <Menu.Item
-              className="table-categorie-menu download"
-              onClick={() => {
-                downloadHandler(startDate, endDate);
-              }}
-            >
-              다운로드
-              <FaFileDownload className="table-categorie-menu download-icon" />
-            </Menu.Item>
-          </Menu.Menu>
         </Menu>
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
@@ -903,6 +936,9 @@ const KickOutWorkerTable = ({
                 singleLine
                 className="table-header blank"
               ></Table.HeaderCell>
+              <Table.HeaderCell singleLine className="table-header kickout">
+                강제퇴출
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}

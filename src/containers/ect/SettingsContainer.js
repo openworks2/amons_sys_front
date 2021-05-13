@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import SettingsInput from "../../components/ect/SettingsInput";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAccounts,
@@ -94,12 +93,6 @@ const SettingsContatiner = () => {
     description: "",
   });
 
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
-
   // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;
@@ -126,8 +119,6 @@ const SettingsContatiner = () => {
   };
 
   const onRadioChange = (e, target) => {
-    console.log(target.value);
-
     let _acc_role = target.value;
 
     setFormData({

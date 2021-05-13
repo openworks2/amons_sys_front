@@ -9,6 +9,9 @@ const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
   margin-top: 5px;
+  .ui.form .field .ui.input input {
+    font-family: "NotoSansKR-Regular";
+  }
 
   .ui.form .field > label,
   .field > label {

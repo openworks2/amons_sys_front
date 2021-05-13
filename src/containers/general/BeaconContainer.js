@@ -253,12 +253,6 @@ const BeaconContatiner = () => {
         vh_index: findItem.vh_index,
         vh_name: findItem.vh_name,
       };
-      console.log(newBeacon);
-      console.log(newBeacon);
-      console.log("newBeacon");
-      console.log("newBeacon");
-      console.log("newBeacon");
-      console.log(newBeacon);
       dispatch(putBeacon(newBeacon.bc_index, newBeacon));
     }
   };

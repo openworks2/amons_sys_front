@@ -9,7 +9,9 @@ const InputCompo = styled.div`
   margin-right: 22px;
   margin-top: 5px;
   margin-bottom: 18px;
-
+  .ui.form .field .ui.input input {
+    font-family: "NotoSansKR-Regular";
+  }
   .ui.input > input {
     /* ui focus 색상변경 */
     &:focus {

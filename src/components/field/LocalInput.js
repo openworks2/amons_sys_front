@@ -20,6 +20,11 @@ const InputCompo = styled.div`
       border-color: #f1592a !important;
     }
   }
+  .ui.form .field .ui.input input,
+  #plan_length,
+  #local_description {
+    font-family: "NotoSansKR-Regular";
+  }
 
   .ui.form .field > label,
   .form-title.dig-length,

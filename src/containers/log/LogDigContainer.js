@@ -87,12 +87,7 @@ const LogDigContainer = () => {
     if (localData) {
       // localData 받아와서 4개 자르기
       let _usedLocalData = localData.filter((el) => el.local_used === 1);
-
-      console.log("_usedLocalData filter 필터필터");
-      console.log(_usedLocalData);
       _usedLocalData = _usedLocalData.slice(0, 4);
-      console.log("_usedLocalData filter 슬라이스");
-      console.log(_usedLocalData);
       setUsedLocalData(_usedLocalData);
     }
   }, [localData]);
@@ -100,10 +95,6 @@ const LogDigContainer = () => {
   useEffect(() => {
     if (usedLocalData !== undefined && data) {
       let _logDigsData = data;
-      console.log("_usedLocalData");
-      console.log(usedLocalData);
-      console.log("_logDigsData");
-      console.log(_logDigsData);
       let localOne = [];
       let localTwo = [];
       let localThree = [];

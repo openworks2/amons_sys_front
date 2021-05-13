@@ -22,7 +22,13 @@ const CategorieMenuCompo = styled.div`
     height: 40px;
     text-align: center !important;
   }
+  .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -34,7 +40,6 @@ const CategorieMenuCompo = styled.div`
       margin: 0px !important;
       padding: 0px !important;
       font-family: "NotoSansKR-Regular";
-      font-size: 13px;
       .search-box {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -373,7 +378,7 @@ const ScannerTable = ({
       tempData = _data.filter((item) =>
         item.scn_address.includes(_searchValue)
       );
-      setSearchValue("");
+
       setCurrentData(tempData);
     } else {
       // 검색
@@ -384,7 +389,7 @@ const ScannerTable = ({
       tempData = tempData.filter((item) =>
         item.scn_address.includes(_searchValue)
       );
-      setSearchValue("");
+
       setCurrentData(tempData);
     }
     if (selectedRow.selectedId) {
@@ -397,8 +402,8 @@ const ScannerTable = ({
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
 
-    if (_str.length > 10) {
-      return str.substring(0, 14);
+    if (_str.length > 12) {
+      return str.substring(0, 17);
     }
 
     let length = _str.length;

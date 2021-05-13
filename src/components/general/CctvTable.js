@@ -22,7 +22,13 @@ const CategorieMenuCompo = styled.div`
     height: 40px;
     text-align: center !important;
   }
+  .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -34,7 +40,6 @@ const CategorieMenuCompo = styled.div`
       margin: 0px !important;
       padding: 0px !important;
       font-family: "NotoSansKR-Regular";
-      font-size: 13px;
       .search-box {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -352,14 +357,14 @@ const CctvTable = ({
       // 전체검색
       let _searchValue = searchValue;
       tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
-      setSearchValue("");
+
       setCurrentData(tempData);
     } else {
       // 검색
       tempData = _data.filter((item) => item.local_index === categorieValue);
       let _searchValue = searchValue;
       tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
-      setSearchValue("");
+
       setCurrentData(tempData);
     }
     if (selectedRow.selectedId) {

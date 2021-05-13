@@ -217,13 +217,6 @@ const KickOutWorkerContainer = () => {
       wk_name: searchValue === "" ? null : searchValue,
       wk_co_index: selectedCompany === "" ? null : selectedCompany,
     };
-    console.log("search!@!@");
-    console.log("searchCondition");
-    console.log(searchCondition);
-    console.log(searchCondition);
-    console.log("searchCondition");
-    console.log("search!@!@");
-
     dispatch(postBleWorkersSearch(searchCondition));
     initPage();
   };

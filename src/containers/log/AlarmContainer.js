@@ -86,8 +86,6 @@ const AlarmContainer = () => {
     dispatch(getLocals());
   }, [dispatch]);
 
-  console.log(data);
-
   const [formData, setFormData] = useState({
     emg_seq: null,
     emg_writer: "",
@@ -97,12 +95,6 @@ const AlarmContainer = () => {
   useEffect(() => {
     makeLocalList(localData);
   }, [localData, formData.local_index]);
-
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
 
   const [localList, setLocalList] = useState([]);
 
@@ -178,12 +170,6 @@ const AlarmContainer = () => {
         emg_result: findItem.emg_result,
       });
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션
@@ -231,10 +217,6 @@ const AlarmContainer = () => {
       from_date: moment(_startDate).format("YYYY-MM-DD HH:mm:ss"),
       to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
     };
-
-    console.log("searchCondition!!!");
-    console.log(searchCondition);
-    console.log("searchCondition!!!");
 
     dispatch(postAlarmSearch(searchCondition));
   };

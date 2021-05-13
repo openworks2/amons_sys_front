@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { Form, Button, Select, Modal, Input } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
-import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 
 const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
+
+  .ui.form input,
+  .ui.form .field .ui.input input {
+    font-family: "NotoSansKR-Regular";
+  }
 
   margin-top: 5px;
   .ui.form .field > label,

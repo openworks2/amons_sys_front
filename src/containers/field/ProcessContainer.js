@@ -117,8 +117,6 @@ const ProcessContainer = () => {
 
   // radioChange event handler
   const onRadioChange = (e, target) => {
-    console.log(target.value);
-
     let _pcs_state = target.value;
 
     if (_pcs_state === formData.pcs_state) {
@@ -215,12 +213,6 @@ const ProcessContainer = () => {
       });
     }
   };
-
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
 
   // form onChange Event
   const onChange = (e) => {

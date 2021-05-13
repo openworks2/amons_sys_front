@@ -25,7 +25,11 @@ const InputCompo = styled.div`
   margin-right: 22px;
   margin-top: 5px;
   margin-bottom: 18px;
-
+  font-family: "NotoSansKR-Regular";
+  .ui.form .field .ui.input input,
+  #wk_nation {
+    font-family: "NotoSansKR-Regular";
+  }
   .ui.input > input {
     /* ui focus 색상변경 */
     &:focus {
@@ -42,6 +46,7 @@ const InputCompo = styled.div`
   }
   .ui.dropdown .menu > .item {
     /* border-color: #f1592a !important; */
+    font-family: "NotoSansKR-Regular" !important;
   }
   .ui.checkbox input:focus ~ label:before {
     border-color: #f1592a !important;

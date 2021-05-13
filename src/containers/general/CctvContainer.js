@@ -72,8 +72,6 @@ const CctvContainer = () => {
     dispatch(getCctvs());
   }, [dispatch]);
 
-  console.log(data);
-
   const [formData, setFormData] = useState({
     cctv_id: null,
     cctv_index: null,
@@ -93,12 +91,6 @@ const CctvContainer = () => {
   useEffect(() => {
     makeLocalList(localData);
   }, [localData, formData.local_index]);
-
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
 
   const [localList, setLocalList] = useState([]);
 
@@ -240,12 +232,6 @@ const CctvContainer = () => {
         description: findItem.description,
       });
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션

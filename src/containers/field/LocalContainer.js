@@ -78,7 +78,6 @@ const LocalContainer = () => {
 
   useEffect(() => {
     if (data) {
-      console.log("data-->", data);
       const _filteredData = data.filter((el) => el.local_used !== 0);
       setFilteredData(_filteredData);
     }

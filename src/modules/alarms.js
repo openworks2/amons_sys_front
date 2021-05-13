@@ -67,24 +67,12 @@ export default function alarms(state = initialState, action) {
       const _formData = action.payload;
 
       let modifiedData = items.find((el) => el.emg_seq === _seq);
-      console.log("수정수정수정수정수정수정수정수정");
-      console.log("_formData");
-      console.log(_formData);
-      console.log("_seq");
-      console.log(_seq);
-      console.log("modifiedData");
-      console.log(modifiedData);
-      console.log("수정수정수정수정풋풋풋");
       modifiedData = {
         ...modifiedData,
         emg_writer: _formData.emg_writer,
         emg_result: _formData.emg_result,
         emg_end_time: _formData.emg_end_time,
       };
-      console.log("대입대입대입수정수정수정수정풋풋풋");
-      console.log("modifiedData");
-      console.log(modifiedData);
-      console.log("수정수정수정수정풋풋풋");
       items = items.filter((el) => el.emg_seq !== _seq);
       items.push(modifiedData);
       return {

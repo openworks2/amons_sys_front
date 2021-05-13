@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {
-  Icon,
-  Table,
-  Pagination,
-  Menu,
-  Dropdown,
-  Input,
-  Button,
-} from "semantic-ui-react";
+import { Icon, Table, Pagination, Menu, Input } from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko";
@@ -23,6 +15,7 @@ const _ = require("lodash");
 const CategorieMenuCompo = styled.div`
   font-family: "NotoSansKR-Regular" !important;
   font-size: 13px !important;
+  width: 686px;
   /* date picker customize 시작 */
   .cal-icon {
     top: 12px;
@@ -71,7 +64,7 @@ const CategorieMenuCompo = styled.div`
     color: #ce3f3f;
   }
   .react-datepicker {
-    margin-left: -40px;
+    margin-left: 0px;
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
     .react-datepicker__day-names {
@@ -178,13 +171,6 @@ const CategorieMenuCompo = styled.div`
     font-size: 13px;
     font-size: 13px;
     width: 123px;
-
-    &.all {
-      width: 80px;
-    }
-    &.company-select {
-      background: #f2f2f2 0% 0% no-repeat padding-box;
-    }
   }
   .ui.menu .item > .input input {
     &:focus {
@@ -228,33 +214,7 @@ const CategorieMenuCompo = styled.div`
       color: #f1592a !important;
     }
   }
-  .table-categorie-menu {
-    font-family: "NotoSansKR-Regular";
-    font-size: 13px;
-    font-size: 13px;
-    text-align: center;
-    width: 110px;
 
-    &.download {
-      text-align: left;
-      cursor: pointer;
-      border: 0px 0px 0px 1px solid #d8d8d8;
-      color: #d8d8d8;
-      .download-icon {
-        border: 0px;
-        width: 30px;
-        position: absolute;
-        background-color: rgba(255, 255, 255, 0) !important;
-        left: 70px;
-        top: 12px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      &:hover {
-        color: #f1592a !important;
-      }
-    }
-  }
   .divider,
   .text {
     font-family: "NotoSansKR-Regular" !important;
@@ -262,39 +222,27 @@ const CategorieMenuCompo = styled.div`
     vertical-align: middle;
     padding: 1px;
   }
-  .table-company-dropdown {
+
+  .ui.dropdown > .dropdown.icon,
+  &:before,
+  &:after {
+    left: 95px;
+    font-size: 20px;
+    position: absolute;
+    color: #2e2e2e !important;
+    opacity: 0.8;
+  }
+  .ui.basic.button:hover,
+  .ui.basic.buttons .button:hover,
+  .ui.basic.button:focus,
+  .ui.basic.buttons .button:focus {
+    background: #f2f2f2 0% 0% no-repeat padding-box !important;
+  }
+  .active.selected.item {
+    display: none;
+  }
+  .item {
     width: 140px !important;
-    background: #f2f2f2 0% 0% no-repeat padding-box;
-    font-family: "NotoSansKR-Regular" !important;
-    font-size: 13px !important;
-    .ui.basic.button {
-      border: 0px !important;
-      border-radius: 0px;
-      box-shadow: none;
-      display: flex;
-      width: 100%;
-    }
-    .ui.dropdown > .dropdown.icon,
-    &:before,
-    &:after {
-      left: 95px;
-      font-size: 20px;
-      position: absolute;
-      color: #2e2e2e !important;
-      opacity: 0.8;
-    }
-    .ui.basic.button:hover,
-    .ui.basic.buttons .button:hover,
-    .ui.basic.button:focus,
-    .ui.basic.buttons .button:focus {
-      background: #f2f2f2 0% 0% no-repeat padding-box !important;
-    }
-    .active.selected.item {
-      display: none;
-    }
-    .item {
-      width: 140px !important;
-    }
   }
 `;
 
@@ -315,40 +263,29 @@ const TableCompo = styled.div`
     color: #000000;
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
-    text-align: left;
+    text-align: center;
     padding-left: 20px !important;
     padding-right: 20px !important;
-    &.local {
-      width: 110px;
-      text-align: center;
+    &.login-time {
+      width: 220px;
     }
-    &.company {
-      width: 150px;
+    &.ip {
+      width: 220px;
     }
-    &.name {
-      width: 150px;
-    }
-    &.number {
+    &.user-id {
       width: 140px;
     }
-    &.input-time {
-      width: 210px;
-      padding-left: 40px !important;
+    &.os {
+      width: 150px;
     }
-    &.out-time {
-      width: 90px;
+    &.browser {
+      width: 150px;
     }
-    &.remain-time {
-      width: 180px;
-      text-align: center;
+    &.screensize {
+      width: 150px;
     }
     &.blank {
-      width: 422px;
-    }
-    &.kickout {
-      width: 120px;
-      text-align: center;
-      color: #ff0000;
+      width: 542px;
     }
   }
 
@@ -383,61 +320,34 @@ const TableCompo = styled.div`
         opacity: 1;
         height: 47px;
         .table-cell {
-          text-align: left;
+          text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
           padding-left: 20px;
           padding-right: 20px;
           vertical-align: middle;
-          &.local {
-            width: 110px;
-            text-align: center;
+          &.login-time {
+            width: 220px;
           }
-          &.company {
-            width: 150px;
+          &.ip {
+            width: 220px;
           }
-          &.name {
-            width: 150px;
-          }
-          &.number {
+          &.user-id {
             width: 140px;
           }
-          &.input-time {
-            width: 210px;
-            text-align: center;
+          &.os {
+            width: 150px;
           }
-          &.out-time {
-            width: 90px;
-            text-align: center;
+          &.browser {
+            width: 150px;
           }
-          &.remain-time {
-            width: 180px;
-            text-align: center;
+          &.screensize {
+            width: 150px;
           }
           &.blank {
-            width: 422px;
-          }
-          &.kickout {
-            width: 120px;
-            text-align: center;
+            width: 542px;
             @media screen and (max-height: 970px) {
-              width: 110px;
-            }
-            padding: 0px;
-            margin: 0px;
-            .kick-button {
-              width: 80px;
-              height: 29px;
-              background: #ff0000 0% 0% no-repeat padding-box !important;
-              border-radius: 4px;
-              opacity: 1;
-              color: #ffffff;
-              font-size: 14px;
-              font-family: "NotoSansKR-Regular";
-              font-weight: normal !important;
-              &:hover {
-                color: #d8d8d8 !important;
-              }
+              width: 531px;
             }
           }
         }
@@ -481,19 +391,13 @@ const TableCompo = styled.div`
   }
 `;
 
-const KickOutVehicleTable = ({
+const LoginLogTable = ({
   pageInfo,
   currentData,
-  localData,
-  companyList,
-  categorieValue,
   searchValue,
   onPageChange,
-  onSelectChange,
   onSearchChange,
-  onClickCategorie,
   onSearch,
-  downloadHandler,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -572,28 +476,6 @@ const KickOutVehicleTable = ({
     );
   };
 
-  const getDiffTime = (bigTime, smallTime) => {
-    let _bigTime = moment(bigTime);
-    let _smallTime = moment(smallTime);
-    let day = moment.duration(_bigTime.diff(_smallTime)).days();
-    let hour = moment.duration(_bigTime.diff(_smallTime)).hours();
-    let minute = moment.duration(_bigTime.diff(_smallTime)).minutes();
-
-    let str = "";
-
-    if (day > 0) {
-      str += `${day}일 `;
-    }
-    if (hour > 0) {
-      str += `${hour}시간 `;
-    }
-    if (minute > 0) {
-      str += `${minute}분`;
-    }
-
-    return str;
-  };
-
   // 테이블
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData.slice(
@@ -610,65 +492,27 @@ const KickOutVehicleTable = ({
       return (
         <Table.Row className="table-row" key={index} id={"scroll" + index}>
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
-          <Table.Cell className="table-cell local" name="local">
-            {item &&
-              item.local_index &&
-              localData.find((el) => el.local_index === item.local_index) &&
-              (localData.find((el) => el.local_index === item.local_index)
-                .local_used === 0
-                ? localData.find((el) => el.local_index === item.local_index)
-                    .local_name + "(삭제됨)"
-                : localData.find((el) => el.local_index === item.local_index)
-                    .local_name)}
-          </Table.Cell>
-          <Table.Cell className="table-cell company" name="company">
-            {item && item.vh_co_name && item.vh_co_name}
-          </Table.Cell>
-          <Table.Cell className="table-cell name" name="name">
-            {item && item.vh_name && item.vh_name}
-          </Table.Cell>
-          <Table.Cell className="table-cell number" name="number">
-            {item && item.vh_number && item.vh_number}
-          </Table.Cell>
-          <Table.Cell className="table-cell input-time" name="input-time">
+          <Table.Cell className="table-cell login-time" name="login-time">
             {item &&
               item.ble_input_time &&
               moment(item.ble_input_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
-          <Table.Cell className="table-cell out-time" name="out-time">
-            {item && "∞"}
-          </Table.Cell>
-          <Table.Cell className="table-cell remain-time" name="remain-time">
-            {item &&
-              item.ble_input_time &&
-              (item.ble_out_time
-                ? getDiffTime(item.ble_out_time, item.ble_input_time)
-                : getDiffTime(today, item.ble_input_time))}
-          </Table.Cell>
+          <Table.Cell className="table-cell ip" name="ip"></Table.Cell>
+          <Table.Cell
+            className="table-cell user-id"
+            name="user-id"
+          ></Table.Cell>
+          <Table.Cell className="table-cell os" name="os"></Table.Cell>
+          <Table.Cell
+            className="table-cell browser"
+            name="browser"
+          ></Table.Cell>
+          <Table.Cell
+            className="table-cell screensize"
+            name="screensize"
+          ></Table.Cell>
           <Table.Cell className="table-cell blank" name="blank"></Table.Cell>
-          <Table.Cell className="table-cell kickout" name="kickout">
-            {/* {item && */}
-            <Button className="kick-button">강제퇴출</Button>
-          </Table.Cell>
         </Table.Row>
-      );
-    });
-  };
-  const TopMenuRender = (localData = []) => {
-    if (!localData) {
-      localData = [];
-    }
-    let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 4);
-    return _localData.map((item, index) => {
-      return (
-        <Menu.Item
-          className="table-categorie-menu categorie"
-          name={item.local_name && item.local_name}
-          active={categorieValue === item.local_index}
-          value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
-        />
       );
     });
   };
@@ -677,27 +521,6 @@ const KickOutVehicleTable = ({
     <>
       <CategorieMenuCompo className="table-categorie-menu-compo">
         <Menu pointing className="table-categorie-menu-box">
-          <Menu.Item
-            className="table-categorie-menu all"
-            name="전체"
-            active={categorieValue === null}
-            value={null}
-            onClick={onClickCategorie}
-          />
-          {TopMenuRender(localData)}
-          <Menu.Menu className="table-company-dropdown">
-            <Dropdown
-              button
-              basic
-              id="co_index"
-              name="co_index"
-              options={companyList}
-              className="dropdown"
-              placeholder="소속사 전체"
-              name="searchCategorie"
-              onChange={(e, value) => onSelectChange(e, value)}
-            />
-          </Menu.Menu>
           <Menu.Menu>
             <Menu.Item className="table-categorie-menu datepicker-start">
               <FaRegCalendarAlt className="cal-icon" />
@@ -866,12 +689,12 @@ const KickOutVehicleTable = ({
               ></DatePicker>
             </Menu.Item>
           </Menu.Menu>
-          <Menu.Menu position="right">
+          <Menu.Menu>
             <div className="search-box">
               <Input
                 className="search-input"
                 actionPosition="left"
-                placeholder="차량종류를 검색해 주세요."
+                placeholder="IP 주소를 검색해 주세요."
                 value={searchValue}
                 onChange={onSearchChange}
                 onKeyPress={(e, startDate, endDate) => {
@@ -893,38 +716,32 @@ const KickOutVehicleTable = ({
         </Menu>
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">막장 잔류이력 : 차량의 조회 결과</p>
+        <p className="subtitle">로그인 기록의 조회 결과</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
-              <Table.HeaderCell singleLine className="table-header local">
-                노선
+              <Table.HeaderCell singleLine className="table-header login-time">
+                로그인 일시
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header company">
-                소속사
+              <Table.HeaderCell singleLine className="table-header ip">
+                접속 IP 주소
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header name">
-                차량 종류
+              <Table.HeaderCell singleLine className="table-header user-id">
+                접속 아이디
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header number">
-                차량 번호
+              <Table.HeaderCell singleLine className="table-header os">
+                OS
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header input-time">
-                진입일시
+              <Table.HeaderCell singleLine className="table-header browser">
+                브라우저
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header out-time">
-                퇴출일시
-              </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header remain-time">
-                막장 체류시간
+              <Table.HeaderCell singleLine className="table-header screensize">
+                해상도
               </Table.HeaderCell>
               <Table.HeaderCell
                 singleLine
                 className="table-header blank"
               ></Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header kickout">
-                강제퇴출
-              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
@@ -982,4 +799,4 @@ const KickOutVehicleTable = ({
   );
 };
 
-export default KickOutVehicleTable;
+export default LoginLogTable;

@@ -222,7 +222,10 @@ const SearchCompo = styled.div`
   display: block;
   font-family: "NotoSansKR-Regular";
   font-size: 13px;
-
+  .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
   .ui.input > input {
     display: block;
     width: 310px;

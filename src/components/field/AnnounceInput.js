@@ -20,7 +20,9 @@ const InputCompo = styled.div`
       border-color: #f1592a !important;
     }
   }
-
+  .ui.form .field .ui.input input {
+    font-family: "NotoSansKR-Regular";
+  }
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;

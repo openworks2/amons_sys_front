@@ -23,7 +23,14 @@ const CategorieMenuCompo = styled.div`
     height: 40px;
     text-align: center !important;
   }
+  .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     width: 123px;
 
     &.all {

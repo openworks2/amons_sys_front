@@ -109,12 +109,6 @@ const WorkerContatiner = () => {
   });
 
   useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
-
-  useEffect(() => {
     makeCompanyList(companyData);
   }, [companyData, formData.co_index]);
 
@@ -285,12 +279,6 @@ const WorkerContatiner = () => {
   };
 
   const handleFileInputChange = (e) => {
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-    console.log("set file!!");
-    console.log(files);
-    console.log("e.target.files[0]");
-    console.log(e.target.files[0]);
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
     setFiles({
       selectFile: e.target.files[0],
     });
@@ -397,12 +385,6 @@ const WorkerContatiner = () => {
         image_file: findItem.image_file,
       });
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션
@@ -459,10 +441,6 @@ const WorkerContatiner = () => {
       const createData = new FormData();
       createData.append("file", files.selectFile);
       createData.append("reqBody", JSON.stringify(formData));
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("createData!!");
-      console.log(createData);
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       dispatch(postWorker(createData));
       initActiveRow();
       initFormData();
@@ -505,10 +483,6 @@ const WorkerContatiner = () => {
       const putData = new FormData();
       putData.append("file", files.selectFile);
       putData.append("reqBody", JSON.stringify(formData));
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("putData!!");
-      console.log(putData);
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       dispatch(putWorker(formData.wk_index, putData));
     }
   };

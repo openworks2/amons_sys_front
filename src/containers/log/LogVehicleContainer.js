@@ -217,13 +217,6 @@ const LogVehicleContainer = () => {
       vh_name: searchValue === "" ? null : searchValue,
       vh_co_index: selectedCompany === "" ? null : selectedCompany,
     };
-    console.log("search!@!@");
-    console.log("searchCondition");
-    console.log(searchCondition);
-    console.log(searchCondition);
-    console.log("searchCondition");
-    console.log("search!@!@");
-
     dispatch(postBleVehiclesSearch(searchCondition));
     initPage();
   };

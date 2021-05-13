@@ -183,7 +183,6 @@ const CompanyTable = ({
 
   // 테이블
   const { activePage, itemsPerPage } = pageInfo;
-  console.log("data--->", data);
   const totalPages = Math.ceil(data.length / itemsPerPage, 1);
   const viewItems = data.slice(
     (activePage - 1) * itemsPerPage,

@@ -132,6 +132,9 @@ const CategorieMenuCompo = styled.div`
     margin-left: 28px;
   }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     display: inline-block;
     &.datepicker-start {
       text-align: left;
@@ -170,6 +173,9 @@ const CategorieMenuCompo = styled.div`
     text-align: center !important;
   }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -193,7 +199,8 @@ const CategorieMenuCompo = styled.div`
   }
   .ui.input > input,
   .ui.input {
-    width: 200px;
+    font-family: "NotoSansKR-Regular";
+    width: 220px;
     border-radius: 0px;
     border-color: #f2f2f2 !important;
     border: 0px solid !important;
@@ -201,7 +208,7 @@ const CategorieMenuCompo = styled.div`
 
   .search-box {
     margin-top: 2px;
-    width: 202px;
+    width: 222px;
     height: 35px;
     border-radius: 0px;
     background-color: #f2f2f2;
@@ -213,7 +220,7 @@ const CategorieMenuCompo = styled.div`
   .search-icon {
     position: absolute;
     top: 12px;
-    left: 175px;
+    left: 195px;
     color: #3d3d3d;
     cursor: pointer;
     &:hover,
@@ -221,9 +228,9 @@ const CategorieMenuCompo = styled.div`
       color: #f1592a !important;
     }
   }
-
   .table-categorie-menu {
     font-family: "NotoSansKR-Regular";
+    font-size: 13px;
     font-size: 13px;
     text-align: center;
     width: 110px;
@@ -541,6 +548,28 @@ const LogVehicleTable = ({
     );
   };
 
+  const getDiffTime = (bigTime, smallTime) => {
+    let _bigTime = moment(bigTime);
+    let _smallTime = moment(smallTime);
+    let day = moment.duration(_bigTime.diff(_smallTime)).days();
+    let hour = moment.duration(_bigTime.diff(_smallTime)).hours();
+    let minute = moment.duration(_bigTime.diff(_smallTime)).minutes();
+
+    let str = "";
+
+    if (day > 0) {
+      str += `${day}일 `;
+    }
+    if (hour > 0) {
+      str += `${hour}시간 `;
+    }
+    if (minute > 0) {
+      str += `${minute}분`;
+    }
+
+    return str;
+  };
+
   // 테이블
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData.slice(
@@ -591,24 +620,15 @@ const LogVehicleTable = ({
             {item &&
               item.ble_input_time &&
               (item.ble_out_time
-                ? moment(
-                    moment(item.ble_out_time).diff(moment(item.ble_input_time))
-                  ).format("h시간 mm분")
-                : Math.floor(
-                    moment
-                      .duration(moment(today).diff(moment(item.ble_input_time)))
-                      .asHours()
-                  ) +
-                  "시간" +
-                  moment
-                    .utc(moment(today).diff(moment(item.ble_input_time)))
-                    .format("mm분"))}
+                ? getDiffTime(item.ble_out_time, item.ble_input_time)
+                : getDiffTime(today, item.ble_input_time))}
           </Table.Cell>
           <Table.Cell className="table-cell blank" name="blank"></Table.Cell>
         </Table.Row>
       );
     });
   };
+
   const TopMenuRender = (localData = []) => {
     if (!localData) {
       localData = [];
@@ -826,7 +846,7 @@ const LogVehicleTable = ({
               <Input
                 className="search-input"
                 actionPosition="left"
-                placeholder="이름을 검색해 주세요."
+                placeholder="차량종류를 검색해 주세요."
                 value={searchValue}
                 onChange={onSearchChange}
                 onKeyPress={(e, startDate, endDate) => {

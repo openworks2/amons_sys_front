@@ -472,21 +472,12 @@ const LogDigTable = ({
         searchCondition
       );
       searchData = response.data;
-      console.log("searchData response !!!");
-      console.log(response);
-      console.log("searchData response!!!");
     } catch (e) {
       console.log("굴진 기간 조회 서버 통신 에러");
     }
     if (!searchData) {
       searchData = [];
     }
-    console.log("searchData !!!");
-    console.log(searchData);
-    console.log("searchCondition");
-    console.log(searchCondition);
-    console.log(searchData);
-    console.log("searchData !!!");
     initPage();
     setCurrentData(searchData);
   };
