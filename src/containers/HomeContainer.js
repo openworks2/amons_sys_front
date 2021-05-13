@@ -88,7 +88,7 @@ const HomeContainer = ({ currentMenu }) => {
           callSideMenuHandler={callSideMenuHandler}
           currentUrl={currentUrl}
         />
-        {currentUrl && currentUrl !== "home" && currentUrl !== "monitering" && (
+        {currentUrl && currentUrl !== "home" && currentUrl !== "monitor" && (
           <ContentTitle currentUrl={currentUrl}></ContentTitle>
         )}
         <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} />
