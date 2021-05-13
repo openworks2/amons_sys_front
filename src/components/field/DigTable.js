@@ -319,6 +319,7 @@ const DigTable = ({
         <Table.Row
           className="table-row"
           key={index}
+          id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.dig_seq))}
         >
@@ -466,7 +467,10 @@ const DigTable = ({
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
                     siblingRange={1}
-                    onPageChange={onPageChange}
+                    onPageChange={(e, activePage) => {
+                      document.getElementById("scroll0").scrollIntoView();
+                      onPageChange(e, activePage);
+                    }}
                     firstItem={
                       // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
                       totalPages <= 5 || {

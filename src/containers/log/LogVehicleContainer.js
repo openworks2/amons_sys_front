@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import LogWorkerTable from "../../components/log/LogWorkerTable";
+import LogVehicleTable from "../../components/log/LogVehicleTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getCompanies } from "../../modules/companies";
-import { getBleWorkers, postBleWorkersSearch } from "../../modules/bles";
+import { getBleVehicles, postBleVehiclesSearch } from "../../modules/bles";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
@@ -53,9 +53,9 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const LogWorkerContainer = () => {
+const LogVehicleContainer = () => {
   const { data, loading, error } = useSelector(
-    (state) => state.bles.bleWorkers
+    (state) => state.bles.bleVehicles
   );
 
   const localData = useSelector((state) => state.locals.locals.data);
@@ -74,10 +74,10 @@ const LogWorkerContainer = () => {
       local_index: "",
       from_date: "",
       to_date: "",
-      wk_name: "",
-      wk_co_index: "",
+      vh_name: "",
+      vh_co_index: "",
     };
-    dispatch(postBleWorkersSearch(searchCondition));
+    dispatch(postBleVehiclesSearch(searchCondition));
   }, []);
 
   useEffect(() => {
@@ -187,17 +187,17 @@ const LogWorkerContainer = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: "/api/ble/bles/worker/download",
+        url: "/api/ble/bles/vehicle/download",
         responseType: "blob",
         data: {
           local_index: _local_index,
           from_date: moment(_startDate).format("YYYY-MM-DD HH:mm:ss"),
           to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
-          wk_name: searchValue === "" ? null : searchValue,
-          wk_co_index: selectedCompany === "" ? null : selectedCompany,
+          vh_name: searchValue === "" ? null : searchValue,
+          vh_co_index: selectedCompany === "" ? null : selectedCompany,
         },
       }).then((response) => {
-        saveAs(new Blob([response.data]), "막장 잔류이력(작업자).xlsx");
+        saveAs(new Blob([response.data]), "막장 잔류이력(차량).xlsx");
       });
     } catch (e) {
       console.log(e);
@@ -214,8 +214,8 @@ const LogWorkerContainer = () => {
       local_index: _local_index,
       from_date: moment(startDate).format("YYYY-MM-DD HH:mm:ss"),
       to_date: moment(endDate).format("YYYY-MM-DD HH:mm:ss"),
-      wk_name: searchValue === "" ? null : searchValue,
-      wk_co_index: selectedCompany === "" ? null : selectedCompany,
+      vh_name: searchValue === "" ? null : searchValue,
+      vh_co_index: selectedCompany === "" ? null : selectedCompany,
     };
     console.log("search!@!@");
     console.log("searchCondition");
@@ -224,7 +224,7 @@ const LogWorkerContainer = () => {
     console.log("searchCondition");
     console.log("search!@!@");
 
-    dispatch(postBleWorkersSearch(searchCondition));
+    dispatch(postBleVehiclesSearch(searchCondition));
     initPage();
   };
 
@@ -255,8 +255,8 @@ const LogWorkerContainer = () => {
       <ContentsBodyCompo className="contents-body-compo">
         <div className="table-box">
           {currentData && localData && (
-            <LogWorkerTable
-              className="logworker-table-box"
+            <LogVehicleTable
+              className="logvehicle-table-box"
               pageInfo={pageInfo}
               currentData={currentData}
               localData={localData}
@@ -277,4 +277,4 @@ const LogWorkerContainer = () => {
   );
 };
 
-export default LogWorkerContainer;
+export default LogVehicleContainer;

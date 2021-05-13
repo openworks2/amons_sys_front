@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import LogWorkerTable from "../../components/log/LogWorkerTable";
+import KickOutWorkerTable from "../../components/ect/KickOutWorkerTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getCompanies } from "../../modules/companies";
@@ -53,7 +53,7 @@ const ErrMsg = styled.div`
 `;
 // ***********************************Logic Area*****************************************
 
-const LogWorkerContainer = () => {
+const KickOutWorkerContainer = () => {
   const { data, loading, error } = useSelector(
     (state) => state.bles.bleWorkers
   );
@@ -255,7 +255,7 @@ const LogWorkerContainer = () => {
       <ContentsBodyCompo className="contents-body-compo">
         <div className="table-box">
           {currentData && localData && (
-            <LogWorkerTable
+            <KickOutWorkerTable
               className="logworker-table-box"
               pageInfo={pageInfo}
               currentData={currentData}
@@ -277,4 +277,4 @@ const LogWorkerContainer = () => {
   );
 };
 
-export default LogWorkerContainer;
+export default KickOutWorkerContainer;

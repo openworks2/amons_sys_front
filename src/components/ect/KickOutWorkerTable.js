@@ -459,7 +459,7 @@ const TableCompo = styled.div`
   }
 `;
 
-const LogWorkerTable = ({
+const KickOutWorkerTable = ({
   pageInfo,
   currentData,
   localData,
@@ -960,4 +960,4 @@ const LogWorkerTable = ({
   );
 };
 
-export default LogWorkerTable;
+export default KickOutWorkerTable;

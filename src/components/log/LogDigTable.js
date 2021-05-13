@@ -377,8 +377,8 @@ const LogDigTable = ({
   initPage,
   localData,
   addComma,
-  addZero,
   getDigAmountPercent,
+  serial,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -407,7 +407,6 @@ const LogDigTable = ({
     "11월",
     "12월",
   ];
-  const today = new Date();
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -488,7 +487,7 @@ const LogDigTable = ({
     console.log(searchCondition);
     console.log(searchData);
     console.log("searchData !!!");
-
+    initPage();
     setCurrentData(searchData);
   };
 
@@ -525,7 +524,11 @@ const LogDigTable = ({
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
       return (
-        <Table.Row className="table-row" key={index}>
+        <Table.Row
+          className="table-row"
+          key={index}
+          id={serial + "scroll" + index}
+        >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
@@ -765,7 +768,12 @@ const LogDigTable = ({
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
                     siblingRange={1}
-                    onPageChange={onPageChange}
+                    onPageChange={(e, activePage) => {
+                      document
+                        .getElementById(serial + "scroll0")
+                        .scrollIntoView();
+                      onPageChange(e, activePage);
+                    }}
                     firstItem={
                       // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
                       totalPages <= 5 || {

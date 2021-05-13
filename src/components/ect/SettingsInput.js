@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import NumberFormat from "react-number-format";
-import { Form, Button, Modal, Radio, Input } from "semantic-ui-react";
-import { FaExclamationCircle, FaCheck } from "react-icons/fa";
+import { Form, Button, Radio, Input } from "semantic-ui-react";
 
 const InputCompo = styled.div`
   margin-left: 22px;
@@ -57,6 +55,12 @@ const InputCompo = styled.div`
       @media screen and (max-height: 970px) {
         height: 67.5vh;
       }
+      .form-title.time {
+        margin: 8px;
+      }
+      .input-form.time {
+        width: 160px !important;
+      }
       .input-form {
         font-family: "NotoSansKR-Regular";
         font-size: 14px;
@@ -79,85 +83,16 @@ const InputCompo = styled.div`
           }
         }
       }
-      .form-title.phone {
-        margin: 5px;
-      }
+    }
+  }
 
-      .input-form.mail {
-        margin: 10px;
-        margin-left: 0px;
-        width: 322px;
-      }
-      .input-form.user-id {
-        width: 180px;
-        display: inline-block;
-      }
-      .input-form.user-id-passed {
-        width: 180px;
-        display: inline-block;
-        #acc_user_id {
-          border: 1px solid #f1592a;
-          background-color: rgba(255, 255, 255, 0);
-        }
-      }
-      #passed-icon {
-        z-index: 1;
-        float: left;
-        margin-top: -40px;
-        margin-left: 155px;
-        color: #f1592a;
-      }
-      .duplication-check-button {
-        margin-left: 10px;
-        margin-top: -5px;
-        padding: 7px;
-        cursor: pointer;
-        display: inline-block;
-        color: #ffffff;
-        font-family: "NotoSansKR-Regular";
-        font-size: 14px;
-        width: 132px;
-        height: 38px;
-        vertical-align: middle;
-        text-align: center;
-        background: #f1592a 0% 0% no-repeat padding-box;
-        border: 1px solid #d8d8d8;
-        border-radius: 4px;
-        opacity: 1;
-        &:hover {
-          opacity: 0.9;
-        }
-        &.disabled {
-          background: #d9d9d9 0% 0% no-repeat padding-box;
-          &:hover {
-            opacity: 1;
-          }
-        }
-      }
-    }
-  }
-  .phone {
-    color: black !important;
-    &:focus {
-      border-color: #f1592a !important;
-    }
-  }
   .ui.form textarea {
     &:focus {
       border-color: #f1592a !important;
       color: black;
     }
   }
-  #delete-icon {
-    float: right;
-    margin-top: -35px;
-    margin-right: 10px;
-    font-size: 25px !important;
-    cursor: pointer;
-    &:hover {
-      color: red;
-    }
-  }
+
   .label,
   .ui.form .field > label,
   .form-title {
@@ -237,21 +172,11 @@ const InputError = styled.div`
   opacity: 1;
 `;
 
-const AccountInput = ({
+const SettingsInput = ({
   onChange,
   onRadioChange,
   formData,
   createHandler,
-  updateHandler,
-  selectedRow,
-  initFormData,
-  initActiveRow,
-  idError,
-  passwordError,
-  passwordCheckError,
-  duplicationCheck,
-  setDuplicationCheck,
-  duplicationCheckHandler,
 }) => {
   const {
     acc_id,
@@ -281,9 +206,9 @@ const AccountInput = ({
         <div className="resizable-area">
           <Form.Input
             label="주소등록(날씨조회)"
-            className="input-form name"
-            id="acc_name"
-            name="acc_name"
+            className="input-form address"
+            id="address"
+            name="address"
             placeholder="주소를 검색해주세요."
             required
             value={acc_name && acc_name}
@@ -310,12 +235,12 @@ const AccountInput = ({
               onChange={(e, target) => onRadioChange(e, target)}
             />
           </div>
-          <div className="pos-x-area">
-            <div className="form-title pos-x">공지사항 (Slider Time)</div>
+          <div className="time-area">
+            <div className="form-title time">공지사항 (Slider Time)</div>
             <Input
               label={{ basic: true, content: "초" }}
               labelPosition="right"
-              className="input-form pos-x"
+              className="input-form time"
               id="scn_pos_x"
               name="scn_pos_x"
               placeholder="슬라이더 시간"
@@ -339,4 +264,4 @@ const AccountInput = ({
   );
 };
 
-export default AccountInput;
+export default SettingsInput;

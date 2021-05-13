@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import AlarmInput from "../../components/log/AlarmInput";
 import AlarmTable from "../../components/log/AlarmTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getAlarms, postAlarmSearch, putAlarm } from "../../modules/alarms";
+import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
 
@@ -71,7 +73,13 @@ const AlarmContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAlarms());
+    // dispatch(getAlarms());
+    const searchCondition = {
+      local_index: null,
+      from_date: "",
+      to_date: "",
+    };
+    dispatch(postAlarmSearch(searchCondition));
   }, []);
 
   useEffect(() => {
@@ -220,8 +228,8 @@ const AlarmContainer = () => {
 
     const searchCondition = {
       local_index: _local_index,
-      from_date: moment(_startDate).format("YYYY.MM.DD HH:mm:ss"),
-      to_date: moment(_endDate).format("YYYY.MM.DD HH:mm:ss"),
+      from_date: moment(_startDate).format("YYYY-MM-DD HH:mm:ss"),
+      to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
     };
 
     console.log("searchCondition!!!");
@@ -229,6 +237,20 @@ const AlarmContainer = () => {
     console.log("searchCondition!!!");
 
     dispatch(postAlarmSearch(searchCondition));
+  };
+
+  const downloadHandler = async () => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: "/api/alarm/alarms/download",
+        responseType: "blob",
+      }).then((response) => {
+        saveAs(new Blob([response.data]), "알람이력(작업자).xlsx");
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // 등록
@@ -279,6 +301,7 @@ const AlarmContainer = () => {
               localData={localData}
               localList={localList}
               onSearch={onSearch}
+              downloadHandler={downloadHandler}
             />
           )}
         </div>

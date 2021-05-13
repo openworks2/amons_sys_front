@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  Button,
-  Icon,
-  Table,
-  Pagination,
-  Modal,
-  Menu,
-  Input,
-} from "semantic-ui-react";
+import { Icon, Table, Pagination, Menu } from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt, FaFileDownload } from "react-icons/fa";
-import { getCctvs } from "../../modules/cctvs";
-import { useDispatch } from "react-redux";
 import moment from "moment";
 import "moment/locale/ko";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -431,6 +421,7 @@ const AlarmTable = ({
   initPage,
   localData,
   onSearch,
+  downloadHandler,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
   // 검색 기능 table 데이터 처리
@@ -467,14 +458,20 @@ const AlarmTable = ({
     let age = currentYear - birth.substring(0, 4) + 1;
     return age;
   };
-
+  function date_descending(a, b) {
+    var dateA = new Date(a["emg_start_time"]).getTime();
+    var dateB = new Date(b["emg_start_time"]).getTime();
+    return dateA < dateB ? 1 : -1;
+  }
   // 테이블
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
-  );
+  const viewItems = currentData
+    .sort(date_descending)
+    .slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
@@ -484,11 +481,11 @@ const AlarmTable = ({
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
-      console.log(item);
       return (
         <Table.Row
           className="table-row"
           key={index}
+          id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.emg_seq))}
         >
@@ -817,7 +814,10 @@ const AlarmTable = ({
             </Menu.Item>
           </Menu.Menu>
           <Menu.Menu>
-            <Menu.Item className="table-categorie-menu download">
+            <Menu.Item
+              className="table-categorie-menu download"
+              onClick={downloadHandler}
+            >
               다운로드
               <FaFileDownload className="table-categorie-menu download-icon" />
             </Menu.Item>
@@ -877,7 +877,10 @@ const AlarmTable = ({
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
                     siblingRange={1}
-                    onPageChange={onPageChange}
+                    onPageChange={(e, activePage) => {
+                      document.getElementById("scroll0").scrollIntoView();
+                      onPageChange(e, activePage);
+                    }}
                     firstItem={
                       // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
                       totalPages <= 5 || {

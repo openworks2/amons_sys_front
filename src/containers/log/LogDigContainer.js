@@ -74,12 +74,6 @@ const LogDigContainer = () => {
   useEffect(() => {
     dispatch(getLocals());
     dispatch(getLogDigMonth());
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-    console.log("data");
-    console.log(data);
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
   }, []);
 
   const [usedLocalData, setUsedLocalData] = useState([]);
@@ -158,24 +152,6 @@ const LogDigContainer = () => {
       } else {
         setDataSlotFour([]);
       }
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log(localOne);
-      console.log(localTwo);
-      console.log(localThree);
-      console.log(localFour);
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log("^^^^^^^^dataslot^^^^^^^^^^^");
-      console.log(dataSlotOne);
-      console.log(dataSlotTwo);
-      console.log(dataSlotThree);
-      console.log(dataSlotFour);
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     }
   }, [usedLocalData, data]);
 
@@ -211,78 +187,148 @@ const LogDigContainer = () => {
   };
 
   // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
+  const [pageInfo1, setPageInfo1] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 12, // 페이지 당 item 수
+  });
+  const [pageInfo2, setPageInfo2] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 12, // 페이지 당 item 수
+  });
+  const [pageInfo3, setPageInfo3] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 12, // 페이지 당 item 수
+  });
+  const [pageInfo4, setPageInfo4] = useState({
     activePage: 1, // 현재 페이지
     itemsPerPage: 12, // 페이지 당 item 수
   });
 
-  const initPage = () => {
-    setPageInfo({
+  const initPage1 = () => {
+    setPageInfo1({
+      activePage: 1,
+      itemsPerPage: 12,
+    });
+  };
+  const initPage2 = () => {
+    setPageInfo2({
+      activePage: 1,
+      itemsPerPage: 12,
+    });
+  };
+  const initPage3 = () => {
+    setPageInfo3({
+      activePage: 1,
+      itemsPerPage: 12,
+    });
+  };
+  const initPage4 = () => {
+    setPageInfo4({
       activePage: 1,
       itemsPerPage: 12,
     });
   };
 
-  const onPageChange = (e, { activePage }) => {
+  const onPageChange1 = (e, { activePage }) => {
     e.preventDefault();
     let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
+    const PreState = pageInfo1;
+    setPageInfo1({
+      ...PreState,
+      activePage: _activePage,
+    });
+  };
+  const onPageChange2 = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo2;
+    setPageInfo2({
+      ...PreState,
+      activePage: _activePage,
+    });
+  };
+  const onPageChange3 = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo3;
+    setPageInfo3({
+      ...PreState,
+      activePage: _activePage,
+    });
+  };
+  const onPageChange4 = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo4;
+    setPageInfo4({
       ...PreState,
       activePage: _activePage,
     });
   };
 
+  const serial1 = "slot1";
+  const serial2 = "slot2";
+  const serial3 = "slot3";
+  const serial4 = "slot4";
+
   return (
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
-        <LogDigTable
-          className="table-box one"
-          pageInfo={pageInfo}
-          data={dataSlotOne}
-          onPageChange={onPageChange}
-          initPage={initPage}
-          localData={localData && usedLocalData[0]}
-          addComma={addComma}
-          addZero={addZero}
-          getDigAmountPercent={getDigAmountPercent}
-        />
+        {data && localData && (
+          <>
+            <LogDigTable
+              className="table-box one"
+              pageInfo={pageInfo1}
+              data={dataSlotOne}
+              onPageChange={onPageChange1}
+              initPage={initPage1}
+              localData={localData && usedLocalData[0]}
+              addComma={addComma}
+              addZero={addZero}
+              getDigAmountPercent={getDigAmountPercent}
+              serial={serial1}
+            />
 
-        <LogDigTable
-          className="table-box two"
-          pageInfo={pageInfo}
-          data={dataSlotTwo}
-          onPageChange={onPageChange}
-          initPage={initPage}
-          localData={localData && usedLocalData[1]}
-          addComma={addComma}
-          addZero={addZero}
-          getDigAmountPercent={getDigAmountPercent}
-        />
+            <LogDigTable
+              className="table-box two"
+              pageInfo={pageInfo2}
+              data={dataSlotTwo}
+              onPageChange={onPageChange2}
+              initPage={initPage2}
+              localData={localData && usedLocalData[1]}
+              addComma={addComma}
+              addZero={addZero}
+              getDigAmountPercent={getDigAmountPercent}
+              serial={serial2}
+            />
 
-        <LogDigTable
-          className="table-box three"
-          pageInfo={pageInfo}
-          data={dataSlotThree}
-          onPageChange={onPageChange}
-          initPage={initPage}
-          localData={localData && usedLocalData[2]}
-          addComma={addComma}
-          addZero={addZero}
-          getDigAmountPercent={getDigAmountPercent}
-        />
+            <LogDigTable
+              className="table-box three"
+              pageInfo={pageInfo3}
+              data={dataSlotThree}
+              onPageChange={onPageChange3}
+              initPage={initPage3}
+              localData={localData && usedLocalData[2]}
+              addComma={addComma}
+              addZero={addZero}
+              getDigAmountPercent={getDigAmountPercent}
+              serial={serial3}
+            />
 
-        <LogDigTable
-          className="table-box four"
-          pageInfo={pageInfo}
-          data={dataSlotFour}
-          onPageChange={onPageChange}
-          initPage={initPage}
-          localData={localData && usedLocalData[3]}
-          addComma={addComma}
-          addZero={addZero}
-          getDigAmountPercent={getDigAmountPercent}
-        />
+            <LogDigTable
+              className="table-box four"
+              pageInfo={pageInfo4}
+              data={dataSlotFour}
+              onPageChange={onPageChange4}
+              initPage={initPage4}
+              localData={localData && usedLocalData[3]}
+              addComma={addComma}
+              addZero={addZero}
+              getDigAmountPercent={getDigAmountPercent}
+              serial={serial4}
+            />
+          </>
+        )}
       </ContentsBodyCompo>
     </ContentsCompo>
   );

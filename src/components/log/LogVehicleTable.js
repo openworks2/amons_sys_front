@@ -315,17 +315,14 @@ const TableCompo = styled.div`
       width: 110px;
       text-align: center;
     }
-    &.name {
-      width: 150px;
-    }
     &.company {
       width: 150px;
     }
-    &.position {
-      width: 140px;
+    &.name {
+      width: 150px;
     }
-    &.nation {
-      width: 130px;
+    &.number {
+      width: 140px;
     }
     &.input-time {
       width: 210px;
@@ -340,10 +337,7 @@ const TableCompo = styled.div`
       text-align: center;
     }
     &.blank {
-      width: 292px;
-      @media screen and (max-height: 970px) {
-        width: 292px;
-      }
+      width: 422px;
     }
   }
 
@@ -388,17 +382,14 @@ const TableCompo = styled.div`
             width: 110px;
             text-align: center;
           }
-          &.name {
-            width: 150px;
-          }
           &.company {
             width: 150px;
           }
-          &.position {
-            width: 140px;
+          &.name {
+            width: 150px;
           }
-          &.nation {
-            width: 130px;
+          &.number {
+            width: 140px;
           }
           &.input-time {
             width: 210px;
@@ -413,9 +404,9 @@ const TableCompo = styled.div`
             text-align: center;
           }
           &.blank {
-            width: 292px;
+            width: 422px;
             @media screen and (max-height: 970px) {
-              width: 282px;
+              width: 412px;
             }
           }
         }
@@ -459,7 +450,7 @@ const TableCompo = styled.div`
   }
 `;
 
-const LogWorkerTable = ({
+const LogVehicleTable = ({
   pageInfo,
   currentData,
   localData,
@@ -577,17 +568,14 @@ const LogWorkerTable = ({
                 : localData.find((el) => el.local_index === item.local_index)
                     .local_name)}
           </Table.Cell>
-          <Table.Cell className="table-cell name" name="name">
-            {item && item.wk_name && item.wk_name}
-          </Table.Cell>
           <Table.Cell className="table-cell company" name="company">
-            {item && item.wk_co_name && item.wk_co_name}
+            {item && item.vh_co_name && item.vh_co_name}
           </Table.Cell>
-          <Table.Cell className="table-cell position" name="position">
-            {item && item.wk_position && item.wk_position}
+          <Table.Cell className="table-cell name" name="name">
+            {item && item.vh_name && item.vh_name}
           </Table.Cell>
-          <Table.Cell className="table-cell nation" name="nation">
-            {item && item.wk_nation && item.wk_nation}
+          <Table.Cell className="table-cell number" name="number">
+            {item && item.vh_number && item.vh_number}
           </Table.Cell>
           <Table.Cell className="table-cell input-time" name="input-time">
             {item &&
@@ -871,24 +859,21 @@ const LogWorkerTable = ({
         </Menu>
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">막장 잔류이력 : 작업자의 조회 결과</p>
+        <p className="subtitle">막장 잔류이력 : 차량의 조회 결과</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header local">
                 노선
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header name">
-                이름
-              </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header company">
                 소속사
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header position">
-                직위
+              <Table.HeaderCell singleLine className="table-header name">
+                차량 종류
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header nation">
-                국적
+              <Table.HeaderCell singleLine className="table-header number">
+                차량 번호
               </Table.HeaderCell>
               <Table.HeaderCell singleLine className="table-header input-time">
                 진입일시
@@ -960,4 +945,4 @@ const LogWorkerTable = ({
   );
 };
 
-export default LogWorkerTable;
+export default LogVehicleTable;
