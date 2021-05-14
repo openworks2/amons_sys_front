@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { Form, Button, Radio, Input } from "semantic-ui-react";
+import { Form, Button, Radio, Input, Modal } from "semantic-ui-react";
+import DaumPostcode from "react-daum-postcode";
 
 const InputCompo = styled.div`
   margin-left: 22px;
@@ -75,6 +76,9 @@ const InputCompo = styled.div`
         opacity: 1;
         &.title {
           color: #2e2e2e;
+        }
+        &.address {
+          cursor: default;
         }
       }
       .role-area {
@@ -165,6 +169,23 @@ const InputCompo = styled.div`
     //에러 색상
     display: none;
   }
+  .address-search-button {
+    position: absolute;
+    top: 22px;
+    right: 0px;
+    height: 39px;
+    width: 100px;
+    border: 1px solid;
+    border-radius: 0px 6px 6px 0px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px;
+    background-color: #f1592f;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
 `;
 const InputError = styled.div`
   margin-bottom: -4px;
@@ -199,15 +220,55 @@ const SettingsInput = ({
     description,
   } = formData;
 
+  const [isAddress, setIsAddress] = useState("");
+  const [isZoneCode, setIsZoneCode] = useState();
+  const [isPostOpen, setIsPostOpen] = useState(false);
+
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+
+    console.log("주소 응답 data !!");
+    console.log("주소 응답 data !!");
+    console.log("data");
+    console.log(data);
+    console.log("주소 응답 data !!");
+    console.log("주소 응답 data !!");
+    setIsZoneCode(data);
+    setIsAddress(fullAddress);
+    setIsPostOpen(false);
+  };
+
+  const onClickAddressSearch = (e) => {
+    e.stopPropagation();
+    setIsPostOpen(true);
+  };
+
+  const postCodeStyle = {
+    display: "block",
+    border: "solid 2px",
+    width: "560px",
+    paddingTop: "7px",
+    paddingBottom: "7px",
+    borderRadius: "10px",
+    backgroundColor: "#ffffff",
+  };
+
   return (
     <InputCompo className="input-compo">
       <p className="subtitle">환경설정</p>
-      <Form
-        className="input-form-body"
-        onSubmit={(e) => {
-          createHandler(e);
-        }}
-      >
+      <Form className="input-form-body">
         <div className="resizable-area">
           <Form.Input
             label="주소등록(날씨조회)"
@@ -215,10 +276,12 @@ const SettingsInput = ({
             id="address"
             name="address"
             placeholder="주소를 검색해주세요."
-            required
             value={acc_name && acc_name}
-            onChange={onChange}
+            readOnly
           />
+          <div className="address-search-button" onClick={onClickAddressSearch}>
+            주소검색
+          </div>
           <div className="role-area">
             <div className="form-title role">작업공정 표시</div>
             <Radio
@@ -265,6 +328,30 @@ const SettingsInput = ({
           저장
         </Button>
       </Form>
+      <Modal
+        className="address-modal"
+        onClose={() => setIsPostOpen(false)}
+        onOpen={() => setIsPostOpen(true)}
+        open={isPostOpen}
+      >
+        <Modal.Header className="confirm-modal header">주소 검색</Modal.Header>
+        <Modal.Content className="confirm-modal content">
+          <Modal.Description className="confirm-modal description">
+            <DaumPostcode style={postCodeStyle} onComplete={handleComplete} />
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions className="confirm-modal actions">
+          <Button
+            className="confirm-modal button cancel"
+            color="black"
+            onClick={() => {
+              setIsPostOpen(false);
+            }}
+          >
+            입력 취소
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </InputCompo>
   );
 };

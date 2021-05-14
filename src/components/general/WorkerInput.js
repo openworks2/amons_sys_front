@@ -380,6 +380,17 @@ const InputError = styled.div`
   color: #ff0000;
   opacity: 1;
 `;
+const AgeError = styled.div`
+  margin-bottom: -4px;
+  margin-top: -61px;
+  margin-right: 60px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: right;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
+`;
 
 const WorkerInput = ({
   onChange,
@@ -395,6 +406,7 @@ const WorkerInput = ({
   companyList,
   unUsedBeaconList,
   companyError,
+  ageError,
   fileName,
   imageDeleteHandler,
 }) => {
@@ -455,6 +467,8 @@ const WorkerInput = ({
       new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
     );
   };
+
+  const today = new Date();
 
   return (
     <InputCompo className="input-compo" selectedState={wk_id}>
@@ -597,7 +611,7 @@ const WorkerInput = ({
                   name="wk_birth"
                   shouldCloseOnSelect
                   useWeekdaysShort
-                  maxDate={new Date()}
+                  maxDate={today}
                   selected={wk_birth ? new Date(wk_birth) : new Date()}
                   placeholder="생년월일을 입력해주세요."
                   onChange={(date) => onChangeDate(date)}
@@ -612,6 +626,7 @@ const WorkerInput = ({
                 />
               </div>
             </div>
+            {ageError && <AgeError>{ageError}</AgeError>}
           </div>
           <div className="input-form blood-area">
             <div className="form-title">혈액형</div>

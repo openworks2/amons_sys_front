@@ -5,10 +5,7 @@ import KickOutWorkerTable from "../../components/ect/KickOutWorkerTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getCompanies } from "../../modules/companies";
-import {
-  getRemainVehicles,
-  postRemainVehiclesSearch,
-} from "../../modules/bles";
+import { getRemainWorkers, postRemainWorkersSearch } from "../../modules/bles";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
@@ -58,7 +55,7 @@ const ErrMsg = styled.div`
 
 const KickOutWorkerContainer = () => {
   const { data, loading, error } = useSelector(
-    (state) => state.bles.bleVehicles
+    (state) => state.bles.bleWorkers
   );
 
   const localData = useSelector((state) => state.locals.locals.data);
@@ -81,7 +78,7 @@ const KickOutWorkerContainer = () => {
     //   vh_co_index: "",
     // };
     // dispatch(postBleVehiclesSearch(searchCondition));
-    dispatch(getRemainVehicles());
+    dispatch(getRemainWorkers());
   }, []);
 
   useEffect(() => {
@@ -186,10 +183,10 @@ const KickOutWorkerContainer = () => {
       local_index: _local_index,
       from_date: moment(startDate).format("YYYY-MM-DD HH:mm:ss"),
       to_date: moment(endDate).format("YYYY-MM-DD HH:mm:ss"),
-      vh_name: searchValue === "" ? null : searchValue,
-      vh_co_index: selectedCompany === "" ? null : selectedCompany,
+      wk_name: searchValue === "" ? null : searchValue,
+      wk_co_index: selectedCompany === "" ? null : selectedCompany,
     };
-    dispatch(postRemainVehiclesSearch(searchCondition));
+    dispatch(postRemainWorkersSearch(searchCondition));
     initPage();
   };
 
@@ -208,7 +205,7 @@ const KickOutWorkerContainer = () => {
     // 카테고리 바뀔 때 마다 데이터 전환.
     let _data = data;
     if (data) {
-      _data = _data.filter((el) => el.bc_used_type === 2);
+      _data = _data.filter((el) => el.bc_used_type === 1);
       setCurrentData(_data);
     }
 

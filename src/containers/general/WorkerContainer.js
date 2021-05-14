@@ -266,50 +266,6 @@ const WorkerContatiner = () => {
     });
   };
 
-  // 사진 업로드
-
-  const [files, setFiles] = useState({
-    selectFile: null,
-  });
-
-  const initFiles = () => {
-    setFiles({
-      selectFile: null,
-    });
-  };
-
-  const handleFileInputChange = (e) => {
-    setFiles({
-      selectFile: e.target.files[0],
-    });
-  };
-
-  const [fileName, setFileName] = useState("");
-
-  // 가짜 input form 이미지 이름 바꾸기
-  useEffect(() => {
-    if (formData.wk_image) {
-      setFileName(formData.wk_image);
-    } else if (files.selectFile) {
-      let _filename = files.selectFile.name.toString();
-      _filename && _filename.length > 25
-        ? setFileName(_filename.substring(0, 25) + "...")
-        : setFileName(_filename);
-    } else {
-      setFileName(null);
-    }
-  }, [handleFileInputChange]);
-
-  const imageDeleteHandler = (e) => {
-    e.stopPropagation();
-    initFiles();
-    let deletedImageForm = {
-      ...formData,
-      wk_image: null,
-    };
-    setFormData(deletedImageForm);
-  };
-
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
@@ -414,7 +370,55 @@ const WorkerContatiner = () => {
     initFiles();
   };
 
+  // 사진 업로드
+
+  const [files, setFiles] = useState({
+    selectFile: null,
+  });
+
+  const initFiles = () => {
+    setFiles({
+      selectFile: null,
+    });
+  };
+
+  const handleFileInputChange = (e) => {
+    setFiles({
+      selectFile: e.target.files[0],
+    });
+  };
+
+  const [fileName, setFileName] = useState("");
+
+  // 가짜 input form 이미지 이름 바꾸기
+  useEffect(() => {
+    if (formData.wk_image) {
+      let _filename = formData.wk_image.toString();
+      _filename && _filename.length > 25
+        ? setFileName(_filename.substring(0, 25) + "...")
+        : setFileName(_filename);
+    } else if (files.selectFile) {
+      let _filename = files.selectFile.name.toString();
+      _filename && _filename.length > 25
+        ? setFileName(_filename.substring(0, 25) + "...")
+        : setFileName(_filename);
+    } else {
+      setFileName(null);
+    }
+  }, [handleFileInputChange, activeHandler]);
+
+  const imageDeleteHandler = (e) => {
+    e.stopPropagation();
+    initFiles();
+    let deletedImageForm = {
+      ...formData,
+      wk_image: null,
+    };
+    setFormData(deletedImageForm);
+  };
+
   const [companyError, setCompanyError] = useState(undefined);
+  const [ageError, setAgeError] = useState(undefined);
   // CREATE
   const createHandler = (e) => {
     e.preventDefault();
@@ -425,13 +429,19 @@ const WorkerContatiner = () => {
       return age;
     };
 
-    let age = calAge(formData.wk_birth);
-
-    if (age > 100 || age < 17) {
-      setFormData({
-        ...formData,
-        wk_birth: "1980.01.01",
-      });
+    if (typeof formData.wk_birth !== "string") {
+      setAgeError("*정확한 생년월일을 입력해주세요.");
+      setTimeout(() => {
+        setAgeError(undefined);
+      }, 1350);
+    } else if (
+      calAge(formData.wk_birth) > 100 ||
+      calAge(formData.wk_birth) < 17
+    ) {
+      setAgeError("*정확한 생년월일을 입력해주세요.");
+      setTimeout(() => {
+        setAgeError(undefined);
+      }, 1350);
     } else if (!formData.co_index) {
       setCompanyError("*소속사를 선택해 주세요.");
       setTimeout(() => {
@@ -455,17 +465,23 @@ const WorkerContatiner = () => {
 
     const calAge = (birth) => {
       let currentYear = today.getFullYear();
-      let age = currentYear - formData.wk_birth.substring(0, 4) + 1;
+      let age = currentYear - birth.substring(0, 4) + 1;
       return age;
     };
 
-    let age = calAge(formData.wk_birth);
-
-    if (age > 100 || age < 17) {
-      setFormData({
-        ...formData,
-        wk_birth: "1980.01.01",
-      });
+    if (typeof formData.wk_birth !== "string") {
+      setAgeError("*정확한 생년월일을 입력해주세요.");
+      setTimeout(() => {
+        setAgeError(undefined);
+      }, 1350);
+    } else if (
+      calAge(formData.wk_birth) > 100 ||
+      calAge(formData.wk_birth) < 17
+    ) {
+      setAgeError("*정확한 생년월일을 입력해주세요.");
+      setTimeout(() => {
+        setAgeError(undefined);
+      }, 1350);
     } else if (!formData.co_index) {
       setCompanyError("*소속사를 선택해 주세요.");
       setTimeout(() => {
@@ -522,6 +538,7 @@ const WorkerContatiner = () => {
             companyList={companyList}
             unUsedBeaconList={unUsedBeaconList}
             companyError={companyError}
+            ageError={ageError}
             fileName={fileName}
             imageDeleteHandler={imageDeleteHandler}
           />
