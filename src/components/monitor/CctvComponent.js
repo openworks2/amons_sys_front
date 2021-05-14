@@ -210,7 +210,8 @@ const CctvComponent = ({
     expandMap,
     data,
     scanner,
-    bleData
+    bleData,
+    processDisabled
 }) => {
 
     const [ctrlTarget, setTarget] = useState({
@@ -241,6 +242,7 @@ const CctvComponent = ({
                     openAccessPanel={openAccessPanel}
                     localName={data && data.local_name}
                     scanner={scanner}
+                    processDisabled={processDisabled}
                 />
             </div>
             <div className="status-box">
@@ -251,6 +253,8 @@ const CctvComponent = ({
                         planLength={data && data.plan_length}
                         digLength={data && data.dig_length}
                         bleData={bleData}
+                        scanner={scanner}
+                        processDisabled={processDisabled}
                     />
                 }
             </div>

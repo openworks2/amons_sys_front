@@ -85,7 +85,7 @@ const NoticeCompo = styled.div`
     }
 `;
 
-const Notice = ({ announceList }) => {
+const Notice = ({ announceList, rollingCount }) => {
 
     const [rollingData, setRollData] = useState([]);
 
@@ -96,10 +96,10 @@ const Notice = ({ announceList }) => {
         //     '안전합시다!',
         //     '관리항목에서 현장명, 시행사, 시공사를 넣었으면 좋겠다. 이것은 곧정으로 들어간다.'
         // ]    // 롤링할 데이터를 넣으면 됩니다 갯수 제한 없어요
-            console.log('announceList>>>>>', items)
+            console.log('announceList>>>>>', rollingCount)
 
 
-        let timer = 2000 // 롤링되는 주기 입니다 (1000 => 1초)
+        let timer = rollingCount // 롤링되는 주기 입니다 (1000 => 1초)
 
         let first = document.getElementById('first'),
             second = document.getElementById('second'),

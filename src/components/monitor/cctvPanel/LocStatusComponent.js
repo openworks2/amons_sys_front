@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faDigging, faUserHardHat, faTruck } from "@fortawesome/pro-duotone-svg-icons"
+import { faDigging, faUserHardHat, faTruck, faRouter, faGameConsoleHandheld } from "@fortawesome/pro-duotone-svg-icons"
 
 
 const LocStatusCompo = styled.div`
@@ -88,11 +88,43 @@ const LocStatusCompo = styled.div`
                 height: 10px;
             }
         }
+        &.nms-box{
+            p.nms-title{
+                font-family:"NotoSansKR-Regular";
+                color: #ABABAB;
+                font-size:15px;
+            }
+            .nms-status-box {
+                display: flex;
+                div{
+                    width: 50%;
+                }
+                .nms-status{
+                    &.on{
+                        color:#036EB8;
+                    }
+                    &.off{
+                        color:#7C7C7C;
+                    }
+                    p.scanner-icon{
+                    font-size: 22px;
+                    margin-bottom: 0px;
+                    margin-left: 7px;
+                }
+                    p.scanner-text{
+                        font-family: "NanumSquareB";
+                        font-size: 12px;
+                        margin-bottom: 0px;
+                        margin-left: 10px;
+                    }
+                }
+            }
+        }
         
     }
 `;
 
-const LocStatusComponent = ({ processCode, planLength, digLength, bleData }) => {
+const LocStatusComponent = ({ processCode, planLength, digLength, bleData, scanner, processDisabled }) => {
 
     const [bleCount, setCount] = useState({
         worker: 0,
@@ -152,16 +184,34 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData }) => 
         }
     }, [processCode, bleData]);
 
+    const scannerListRender = (items = []) => {
+        const _Component = items.map((item) => {
+            return <div key={item.scn_id}>
+                <div className={item.scn_result === 'open' ? "nms-status on" : "nms-status off"}>
+                    <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
+                    <p className="scanner-text">{item.scn_result === 'open' ? 'ON' : 'OFF'}</p>
+                </div>
+            </div>
+        })
+        return _Component
+    }
+
+    useEffect(() => {
+        console.log(scanner)
+    }, [scanner]);
 
 
     return (
         <LocStatusCompo className="location-status-component">
-            <div className="state-box process-box">
-                <div className="contents-box">
-                    <p className="title">공정현황</p>
-                    <p className="current-state" style={{ backgroundColor: currentState.color }}>{currentState.name}</p>
+            {
+                processDisabled === 1 &&
+                <div className="state-box process-box">
+                    <div className="contents-box">
+                        <p className="title">공정현황</p>
+                        <p className="current-state" style={{ backgroundColor: currentState.color }}>{currentState.name}</p>
+                    </div>
                 </div>
-            </div>
+            }
             <div className="state-box worker-box">
                 <div className="contents-box">
                     <p className="title-icon worker-icon"><FontAwesomeIcon icon={faUserHardHat} /></p>
@@ -193,6 +243,19 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData }) => 
                     </p>
                 </div>
             </div>
+            {
+                processDisabled === 0 &&
+                <div className="state-box nms-box">
+                    <div className="contents-box">
+                        <p className="title-icon nms-title">막장 스캐너</p>
+                        <div className="nms-status-box">
+                            {
+                                scanner && scannerListRender(scanner)
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
         </LocStatusCompo>
     );
 };

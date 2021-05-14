@@ -24,4 +24,10 @@ export const getBleBeacon = async () => {
   return response.data;
 };
 
+// 대시보드 환경설정
+export const getEnvironment = async () => {
+  const response = await axios.get("http://192.168.0.39:3000/api/environment/environments");
+  return response.data;
+};
+
 
