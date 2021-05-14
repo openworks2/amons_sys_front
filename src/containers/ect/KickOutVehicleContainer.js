@@ -5,7 +5,10 @@ import KickOutVehicleTable from "../../components/ect/KickOutVehicleTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getCompanies } from "../../modules/companies";
-import { getBleVehicles, postBleVehiclesSearch } from "../../modules/bles";
+import {
+  getRemainVehicles,
+  postRemainVehiclesSearch,
+} from "../../modules/bles";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
@@ -70,14 +73,15 @@ const KickOutVehicleContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const searchCondition = {
-      local_index: "",
-      from_date: "",
-      to_date: "",
-      vh_name: "",
-      vh_co_index: "",
-    };
-    dispatch(postBleVehiclesSearch(searchCondition));
+    // const searchCondition = {
+    //   local_index: "",
+    //   from_date: "",
+    //   to_date: "",
+    //   vh_name: "",
+    //   vh_co_index: "",
+    // };
+    // dispatch(postBleVehiclesSearch(searchCondition));
+    dispatch(getRemainVehicles());
   }, []);
 
   useEffect(() => {
@@ -172,38 +176,6 @@ const KickOutVehicleContainer = () => {
     setCategorieValue(_value);
   };
 
-  const downloadHandler = async (startDate, endDate) => {
-    let _local_index = categorieValue;
-    let _startDate = startDate;
-    let _endDate = endDate;
-
-    if (!_startDate) {
-      _startDate = today;
-    }
-    if (!_endDate) {
-      _endDate = today;
-    }
-
-    try {
-      const response = await axios({
-        method: "POST",
-        url: "/api/ble/bles/vehicle/download",
-        responseType: "blob",
-        data: {
-          local_index: _local_index,
-          from_date: moment(_startDate).format("YYYY-MM-DD HH:mm:ss"),
-          to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
-          vh_name: searchValue === "" ? null : searchValue,
-          vh_co_index: selectedCompany === "" ? null : selectedCompany,
-        },
-      }).then((response) => {
-        saveAs(new Blob([response.data]), "막장 잔류이력(차량).xlsx");
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const today = new Date();
 
   // 데이터 조회 (post )
@@ -217,14 +189,26 @@ const KickOutVehicleContainer = () => {
       vh_name: searchValue === "" ? null : searchValue,
       vh_co_index: selectedCompany === "" ? null : selectedCompany,
     };
-    dispatch(postBleVehiclesSearch(searchCondition));
+    dispatch(postRemainVehiclesSearch(searchCondition));
     initPage();
+  };
+
+  const kickoutHandler = async (bc_index) => {
+    const response = await axios.get(`/api/ble/bles/out/${bc_index}`);
+
+    let _data = data;
+    _data = _data.filter((el) => el.bc_index !== bc_index);
+    setCurrentData(_data);
   };
 
   useEffect(() => {
     // 카테고리 바뀔 때 마다 데이터 전환.
-    const _data = data;
-    setCurrentData(_data);
+    let _data = data;
+    if (data) {
+      _data = _data.filter((el) => el.bc_used_type === 2);
+      setCurrentData(_data);
+    }
+
     let tempData = [];
 
     if (categorieValue === null) {
@@ -249,7 +233,7 @@ const KickOutVehicleContainer = () => {
         <div className="table-box">
           {currentData && localData && (
             <KickOutVehicleTable
-              className="logvehicle-table-box"
+              className="kick-table-box"
               pageInfo={pageInfo}
               currentData={currentData}
               localData={localData}
@@ -261,7 +245,7 @@ const KickOutVehicleContainer = () => {
               onSearchChange={onSearchChange}
               onClickCategorie={onClickCategorie}
               onSearch={onSearch}
-              downloadHandler={downloadHandler}
+              kickoutHandler={kickoutHandler}
             />
           )}
         </div>
@@ -269,5 +253,4 @@ const KickOutVehicleContainer = () => {
     </ContentsCompo>
   );
 };
-
 export default KickOutVehicleContainer;

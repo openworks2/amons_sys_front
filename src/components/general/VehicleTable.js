@@ -343,10 +343,14 @@ const VehicleTable = ({
   // 테이블
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
-  );
+  const viewItems = currentData
+    .sort(function (a, b) {
+      return a.vh_name < b.vh_name ? -1 : a.vh_name > b.vh_name ? 1 : 0;
+    })
+    .slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 

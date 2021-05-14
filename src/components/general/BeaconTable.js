@@ -303,7 +303,7 @@ const BeaconTable = ({
   };
 
   // serach input 입력
-  const onSearchChange = (e) => {
+  const onSearchChange = (e, target) => {
     const _searchValue = e.target.value;
     setSearchValue(_searchValue);
   };
@@ -311,35 +311,56 @@ const BeaconTable = ({
   const onSearch = (e) => {
     // 조건 usedtype
     const _data = data;
-    let tempData1 = _data.filter((item) => item.bc_used_type === 1); // 작업자용
-    let tempData2 = _data.filter((item) => item.bc_used_type === 2); // 차량용
+    // 작업자용
+    let tempData1 = _data.filter((item) => item.bc_used_type === 1);
+    tempData1 = tempData1.filter((item) => item.wk_name !== null);
+    // 차량용
+    let tempData2 = _data.filter((item) => item.bc_used_type === 2);
+    tempData2 = tempData2.filter((item) => item.vh_name !== null);
+
+    //여기서 정렬까지
     if (!searchValue) {
       dispatch(getBeacons());
     }
     if (categorieValue === null) {
       // 전체검색
-      tempData1 !== [] &&
-        (tempData1 = tempData1.filter((item) =>
+      if (tempData1) {
+        tempData1 = tempData1.filter((item) =>
           item.wk_name.includes(searchValue)
-        ));
-      tempData2 !== [] &&
-        (tempData2 = tempData2.filter((item) =>
+        );
+        tempData1 = tempData1.sort(function (a, b) {
+          return a.wk_name < b.wk_name ? -1 : a.wk_name > b.wk_name ? 1 : 0;
+        });
+      }
+      if (tempData2) {
+        tempData2 = tempData2.filter((item) =>
           item.vh_name.includes(searchValue)
-        ));
+        );
+        tempData2 = tempData2.sort(function (a, b) {
+          return a.vh_name < b.vh_name ? -1 : a.vh_name > b.vh_name ? 1 : 0;
+        });
+      }
       let combineTempData = [...tempData1, ...tempData2];
       setCurrentData(combineTempData);
     } else if (categorieValue === 1) {
       // 인원
-      tempData1 !== [] &&
+      tempData1 !== null &&
         (tempData1 = tempData1.filter((item) =>
           item.wk_name.includes(searchValue)
         ));
+      tempData1 = tempData1.sort(function (a, b) {
+        return a.wk_name < b.wk_name ? -1 : a.wk_name > b.wk_name ? 1 : 0;
+      });
       setCurrentData(tempData1);
-    } else {
-      tempData2 !== [] &&
+    } else if (categorieValue === 2) {
+      // 차량
+      tempData2 !== null &&
         (tempData2 = tempData2.filter((item) =>
           item.vh_name.includes(searchValue)
         ));
+      tempData2 = tempData2.sort(function (a, b) {
+        return a.vh_name < b.vh_name ? -1 : a.vh_name > b.vh_name ? 1 : 0;
+      });
       setCurrentData(tempData2);
     }
     if (selectedRow.selectedId) {

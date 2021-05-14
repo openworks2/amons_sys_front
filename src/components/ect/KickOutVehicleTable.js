@@ -8,8 +8,9 @@ import {
   Dropdown,
   Input,
   Button,
+  Modal,
 } from "semantic-ui-react";
-import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
+import { FaSearch, FaRegCalendarAlt, FaMinusCircle } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -493,9 +494,12 @@ const KickOutVehicleTable = ({
   onSearchChange,
   onClickCategorie,
   onSearch,
-  downloadHandler,
+  kickoutHandler,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
+
+  // 삭제 모달
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const today = new Date();
 
@@ -559,6 +563,9 @@ const KickOutVehicleTable = ({
       </div>
     </div>
   );
+
+  // 클릭된 버튼의 정보
+  const [buttonInfo, setButtonInfo] = useState({});
 
   // 요일 반환
   const getDayName = (date) => {
@@ -632,23 +639,35 @@ const KickOutVehicleTable = ({
           </Table.Cell>
           <Table.Cell className="table-cell input-time" name="input-time">
             {item &&
-              item.ble_input_time &&
-              moment(item.ble_input_time).format("YYYY-MM-DD HH:mm:ss")}
+              item.bc_input_time &&
+              moment(item.bc_input_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell out-time" name="out-time">
             {item && "∞"}
           </Table.Cell>
           <Table.Cell className="table-cell remain-time" name="remain-time">
             {item &&
-              item.ble_input_time &&
-              (item.ble_out_time
-                ? getDiffTime(item.ble_out_time, item.ble_input_time)
-                : getDiffTime(today, item.ble_input_time))}
+              item.bc_input_time &&
+              getDiffTime(today, item.bc_input_time)}
           </Table.Cell>
           <Table.Cell className="table-cell blank" name="blank"></Table.Cell>
           <Table.Cell className="table-cell kickout" name="kickout">
-            {/* {item && */}
-            <Button className="kick-button">강제퇴출</Button>
+            {item && (
+              <Button
+                className="kick-button"
+                onClick={() => {
+                  setButtonInfo({});
+                  setButtonInfo({
+                    bc_index: item.bc_index,
+                    bc_input_time: item.bc_input_time,
+                    vh_name: item.vh_name,
+                  });
+                  setDeleteModalOpen(true);
+                }}
+              >
+                강제퇴출
+              </Button>
+            )}
           </Table.Cell>
         </Table.Row>
       );
@@ -977,6 +996,53 @@ const KickOutVehicleTable = ({
             </Table.Row>
           </Table.Footer>
         </Table>
+        <Modal
+          className="confirm-modal"
+          onClose={() => setDeleteModalOpen(false)}
+          onOpen={() => setDeleteModalOpen(true)}
+          open={deleteModalOpen}
+        >
+          <Modal.Header className="confirm-modal header">삭제</Modal.Header>
+          <Modal.Content className="confirm-modal content">
+            <Modal.Description className="confirm-modal description">
+              <FaMinusCircle className="confirm-modal delete-icon" />
+
+              <p className="confirm-modal text">
+                {buttonInfo && buttonInfo.vh_name && buttonInfo.vh_name} 차량을
+                퇴출 시키겠습니까?
+              </p>
+              <p className="confirm-modal text">
+                체류시간 :{" "}
+                {buttonInfo &&
+                  buttonInfo.bc_input_time &&
+                  getDiffTime(today, buttonInfo.bc_input_time)}
+              </p>
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions className="confirm-modal actions">
+            <Button
+              className="confirm-modal button delete"
+              color="red"
+              content="삭제"
+              labelPosition="right"
+              icon="checkmark"
+              onClick={(e) => {
+                kickoutHandler(buttonInfo.bc_index);
+                setButtonInfo({});
+                setDeleteModalOpen(false);
+              }}
+            />
+            <Button
+              className="confirm-modal button cancel"
+              color="black"
+              onClick={() => {
+                setDeleteModalOpen(false);
+              }}
+            >
+              취소
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </TableCompo>
     </>
   );

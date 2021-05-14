@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Icon, Table, Pagination } from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
