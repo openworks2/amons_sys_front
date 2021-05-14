@@ -154,7 +154,6 @@ const MonitorContainer = () => {
     // dispatch(getMonitor());
 
     const getDispatch = async () => {
-        console.log(12312123123)
         dispatch(receiveMonitor());
         dispatch(getMonitor());
         dispatch(getScanner());

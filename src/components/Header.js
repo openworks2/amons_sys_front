@@ -236,11 +236,11 @@ const Header = ({
             </div>
           }
           <div className="shortcut-button-box">
-            <Link to="/amons/home">
+            <a href="/amons/home">
               <div className="shortcut-button home">
                 <FontAwesomeIcon icon={faHomeAlt} />
               </div>
-            </Link>
+            </a>
 
             <div className="button-name">HOME</div>
           </div>

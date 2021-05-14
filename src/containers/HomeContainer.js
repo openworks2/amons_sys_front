@@ -94,11 +94,20 @@ const HomeContainer = () => {
 
   const onLogout = () => {
     dispatch(logOutAsync())
-    return <Redirect to="/amons/signin" />
+    window.location.href='/amons/signin';
+    // return <Redirect to="/amons/signin" />
   }
 
-
   useEffect(() => {
+    console.log(">>>>>>>>>>>>>>>HomeContainer");
+    const url = document.location.href;
+    const splitUrl = url.split("/");
+    const location = splitUrl[splitUrl.length - 1];
+    setCurrentUrl(location);
+  }, []);
+  useEffect(() => {
+    console.log(">>>>>>>>>>>>>>>HomeContainer");
+
     console.log('login--->>', login)
     initialUserInfo();
   }, [])
@@ -120,7 +129,11 @@ const HomeContainer = () => {
         currentMenu={currentMenu}
       />
       {/* <ContentsCompo> */}
+      {currentUrl && currentUrl !== "home" && currentUrl !== "monitor" && (
+        <ContentTitle currentUrl={currentUrl}></ContentTitle>
+      )}
       <Contents currentMenu={currentMenu} openFullScreenMode={openFullScreenMode} />
+      
       {/* </ContentsCompo> */}
     </HomeCompo>
   );

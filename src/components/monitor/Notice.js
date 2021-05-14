@@ -90,14 +90,15 @@ const Notice = ({ announceList }) => {
     const [rollingData, setRollData] = useState([]);
 
     let intervalId = useRef();
-    const rollingAction = () => {
+    const rollingAction = (items=[]) => {
         // let rollingData = [
         //     '우리 현장에는 당신의 안전보다 우선인 작업이 없습니다. 제목만 2줄 까지 출력하고 클릭시 내용을 출력 합시다.',
         //     '안전합시다!',
         //     '관리항목에서 현장명, 시행사, 시공사를 넣었으면 좋겠다. 이것은 곧정으로 들어간다.'
         // ]    // 롤링할 데이터를 넣으면 됩니다 갯수 제한 없어요
+            console.log('announceList>>>>>', items)
 
-       
+
         let timer = 2000 // 롤링되는 주기 입니다 (1000 => 1초)
 
         let first = document.getElementById('first'),
@@ -108,8 +109,7 @@ const Notice = ({ announceList }) => {
         let listCnt = 1
 
         //위 선언은 따로 완전히 수정하지 않는 한 조정할 필요는 없습니다.
-
-        first.children[0].innerHTML = rollingData[0]
+        first.children[0].innerHTML = items[0]
 
         intervalId = setInterval(() => {
             if (move === 2) {
@@ -147,11 +147,11 @@ const Notice = ({ announceList }) => {
                 move = 2
             }
 
-            if (dataCnt < (rollingData.length - 1)) {
-                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = rollingData[dataCnt]
+            if (dataCnt < (items.length - 1)) {
+                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = items[dataCnt]
                 dataCnt++
-            } else if (dataCnt === rollingData.length - 1) {
-                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = rollingData[dataCnt]
+            } else if (dataCnt === items.length - 1) {
+                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = items[dataCnt]
                 dataCnt = 0
             }
 
@@ -165,19 +165,21 @@ const Notice = ({ announceList }) => {
         }, timer);
     }
 
-    const dataBinding=()=>{
+    const dataBinding = () => {
         let titleList = [];
-        announceList.map(item=>{
+        announceList.map(item => {
             titleList.push(item.ann_title)
             return item;
         });
         setRollData(titleList)
-        rollingAction();
+        rollingAction(titleList);
     };
 
     useEffect(() => {
         // rollingAction();
-        dataBinding();
+        if (announceList) {
+            dataBinding();
+        }
         return () => {
             clearInterval(intervalId);
         }

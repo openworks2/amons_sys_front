@@ -289,6 +289,10 @@ Dahua.prototype = {
             return
         }
     },
+    setClosePlayer(){
+        console.log('setClosePlayer!!!')
+        // WebVideoCtrl.closePlayer()
+    },
     clickStopRealPlay() {
         /**
          * @description 실시간 영상 재생 중지         
@@ -450,6 +454,7 @@ Dahua.prototype = {
 
     },
     hiddenScreen() {
+        console.log('hiddenScreen')
         WebVideoCtrl.resizeVideo(0, 0, 0, 0);
     },
     showScreen() {
@@ -478,5 +483,6 @@ Dahua.prototype = {
             right: _this.position.height
         }
         return _position;
-    }
+    },
+
 }

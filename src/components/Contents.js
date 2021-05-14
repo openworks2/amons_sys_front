@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router";
 // log (이력조회)
 import LogDigContatiner from "../containers/log/LogDigContainer";
@@ -24,10 +24,15 @@ import MonitorContainer from "../containers/monitor/MonitorContainer";
 // import HomeShortcut from "./home/HomeShortcut";
 
 const Contents = ({openFullScreenMode}) => {
+
+  useEffect(()=>{
+    console.log('>');
+  },[]);
+
   return (
     <>
       <Route path="/amons/home/" component={() => <HomeShortcut openFullScreenMode={openFullScreenMode} />} exact />
-      <Route path="/amons/home/monitor" component={() => <MonitorContainer />} />
+      <Route path="/amons/home/monitor" component={MonitorContainer} />
       {/* *******************************log 이력조회****************************** */}
       <Route path="/amons/home/log/diglog" component={LogDigContatiner} />
       <Route path="/amons/home/log/alarm" component={AlarmContainer} />

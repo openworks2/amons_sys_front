@@ -86,6 +86,7 @@ const SideMenuCompo = styled.div`
 `;
 
 const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
+
   return (
     <SideMenuCompo className="sidemenu-compo">
       <Sidebar

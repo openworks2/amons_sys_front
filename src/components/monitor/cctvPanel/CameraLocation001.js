@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import Dahua from '../../../lib/cctv/location001/Dahua';
+import Dahua from '../../../lib/cctv/location001/Dahua';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fortawesome/pro-solid-svg-icons"
@@ -156,56 +156,63 @@ const CameraLocation001 = ({
     }
 
 
-    // const connCCTV = async () => {
-    //     try {
-    //         const cctv = await new Dahua(`divPlugin-${id}`);
-    //         cctv.init(form);
-    //         setCamera(cctv);
-    //     } catch (error) {
+    const connCCTV = async () => {
+        try {
+            const cctv = await new Dahua(`divPlugin-${id}`);
+            cctv.init(form);
+            setCamera(cctv);
+        } catch (error) {
 
-    //     }
-    // }
+        }
+    }
 
-    // const resizeVideo = useCallback(() => {
-    //     console.log(ctrlPanel)
-    //     if (accessPanel !== null && accessPanel === 'loc003') {
-    //         Camera.hiddenScreen();
-    //     }
-    //     else if (accessPanel === null || accessPanel !== 'loc003') {
-    //         Camera.showScreen();
-    //     }
-    // }, [Camera, accessPanel]);
+    const resizeVideo = useCallback(() => {
+        console.log(ctrlPanel)
+        if (accessPanel !== null && accessPanel === 'loc003') {
+            Camera.hiddenScreen();
+        }
+        else if (accessPanel === null || accessPanel !== 'loc003') {
+            Camera.showScreen();
+        }
+    }, [Camera, accessPanel]);
 
 
-    // useEffect(() => {
-    //     console.log('CameraLocation001--->', data)
-    //     if (!Camera) {
-    //         connCCTV();
-    //     }
-    //     if (Camera) {
-    //         if (expandMap) {
-    //             Camera.hiddenScreen();
-    //         } else {
-    //             if (alarmPanel) {
-    //                 Camera.hiddenScreen();
-    //             } else {
-    //                 resizeVideo();
-    //                 if (ctrlPanel !== id || ctrlPanel === null) {
-    //                     if (Locate) {
-    //                         ptzLocationHandler();
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
+    useEffect(() => {
+        console.log('CameraLocation001--->', data)
+        if (!Camera) {
+            connCCTV();
+        }
+        if (Camera) {
+            if (expandMap) {
+                Camera.hiddenScreen();
+            } else {
+                if (alarmPanel) {
+                    Camera.hiddenScreen();
+                } else {
+                    resizeVideo();
+                    if (ctrlPanel !== id || ctrlPanel === null) {
+                        if (Locate) {
+                            ptzLocationHandler();
+                        }
+                    }
+                }
+            }
+            console.log(Camera.setClosePlayer)
+        }
+        return () => {
+            if(Camera){
+                Camera.hiddenScreen();
+            
+            }
+        }
+    }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
 
-    // const resizeHandler = () => {
-    //     if (Camera) {
-    //         Camera.setReposition();
-    //     }
-    // }
-    // window.addEventListener("resize", resizeHandler);
+    const resizeHandler = () => {
+        if (Camera) {
+            Camera.setReposition();
+        }
+    }
+    window.addEventListener("resize", resizeHandler);
 
     return (
         <CameraCompo>
