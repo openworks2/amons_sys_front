@@ -22,7 +22,13 @@ const CategorieMenuCompo = styled.div`
     height: 40px;
     text-align: center !important;
   }
+  .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -34,7 +40,6 @@ const CategorieMenuCompo = styled.div`
       margin: 0px !important;
       padding: 0px !important;
       font-family: "NotoSansKR-Regular";
-      font-size: 13px;
       .search-box {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -373,7 +378,7 @@ const ScannerTable = ({
       tempData = _data.filter((item) =>
         item.scn_address.includes(_searchValue)
       );
-      setSearchValue("");
+
       setCurrentData(tempData);
     } else {
       // 검색
@@ -384,7 +389,7 @@ const ScannerTable = ({
       tempData = tempData.filter((item) =>
         item.scn_address.includes(_searchValue)
       );
-      setSearchValue("");
+
       setCurrentData(tempData);
     }
     if (selectedRow.selectedId) {
@@ -397,8 +402,8 @@ const ScannerTable = ({
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
 
-    if (_str.length > 10) {
-      return str.substring(0, 14);
+    if (_str.length > 12) {
+      return str.substring(0, 17);
     }
 
     let length = _str.length;
@@ -465,6 +470,7 @@ const ScannerTable = ({
         <Table.Row
           className="table-row"
           key={index}
+          id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.scn_id))}
         >
@@ -529,7 +535,7 @@ const ScannerTable = ({
       localData = [];
     }
     let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 7);
+    _localData = _localData.slice(0, 4);
     return _localData.map((item, index) => {
       return (
         <Menu.Item
@@ -634,7 +640,10 @@ const ScannerTable = ({
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
                     siblingRange={1}
-                    onPageChange={onPageChange}
+                    onPageChange={(e, activePage) => {
+                      document.getElementById("scroll0").scrollIntoView();
+                      onPageChange(e, activePage);
+                    }}
                     firstItem={
                       // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
                       totalPages <= 5 || {

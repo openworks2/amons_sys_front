@@ -22,6 +22,9 @@ const CategorieMenuCompo = styled.div`
     text-align: center !important;
   }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -81,13 +84,19 @@ const TableCompo = styled.div`
     &.date {
       width: 200px;
     }
-    &.description {
+    /* &.description {
       width: 486px;
       @media screen and (max-height: 970px) {
         width: 478px;
       }
+    } */
+    &.description {
+      width: 541px;
+      @media screen and (max-height: 970px) {
+        width: 542px;
+      }
     }
-    &.trash-icon {
+    /* &.trash-icon {
       width: 55px !important ;
       color: #7d7d7d;
     }
@@ -101,7 +110,7 @@ const TableCompo = styled.div`
       &.trash-icon {
         width: 64px !important;
       }
-    }
+    } */
   }
 
   .table-body {
@@ -180,12 +189,12 @@ const TableCompo = styled.div`
             width: 200px;
           }
           &.description {
-            width: 486px;
+            width: 541px;
             @media screen and (max-height: 970px) {
-              width: 478px;
+              width: 533px;
             }
           }
-          &.trash-icon {
+          /* &.trash-icon {
             width: 55px !important ;
             color: #7d7d7d;
           }
@@ -193,7 +202,7 @@ const TableCompo = styled.div`
             height: 25px;
             width: 25px;
             border: 0px;
-          }
+          } */
         }
       }
     }
@@ -254,7 +263,7 @@ const ProcessTable = ({
   pageInfo,
   data,
   activeHandler,
-  deleteHandler,
+  // deleteHandler,
   onPageChange,
   selectedRow,
   initFormData,
@@ -321,6 +330,7 @@ const ProcessTable = ({
         <Table.Row
           className="table-row"
           key={index}
+          id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.pcs_seq))}
         >
@@ -355,7 +365,7 @@ const ProcessTable = ({
           <Table.Cell className="table-cell description" name="description">
             {item && item.pcs_description && item.pcs_description}
           </Table.Cell>
-          <Table.Cell className="table-cell trash-icon">
+          {/* <Table.Cell className="table-cell trash-icon">
             {item && selectedId && item.pcs_seq === selectedId && (
               <Button
                 className="trash-icon-button"
@@ -369,7 +379,7 @@ const ProcessTable = ({
                 <FaTrash />
               </Button>
             )}
-          </Table.Cell>
+          </Table.Cell> */}
         </Table.Row>
       );
     });
@@ -380,7 +390,7 @@ const ProcessTable = ({
       localData = [];
     }
     let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 7);
+    _localData = _localData.slice(0, 4);
     return _localData.map((item, index) => {
       return (
         <Menu.Item
@@ -431,9 +441,9 @@ const ProcessTable = ({
               <Table.HeaderCell singleLine className="table-header description">
                 비고
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header trash-icon">
+              {/* <Table.HeaderCell singleLine className="table-header trash-icon">
                 <FaTrash />
-              </Table.HeaderCell>
+              </Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
@@ -449,7 +459,10 @@ const ProcessTable = ({
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
                     siblingRange={1}
-                    onPageChange={onPageChange}
+                    onPageChange={(e, activePage) => {
+                      document.getElementById("scroll0").scrollIntoView();
+                      onPageChange(e, activePage);
+                    }}
                     firstItem={
                       // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
                       totalPages <= 5 || {
@@ -482,7 +495,7 @@ const ProcessTable = ({
           </Table.Footer>
         </Table>
         {/* =============================모달============================== */}
-        <Modal
+        {/* <Modal
           className="confirm-modal"
           onClose={() => setDeleteModalOpen(false)}
           onOpen={() => setDeleteModalOpen(true)}
@@ -538,7 +551,7 @@ const ProcessTable = ({
               취소
             </Button>
           </Modal.Actions>
-        </Modal>
+        </Modal> */}
       </TableCompo>
     </>
   );

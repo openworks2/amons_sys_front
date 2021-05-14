@@ -209,6 +209,46 @@ export const handleAsyncActionsOfPost = (type, key, keepData) => {
 };
 
 /**
+ * @description post로 조회하기- 리듀서
+ */
+export const handleAsyncActionsOfPostGet = (type, key, keepData) => {
+  const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case type:
+        return {
+          ...state,
+          [key]: reducerUtils.loading(keepData ? state[key].data : null),
+        };
+      case SUCCESS:
+        console.log("action.payload");
+        console.log(action.payload);
+        console.log("action.payload");
+        return {
+          ...state,
+          [key]: {
+            loading: false,
+            data: action.payload,
+            error: null,
+          },
+        };
+      case ERROR:
+        return {
+          ...state,
+          [key]: {
+            loading: false,
+            data: keepData ? state[key].data : null,
+            error: null,
+          },
+        };
+      default:
+        return state;
+    }
+  };
+  return reducer;
+};
+
+/**
  * @description Item 등록 최신 최상단으로 - 리듀서
  */
 export const handleAsyncActionsOfPostOrderByTime = (type, key, keepData) => {

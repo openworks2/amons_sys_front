@@ -1,10 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import AlarmInput from "../../components/log/AlarmInput";
 import AlarmTable from "../../components/log/AlarmTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getAlarms, postAlarmSearch, putAlarm } from "../../modules/alarms";
+import { saveAs } from "file-saver";
+import moment from "moment";
+import "moment/locale/ko";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -69,11 +73,18 @@ const AlarmContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getLocals());
-    dispatch(getAlarms());
-  }, [dispatch]);
+    // dispatch(getAlarms());
+    const searchCondition = {
+      local_index: null,
+      from_date: "",
+      to_date: "",
+    };
+    dispatch(postAlarmSearch(searchCondition));
+  }, []);
 
-  console.log(data);
+  useEffect(() => {
+    dispatch(getLocals());
+  }, [dispatch]);
 
   const [formData, setFormData] = useState({
     emg_seq: null,
@@ -84,12 +95,6 @@ const AlarmContainer = () => {
   useEffect(() => {
     makeLocalList(localData);
   }, [localData, formData.local_index]);
-
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
 
   const [localList, setLocalList] = useState([]);
 
@@ -165,12 +170,6 @@ const AlarmContainer = () => {
         emg_result: findItem.emg_result,
       });
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션
@@ -200,17 +199,51 @@ const AlarmContainer = () => {
 
   const today = new Date();
 
-  // UPDATE
-  const updateHandler = (e) => {
-    e.preventDefault();
+  // 데이터 조회 (post )
+  const onSearch = (local_index, startDate, endDate) => {
+    let _local_index = local_index;
+    let _startDate = startDate;
+    let _endDate = endDate;
 
-    // 성공
-    const findItem = selectedRow.selectedItem;
+    if (!_startDate) {
+      _startDate = today;
+    }
+    if (!_endDate) {
+      _endDate = today;
+    }
+
+    const searchCondition = {
+      local_index: _local_index,
+      from_date: moment(_startDate).format("YYYY-MM-DD HH:mm:ss"),
+      to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
+    };
+
+    dispatch(postAlarmSearch(searchCondition));
+  };
+
+  const downloadHandler = async () => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: "/api/alarm/alarms/download",
+        responseType: "blob",
+      }).then((response) => {
+        saveAs(new Blob([response.data]), "알람이력(작업자).xlsx");
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 등록
+  const createHandler = (e) => {
+    e.preventDefault();
 
     let newAlarm = {
       ...formData,
     };
-    dispatch(putAlarm(newAlarm.alarm_seq, newAlarm));
+
+    dispatch(putAlarm(newAlarm.emg_seq, newAlarm));
   };
 
   if (error) {
@@ -229,11 +262,10 @@ const AlarmContainer = () => {
             className="alarm-input-box"
             onChange={onChange}
             formData={formData}
-            updateHandler={updateHandler}
+            createHandler={createHandler}
             selectedRow={selectedRow}
             initFormData={initFormData}
             initActiveRow={initActiveRow}
-            localList={localList}
           />
         </div>
         <div className="table-box">
@@ -250,6 +282,8 @@ const AlarmContainer = () => {
               initPage={initPage}
               localData={localData}
               localList={localList}
+              onSearch={onSearch}
+              downloadHandler={downloadHandler}
             />
           )}
         </div>

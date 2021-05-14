@@ -79,8 +79,6 @@ const ScannerContainer = () => {
     dispatch(getScanners());
   }, [dispatch]);
 
-  console.log(data);
-
   const [formData, setFormData] = useState({
     scn_id: null,
     scn_index: null,
@@ -105,12 +103,6 @@ const ScannerContainer = () => {
   useEffect(() => {
     makeLocalList(localData);
   }, [localData, formData.local_index]);
-
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
 
   const [localList, setLocalList] = useState([]);
 
@@ -306,12 +298,6 @@ const ScannerContainer = () => {
         closed_count: findItem.closed_count,
       });
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션

@@ -100,12 +100,6 @@ const VehicleContainer = () => {
   });
 
   useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
-
-  useEffect(() => {
     makeCompanyList(companyData);
   }, [companyData, formData.co_index]);
 
@@ -224,7 +218,6 @@ const VehicleContainer = () => {
     if (name === "bc_index") {
       const findBeacon = seletedValue.options.find((el) => el.value === value);
       const address = findBeacon.address;
-      console.log(findBeacon);
       setFormData({
         ...formData,
         [name]: value,
@@ -252,12 +245,6 @@ const VehicleContainer = () => {
   };
 
   const handleFileInputChange = (e) => {
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-    console.log("set file!!");
-    console.log(files);
-    console.log("e.target.files[0]");
-    console.log(e.target.files[0]);
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
     setFiles({
       selectFile: e.target.files[0],
     });
@@ -356,12 +343,6 @@ const VehicleContainer = () => {
 
       setFileName(formData.vh_image);
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션
@@ -406,10 +387,6 @@ const VehicleContainer = () => {
       const createData = new FormData();
       createData.append("file", files.selectFile);
       createData.append("reqBody", JSON.stringify(formData));
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("createData!!");
-      console.log(createData);
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       dispatch(postVehicle(createData));
       initActiveRow();
       initFormData();
@@ -437,10 +414,6 @@ const VehicleContainer = () => {
       const putData = new FormData();
       putData.append("file", files.selectFile);
       putData.append("reqBody", JSON.stringify(formData));
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log("putData!!");
-      console.log(putData);
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       dispatch(putVehicle(formData.vh_index, putData));
     }
   };

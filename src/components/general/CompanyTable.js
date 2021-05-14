@@ -183,7 +183,6 @@ const CompanyTable = ({
 
   // 테이블
   const { activePage, itemsPerPage } = pageInfo;
-  console.log("data--->", data);
   const totalPages = Math.ceil(data.length / itemsPerPage, 1);
   const viewItems = data.slice(
     (activePage - 1) * itemsPerPage,
@@ -202,6 +201,7 @@ const CompanyTable = ({
         <Table.Row
           className="table-row"
           key={index}
+          id={"scroll" + index}
           active={company && index === clickedIndex}
           onClick={company && ((e) => activeHandler(e, index, company.co_id))}
         >

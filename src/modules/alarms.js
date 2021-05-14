@@ -2,12 +2,10 @@ import * as alarmsAPI from "../api/alarms";
 import {
   createPromiseThunk,
   handleAsyncActions,
-  handleAsyncActionsById,
   reducerUtils,
   createPromiseThunkOfPost,
-  handleAsyncActionsOfPost,
+  handleAsyncActionsOfPostGet,
   createPromiseThunkOfPut,
-  handleAsyncActionsOfPut,
 } from "../lib/asyncUtils";
 
 const GET_ALARMS = "alarm/GET_ALARMS";
@@ -38,15 +36,9 @@ const initialState = {
 };
 
 const getAlarmsReducer = handleAsyncActions(GET_ALARMS, "alarms", true);
-const postAlarmSearchReducer = handleAsyncActionsOfPost(
+const postAlarmSearchReducer = handleAsyncActionsOfPostGet(
   POST_ALARMSEARCH,
   "alarms",
-  true
-);
-const putAlarmReducer = handleAsyncActionsOfPut(
-  PUT_ALARM,
-  "alarms",
-  "emg_seq",
   true
 );
 
@@ -61,9 +53,46 @@ export default function alarms(state = initialState, action) {
     case POST_ALARMSEARCH_ERROR:
       return postAlarmSearchReducer(state, action);
     case PUT_ALARM:
+      return {
+        ...state,
+        alarms: {
+          ...state.alarms,
+          loading: true,
+          error: null,
+        },
+      };
     case PUT_ALARM_SUCCESS:
+      let items = state.alarms.data;
+      const _seq = parseInt(action.payload.emg_seq);
+      const _formData = action.payload;
+
+      let modifiedData = items.find((el) => el.emg_seq === _seq);
+      modifiedData = {
+        ...modifiedData,
+        emg_writer: _formData.emg_writer,
+        emg_result: _formData.emg_result,
+        emg_end_time: _formData.emg_end_time,
+      };
+      items = items.filter((el) => el.emg_seq !== _seq);
+      items.push(modifiedData);
+      return {
+        ...state,
+        alarms: {
+          ...state.alarms,
+          loading: false,
+          data: items,
+          error: null,
+        },
+      };
     case PUT_ALARM_ERROR:
-      return putAlarmReducer(state, action);
+      return {
+        ...state,
+        alarms: {
+          ...state.alarms,
+          loading: false,
+          error: action.error,
+        },
+      };
     case CLEAR_ALARM:
       return {
         ...state,

@@ -22,6 +22,10 @@ const InputCompo = styled.div`
     table-layout: fixed;
     word-break: break-all;
   }
+  .ui.form .field .ui.input input,
+  #dig_length {
+    font-family: "NotoSansKR-Regular";
+  }
   .ui.form .field > label,
   .field > label {
     font-family: "NotoSansKR-Medium" !important;
@@ -31,6 +35,9 @@ const InputCompo = styled.div`
     opacity: 1;
     font-weight: initial !important;
   }
+  .div.divider.text {
+    font-family: "NotoSansKR-Regular" !important;
+  }
   .ui.input > input {
     /* ui focus 색상변경 */
     &:focus {
@@ -38,6 +45,7 @@ const InputCompo = styled.div`
     }
   }
   .ui.dropdown {
+    font-family: "NotoSansKR-Regular";
     &:focus {
       border-color: #f1592a !important;
     }
@@ -49,6 +57,7 @@ const InputCompo = styled.div`
     /* border-color: #f1592a !important; */
   }
   .ui.form textarea {
+    font-family: "NotoSansKR-Regular";
     &:focus {
       border-color: #f1592a !important;
     }

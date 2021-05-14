@@ -22,7 +22,13 @@ const CategorieMenuCompo = styled.div`
     height: 40px;
     text-align: center !important;
   }
+  .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
   .table-categorie-menu {
+    font-family: "NotoSansKR-Regular";
+    font-size: 13px;
     width: 123px;
 
     &.all {
@@ -34,7 +40,6 @@ const CategorieMenuCompo = styled.div`
       margin: 0px !important;
       padding: 0px !important;
       font-family: "NotoSansKR-Regular";
-      font-size: 13px;
       .search-box {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -352,14 +357,14 @@ const CctvTable = ({
       // 전체검색
       let _searchValue = searchValue;
       tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
-      setSearchValue("");
+
       setCurrentData(tempData);
     } else {
       // 검색
       tempData = _data.filter((item) => item.local_index === categorieValue);
       let _searchValue = searchValue;
       tempData = _data.filter((item) => item.cctv_name.includes(_searchValue));
-      setSearchValue("");
+
       setCurrentData(tempData);
     }
     if (selectedRow.selectedId) {
@@ -372,10 +377,14 @@ const CctvTable = ({
   // 테이블
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
-  );
+  const viewItems = currentData
+    .sort(function (a, b) {
+      return a.cctv_name < b.cctv_name ? -1 : a.cctv_name > b.cctv_name ? 1 : 0;
+    })
+    .slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
@@ -389,6 +398,7 @@ const CctvTable = ({
         <Table.Row
           className="table-row"
           key={index}
+          id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.cctv_id))}
         >
@@ -455,7 +465,7 @@ const CctvTable = ({
       localData = [];
     }
     let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 7);
+    _localData = _localData.slice(0, 4);
     return _localData.map((item, index) => {
       return (
         <Menu.Item
@@ -564,7 +574,10 @@ const CctvTable = ({
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
                     siblingRange={1}
-                    onPageChange={onPageChange}
+                    onPageChange={(e, activePage) => {
+                      document.getElementById("scroll0").scrollIntoView();
+                      onPageChange(e, activePage);
+                    }}
                     firstItem={
                       // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
                       totalPages <= 5 || {

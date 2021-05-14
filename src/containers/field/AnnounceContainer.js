@@ -86,10 +86,6 @@ const AnnounceContainer = () => {
     ann_preview: 1,
   });
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;

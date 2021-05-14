@@ -18,6 +18,10 @@ const InputCompo = styled.div`
     font-weight: initial !important;
   }
   .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
+  .ui.input > input {
     /* ui focus 색상변경 */
     &:focus {
       border-color: #f1592a !important;

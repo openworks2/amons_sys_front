@@ -95,12 +95,6 @@ const AccountContatiner = () => {
     description: "",
   });
 
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
-
   // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;
@@ -127,8 +121,6 @@ const AccountContatiner = () => {
   };
 
   const onRadioChange = (e, target) => {
-    console.log(target.value);
-
     let _acc_role = target.value;
 
     setFormData({
@@ -202,12 +194,6 @@ const AccountContatiner = () => {
         setDuplicationCheck(true);
       }, 10);
     }
-
-    console.log("formData");
-    console.log("formData");
-    console.log(formData);
-    console.log("formData");
-    console.log("formData");
   };
 
   // 페이지 네이션

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Icon, Table, Pagination, Menu } from "semantic-ui-react";
-import { FaSearch, FaRegCalendarAlt, FaFileDownload } from "react-icons/fa";
+import { Icon, Table, Pagination, Menu, Input } from "semantic-ui-react";
+import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -9,11 +9,13 @@ import "../../react-datepicker.css";
 import ko from "date-fns/locale/ko";
 import getYear from "date-fns/getYear";
 import getMonth from "date-fns/getMonth";
-
 registerLocale("ko", ko);
 const _ = require("lodash");
 
 const CategorieMenuCompo = styled.div`
+  font-family: "NotoSansKR-Regular" !important;
+  font-size: 13px !important;
+  width: 686px;
   /* date picker customize 시작 */
   .cal-icon {
     top: 12px;
@@ -62,7 +64,7 @@ const CategorieMenuCompo = styled.div`
     color: #ce3f3f;
   }
   .react-datepicker {
-    margin-left: -40px;
+    margin-left: 0px;
     font-family: "NotoSansKR-Regular";
     font-size: 14px;
     .react-datepicker__day-names {
@@ -169,10 +171,6 @@ const CategorieMenuCompo = styled.div`
     font-size: 13px;
     font-size: 13px;
     width: 123px;
-
-    &.all {
-      width: 80px;
-    }
   }
   .ui.menu .item > .input input {
     &:focus {
@@ -186,48 +184,65 @@ const CategorieMenuCompo = styled.div`
     width: 1.3em;
     height: 1.3em;
   }
-  .table-categorie-menu {
-    font-family: "NotoSansKR-Regular";
-    font-size: 13px;
-    font-size: 13px;
-    text-align: center;
-    width: 110px;
-    &.search {
-      text-align: left;
-      background: #f2f2f2 0% 0% no-repeat padding-box;
-      cursor: pointer;
-      &.search-icon {
-        width: 30px;
-        position: absolute;
-        background-color: rgba(255, 255, 255, 0) !important;
-        left: 70px;
-        top: 13px;
-        font-size: 15px;
-        cursor: pointer;
-      }
-      &:hover {
-        color: #f1592a !important;
-      }
+  .ui.input > input,
+  .ui.input {
+    width: 300px;
+    border-radius: 0px;
+    border-color: #f2f2f2 !important;
+    border: 0px solid !important;
+  }
+
+  .search-box {
+    margin-top: 2px;
+    width: 302px;
+    height: 35px;
+    border-radius: 0px;
+    background-color: #f2f2f2;
+    &:hover,
+    &:focus {
+      background-color: #f1592a !important;
     }
-    &.download {
-      text-align: left;
-      cursor: pointer;
-      border: 0px 0px 0px 1px solid #d8d8d8;
-      color: #d8d8d8;
-      .download-icon {
-        border: 0px;
-        width: 30px;
-        position: absolute;
-        background-color: rgba(255, 255, 255, 0) !important;
-        left: 70px;
-        top: 12px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      &:hover {
-        color: #f1592a !important;
-      }
+  }
+  .search-icon {
+    position: absolute;
+    top: 12px;
+    left: 265px;
+    color: #3d3d3d;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+      color: #f1592a !important;
     }
+  }
+
+  .divider,
+  .text {
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 13px !important;
+    vertical-align: middle;
+    padding: 1px;
+  }
+
+  .ui.dropdown > .dropdown.icon,
+  &:before,
+  &:after {
+    left: 95px;
+    font-size: 20px;
+    position: absolute;
+    color: #2e2e2e !important;
+    opacity: 0.8;
+  }
+  .ui.basic.button:hover,
+  .ui.basic.buttons .button:hover,
+  .ui.basic.button:focus,
+  .ui.basic.buttons .button:focus {
+    background: #f2f2f2 0% 0% no-repeat padding-box !important;
+  }
+  .active.selected.item {
+    display: none;
+  }
+  .item {
+    width: 140px !important;
   }
 `;
 
@@ -249,38 +264,28 @@ const TableCompo = styled.div`
     background: #f2f2f2 0% 0% no-repeat padding-box !important;
     opacity: 1;
     text-align: center;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    &.local {
-      width: 90px;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    &.login-time {
+      width: 220px;
     }
-    &.name {
-      width: 100px;
+    &.ip {
+      width: 220px;
     }
-    &.company {
-      width: 110px;
-      text-align: left;
-    }
-    &.age {
-      width: 70px;
-    }
-    &.phone {
+    &.user-id {
       width: 140px;
     }
-    &.receive-time {
-      width: 180px;
+    &.os {
+      width: 150px;
     }
-    &.writer {
-      width: 100px;
-      color: #ce3f3f;
+    &.browser {
+      width: 150px;
     }
-    &.emg-end-time {
-      width: 180px;
-      color: #ce3f3f;
+    &.screensize {
+      width: 150px;
     }
-    &.result {
-      width: 218px;
-      color: #ce3f3f;
+    &.blank {
+      width: 542px;
     }
   }
 
@@ -318,47 +323,31 @@ const TableCompo = styled.div`
           text-align: center;
           padding-top: 0px;
           padding-bottom: 0px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 20px;
+          padding-right: 20px;
           vertical-align: middle;
-          &.no {
-            width: 52px;
-            @media screen and (max-height: 970px) {
-              width: 53px;
-            }
+          &.login-time {
+            width: 220px;
           }
-          &.local {
-            width: 90px;
+          &.ip {
+            width: 220px;
           }
-          &.name {
-            width: 100px;
-          }
-          &.company {
-            width: 110px;
-            text-align: left;
-          }
-          &.age {
-            width: 70px;
-          }
-          &.phone {
+          &.user-id {
             width: 140px;
           }
-          &.receive-time {
-            width: 180px;
+          &.os {
+            width: 150px;
           }
-          &.writer {
-            width: 100px;
-            color: #ce3f3f;
+          &.browser {
+            width: 150px;
           }
-          &.emg-end-time {
-            width: 180px;
-            color: #ce3f3f;
+          &.screensize {
+            width: 150px;
           }
-          &.result {
-            width: 218px;
-            color: #ce3f3f;
+          &.blank {
+            width: 542px;
             @media screen and (max-height: 970px) {
-              width: 208px;
+              width: 531px;
             }
           }
         }
@@ -388,21 +377,6 @@ const TableCompo = styled.div`
     }
   }
 
-  .ui.table td.active,
-  .ui.table tr.active {
-    background: #f9fafb !important;
-    &:hover {
-      background: #f9fafb !important;
-    }
-  }
-  .ui.checkbox input:checked ~ label:after {
-    background-color: #2e2e2e;
-    border-radius: 4px;
-    border-color: #929292;
-    color: #ffffff;
-    font-size: 12px;
-  }
-
   .subtitle {
     font-family: "NotoSansKR-Medium";
     font-size: 16px;
@@ -417,148 +391,17 @@ const TableCompo = styled.div`
   }
 `;
 
-const AlarmTable = ({
+const LoginLogTable = ({
   pageInfo,
-  data,
-  activeHandler,
+  currentData,
+  searchValue,
   onPageChange,
-  selectedRow,
-  initFormData,
-  initActiveRow,
-  initPage,
-  localData,
+  onSearchChange,
   onSearch,
-  downloadHandler,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
-  // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [currentData, setCurrentData] = useState([]);
-
-  const onClickCategorie = (e, value) => {
-    initPage();
-    if (selectedRow.selectedId) {
-      initActiveRow();
-      initFormData();
-    }
-    const _value = value.value;
-    setCategorieValue(_value);
-  };
-
-  useEffect(() => {
-    const _data = data;
-    setCurrentData(_data);
-    let tempData = [];
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      setCurrentData(tempData);
-    }
-  }, [data, categorieValue]);
 
   const today = new Date();
-
-  const calAge = (birth) => {
-    let currentYear = today.getFullYear();
-    let age = currentYear - birth.substring(0, 4) + 1;
-    return age;
-  };
-  function date_descending(a, b) {
-    var dateA = new Date(a["emg_start_time"]).getTime();
-    var dateB = new Date(b["emg_start_time"]).getTime();
-    return dateA < dateB ? 1 : -1;
-  }
-  // 테이블
-
-  const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData
-    .sort(date_descending)
-    .slice(
-      (activePage - 1) * itemsPerPage,
-      (activePage - 1) * itemsPerPage + itemsPerPage
-    );
-
-  const { selectedId, selectedItem, clickedIndex } = selectedRow;
-
-  // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
-  const tableRender = (items = []) => {
-    // 현재 보여지는 테이블에 들어갈 임시 배열 생성
-    const tempItems = [...items, ...Array(itemsPerPage - items.length)];
-    return tempItems.map((item, index) => {
-      const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
-      return (
-        <Table.Row
-          className="table-row"
-          key={index}
-          id={"scroll" + index}
-          active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.emg_seq))}
-        >
-          {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
-          <Table.Cell className="table-cell local" name="local">
-            {item &&
-              item.local_index &&
-              localData &&
-              localData.find((el) => el.local_index === item.local_index) &&
-              (localData.find((el) => el.local_index === item.local_index)
-                .local_used === 0
-                ? localData.find((el) => el.local_index === item.local_index)
-                    .local_name + "(삭제됨)"
-                : localData.find((el) => el.local_index === item.local_index)
-                    .local_name)}
-          </Table.Cell>
-          <Table.Cell className="table-cell name" name="name">
-            {item && item.wk_name && item.wk_name}
-          </Table.Cell>
-          <Table.Cell className="table-cell company" name="company">
-            {item && item.wk_co_name && item.wk_co_name}
-          </Table.Cell>
-          <Table.Cell className="table-cell age" name="age">
-            {item && item.wk_birth && calAge(item.wk_birth)}
-          </Table.Cell>
-          <Table.Cell className="table-cell phone" name="phone">
-            {item && item.wk_phone && item.wk_phone}
-          </Table.Cell>
-          <Table.Cell className="table-cell receive-time" name="receive-time">
-            {item &&
-              item.emg_start_time &&
-              moment(item.emg_start_time).format("YYYY-MM-DD HH:mm:ss")}
-          </Table.Cell>
-          <Table.Cell className="table-cell writer" name="writer">
-            {item && item.emg_writer && item.emg_writer}
-          </Table.Cell>
-          <Table.Cell className="table-cell emg-end-time" name="emg-end-time">
-            {item &&
-              item.emg_end_time &&
-              moment(item.emg_end_time).format("YYYY-MM-DD HH:mm:ss")}
-          </Table.Cell>
-          <Table.Cell className="table-cell result" name="result">
-            {item && item.emg_result && item.emg_result}
-          </Table.Cell>
-        </Table.Row>
-      );
-    });
-  };
-  const TopMenuRender = (localData = []) => {
-    if (!localData) {
-      localData = [];
-    }
-    let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 4);
-    return _localData.map((item, index) => {
-      return (
-        <Menu.Item
-          className="table-categorie-menu categorie"
-          name={item.local_name && item.local_name}
-          active={categorieValue === item.local_index}
-          value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
-        />
-      );
-    });
-  };
 
   const years = _.range(2020, getYear(new Date()) + 3, 1); // 수정
   const months = [
@@ -588,6 +431,10 @@ const AlarmTable = ({
   };
   const onChangeEndDate = (date) => {
     setEndDate(date);
+  };
+
+  const onSearchEnter = () => {
+    onSearch(startDate, endDate);
   };
 
   const StartDateInput = ({ value, onClick }) => (
@@ -621,6 +468,7 @@ const AlarmTable = ({
   const getDayName = (date) => {
     return date.toLocaleDateString("ko-KR", { weekday: "long" }).substr(0, 1);
   };
+
   // 날짜 비교시 년 월 일까지만 비교하게끔
   const createDate = (date) => {
     return new Date(
@@ -628,19 +476,51 @@ const AlarmTable = ({
     );
   };
 
+  // 테이블
+  const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
+  const viewItems = currentData.slice(
+    (activePage - 1) * itemsPerPage,
+    (activePage - 1) * itemsPerPage + itemsPerPage
+  );
+
+  // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
+  const tableRender = (items = []) => {
+    // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+    const tempItems = [...items, ...Array(itemsPerPage - items.length)];
+    return tempItems.map((item, index) => {
+      const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
+      return (
+        <Table.Row className="table-row" key={index} id={"scroll" + index}>
+          {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
+          <Table.Cell className="table-cell login-time" name="login-time">
+            {item &&
+              item.ble_input_time &&
+              moment(item.ble_input_time).format("YYYY-MM-DD HH:mm:ss")}
+          </Table.Cell>
+          <Table.Cell className="table-cell ip" name="ip"></Table.Cell>
+          <Table.Cell
+            className="table-cell user-id"
+            name="user-id"
+          ></Table.Cell>
+          <Table.Cell className="table-cell os" name="os"></Table.Cell>
+          <Table.Cell
+            className="table-cell browser"
+            name="browser"
+          ></Table.Cell>
+          <Table.Cell
+            className="table-cell screensize"
+            name="screensize"
+          ></Table.Cell>
+          <Table.Cell className="table-cell blank" name="blank"></Table.Cell>
+        </Table.Row>
+      );
+    });
+  };
+
   return (
     <>
       <CategorieMenuCompo className="table-categorie-menu-compo">
         <Menu pointing className="table-categorie-menu-box">
-          <Menu.Item
-            className="table-categorie-menu all"
-            name="전체"
-            active={categorieValue === null}
-            value={null}
-            onClick={onClickCategorie}
-          />
-          {TopMenuRender(localData)}
-
           <Menu.Menu>
             <Menu.Item className="table-categorie-menu datepicker-start">
               <FaRegCalendarAlt className="cal-icon" />
@@ -809,71 +689,66 @@ const AlarmTable = ({
               ></DatePicker>
             </Menu.Item>
           </Menu.Menu>
-          <Menu.Menu position="right">
-            <Menu.Item
-              className="table-categorie-menu search"
-              onClick={() => {
-                onSearch(categorieValue, startDate, endDate);
-              }}
-            >
-              조회
-              <FaSearch className="table-categorie-menu search search-icon" />
-            </Menu.Item>
-          </Menu.Menu>
           <Menu.Menu>
-            <Menu.Item
-              className="table-categorie-menu download"
-              onClick={downloadHandler}
-            >
-              다운로드
-              <FaFileDownload className="table-categorie-menu download-icon" />
-            </Menu.Item>
+            <div className="search-box">
+              <Input
+                className="search-input"
+                actionPosition="left"
+                placeholder="IP 주소를 검색해 주세요."
+                value={searchValue}
+                onChange={onSearchChange}
+                onKeyPress={(e, startDate, endDate) => {
+                  if (e.key === "Enter") {
+                    onSearchEnter();
+                  }
+                }}
+                icon={
+                  <FaSearch
+                    onClick={() => {
+                      onSearch(startDate, endDate);
+                    }}
+                    className="search-icon"
+                  />
+                }
+              />
+            </div>
           </Menu.Menu>
         </Menu>
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
-        <p className="subtitle">알람이력 : 작업자의 조회결과</p>
+        <p className="subtitle">로그인 기록의 조회 결과</p>
         <Table celled padded selectable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
-              <Table.HeaderCell singleLine className="table-header local">
-                노선
+              <Table.HeaderCell singleLine className="table-header login-time">
+                로그인 일시
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header name">
-                이름
+              <Table.HeaderCell singleLine className="table-header ip">
+                접속 IP 주소
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header company">
-                소속사
+              <Table.HeaderCell singleLine className="table-header user-id">
+                접속 아이디
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header age">
-                나이
+              <Table.HeaderCell singleLine className="table-header os">
+                OS
               </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header phone">
-                핸드폰
+              <Table.HeaderCell singleLine className="table-header browser">
+                브라우저
               </Table.HeaderCell>
-              <Table.HeaderCell
-                singleLine
-                className="table-header receive-time"
-              >
-                수신일시
-              </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header writer">
-                작성자
+              <Table.HeaderCell singleLine className="table-header screensize">
+                해상도
               </Table.HeaderCell>
               <Table.HeaderCell
                 singleLine
-                className="table-header emg-end-time"
-              >
-                조치일시
-              </Table.HeaderCell>
-              <Table.HeaderCell singleLine className="table-header result">
-                내용
-              </Table.HeaderCell>
+                className="table-header blank"
+              ></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
           <Table.Cell className="table-body" colSpan="12">
-            <div className="resizable-table-body">{tableRender(viewItems)}</div>
+            <div className="resizable-table-body" id="move-here">
+              {tableRender(viewItems)}
+            </div>
           </Table.Cell>
           {/* =============================테이블 푸터(페이지네이션)============================== */}
           <Table.Footer className="table-footer">
@@ -924,4 +799,4 @@ const AlarmTable = ({
   );
 };
 
-export default AlarmTable;
+export default LoginLogTable;

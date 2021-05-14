@@ -256,7 +256,10 @@ const SearchCompo = styled.div`
   display: block;
   font-family: "NotoSansKR-Regular";
   font-size: 13px;
-
+  .ui.input > input {
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
+  }
   .ui.input > input {
     display: block;
     width: 310px;
@@ -298,6 +301,13 @@ const SearchCompo = styled.div`
     position: absolute;
     color: #2e2e2e !important;
     opacity: 0.8;
+  }
+  .divider,
+  .text {
+    font-family: "NotoSansKR-Regular" !important;
+    font-size: 13px !important;
+    vertical-align: middle;
+    padding: 1px;
   }
 `;
 
@@ -370,10 +380,14 @@ const WorkerTable = ({
   // 테이블
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
-  );
+  const viewItems = currentData
+    .sort(function (a, b) {
+      return a.wk_name < b.wk_name ? -1 : a.wk_name > b.wk_name ? 1 : 0;
+    })
+    .slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
@@ -445,6 +459,7 @@ const WorkerTable = ({
         <Table.Row
           className="table-row"
           key={index}
+          id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.wk_id))}
         >
@@ -586,7 +601,10 @@ const WorkerTable = ({
                     activePage={activePage ? activePage : 0}
                     totalPages={totalPages}
                     siblingRange={1}
-                    onPageChange={onPageChange}
+                    onPageChange={(e, activePage) => {
+                      document.getElementById("scroll0").scrollIntoView();
+                      onPageChange(e, activePage);
+                    }}
                     firstItem={
                       // 페이지 수가 5개 이상일 때 >> << 맨 앞 맨 뒤 페이지 호출
                       totalPages <= 5 || {

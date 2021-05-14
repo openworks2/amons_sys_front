@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 // 이력조회
 import alarms from "./alarms";
+import bles from "./bles";
 // 현장관리
 import locals from "./locals";
 import announces from "./announces";
@@ -22,6 +23,8 @@ import monitor from './monitor';
 const rootReducer = combineReducers({
   //이력조회
   alarms,
+  bles,
+  //digs 에 굴진이력 리듀서 있음.
   //현장관리
   locals,
   announces,

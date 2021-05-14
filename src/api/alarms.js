@@ -18,8 +18,8 @@ export const putAlarm = async (index, data) => {
   return response.data;
 };
 
-//SOS 알람 다운로드
-export const getAlarmsDownload = async () => {
-  const response = await axios.get("/api/alarm/alarms/download");
-  return response.data;
-};
+// //SOS 알람 다운로드
+// export const getAlarmsDownload = async () => {
+//   const response = await axios.get("/api/alarm/alarms/download");
+//   return response.data;
+// };

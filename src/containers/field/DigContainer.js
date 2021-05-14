@@ -133,12 +133,6 @@ const DigContainer = () => {
     }
   }, [onSelectChange]);
 
-  useEffect(() => {
-    console.log("$$$$$$$change!");
-    console.log(formData);
-    console.log("$$$$$$$change!");
-  }, [formData]);
-
   // 누적 굴진율 퍼센트 구하기
   const getDigAmountPercent = (plan_length, dig_length) => {
     return ((dig_length / plan_length) * 100).toFixed(1) + "%";

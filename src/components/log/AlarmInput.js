@@ -9,6 +9,12 @@ const InputCompo = styled.div`
   margin-left: 22px;
   margin-right: 22px;
   margin-top: 5px;
+
+  .ui.form input,
+  .ui.form .field .ui.input input {
+    font-family: "NotoSansKR-Regular";
+  }
+
   .ui.form .field > label,
   .field > label {
     font-family: "NotoSansKR-Medium" !important;
@@ -153,7 +159,6 @@ const AlarmInput = ({
   onChange,
   formData,
   createHandler,
-  updateHandler,
   selectedRow,
   initFormData,
   initActiveRow,
@@ -168,7 +173,7 @@ const AlarmInput = ({
       <Form
         className="input-form-body"
         onSubmit={(e) => {
-          !selectedItem && createHandler(e);
+          selectedItem && createHandler(e);
         }}
       >
         <div className="resizable-area">
@@ -201,7 +206,6 @@ const AlarmInput = ({
             className="modify-button"
             onClick={(e) => {
               e.stopPropagation();
-              // setModifyOpen(true);
               // put
             }}
           >
@@ -209,51 +213,8 @@ const AlarmInput = ({
           </Button>
         ) : (
           ""
-          // <Button className="submit-button" type="submit">
-          //   등록
-          // </Button>
         )}
       </Form>
-      {/* <Modal
-        className="confirm-modal"
-        onClose={() => setModifyOpen(false)}
-        onOpen={() => setModifyOpen(true)}
-        open={modifyOpen}
-      >
-        <Modal.Header className="confirm-modal header">수정</Modal.Header>
-        <Modal.Content className="confirm-modal content">
-          <Modal.Description className="confirm-modal description">
-            <FaExclamationCircle className="confirm-modal warning-icon" />
-            <p className="confirm-modal text">
-              입력한 내용으로 수정하시겠습니까?
-            </p>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions className="confirm-modal actions">
-          <Button
-            className="confirm-modal button confirm"
-            color="blue"
-            content="수정"
-            labelPosition="right"
-            icon="checkmark"
-            onClick={(e) => {
-              updateHandler(e, selectedId);
-              setModifyOpen(false);
-            }}
-          />
-          <Button
-            className="confirm-modal button cancel"
-            color="black"
-            onClick={() => {
-              setModifyOpen(false);
-              initFormData();
-              initActiveRow();
-            }}
-          >
-            취소
-          </Button>
-        </Modal.Actions>
-      </Modal> */}
     </InputCompo>
   );
 };
