@@ -149,7 +149,8 @@ const WorkerDetailComponent = ({ selectItem }) => {
                     </div>
                     <div className="worker-info residence-time">
                         <span>체류시간:</span>
-                        <span>{<Moment fromNow format="HH시간 mm분">{item.bc_input_time}</Moment>}</span>
+                        {/* <span>{<Moment fromNow format="HH시간 mm분" durationFromNow >{item.bc_input_time}</Moment>}</span> */}
+                        <span><Moment date={item.bc_input_time} format="HH시간mm분" durationFromNow /></span>
                     </div>
                 </div>
             </div>

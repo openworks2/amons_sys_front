@@ -179,7 +179,8 @@ const LoginContainer = () => {
 
         const reqData = {
             acc_user_id: loginForm.userId,
-            acc_password: loginForm.password
+            acc_password: loginForm.password,
+            screen: `${window.screen.width}x${window.screen.height}` 
         }
 
         dispatch(loginAsync(reqData))
