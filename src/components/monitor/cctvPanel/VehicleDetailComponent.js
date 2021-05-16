@@ -118,7 +118,9 @@ const VehicleDetailComponent = ({ selectItem }) => {
                     </div>
                     <div className="vehicle-info residence-time">
                         <span>체류시간:</span>
-                        <span>{<Moment fromNow format="HH시간 mm분">{item.bc_input_time}</Moment>}</span>
+                        {/* <span>{<Moment fromNow format="HH시간 mm분" durationFromNow>{item.bc_input_time}</Moment>}</span> */}
+                        <span><Moment date={item.bc_input_time} format="hh시간mm분" durationFromNow /></span>
+
                     </div>
                 </div>
             </div>

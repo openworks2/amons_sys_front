@@ -195,7 +195,14 @@ const AccessDetailPanel = ({ bleData, localName }) => {
                                         <td>{item && item.vh_co_name}</td>
                                         <td>{item && item.vh_name}</td>
                                         <td>{item && item.vh_number}</td>
-                                        <td>2021-02-19 01:15:00</td>
+                                        <td>
+                                            {
+                                                item &&
+                                                <Moment format="YYYY-MM-DD HH:mm:ss">
+                                                    {item.bc_input_time}
+                                                </Moment>
+                                            }
+                                        </td>
                                     </>
                                 :
                                 <>

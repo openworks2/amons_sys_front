@@ -101,7 +101,8 @@ const InfoComponent = ({
     accessPanel,
     openAccessPanel,
     localName,
-    scanner
+    scanner,
+    processDisabled
 }) => {
 
     const scannerListRender = (items = []) => {
@@ -127,6 +128,7 @@ const InfoComponent = ({
             <div className="right-box">
                 <div className="nms-box">
                     {
+                        processDisabled === 1 &&
                         scanner && scannerListRender(scanner)
                     }
                 </div>

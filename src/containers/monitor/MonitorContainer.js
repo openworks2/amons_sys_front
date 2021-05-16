@@ -10,7 +10,7 @@ import NoticeCompo from '../../components/monitor/Notice';
 import StatusInfo from '../../components/monitor/StatusInfo';
 import TodayInfoComponent from '../../components/monitor/TodayInfoComponent';
 import { getAnnounces } from '../../modules/announces';
-import { getBleBeacon, getMonitor, getScanner, getWeather, receiveMonitor, setSOSSituation, socketDisconnet } from '../../modules/monitor';
+import { getBleBeacon, getEnvironment, getMonitor, getScanner, getWeather, receiveMonitor, setSOSSituation, socketDisconnet } from '../../modules/monitor';
 
 const MonitorCompo = styled.div`
     width: 100vw;
@@ -95,7 +95,7 @@ const BodyCompo = styled.div`
 
 const MonitorContainer = () => {
 
-    const { monitor, scanner, weather, beacon, ratePanel, sosSituation } = useSelector(state => {
+    const { monitor, scanner, weather, beacon, ratePanel, sosSituation, environment } = useSelector(state => {
         return state.monitor
     });
 
@@ -158,6 +158,7 @@ const MonitorContainer = () => {
         dispatch(getMonitor());
         dispatch(getScanner());
         dispatch(getWeather());
+        dispatch(getEnvironment())
         dispatch(getBleBeacon());
         dispatch(getAnnounces());
     }
@@ -231,13 +232,13 @@ const MonitorContainer = () => {
                     <div className="right-left-box">
                         <div className="top-panel">
                             {
-                                announceList &&
-                                <NoticeCompo announceList={announceList} />
+                                announceList && environment.data &&
+                                <NoticeCompo announceList={announceList} rollingCount={environment.data[0].announce_rolling} />
                             }
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                {monitor.data && beacon.data &&
+                                {monitor.data && beacon.data && environment.data &&
                                     <CctvComponent
                                         way="right"
                                         id="loc001"
@@ -250,6 +251,7 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[0]}
                                         scanner={scanner.data && localScanner(monitor.data[0].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[0].local_index)}
+                                        processDisabled={environment.data[0].process_disabled}
                                     />
                                 }
                             </div>
@@ -267,6 +269,7 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[2]}
                                         scanner={scanner.data && localScanner(monitor.data[2].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[2].local_index)}
+                                        processDisabled={environment.data[0].process_disabled}
 
                                     />
                                 }
@@ -295,6 +298,7 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[1]}
                                         scanner={scanner.data && localScanner(monitor.data[1].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[1].local_index)}
+                                        processDisabled={environment.data[0].process_disabled}
 
                                     />
                                 }
@@ -313,6 +317,7 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[3]}
                                         scanner={scanner.data && localScanner(monitor.data[3].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[3].local_index)}
+                                        processDisabled={environment.data[0].process_disabled}
 
                                     />
                                 }

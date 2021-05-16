@@ -3,7 +3,7 @@ import { createPromiseThunk, handleAsyncActions, reducerUtils } from "../lib/asy
 
 
 import io from "socket.io-client";   //모듈 가져오기
-
+import { API } from '../lib/server.config'
 
 
 const GET_MONITOR = 'monitor/GET_MONITOR';
@@ -23,6 +23,9 @@ const GET_WEATHER = 'monitor/GET_WEATHER';
 const GET_WEATHER_SUCCESS = 'monitor/GET_WEATHER_SUCCESS';
 const GET_WEATHER_ERROR = 'monitor/GET_WEATHER_ERROR';
 
+const GET_ENVIRONMENT = 'monitor/GET_ENVIRONMENT';
+const GET_ENVIRONMENT_SUCCESS = 'monitor/GET_ENVIRONMENT_SUCCESS';
+const GET_ENVIRONMENT_ERROR = 'monitor/GET_ENVIRONMENT_ERROR';
 
 
 const RECEIVE_MONITOR = 'monitor/RECEIVE_MONITOR';
@@ -46,7 +49,7 @@ export const getBleBeacon = createPromiseThunk(
 
 let socket;
 export const receiveMonitor = () => dispatch => {
-    socket = io.connect("http://192.168.0.39:3000");  //3000번 포트 사용(서버)
+    socket = io.connect(API);  //3000번 포트 사용(서버)
 
     socket.emit('getData', 'scanner')
     socket.on('getData', (data) => {
@@ -71,11 +74,17 @@ export const getWeather = createPromiseThunk(
     monitorAPI.getWeather
 )
 
+export const getEnvironment = createPromiseThunk(
+    GET_ENVIRONMENT,
+    monitorAPI.getEnvironment
+)
+
 const initialState = {
     monitor: reducerUtils.initial(),
     scanner: reducerUtils.initial(),
     beacon: reducerUtils.initial(),
     weather: reducerUtils.initial(),
+    environment: reducerUtils.initial(),
     ratePanel: false,
     sosSituation: false,
 }
@@ -101,6 +110,12 @@ const getBleBeaconReducer = handleAsyncActions(
 const getWeatherReducer = handleAsyncActions(
     GET_WEATHER,
     "weather",
+    true
+)
+
+const getEnvironmentReducer = handleAsyncActions(
+    GET_ENVIRONMENT,
+    "environment",
     true
 )
 
@@ -167,6 +182,10 @@ export default function monitor(state = initialState, action) {
         case GET_WEATHER_SUCCESS:
         case GET_WEATHER_ERROR:
             return getWeatherReducer(state, action);
+        case GET_ENVIRONMENT:
+        case GET_ENVIRONMENT_SUCCESS:
+        case GET_ENVIRONMENT_ERROR:
+            return getEnvironmentReducer(state, action);
         case TOGGLE_DRILLRATE_PANEL:
             return {
                 ...state,
