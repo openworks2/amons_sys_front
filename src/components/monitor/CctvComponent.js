@@ -295,6 +295,7 @@ const CctvComponent = ({
                         accessPanel={accessPanel}
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
+                        data={data && data}
                     />
                 }
                 {
@@ -307,11 +308,12 @@ const CctvComponent = ({
                         accessPanel={accessPanel}
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
+                        data={data && data}
                     />
                 }
             </div>
             {
-                accessPanel === id && bleData && <AccessDetailPanel bleData={bleData} localName={data && data.local_name}/>
+                accessPanel === id && bleData && <AccessDetailPanel bleData={bleData} localName={data && data.local_name} />
             }
         </CctvCompo>
     );

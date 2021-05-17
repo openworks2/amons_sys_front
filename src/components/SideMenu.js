@@ -103,10 +103,10 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
         <div className="divide-line" />
         <Menu.Item
           as={Link}
-          to="/amons/monitering"
+          to="/amons/home/monitor"
           className="sidemenu-title"
-          name="monitering"
-          active={currentUrl === "monitering"}
+          name="moniter"
+          active={currentUrl === "moniter"}
         >
           모니터링
           <FaDesktop className="side-icon" />

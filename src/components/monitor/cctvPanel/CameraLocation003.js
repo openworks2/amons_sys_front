@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import Dahua from '../../../lib/cctv/location003/Dahua';
+import Dahua from '../../../lib/cctv/location003/Dahua';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fortawesome/pro-solid-svg-icons"
-import AccessDetailPanel from './AccessDetailPanel';
+// import AccessDetailPanel from './AccessDetailPanel';
 
 const CameraCompo = styled.div`
     width: 100%;
@@ -31,10 +31,10 @@ const CameraLocation003 = ({
  }) => {
 
     const [form, setForm] = useState({
-        ip: 'dhh3-4.iptime.org',
-        port: '1113',
-        username: 'admin',
-        password: 'work1801!@',
+        ip: data.cctv_ip,
+        port: data.cctv_port,
+        username: data.cctv_user_id,
+        password: data.cctv_pw,
         rtspPort: 80,
         protocol: 0,
         timeout: 5,
@@ -68,7 +68,7 @@ const CameraLocation003 = ({
         setLocate(!Locate)
     }
     /**
-     * @pa`ram{string} key 컨트롤 인덱스
+     * @param{string} key 컨트롤 인덱스
      * @param{boolean} flag 진위값
      * @description 영상 이동 조작
      */
@@ -145,46 +145,53 @@ const CameraLocation003 = ({
     }
 
 
-    // const connCCTV = async () => {
-    //     try {
-    //         const cctv = await new Dahua(`divPlugin-${id}`);
-    //         cctv.init(form);
-    //         setCamera(cctv);
-    //     } catch (error) {
+    const connCCTV = async () => {
+        try {
+            const cctv = await new Dahua(`divPlugin-${id}`);
+            cctv.init(form);
+            setCamera(cctv);
+        } catch (error) {
 
-    //     }
-    // }
+        }
+    }
 
+    useEffect(() => {
+        console.log('CameraLocation003--->', data)
+        if (!Camera) {
+            connCCTV();
+        }
+        if (Camera) {
+            if (expandMap) {
+                Camera.hiddenScreen();
+            } else {
+                if (alarmPanel) {
+                    Camera.hiddenScreen();
+                } else {
+                    // resizeVideo();
+                    Camera.showScreen();
+                    if (ctrlPanel !== id || ctrlPanel === null) {
+                        if (Locate) {
+                            ptzLocationHandler();
+                        }
+                    }
+                }
+            }
+            console.log(Camera.setClosePlayer)
+        }
+        return () => {
+            if(Camera){
+                // Camera.hiddenScreen();
+            
+            }
+        }
+    }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
 
-
-    // useEffect(() => {
-    //     console.log('CameraLocation001--->', data)
-    //     if (!Camera) {
-    //         connCCTV();
-    //     }
-    //     if (Camera) {
-    //         if (expandMap) {
-    //             Camera.hiddenScreen();
-    //         } else {
-    //             if (alarmPanel) {
-    //                 Camera.hiddenScreen();
-    //             } else {
-    //                 if (ctrlPanel !== id || ctrlPanel === null) {
-    //                     if (Locate) {
-    //                         ptzLocationHandler();
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
-
-    // const resizeHandler = () => {
-    //     if (Camera) {
-    //         Camera.setReposition();
-    //     }
-    // }
-    // window.addEventListener("resize", resizeHandler);
+    const resizeHandler = () => {
+        if (Camera) {
+            Camera.setReposition();
+        }
+    }
+    window.addEventListener("resize", resizeHandler);
 
     return (
         <CameraCompo>
