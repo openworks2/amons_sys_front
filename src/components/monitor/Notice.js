@@ -172,7 +172,9 @@ const Notice = ({ announceList, rollingCount }) => {
             return item;
         });
         setRollData(titleList)
-        rollingAction(titleList);
+        if(titleList.length > 0){
+            rollingAction(titleList);
+        }
     };
 
     useEffect(() => {
