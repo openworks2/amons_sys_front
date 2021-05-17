@@ -104,7 +104,8 @@ const HomeContainer = () => {
     const splitUrl = url.split("/");
     const location = splitUrl[splitUrl.length - 1];
     setCurrentUrl(location);
-  }, []);
+  });
+
   useEffect(() => {
     console.log(">>>>>>>>>>>>>>>HomeContainer");
 
@@ -123,10 +124,9 @@ const HomeContainer = () => {
         onLogout={onLogout}
       />
       <SideMenu
-        callSideMenu={callSideMenu}
-        callSideMenuHandler={callSideMenuHandler}
-        changeCurrentMenu={changeCurrentMenu}
-        currentMenu={currentMenu}
+          callSideMenu={callSideMenu}
+          callSideMenuHandler={callSideMenuHandler}
+          currentUrl={currentUrl}
       />
       {/* <ContentsCompo> */}
       {currentUrl && currentUrl !== "home" && currentUrl !== "monitor" && (
