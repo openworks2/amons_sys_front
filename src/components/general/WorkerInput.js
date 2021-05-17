@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import NumberFormat from "react-number-format";
+import { API } from "../../lib/server.config";
 import {
   Form,
   Button,
@@ -9,6 +10,7 @@ import {
   Modal,
   Dropdown,
   Input,
+  Image,
 } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { FaImage, FaRegCalendarAlt, FaBackspace } from "react-icons/fa";
@@ -691,6 +693,9 @@ const WorkerInput = ({
             <div className="form-title photo" id="photo-title-unique">
               사진
             </div>
+            {/* 이미지 미리보기 : 서버에 올라간 상태 */}
+            {wk_image && <Image src={`${API}/uploads/${wk_image}`} />}
+            {/* 이미지 미리보기 : 서버에 올라가지 않은 상태 */}
             <label for="input-image-file" className="photo-box">
               <div className="icon-box">
                 <FaImage className="photo-icon" />
