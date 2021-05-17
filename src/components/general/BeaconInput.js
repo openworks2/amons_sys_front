@@ -171,7 +171,7 @@ const BeaconInput = ({
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
-  const { bc_address, description } = formData;
+  const { bc_address, bc_description } = formData;
 
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
@@ -221,10 +221,10 @@ const BeaconInput = ({
             <label className="input-form title">비고</label>
             <textarea
               className="input-form description"
-              id="description"
-              name="description"
+              id="bc_description"
+              name="bc_description"
               placeholder={"비고 입력란"}
-              value={description}
+              value={bc_description}
               onChange={onChange}
             />
           </Form.Field>

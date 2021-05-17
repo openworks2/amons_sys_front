@@ -64,7 +64,14 @@ const LoginLogContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getLoginRecords());
+    const searchCondition = {
+      from_date: new Date(),
+      to_date: new Date(),
+      ip: null,
+    };
+    console.log("searchCondition");
+    console.log(searchCondition);
+    dispatch(postLoginRecordsSearch(searchCondition));
   }, []);
 
   useEffect(() => {
