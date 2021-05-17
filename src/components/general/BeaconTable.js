@@ -437,7 +437,7 @@ const BeaconTable = ({
             {item && item.bc_time}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
-            {item && item.description}
+            {item && item.bc_description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
             {item && selectedId && item.bc_id === selectedId && (

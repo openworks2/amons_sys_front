@@ -80,7 +80,7 @@ const BeaconContatiner = () => {
 
   const [formData, setFormData] = useState({
     bc_address: "",
-    description: "",
+    bc_description: "",
   });
 
   // form onChange Event
@@ -124,7 +124,7 @@ const BeaconContatiner = () => {
   const initFormData = () => {
     setFormData({
       bc_address: "",
-      description: "",
+      bc_description: "",
     });
   };
 
@@ -147,7 +147,7 @@ const BeaconContatiner = () => {
         bc_id: findItem.bc_id,
         bc_index: findItem.bc_index,
         bc_address: findItem.bc_address,
-        description: findItem.description,
+        bc_description: findItem.bc_description,
       });
     }
   };
@@ -202,6 +202,9 @@ const BeaconContatiner = () => {
         ...formData,
         bc_address: _bc_address,
       };
+      console.log(newBeacon);
+      console.log("newBeacon");
+      console.log(newBeacon);
       dispatch(postBeacon(newBeacon));
       initActiveRow();
       initFormData();
@@ -252,6 +255,7 @@ const BeaconContatiner = () => {
         vh_id: findItem.vh_id,
         vh_index: findItem.vh_index,
         vh_name: findItem.vh_name,
+        // bc_description: findItem.bc_description,
       };
       dispatch(putBeacon(newBeacon.bc_index, newBeacon));
     }
