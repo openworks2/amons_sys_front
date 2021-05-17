@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import { Form, Button, Select, Modal, Input } from "semantic-ui-react";
-import { FaExclamationCircle } from "react-icons/fa";
-import { FaImage, FaRegCalendarAlt } from "react-icons/fa";
-import NumberFormat from "react-number-format";
+import { Form, Button } from "semantic-ui-react";
 
 const InputCompo = styled.div`
   margin-left: 22px;

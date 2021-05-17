@@ -9,6 +9,7 @@ import { getBleVehicles, postBleVehiclesSearch } from "../../modules/bles";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
+import { API } from "../../lib/server.config";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -187,7 +188,7 @@ const LogVehicleContainer = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: "/api/ble/bles/vehicle/download",
+        url: `${API}/api/ble/bles/vehicle/download`,
         responseType: "blob",
         data: {
           local_index: _local_index,

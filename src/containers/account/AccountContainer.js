@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { API } from "../../lib/server.config";
 import styled from "styled-components";
 import AccountInput from "../../components/account/AccountInput";
 import AccountTable from "../../components/account/AccountTable";
@@ -230,7 +231,10 @@ const AccountContatiner = () => {
   const duplicationCheckHandler = async () => {
     let auth = false;
     try {
-      const response = await axios.post(`/api/account/doublecheck/`, formData);
+      const response = await axios.post(
+        `${API}/api/account/doublecheck/`,
+        formData
+      );
       auth = response.data.auth;
     } catch (e) {
       console.log("중복확인 서버 통신 에러");

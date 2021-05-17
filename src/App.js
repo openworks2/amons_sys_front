@@ -7,16 +7,16 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import MonitorPage from "./pages/MonitorPage";
 
-
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
 .ui.modal.transition.visible.active.confirm-modal{
       width : 500px;
-      height: 24.5em;
+      height: 27.5em;
       text-align: center;
       align-items: center;
-
+      top : 30%;
+      left : 40%;
       .delete-icon{
         font-size : 100px;
         color : #d01919;
@@ -35,10 +35,11 @@ const GlobalStyle = createGlobalStyle`
 }
 .ui.modal.transition.visible.active.address-modal{
       width : 600px;
-      height: 24.5em;
+      height: 40.5em;
       text-align: center;
       align-items: center;
       top : 20%;
+      left : 35%;
       .delete-icon{
         font-size : 100px;
         color : #d01919;

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Image } from "semantic-ui-react";
 import styled from "styled-components";
-import ReactAudioPlayer from 'react-audio-player';
+import ReactAudioPlayer from "react-audio-player";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faVolumeSlash,
@@ -13,8 +13,8 @@ import {
   faCompressArrowsAlt,
   faExpandArrowsAlt,
   faQuestion,
-  faSignOutAlt
-} from "@fortawesome/pro-solid-svg-icons"
+  faSignOutAlt,
+} from "@fortawesome/pro-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setSOSSituation } from "../modules/monitor";
 
@@ -30,180 +30,173 @@ const HeaderCompo = styled.div`
   opacity: 1;
   display: flex;
   z-index: 1001;
-  .left-area{
-      height: 100%;
-      width: 63%;
-      display: flex;
-      .sidemenu-button-box{
-        width: 6.15%;
-        height: 100%;
-        display: flex;
-        justify-content:center;
-        align-items: center;
-        .sidemenu-button{
-          width: 44px;
-          height: 44px;   
-          background-color:#000000;
-          color:#FFFFFF;
-          display: flex;
-          justify-content:center;
-          align-items: center;
-          font-size: 15px;
-          &:hover{
-            cursor: pointer;
-          }
-        }
-      }
-      .monitor-title-box{
-        width: 93.85%;
-        height: 100%;
-        padding-left: 16px;
-        display: flex;
-        align-items: center;
-        #site-name{
-          color: #FFFFFF;
-          font-size: 30px;
-          font-family:"NotoSansKR-Regular";
-          margin-left: 23px;
-          margin-left: 23px;
-        }
-        #tunnel-name{
-          color: #F1592A;
-          font-size: 30px;
-          font-family:"NotoSansKR-Regular";
-          margin-left: 5px;
-        }
-      }
-  }
-  .right-area{
+  .left-area {
     height: 100%;
-    width: 37%;
-    display:flex;
-    justify-content: flex-end;
-    .shortcut-button-list{
-        height: 100%;
-        width: 56%;
-        display:flex;
-        align-items:center;
-        margin-right:20px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        .shortcut-button-box{
-          width: 45px;
-          height: 83%;
-          &:nth-child(n+2){
-            margin-left: 24px;
-          }
-          .shortcut-button{
-            height: 39px;
-            width: 39px;
-            border-radius: 47%;
-            color: #FFFFFF;
-            font-size: 17px;
-            margin-left: 2px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            &:hover{
-              cursor: pointer;
-              color: #72afd2;
-            }
-            &.alarm{
-              background-color: #C23235;
-            }
-            &.home{
-              background-color: #A73B1F;
-            }
-            &.drill{
-              background-color: #686868;
-            }
-            &.general-screen{
-              background-color: #8FC31F;
-              /* opacity: 0.5; */
-            }
-            &.full-screen{
-              background-color: #32B16C;
-              /* opacity: 0.5; */
-            }
-            &.question{
-              background-color: #305A70;
-            }
-          }
-        }
-        .button-name{
-          color: #FFFFFF;
-          font-family:"NotoSansKR-Regular";
-          font-size:12px;
-          text-align: center;
-        }
-    }
-    .logout-button-box{
+    width: 63%;
+    display: flex;
+    .sidemenu-button-box {
+      width: 6.15%;
       height: 100%;
-        width:9.95%;
-        display:flex;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .sidemenu-button {
+        width: 44px;
+        height: 44px;
+        background-color: #000000;
+        color: #ffffff;
+        display: flex;
         justify-content: center;
         align-items: center;
-        .logout-button{
-          width: 44px;
-          height: 44px;
-          background-color:#000000;
-          font-size: 21px;
-          display:flex;
+        font-size: 15px;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .monitor-title-box {
+      width: 93.85%;
+      height: 100%;
+      padding-left: 16px;
+      display: flex;
+      align-items: center;
+      #site-name {
+        color: #ffffff;
+        font-size: 30px;
+        font-family: "NotoSansKR-Regular";
+        margin-left: 23px;
+        margin-left: 23px;
+      }
+      #tunnel-name {
+        color: #f1592a;
+        font-size: 30px;
+        font-family: "NotoSansKR-Regular";
+        margin-left: 5px;
+      }
+    }
+  }
+  .right-area {
+    height: 100%;
+    width: 37%;
+    display: flex;
+    justify-content: flex-end;
+    .shortcut-button-list {
+      height: 100%;
+      width: 56%;
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .shortcut-button-box {
+        width: 45px;
+        height: 83%;
+        &:nth-child(n + 2) {
+          margin-left: 24px;
+        }
+        .shortcut-button {
+          height: 39px;
+          width: 39px;
+          border-radius: 47%;
+          color: #ffffff;
+          font-size: 17px;
+          margin-left: 2px;
+          display: flex;
           justify-content: center;
           align-items: center;
-          &:hover{
+          &:hover {
             cursor: pointer;
             color: #72afd2;
           }
-          svg{
-            color:#FFFFFF;
-            opacity: 0.7
+          &.alarm {
+            background-color: #c23235;
+          }
+          &.home {
+            background-color: #a73b1f;
+          }
+          &.drill {
+            background-color: #686868;
+          }
+          &.general-screen {
+            background-color: #8fc31f;
+            /* opacity: 0.5; */
+          }
+          &.full-screen {
+            background-color: #32b16c;
+            /* opacity: 0.5; */
+          }
+          &.question {
+            background-color: #305a70;
           }
         }
+      }
+      .button-name {
+        color: #ffffff;
+        font-family: "NotoSansKR-Regular";
+        font-size: 12px;
+        text-align: center;
+      }
+    }
+    .logout-button-box {
+      height: 100%;
+      width: 9.95%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .logout-button {
+        width: 44px;
+        height: 44px;
+        background-color: #000000;
+        font-size: 21px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+          cursor: pointer;
+          color: #72afd2;
+        }
+        svg {
+          color: #ffffff;
+          opacity: 0.7;
+        }
+      }
     }
   }
-
 `;
-
-
 
 const Header = ({
   callSideMenuHandler,
   setRatePanelHandler,
   triggerFull,
   exitFull,
-  onLogout
+  onLogout,
 }) => {
-  const { sosSituation } = useSelector(state => state.monitor);
+  const { sosSituation } = useSelector((state) => state.monitor);
 
   const dispatch = useDispatch();
 
   // load audio file on component load
-  useEffect(() => {
-  }, [])
+  useEffect(() => {}, []);
 
   // set the loop of audio tune
   useEffect(() => {
-    const audioEl = document.getElementsByClassName("audio-element")[0]
+    const audioEl = document.getElementsByClassName("audio-element")[0];
     if (sosSituation) {
       // playSound();
       setTimeout(() => {
         audioEl.loop = true;
-        audioEl.play()
-
+        audioEl.play();
       }, 2000);
     } else {
       // pauseSound();
-      audioEl.pause()
+      audioEl.pause();
     }
-  }, [sosSituation])
-
+  }, [sosSituation]);
 
   const sosAlarmOffHandler = () => {
-    dispatch(setSOSSituation(false))
-  }
-
+    dispatch(setSOSSituation(false));
+  };
 
   return (
     <HeaderCompo className="header-component">
@@ -220,21 +213,25 @@ const Header = ({
             verticalAlign="middle"
             inline="true"
           />
-          <span id="site-name">고속국도 제 14호선 함양-울산선(함양-합천) 건설공사(제4공구)</span>
+          <span id="site-name">
+            고속국도 제 14호선 함양-울산선(함양-합천) 건설공사(제4공구)
+          </span>
           <span id="tunnel-name">신원3터널</span>
         </div>
       </div>
       <div className="right-area">
         <div className="shortcut-button-list">
-          {
-            sosSituation &&
+          {sosSituation && (
             <div className="shortcut-button-box">
-              <div className="shortcut-button alarm" onClick={sosAlarmOffHandler}>
+              <div
+                className="shortcut-button alarm"
+                onClick={sosAlarmOffHandler}
+              >
                 <FontAwesomeIcon icon={faVolumeSlash} />
               </div>
               <div className="button-name">알림음</div>
             </div>
-          }
+          )}
           <div className="shortcut-button-box">
             <a href="/amons/home">
               <div className="shortcut-button home">
@@ -245,7 +242,10 @@ const Header = ({
             <div className="button-name">HOME</div>
           </div>
           <div className="shortcut-button-box">
-            <div className="shortcut-button drill" onClick={setRatePanelHandler}>
+            <div
+              className="shortcut-button drill"
+              onClick={setRatePanelHandler}
+            >
               <FontAwesomeIcon icon={faDigging} />
             </div>
             <div className="button-name">굴진율</div>

@@ -24,7 +24,7 @@ import { Image } from "semantic-ui-react";
 
 const ContentTitleBoxCompo = styled.div`
   padding-left: 280px;
-  padding-top: 9.3vh;
+  padding-top: 6.1vh;
   padding-right: 130px;
   font-family: "NotoSansKR-Medium";
   text-align: left;
@@ -34,6 +34,7 @@ const ContentTitleBoxCompo = styled.div`
   .content-title-compo {
     font-family: "NotoSansKR-Medium";
     margin-left: 15px;
+    margin-top: 20px;
     font-size: 24px;
     vertical-align: middle;
     display: inline-block;
@@ -54,7 +55,6 @@ const ContentTitleBoxCompo = styled.div`
     height: 25px;
     margin-top: 2px;
     display: inline-block;
-    vertical-align: top;
     object-fit: cover;
   }
   .content-title-divide-line {

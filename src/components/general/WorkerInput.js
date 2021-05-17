@@ -83,13 +83,13 @@ const InputCompo = styled.div`
   .decrease-button {
     font-family: "NotoSansKR-Medium";
     font-size: 20px;
-    vertical-align: middle;
+    vertical-align: top !important;
     text-align: center;
     padding: 5px;
     padding-top: 0px;
     margin: 5px;
     border-radius: 200px;
-    height: 23px;
+    height: 30px;
     border: solid 1px rgba(34, 36, 38, 0.35);
     display: inline-block;
     font-weight: bolder;
@@ -234,7 +234,6 @@ const InputCompo = styled.div`
       border-radius: 4px;
       opacity: 1;
       height: 38px;
-      margin-top: 5px;
       .icon-box {
         background-color: #2e2e2e;
         display: inline-block;
@@ -251,10 +250,10 @@ const InputCompo = styled.div`
 
       .photo-description {
         display: inline-block;
-        margin: 0px;
-        padding-bottom: 12px;
-        vertical-align: middle;
         margin-left: 10px;
+        margin-top: -2px;
+        vertical-align: bottom;
+        margin-bottom: 10px;
         text-align: left;
         letter-spacing: 0px;
         opacity: 1;
@@ -694,7 +693,7 @@ const WorkerInput = ({
               사진
             </div>
             {/* 이미지 미리보기 : 서버에 올라간 상태 */}
-            {wk_image && <Image src={`${API}/uploads/${wk_image}`} />}
+            {/* {wk_image && <Image src={`${API}/uploads/${wk_image}`} />} */}
             {/* 이미지 미리보기 : 서버에 올라가지 않은 상태 */}
             <label for="input-image-file" className="photo-box">
               <div className="icon-box">

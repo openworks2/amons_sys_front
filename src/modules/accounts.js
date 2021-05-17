@@ -8,6 +8,7 @@ import {
   handleAsyncActionsOfPost,
   createPromiseThunkOfPut,
   handleAsyncActionsOfPut,
+  handleAsyncActionsOfPostGet,
 } from "../lib/asyncUtils";
 
 const GET_ACCOUNTS = "account/GET_ACCOUNTS";
@@ -105,7 +106,7 @@ const getLoginRecordsReducer = handleAsyncActions(
   "loginRecords",
   true
 );
-const postLoginRecordsSearchReducer = handleAsyncActionsOfPost(
+const postLoginRecordsSearchReducer = handleAsyncActionsOfPostGet(
   POST_LOGINRECORDSSEARCH,
   "loginRecords",
   true

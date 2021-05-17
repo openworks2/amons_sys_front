@@ -133,7 +133,7 @@ const TableCompo = styled.div`
       left: 0px;
     }
     &.end {
-      margin-top: -16px;
+      margin-top: -18px;
       left: 120px;
     }
   }
@@ -204,15 +204,14 @@ const TableCompo = styled.div`
   .decrease-button {
     font-family: "NotoSansKR-Medium";
     font-size: 20px;
-    vertical-align: middle;
     text-align: center;
     padding: 5px;
     padding-top: 0px;
-    margin: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
     border-radius: 200px;
-    height: 23px;
+    height: 30px;
     border: solid 1px rgba(34, 36, 38, 0.35);
-    display: inline-block;
     font-weight: bolder;
     cursor: pointer;
     &:hover {

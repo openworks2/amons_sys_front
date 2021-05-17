@@ -87,9 +87,6 @@ const CategorieMenuCompo = styled.div`
     font-size: 20px;
     vertical-align: middle;
     text-align: center;
-    padding: 5px;
-    padding-top: 0px;
-    margin: 5px;
     border-radius: 200px;
     height: 23px;
     border: solid 1px rgba(34, 36, 38, 0.35);
