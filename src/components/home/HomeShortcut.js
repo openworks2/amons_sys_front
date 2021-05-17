@@ -122,7 +122,7 @@ const HomeShortcut = ({ openFullScreenMode }) => {
         <Card.Content className="card-title" >모니터링</Card.Content>
       </Card>
 
-      <Card as={Link} to="" className="card-component">
+      <Card as={Link} to="/amons/home/log/alarm" className="card-component">
         <div className="img-box">
           <Image src="/main/sos.png" className="card-img " wrapped={false} />
         </div>
@@ -134,7 +134,7 @@ const HomeShortcut = ({ openFullScreenMode }) => {
         <Card.Content className="card-title">알람이력 : 작업자</Card.Content>
       </Card>
 
-      <Card as={Link} to="" className="card-component">
+      <Card as={Link} to="/amons/home/log/workerlog" className="card-component">
         <div className="img-box">
           <Image src="/main/worker.png" className="card-img " wrapped={false} />
         </div>
@@ -148,7 +148,7 @@ const HomeShortcut = ({ openFullScreenMode }) => {
         </Card.Content>
       </Card>
 
-      <Card as={Link} to="" className="card-component">
+      <Card as={Link} to="/amons/home/log/vehiclelog" className="card-component">
         <div className="img-box">
           <Image
             src="/main/vehicle.png"
@@ -165,7 +165,7 @@ const HomeShortcut = ({ openFullScreenMode }) => {
         <Card.Content className="card-title">막장잔류이력 : 차량</Card.Content>
       </Card>
 
-      <Card as={Link} to="" className="card-component">
+      <Card as={Link} to="/amons/home/log/diglog" className="card-component">
         <div className="img-box">
           <Image src="/main/drill.png" className="card-img " wrapped={false} />
         </div>

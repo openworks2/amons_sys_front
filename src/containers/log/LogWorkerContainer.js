@@ -187,7 +187,7 @@ const LogWorkerContainer = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: "/api/ble/bles/worker/download",
+        url: "http://192.168.0.39:3000/api/ble/bles/worker/download",
         responseType: "blob",
         data: {
           local_index: _local_index,

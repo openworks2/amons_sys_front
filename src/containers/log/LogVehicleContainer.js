@@ -187,7 +187,7 @@ const LogVehicleContainer = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: "/api/ble/bles/vehicle/download",
+        url: "http://192.168.0.39:3000/api/ble/bles/vehicle/download",
         responseType: "blob",
         data: {
           local_index: _local_index,
