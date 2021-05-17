@@ -2,12 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import SettingsInput from "../../components/ect/SettingsInput";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAccounts,
-  postAccount,
-  deleteAccount,
-  putAccount,
-} from "../../modules/accounts";
+import { getSettings, putSettings } from "../../modules/settings";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -66,82 +61,130 @@ const ErrMsg = styled.div`
 
 const SettingsContatiner = () => {
   const { data, loading, error } = useSelector(
-    (state) => state.accounts.accounts
+    (state) => state.settings.settings
   );
 
   const dispatch = useDispatch();
 
+  const [formData, setFormData] = useState({
+    env_index: "HH2106001",
+    announce_rolling: 0,
+    process_disabled: "0",
+    kma_sido: "",
+    kma_gun: "",
+    kma_dong: "",
+  });
+
   useEffect(() => {
-    dispatch(getAccounts());
+    dispatch(getSettings());
   }, [dispatch]);
 
-  const today = new Date();
+  useEffect(() => {
+    if (data) {
+      let newFormData = {
+        env_index: data[0].env_index,
+        announce_rolling: data[0].announce_rolling / 1000,
+        process_disabled: data[0].process_disabled.toString(),
+        kma_sido: data[0].kma_sido,
+        kma_gun: data[0].kma_gun,
+        kma_dong: data[0].kma_dong,
+      };
+      setFormData(newFormData);
+    }
+  }, [data]);
 
-  const [formData, setFormData] = useState({
-    acc_id: null,
-    created_date: null,
-    modified_date: null,
-    acc_name: "",
-    acc_user_id: "",
-    acc_password: "",
-    acc_password_check: "",
-    acc_salt: null,
-    acc_phone: "",
-    acc_tel: "",
-    acc_mail: "",
-    acc_role: 2,
-    description: "",
-  });
+  const today = new Date();
 
   // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     // 입력값 state 에 저장
-    if (name === "acc_user_id") {
-      let _acc_user_id = value.replace(/[^a-z|^A-Z|^0-9]*$/g, "");
+    if (name === "announce_rolling") {
+      let _announce_rolling = value.replace(/[^0-9]*$/g, "");
       setFormData({
         ...formData,
-        acc_user_id: _acc_user_id,
-      });
-    } else if (name === "acc_name") {
-      let _acc_name = value.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "");
-      setFormData({
-        ...formData,
-        acc_name: _acc_name,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
+        announce_rolling: _announce_rolling,
       });
     }
   };
 
+  const sidoParser = (sido) => {
+    let str = "";
+    switch (sido) {
+      case "충남":
+        str = "충청남도";
+        break;
+      case "충북":
+        str = "충청북도";
+        break;
+      case "전북":
+        str = "전라북도";
+        break;
+      case "전남":
+        str = "전라남도";
+        break;
+      case "경북":
+        str = "경상북도";
+        break;
+      case "경남":
+        str = "경상남도";
+        break;
+      default:
+        str = sido;
+    }
+    return str;
+  };
+
+  const onChangeAddress = (sido, gun, dong) => {
+    const newAddressFormData = {
+      ...formData,
+      kma_sido: sidoParser(sido),
+      kma_gun: gun,
+      kma_dong: dong,
+    };
+    setFormData(newAddressFormData);
+  };
+
   const onRadioChange = (e, target) => {
-    let _acc_role = target.value;
+    let _process_disabled = target.value;
 
     setFormData({
       ...formData,
-      acc_role: _acc_role,
+      process_disabled: _process_disabled,
     });
   };
 
-  // CREATE
-  const createHandler = (e) => {
-    e.preventDefault();
-    let newAccount = {
-      ...formData,
-    };
-    dispatch(postAccount(newAccount));
-  };
+  const [saveMessage, setSaveMessage] = useState(null);
+  const [addressError, setAddressError] = useState(null);
+  const [sliderTimeError, setSliderTimeError] = useState(null);
 
   // UPDATE
   const updateHandler = (e) => {
-    let newAccount = {
-      ...formData,
-    };
-    dispatch(putAccount(formData.acc_id, newAccount));
+    if (!formData.kma_dong) {
+      setAddressError("*주소를 검색해 주세요.");
+      setTimeout(() => {
+        setAddressError(undefined);
+      }, 1350);
+    } else if (
+      formData.announce_rolling < 1 ||
+      formData.announce_rolling > 10
+    ) {
+      setSliderTimeError("*1초에서 10초 사이의 값을 입력해주세요.");
+      setTimeout(() => {
+        setSliderTimeError(undefined);
+      }, 1350);
+    } else {
+      let newSettings = {
+        ...formData,
+        announce_rolling: formData.announce_rolling * 1000,
+      };
+      dispatch(putSettings("HH2106001", newSettings));
+      setSaveMessage("저장되었습니다.");
+      setTimeout(() => {
+        setSaveMessage(undefined);
+      }, 1350);
+    }
   };
 
   if (error) {
@@ -160,9 +203,12 @@ const SettingsContatiner = () => {
             className="settings-input-box"
             onChange={onChange}
             onRadioChange={onRadioChange}
+            onChangeAddress={onChangeAddress}
             formData={formData}
-            createHandler={createHandler}
             updateHandler={updateHandler}
+            saveMessage={saveMessage}
+            addressError={addressError}
+            sliderTimeError={sliderTimeError}
           />
         </div>
       </ContentsBodyCompo>

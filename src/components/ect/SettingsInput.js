@@ -164,6 +164,9 @@ const InputCompo = styled.div`
     @media screen and (max-height: 970px) {
       top: 68vh;
     }
+    &.green {
+      background-color: green;
+    }
   }
   .ui.form .field .prompt.label {
     //에러 색상
@@ -197,27 +200,34 @@ const InputError = styled.div`
   color: #ff0000;
   opacity: 1;
 `;
+const TimeError = styled.div`
+  margin-bottom: -4px;
+  margin-top: 0px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: left;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
+`;
 
 const SettingsInput = ({
   onChange,
   onRadioChange,
+  onChangeAddress,
   formData,
-  createHandler,
+  updateHandler,
+  saveMessage,
+  addressError,
+  sliderTimeError,
 }) => {
   const {
-    acc_id,
-    created_date,
-    modified_date,
-    acc_name,
-    acc_user_id,
-    acc_password,
-    acc_password_check,
-    acc_salt,
-    acc_phone,
-    acc_tel,
-    acc_mail,
-    acc_role,
-    description,
+    env_index,
+    announce_rolling,
+    process_disabled,
+    kma_sido,
+    kma_gun,
+    kma_dong,
   } = formData;
 
   const [isAddress, setIsAddress] = useState("");
@@ -239,12 +249,11 @@ const SettingsInput = ({
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    console.log("주소 응답 data !!");
-    console.log("주소 응답 data !!");
-    console.log("data");
+    console.log("주소 데이타 ~~~data");
     console.log(data);
-    console.log("주소 응답 data !!");
-    console.log("주소 응답 data !!");
+
+    onChangeAddress(data.sido, data.sigungu, data.bname);
+
     setIsZoneCode(data);
     setIsAddress(fullAddress);
     setIsPostOpen(false);
@@ -276,9 +285,16 @@ const SettingsInput = ({
             id="address"
             name="address"
             placeholder="주소를 검색해주세요."
-            value={acc_name && acc_name}
+            value={
+              (kma_sido && kma_sido) +
+              " " +
+              (kma_gun && kma_gun) +
+              " " +
+              (kma_dong && kma_dong)
+            }
             readOnly
           />
+          {addressError && <InputError>{addressError}</InputError>}
           <div className="address-search-button" onClick={onClickAddressSearch}>
             주소검색
           </div>
@@ -287,19 +303,19 @@ const SettingsInput = ({
             <Radio
               label="사용"
               className="radio-row one"
-              id="admin"
+              id="process-abled"
               name="radioGroup"
-              value={1}
-              checked={acc_role && acc_role === 1}
+              value={"1"}
+              checked={process_disabled && process_disabled === "1"}
               onChange={(e, target) => onRadioChange(e, target)}
             />
             <Radio
               label="미사용"
               className="radio-row two"
-              id="user"
+              id="process-disabled"
               name="radioGroup"
-              value={2}
-              checked={acc_role && acc_role === 2}
+              value={"0"}
+              checked={process_disabled && process_disabled === "0"}
               onChange={(e, target) => onRadioChange(e, target)}
             />
           </div>
@@ -309,24 +325,36 @@ const SettingsInput = ({
               label={{ basic: true, content: "초" }}
               labelPosition="right"
               className="input-form time"
-              id="scn_pos_x"
-              name="scn_pos_x"
+              id="announce_rolling"
+              name="announce_rolling"
               placeholder="슬라이더 시간"
               required
-              // value={scn_pos_x && addComma(scn_pos_x)}
+              value={announce_rolling && announce_rolling}
               onChange={onChange}
             />
+            {sliderTimeError && <TimeError>{sliderTimeError}</TimeError>}
           </div>
         </div>
-
-        <Button
-          className="modify-button"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          저장
-        </Button>
+        {saveMessage ? (
+          <Button
+            className="modify-button green"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {saveMessage}
+          </Button>
+        ) : (
+          <Button
+            className="modify-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              updateHandler();
+            }}
+          >
+            저장
+          </Button>
+        )}
       </Form>
       <Modal
         className="address-modal"
