@@ -85,8 +85,8 @@ const SideMenuCompo = styled.div`
   }
 `;
 
-const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
-  console.log('SideMenu-->', currentUrl)
+const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl, role }) => {
+  console.log('SideMenu-->', role)
   useEffect(() => {
 
   }, [currentUrl]);
