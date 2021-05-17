@@ -32,6 +32,15 @@ const DELETE_ACCOUNT_ERROR = "account/DELETE_ACCOUNT_ERROR";
 
 const CLEAR_ACCOUNT = "account/CLEAR_ACCOUNT";
 
+const GET_LOGINRECORDS = "account/GET_LOGINRECORDS";
+const GET_LOGINRECORDS_SUCCESS = "account/GET_LOGINRECORDS_SUCCESS";
+const GET_LOGINRECORDS_ERROR = "account/GET_LOGINRECORDS_ERROR";
+
+const POST_LOGINRECORDSSEARCH = "account/POST_LOGINRECORDSSEARCH";
+const POST_LOGINRECORDSSEARCH_SUCCESS =
+  "account/POST_LOGINRECORDSSEARCH_SUCCESS";
+const POST_LOGINRECORDSSEARCH_ERROR = "account/POST_LOGINRECORDSSEARCH_ERROR";
+
 export const getAccounts = createPromiseThunk(
   GET_ACCOUNTS,
   accountsAPI.getAccounts
@@ -61,10 +70,21 @@ export const deleteAccount = (id) => async (dispatch) => {
     dispatch({ type: DELETE_ACCOUNT_ERROR, error: e });
   }
 };
+
+export const getLoginRecords = createPromiseThunk(
+  GET_LOGINRECORDS,
+  accountsAPI.getLoginRecords
+);
+export const postLoginRecordsSearch = createPromiseThunkOfPost(
+  POST_LOGINRECORDSSEARCH,
+  accountsAPI.postLoginRecordsSearch
+);
+
 const initialState = {
   accounts: reducerUtils.initial(),
   account: {},
   auth: {},
+  loginRecords: {},
 };
 
 const getAccountsReducer = handleAsyncActions(GET_ACCOUNTS, "accounts", true);
@@ -78,6 +98,16 @@ const putAccountReducer = handleAsyncActionsOfPut(
   PUT_ACCOUNT,
   "accounts",
   "acc_id",
+  true
+);
+const getLoginRecordsReducer = handleAsyncActions(
+  GET_LOGINRECORDS,
+  "loginRecords",
+  true
+);
+const postLoginRecordsSearchReducer = handleAsyncActionsOfPost(
+  POST_LOGINRECORDSSEARCH,
+  "loginRecords",
   true
 );
 
@@ -135,6 +165,14 @@ export default function accounts(state = initialState, action) {
         ...state,
         account: {},
       };
+    case GET_LOGINRECORDS:
+    case GET_LOGINRECORDS_SUCCESS:
+    case GET_LOGINRECORDS_ERROR:
+      return getLoginRecordsReducer(state, action);
+    case POST_LOGINRECORDSSEARCH:
+    case POST_LOGINRECORDSSEARCH_SUCCESS:
+    case POST_LOGINRECORDSSEARCH_ERROR:
+      return postLoginRecordsSearchReducer(state, action);
     default:
       return state;
   }

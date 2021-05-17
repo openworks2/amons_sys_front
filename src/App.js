@@ -33,6 +33,28 @@ const GlobalStyle = createGlobalStyle`
         font-size : 20px;
       }
 }
+.ui.modal.transition.visible.active.address-modal{
+      width : 600px;
+      height: 24.5em;
+      text-align: center;
+      align-items: center;
+      top : 20%;
+      .delete-icon{
+        font-size : 100px;
+        color : #d01919;
+        margin : 20px;
+      }
+
+      .warning-icon{
+        font-size : 100px;
+        color : #5e7827;
+        margin : 20px;
+      }
+      .text{
+        font-family: "NotoSansKR-Medium";
+        font-size : 20px;
+      }
+}
 `;
 
 function App() {

@@ -651,8 +651,8 @@ const KickOutWorkerTable = ({
           </Table.Cell>
           <Table.Cell className="table-cell input-time" name="input-time">
             {item &&
-              item.ble_input_time &&
-              moment(item.ble_input_time).format("YYYY-MM-DD HH:mm:ss")}
+              item.bc_input_time &&
+              moment(item.bc_input_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell out-time" name="out-time">
             {item && "∞"}
@@ -902,7 +902,7 @@ const KickOutWorkerTable = ({
               <Input
                 className="search-input"
                 actionPosition="left"
-                placeholder="차량종류를 검색해 주세요."
+                placeholder="이름을 검색해 주세요."
                 value={searchValue}
                 onChange={onSearchChange}
                 onKeyPress={(e, startDate, endDate) => {

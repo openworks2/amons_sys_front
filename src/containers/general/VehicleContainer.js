@@ -232,50 +232,6 @@ const VehicleContainer = () => {
     }
   };
 
-  // 사진 업로드
-
-  const [files, setFiles] = useState({
-    selectFile: null,
-  });
-
-  const initFiles = () => {
-    setFiles({
-      selectFile: null,
-    });
-  };
-
-  const handleFileInputChange = (e) => {
-    setFiles({
-      selectFile: e.target.files[0],
-    });
-  };
-
-  const [fileName, setFileName] = useState("");
-
-  // 가짜 input form 이미지 이름 바꾸기
-  useEffect(() => {
-    if (formData.wk_image) {
-      setFileName(formData.wk_image);
-    } else if (files.selectFile) {
-      let _filename = files.selectFile.name.toString();
-      _filename && _filename.length > 25
-        ? setFileName(_filename.substring(0, 25) + "...")
-        : setFileName(_filename);
-    } else {
-      setFileName(null);
-    }
-  }, [handleFileInputChange]);
-
-  const imageDeleteHandler = (e) => {
-    e.stopPropagation();
-    initFiles();
-    let deletedImageForm = {
-      ...formData,
-      vh_image: null,
-    };
-    setFormData(deletedImageForm);
-  };
-
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
@@ -371,6 +327,53 @@ const VehicleContainer = () => {
     initFormData();
   };
 
+  // 사진 업로드
+
+  const [files, setFiles] = useState({
+    selectFile: null,
+  });
+
+  const initFiles = () => {
+    setFiles({
+      selectFile: null,
+    });
+  };
+
+  const handleFileInputChange = (e) => {
+    setFiles({
+      selectFile: e.target.files[0],
+    });
+  };
+
+  const [fileName, setFileName] = useState("");
+
+  // 가짜 input form 이미지 이름 바꾸기
+  useEffect(() => {
+    if (formData.vh_image) {
+      let _filename = formData.vh_image.toString();
+      _filename && _filename.length > 25
+        ? setFileName(_filename.substring(0, 25) + "...")
+        : setFileName(_filename);
+    } else if (files.selectFile) {
+      let _filename = files.selectFile.name.toString();
+      _filename && _filename.length > 25
+        ? setFileName(_filename.substring(0, 25) + "...")
+        : setFileName(_filename);
+    } else {
+      setFileName(null);
+    }
+  }, [handleFileInputChange, activeHandler]);
+
+  const imageDeleteHandler = (e) => {
+    e.stopPropagation();
+    initFiles();
+    let deletedImageForm = {
+      ...formData,
+      vh_image: null,
+    };
+    setFormData(deletedImageForm);
+  };
+
   const today = new Date();
 
   const [companyError, setCompanyError] = useState(undefined);
@@ -407,6 +410,7 @@ const VehicleContainer = () => {
       const findItem = selectedRow.selectedItem;
       setFormData({
         ...formData,
+        vh_image: formData.vh_image,
         vh_io_state: findItem.vh_io_state,
         created_date: findItem.created_date,
         modified_date: today,

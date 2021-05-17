@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import LoginLogTable from "../../components/ect/LoginLogTable";
 import { useDispatch, useSelector } from "react-redux";
-import { getBleWorkers, postBleWorkersSearch } from "../../modules/bles";
+import {
+  getLoginRecords,
+  postLoginRecordsSearch,
+} from "../../modules/accounts";
 import moment from "moment";
 import "moment/locale/ko";
 
@@ -51,7 +54,7 @@ const ErrMsg = styled.div`
 
 const LoginLogContainer = () => {
   const { data, loading, error } = useSelector(
-    (state) => state.bles.bleWorkers
+    (state) => state.accounts.loginRecords
   );
 
   // 검색 기능 table 데이터 처리
@@ -61,15 +64,13 @@ const LoginLogContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const searchCondition = {
-      local_index: "",
-      from_date: "",
-      to_date: "",
-      wk_name: "",
-      wk_co_index: "",
-    };
-    dispatch(postBleWorkersSearch(searchCondition));
+    dispatch(getLoginRecords());
   }, []);
+
+  useEffect(() => {
+    let _data = data;
+    setCurrentData(_data);
+  }, [data]);
 
   // 페이지 네이션
   const [pageInfo, setPageInfo] = useState({
@@ -106,10 +107,8 @@ const LoginLogContainer = () => {
     const searchCondition = {
       from_date: moment(startDate).format("YYYY-MM-DD HH:mm:ss"),
       to_date: moment(endDate).format("YYYY-MM-DD HH:mm:ss"),
-      // wk_name: searchValue === "" ? null : searchValue,
-      // wk_co_index: selectedCompany === "" ? null : selectedCompany,
     };
-    dispatch(postBleWorkersSearch(searchCondition));
+    dispatch(postLoginRecordsSearch(searchCondition));
     initPage();
   };
   if (error) {
@@ -126,7 +125,7 @@ const LoginLogContainer = () => {
         <div className="table-box">
           {currentData && (
             <LoginLogTable
-              className="logworker-table-box"
+              className="loginlog-table-box"
               pageInfo={pageInfo}
               currentData={currentData}
               searchValue={searchValue}

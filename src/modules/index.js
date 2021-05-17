@@ -16,6 +16,8 @@ import scanners from "./scanners";
 import cctvs from "./cctvs";
 //계정관리
 import accounts from "./accounts";
+//기타관리
+import settings from "./settings";
 
 import login from './login';
 import monitor from './monitor';
@@ -40,7 +42,9 @@ const rootReducer = combineReducers({
   //계정관리
   accounts,
   login, 
-  monitor
+  monitor,
+  //기타관리
+  settings,
 });
 
 export default rootReducer;

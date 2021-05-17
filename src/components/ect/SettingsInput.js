@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { Form, Button, Radio, Input } from "semantic-ui-react";
+import { Form, Button, Radio, Input, Modal } from "semantic-ui-react";
+import DaumPostcode from "react-daum-postcode";
 
 const InputCompo = styled.div`
   margin-left: 22px;
@@ -75,6 +76,9 @@ const InputCompo = styled.div`
         opacity: 1;
         &.title {
           color: #2e2e2e;
+        }
+        &.address {
+          cursor: default;
         }
       }
       .role-area {
@@ -160,10 +164,30 @@ const InputCompo = styled.div`
     @media screen and (max-height: 970px) {
       top: 68vh;
     }
+    &.green {
+      background-color: green;
+    }
   }
   .ui.form .field .prompt.label {
     //에러 색상
     display: none;
+  }
+  .address-search-button {
+    position: absolute;
+    top: 22px;
+    right: 0px;
+    height: 39px;
+    width: 100px;
+    border: 1px solid;
+    border-radius: 0px 6px 6px 0px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px;
+    background-color: #f1592f;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: "NotoSansKR-Regular";
+    font-size: 14px;
   }
 `;
 const InputError = styled.div`
@@ -176,38 +200,84 @@ const InputError = styled.div`
   color: #ff0000;
   opacity: 1;
 `;
+const TimeError = styled.div`
+  margin-bottom: -4px;
+  margin-top: 0px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: left;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
+`;
 
 const SettingsInput = ({
   onChange,
   onRadioChange,
+  onChangeAddress,
   formData,
-  createHandler,
+  updateHandler,
+  saveMessage,
+  addressError,
+  sliderTimeError,
 }) => {
   const {
-    acc_id,
-    created_date,
-    modified_date,
-    acc_name,
-    acc_user_id,
-    acc_password,
-    acc_password_check,
-    acc_salt,
-    acc_phone,
-    acc_tel,
-    acc_mail,
-    acc_role,
-    description,
+    env_index,
+    announce_rolling,
+    process_disabled,
+    kma_sido,
+    kma_gun,
+    kma_dong,
   } = formData;
+
+  const [isAddress, setIsAddress] = useState("");
+  const [isZoneCode, setIsZoneCode] = useState();
+  const [isPostOpen, setIsPostOpen] = useState(false);
+
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+
+    console.log("주소 데이타 ~~~data");
+    console.log(data);
+
+    onChangeAddress(data.sido, data.sigungu, data.bname);
+
+    setIsZoneCode(data);
+    setIsAddress(fullAddress);
+    setIsPostOpen(false);
+  };
+
+  const onClickAddressSearch = (e) => {
+    e.stopPropagation();
+    setIsPostOpen(true);
+  };
+
+  const postCodeStyle = {
+    display: "block",
+    border: "solid 2px",
+    width: "560px",
+    paddingTop: "7px",
+    paddingBottom: "7px",
+    borderRadius: "10px",
+    backgroundColor: "#ffffff",
+  };
 
   return (
     <InputCompo className="input-compo">
       <p className="subtitle">환경설정</p>
-      <Form
-        className="input-form-body"
-        onSubmit={(e) => {
-          createHandler(e);
-        }}
-      >
+      <Form className="input-form-body">
         <div className="resizable-area">
           <Form.Input
             label="주소등록(날씨조회)"
@@ -215,28 +285,37 @@ const SettingsInput = ({
             id="address"
             name="address"
             placeholder="주소를 검색해주세요."
-            required
-            value={acc_name && acc_name}
-            onChange={onChange}
+            value={
+              (kma_sido && kma_sido) +
+              " " +
+              (kma_gun && kma_gun) +
+              " " +
+              (kma_dong && kma_dong)
+            }
+            readOnly
           />
+          {addressError && <InputError>{addressError}</InputError>}
+          <div className="address-search-button" onClick={onClickAddressSearch}>
+            주소검색
+          </div>
           <div className="role-area">
             <div className="form-title role">작업공정 표시</div>
             <Radio
               label="사용"
               className="radio-row one"
-              id="admin"
+              id="process-abled"
               name="radioGroup"
-              value={1}
-              checked={acc_role && acc_role === 1}
+              value={"1"}
+              checked={process_disabled && process_disabled === "1"}
               onChange={(e, target) => onRadioChange(e, target)}
             />
             <Radio
               label="미사용"
               className="radio-row two"
-              id="user"
+              id="process-disabled"
               name="radioGroup"
-              value={2}
-              checked={acc_role && acc_role === 2}
+              value={"0"}
+              checked={process_disabled && process_disabled === "0"}
               onChange={(e, target) => onRadioChange(e, target)}
             />
           </div>
@@ -246,25 +325,61 @@ const SettingsInput = ({
               label={{ basic: true, content: "초" }}
               labelPosition="right"
               className="input-form time"
-              id="scn_pos_x"
-              name="scn_pos_x"
+              id="announce_rolling"
+              name="announce_rolling"
               placeholder="슬라이더 시간"
               required
-              // value={scn_pos_x && addComma(scn_pos_x)}
+              value={announce_rolling && announce_rolling}
               onChange={onChange}
             />
+            {sliderTimeError && <TimeError>{sliderTimeError}</TimeError>}
           </div>
         </div>
-
-        <Button
-          className="modify-button"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          저장
-        </Button>
+        {saveMessage ? (
+          <Button
+            className="modify-button green"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {saveMessage}
+          </Button>
+        ) : (
+          <Button
+            className="modify-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              updateHandler();
+            }}
+          >
+            저장
+          </Button>
+        )}
       </Form>
+      <Modal
+        className="address-modal"
+        onClose={() => setIsPostOpen(false)}
+        onOpen={() => setIsPostOpen(true)}
+        open={isPostOpen}
+      >
+        <Modal.Header className="confirm-modal header">주소 검색</Modal.Header>
+        <Modal.Content className="confirm-modal content">
+          <Modal.Description className="confirm-modal description">
+            <DaumPostcode style={postCodeStyle} onComplete={handleComplete} />
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions className="confirm-modal actions">
+          <Button
+            className="confirm-modal button cancel"
+            color="black"
+            onClick={() => {
+              setIsPostOpen(false);
+            }}
+          >
+            입력 취소
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </InputCompo>
   );
 };

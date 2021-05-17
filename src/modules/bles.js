@@ -74,7 +74,7 @@ export const getRemainVehicles = createPromiseThunk(
   blesAPI.getRemainVehicles
 );
 
-export const postRemainWorkerSearch = createPromiseThunkOfPost(
+export const postRemainWorkersSearch = createPromiseThunkOfPost(
   POST_REMAINWORKERSSEARCH,
   blesAPI.postRemainWorkerSearch
 );

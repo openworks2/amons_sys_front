@@ -494,23 +494,24 @@ const LoginLogTable = ({
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell login-time" name="login-time">
             {item &&
-              item.ble_input_time &&
-              moment(item.ble_input_time).format("YYYY-MM-DD HH:mm:ss")}
+              item.ll_logined_date &&
+              moment(item.ll_logined_date).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
-          <Table.Cell className="table-cell ip" name="ip"></Table.Cell>
-          <Table.Cell
-            className="table-cell user-id"
-            name="user-id"
-          ></Table.Cell>
-          <Table.Cell className="table-cell os" name="os"></Table.Cell>
-          <Table.Cell
-            className="table-cell browser"
-            name="browser"
-          ></Table.Cell>
-          <Table.Cell
-            className="table-cell screensize"
-            name="screensize"
-          ></Table.Cell>
+          <Table.Cell className="table-cell ip" name="ip">
+            {item && item.ll_ip && item.ll_ip}
+          </Table.Cell>
+          <Table.Cell className="table-cell user-id" name="user-id">
+            {item && item.ll_user_id && item.ll_user_id}
+          </Table.Cell>
+          <Table.Cell className="table-cell os" name="os">
+            {item && item.ll_os && item.ll_os}
+          </Table.Cell>
+          <Table.Cell className="table-cell browser" name="browser">
+            {item && item.ll_browser && item.ll_browser}
+          </Table.Cell>
+          <Table.Cell className="table-cell screensize" name="screensize">
+            {item && item.ll_screen && item.ll_screen}
+          </Table.Cell>
           <Table.Cell className="table-cell blank" name="blank"></Table.Cell>
         </Table.Row>
       );
