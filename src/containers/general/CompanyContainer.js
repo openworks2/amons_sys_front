@@ -31,7 +31,6 @@ const ContentsBodyCompo = styled.div`
     margin: 0px;
     display: none;
   }
-
   .input-box {
     background: #ffffff 0% 0% no-repeat padding-box;
     border: 1px solid #c5c9cf;

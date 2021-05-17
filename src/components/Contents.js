@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router";
 // log (이력조회)
 import AlarmContainer from "../containers/log/AlarmContainer";
@@ -21,16 +21,22 @@ import CctvContainer from "../containers/general/CctvContainer";
 import HomeShortcut from "../components/home/HomeShortcut";
 // account(계정관리)
 import AccountContainer from "../containers/account/AccountContainer";
-// ect(기타관리)
+import MonitorContainer from "../containers/monitor/MonitorContainer";
 import SettingsContainer from "../containers/ect/SettingsContainer";
 import KickOutWorkerContainer from "../containers/ect/KickOutWorkerContainer";
 import KickOutVehicleContainer from "../containers/ect/KickOutVehicleContainer";
 import LoginLogContainer from "../containers/ect/LoginLogContainer";
+// import CompanyContatiner from "./general/CompanyContainer";
+// import HomeShortcut from "./home/HomeShortcut";
 
-const Contents = () => {
+const Contents = ({openFullScreenMode}) => {
+
+// ect(기타관리)
+
   return (
     <>
-      <Route path="/amons/home/" component={HomeShortcut} exact />
+      <Route path="/amons/home/" component={() => <HomeShortcut openFullScreenMode={openFullScreenMode} />} exact />
+      <Route path="/amons/home/monitor" component={MonitorContainer} />
       {/* *******************************log 이력조회****************************** */}
       <Route path="/amons/home/log/diglog" component={LogDigContatiner} />
       <Route path="/amons/home/log/workerlog" component={LogWorkerContainer} />

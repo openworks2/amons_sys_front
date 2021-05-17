@@ -15,6 +15,31 @@
   src: url("./fonts/NotoSansKR-Light.otf");
 }
 
+/*  나눔스퀘어 폰트 */
+@font-face {
+  font-family: "NanumSquareR";
+  src: url("./fonts/Nanumsquare/NanumSquare_acR.ttf");
+}
+@font-face {
+  font-family: "NanumSquareEB";
+  src: url("./fonts/Nanumsquare/NanumSquare_acEB.ttf");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("./fonts/Nanumsquare/NanumSquare_acB.ttf");
+}
+@font-face {
+  font-family: "NanumSquareL";
+  src: url("./fonts/Nanumsquare/NanumSquare_acL.ttf");
+}
+
+/*  DS-digital 폰트 */
+@font-face {
+  font-family: "DS-Digital";
+  src: url("./fonts/DS-digital/DS-DIGI.TTF");
+}
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
