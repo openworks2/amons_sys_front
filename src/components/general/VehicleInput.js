@@ -113,10 +113,10 @@ const InputCompo = styled.div`
       }
       .photo-description {
         display: inline-block;
-        margin: 0px;
-        padding-bottom: 12px;
-        vertical-align: middle;
         margin-left: 10px;
+        margin-top: -2px;
+        vertical-align: bottom;
+        margin-bottom: 10px;
         text-align: left;
         letter-spacing: 0px;
         opacity: 1;

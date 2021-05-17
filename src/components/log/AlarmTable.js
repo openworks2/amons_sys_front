@@ -823,7 +823,9 @@ const AlarmTable = ({
           <Menu.Menu>
             <Menu.Item
               className="table-categorie-menu download"
-              onClick={downloadHandler}
+              onClick={() => {
+                downloadHandler(startDate, endDate, categorieValue);
+              }}
             >
               다운로드
               <FaFileDownload className="table-categorie-menu download-icon" />

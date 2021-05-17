@@ -95,9 +95,10 @@ const InputCompo = styled.div`
     text-align: center;
     padding: 5px;
     padding-top: 0px;
-    margin: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
     border-radius: 200px;
-    height: 23px;
+    height: 30px;
     border: solid 1px rgba(34, 36, 38, 0.35);
     display: inline-block;
     font-weight: bolder;
@@ -142,9 +143,9 @@ const InputCompo = styled.div`
 
   .ui.table,
   .sub-info-table {
+    margin: 0px;
     border-radius: 4px 4px 0px 0px;
     background: #f9fafb 0% 0% no-repeat padding-box;
-    border: 1px solid #d8d8d8;
     opacity: 1;
     font-family: "NotoSansKR-Regular";
     font-size: 13px;
@@ -152,22 +153,30 @@ const InputCompo = styled.div`
     letter-spacing: 0px;
     color: #2e2e2e;
     opacity: 1;
+
     &.header {
       border-radius: 0px;
-      width: 146px !important;
+      width: 144px !important;
+      border: 1px solid #d8d8d8;
     }
     &.origin {
       border-radius: 0px;
       letter-spacing: 0px;
       color: #7c7c7c !important;
       opacity: 1;
+      border: 1px solid #d8d8d8;
+      width: 88px !important;
     }
     &.cell {
-      width: 90px !important;
       border-radius: 0px;
+      border: 1px solid #d8d8d8;
+      width: 88px !important;
     }
     &.date {
       border-radius: 0px;
+    }
+    &.row {
+      display: table !important;
     }
   }
 
@@ -251,9 +260,16 @@ const InputCompo = styled.div`
   }
 
   .sub-info-table.last-row {
-    margin-top: -14px;
+    margin-top: -3px;
     border-radius: 0px 0px 4px 4px;
     height: 39px;
+    .header {
+      width: 144px !important;
+    }
+    .date {
+      border: 1px solid #d8d8d8;
+      width: 176px !important;
+    }
   }
 
   .label,
@@ -266,6 +282,7 @@ const InputCompo = styled.div`
     opacity: 1;
     font-weight: initial !important;
     &.dig-length {
+      margin-top: 10px;
       margin-bottom: 5px;
     }
   }
@@ -462,23 +479,20 @@ const DigInput = ({
           </Table>
           <Table className="sub-info-table last-row">
             <Table.Body>
-              <Table.Row className="sub-info-table row">
-                <Table.Cell className="sub-info-table header" singleLine>
-                  최종 입력일
-                </Table.Cell>
-                <Table.Cell className="sub-info-table date" singleLine>
-                  {selectedRow.selectedId
-                    ? moment(record_date).format("YYYY-MM-DD")
-                    : currentLatestDigInfo &&
-                      currentLatestDigInfo.record_date &&
-                      moment(currentLatestDigInfo.record_date).format(
-                        "YYYY-MM-DD"
-                      )}
-                </Table.Cell>
-              </Table.Row>
+              <Table.Cell className="sub-info-table header" singleLine>
+                최종 입력일
+              </Table.Cell>
+              <Table.Cell className="sub-info-table date" singleLine>
+                {selectedRow.selectedId
+                  ? moment(record_date).format("YYYY-MM-DD")
+                  : currentLatestDigInfo &&
+                    currentLatestDigInfo.record_date &&
+                    moment(currentLatestDigInfo.record_date).format(
+                      "YYYY-MM-DD"
+                    )}
+              </Table.Cell>
             </Table.Body>
           </Table>
-
           <div className="dig-length-area">
             <div className="form-title dig-length">누적 굴진량</div>
             <Input

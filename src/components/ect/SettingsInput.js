@@ -174,7 +174,7 @@ const InputCompo = styled.div`
   }
   .address-search-button {
     position: absolute;
-    top: 22px;
+    top: 24px;
     right: 0px;
     height: 39px;
     width: 100px;
@@ -182,7 +182,7 @@ const InputCompo = styled.div`
     border-radius: 0px 6px 6px 0px;
     vertical-align: middle;
     text-align: center;
-    padding: 10px;
+    padding: 8px;
     background-color: #f1592f;
     color: #ffffff;
     cursor: pointer;

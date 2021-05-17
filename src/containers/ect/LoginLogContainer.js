@@ -107,7 +107,10 @@ const LoginLogContainer = () => {
     const searchCondition = {
       from_date: moment(startDate).format("YYYY-MM-DD HH:mm:ss"),
       to_date: moment(endDate).format("YYYY-MM-DD HH:mm:ss"),
+      ip: searchValue,
     };
+    console.log("searchCondition");
+    console.log(searchCondition);
     dispatch(postLoginRecordsSearch(searchCondition));
     initPage();
   };

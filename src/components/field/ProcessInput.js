@@ -102,14 +102,16 @@ const InputCompo = styled.div`
     margin: 8px;
     margin-top: 3px;
     font-family: "NotoSansKR-Regular";
-    font-size: 14px;
     text-align: left;
     letter-spacing: 0px;
     .radio-row {
       margin: 6px;
     }
     .blank-place {
-      font-size: 25px;
+      font-size: 17px;
+    }
+    &.row3 {
+      margin-bottom: 10px;
     }
   }
 
@@ -469,139 +471,141 @@ const ProcessInput = ({
           </Form.Field>
           <Form.Field className="process-input-form radio-group">
             <label className="input-form title">공정상태 선택</label>
-            <div className="radio-grouper row1">
-              <Radio
-                label="미착공"
-                className="radio-row one"
-                name="radioGroup"
-                value={1}
-                checked={pcs_state && pcs_state === 1}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="발파"
-                className="radio-row one"
-                name="radioGroup"
-                value={4}
-                checked={pcs_state && pcs_state === 4}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="강지보"
-                className="radio-row one"
-                name="radioGroup"
-                value={7}
-                checked={pcs_state && pcs_state === 7}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="방수시트"
-                className="radio-row one"
-                name="radioGroup"
-                value={10}
-                checked={pcs_state && pcs_state === 10}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="장비점검"
-                className="radio-row one"
-                name="radioGroup"
-                value={13}
-                checked={pcs_state && pcs_state === 13}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-            </div>
-            <div className="radio-grouper row2">
-              <Radio
-                label="천공"
-                className="radio-row two"
-                name="radioGroup"
-                value={2}
-                checked={pcs_state && pcs_state === 2}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="버력처리"
-                className="radio-row two"
-                name="radioGroup"
-                value={5}
-                checked={pcs_state && pcs_state === 5}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="격자지보"
-                className="radio-row two"
-                name="radioGroup"
-                value={8}
-                checked={pcs_state && pcs_state === 8}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="라이닝"
-                className="radio-row two"
-                name="radioGroup"
-                value={11}
-                checked={pcs_state && pcs_state === 11}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="기타"
-                className="radio-row two"
-                name="radioGroup"
-                value={14}
-                checked={pcs_state && pcs_state === 14}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-            </div>
-            <div className="radio-grouper row3">
-              <Radio
-                label="장약"
-                className="radio-row three"
-                name="radioGroup"
-                value={3}
-                checked={pcs_state && pcs_state === 3}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="숏크리트"
-                className="radio-row three"
-                name="radioGroup"
-                value={6}
-                checked={pcs_state && pcs_state === 6}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
+            <div>
+              <div className="radio-grouper row1">
+                <Radio
+                  label="미착공"
+                  className="radio-row one"
+                  name="radioGroup"
+                  value={1}
+                  checked={pcs_state && pcs_state === 1}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="발파"
+                  className="radio-row one"
+                  name="radioGroup"
+                  value={4}
+                  checked={pcs_state && pcs_state === 4}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="강지보"
+                  className="radio-row one"
+                  name="radioGroup"
+                  value={7}
+                  checked={pcs_state && pcs_state === 7}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="방수시트"
+                  className="radio-row one"
+                  name="radioGroup"
+                  value={10}
+                  checked={pcs_state && pcs_state === 10}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="장비점검"
+                  className="radio-row one"
+                  name="radioGroup"
+                  value={13}
+                  checked={pcs_state && pcs_state === 13}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+              </div>
+              <div className="radio-grouper row2">
+                <Radio
+                  label="천공"
+                  className="radio-row two"
+                  name="radioGroup"
+                  value={2}
+                  checked={pcs_state && pcs_state === 2}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="버력처리"
+                  className="radio-row two"
+                  name="radioGroup"
+                  value={5}
+                  checked={pcs_state && pcs_state === 5}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="격자지보"
+                  className="radio-row two"
+                  name="radioGroup"
+                  value={8}
+                  checked={pcs_state && pcs_state === 8}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="라이닝"
+                  className="radio-row two"
+                  name="radioGroup"
+                  value={11}
+                  checked={pcs_state && pcs_state === 11}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="기타"
+                  className="radio-row two"
+                  name="radioGroup"
+                  value={14}
+                  checked={pcs_state && pcs_state === 14}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+              </div>
+              <div className="radio-grouper row3">
+                <Radio
+                  label="장약"
+                  className="radio-row three"
+                  name="radioGroup"
+                  value={3}
+                  checked={pcs_state && pcs_state === 3}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="숏크리트"
+                  className="radio-row three"
+                  name="radioGroup"
+                  value={6}
+                  checked={pcs_state && pcs_state === 6}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
 
-              <Radio
-                label="록볼트"
-                className="radio-row three"
-                name="radioGroup"
-                value={9}
-                checked={pcs_state && pcs_state === 9}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <Radio
-                label="근무교대"
-                className="radio-row three"
-                name="radioGroup"
-                value={12}
-                checked={pcs_state && pcs_state === 12}
-                onChange={(e, target) => onRadioChange(e, target)}
-                disabled={selectedRow.selectedId}
-              />
-              <div className="blank-place"> </div>
+                <Radio
+                  label="록볼트"
+                  className="radio-row three"
+                  name="radioGroup"
+                  value={9}
+                  checked={pcs_state && pcs_state === 9}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <Radio
+                  label="근무교대"
+                  className="radio-row three"
+                  name="radioGroup"
+                  value={12}
+                  checked={pcs_state && pcs_state === 12}
+                  onChange={(e, target) => onRadioChange(e, target)}
+                  disabled={selectedRow.selectedId}
+                />
+                <div className="blank-place"> </div>
+              </div>
             </div>
             {stateError && <InputError>{stateError}</InputError>}
           </Form.Field>

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import AlarmInput from "../../components/log/AlarmInput";
 import AlarmTable from "../../components/log/AlarmTable";
+import { API } from "../../lib/server.config";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getAlarms, postAlarmSearch, putAlarm } from "../../modules/alarms";
@@ -221,12 +222,28 @@ const AlarmContainer = () => {
     dispatch(postAlarmSearch(searchCondition));
   };
 
-  const downloadHandler = async () => {
+  const downloadHandler = async (startDate, endDate, categorieValue) => {
+    let _local_index = categorieValue;
+    let _startDate = startDate;
+    let _endDate = endDate;
+
+    if (!_startDate) {
+      _startDate = today;
+    }
+    if (!_endDate) {
+      _endDate = today;
+    }
+
     try {
       const response = await axios({
-        method: "GET",
-        url: "/api/alarm/alarms/download",
+        method: "POST",
+        url: `${API}/api/alarm/alarms/download`,
         responseType: "blob",
+        data: {
+          local_index: _local_index,
+          from_date: moment(_startDate).format("YYYY-MM-DD HH:mm:ss"),
+          to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
+        },
       }).then((response) => {
         saveAs(new Blob([response.data]), "알람이력(작업자).xlsx");
       });
