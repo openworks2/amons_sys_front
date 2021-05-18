@@ -12,6 +12,7 @@ import {
 import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
+import { API } from "../../lib/server.config";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -194,7 +195,7 @@ const KickOutVehicleContainer = () => {
   };
 
   const kickoutHandler = async (bc_index) => {
-    const response = await axios.get(`/api/ble/bles/out/${bc_index}`);
+    const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
 
     let _data = data;
     _data = _data.filter((el) => el.bc_index !== bc_index);

@@ -263,6 +263,7 @@ const CctvComponent = ({
                     data &&
                     cctvShow['loc001']
                     && id === 'loc001'
+                    && data.cctv_id
                     && <CameraLocation001
                         id={id}
                         ctrlPanel={ctrlPanel}
@@ -276,6 +277,7 @@ const CctvComponent = ({
                     data &&
                     cctvShow['loc002']
                     && id === 'loc002'
+                    && data.cctv_id
                     && <CameraLocation002
                         id={id}
                         ctrlPanel={ctrlPanel}
@@ -289,29 +291,33 @@ const CctvComponent = ({
                     data &&
                     cctvShow['loc003']
                     && id === 'loc003'
+                    && data.cctv_id
                     && <CameraLocation003
                         id={id}
                         ctrlPanel={ctrlPanel}
                         accessPanel={accessPanel}
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
+                        data={data && data}
                     />
                 }
                 {
                     data &&
                     cctvShow['loc004']
                     && id === 'loc004'
+                    && data.cctv_id
                     && <CameraLocation004
                         id={id}
                         ctrlPanel={ctrlPanel}
                         accessPanel={accessPanel}
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
+                        data={data && data}
                     />
                 }
             </div>
             {
-                accessPanel === id && bleData && <AccessDetailPanel bleData={bleData} localName={data && data.local_name}/>
+                accessPanel === id && bleData && <AccessDetailPanel bleData={bleData} localName={data && data.local_name} />
             }
         </CctvCompo>
     );

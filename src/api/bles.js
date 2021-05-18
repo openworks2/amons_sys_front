@@ -53,7 +53,7 @@ export const getRemainVehicles = async () => {
 
 // 현재 잔류 작업자 조건 조회
 export const postRemainWorkerSearch = async (data) => {
-  const response = await axios.post(`/api/ble/bles/input/worker/search`, data);
+  const response = await axios.post(`${API}/api/ble/bles/input/worker/search`, data);
   return response.data;
 };
 

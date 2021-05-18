@@ -9,6 +9,7 @@ import { getRemainWorkers, postRemainWorkersSearch } from "../../modules/bles";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
+import { API } from "../../lib/server.config";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -192,7 +193,7 @@ const KickOutWorkerContainer = () => {
 
   const kickoutHandler = async (bc_index) => {
     try {
-      const response = await axios.get(`/api/ble/bles/out/${bc_index}`);
+      const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
     } catch (e) {
       console.log(e);
     }

@@ -26,6 +26,8 @@ const HomeCompo = styled.div`
 const HomeContainer = () => {
   const { login } = useSelector((state) => state.login);
 
+  const [user, setUser] = useState(null);
+
   const dispatch = useDispatch();
 
   const [fullState, setState] = useState(false);
@@ -66,7 +68,12 @@ const HomeContainer = () => {
 
   const initialUserInfo = useCallback(async () => {
     const loggedInfo = storage.get("user"); // 로그인 정보를 로컬스토리지에서 가져오기
-    if (!loggedInfo) return; // 로그인 정보가 없다면 멈춤
+    if (!loggedInfo) {
+      return // 로그인 정보가 없다면 멈춤
+    } else {
+      console.log('loggedInfo--->', loggedInfo)
+      setUser(loggedInfo)
+    };
 
     dispatch(setLogindInfoAsync(loggedInfo));
     try {
@@ -89,6 +96,7 @@ const HomeContainer = () => {
     const location = splitUrl[splitUrl.length - 1];
     setCurrentUrl(location);
   });
+
   useEffect(() => {
     console.log(">>>>>>>>>>>>>>>HomeContainer");
 
@@ -110,6 +118,7 @@ const HomeContainer = () => {
         callSideMenu={callSideMenu}
         callSideMenuHandler={callSideMenuHandler}
         currentUrl={currentUrl}
+        role={user !== null ? user.acc_role : null}
       />
       {/* <ContentsCompo> */}
       {currentUrl && currentUrl !== "home" && currentUrl !== "monitor" && (

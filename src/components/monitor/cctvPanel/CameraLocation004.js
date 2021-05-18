@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import Dahua from '../../../lib/cctv/location004/Dahua';
+import Dahua from '../../../lib/cctv/location004/Dahua';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fortawesome/pro-solid-svg-icons"
-import AccessDetailPanel from './AccessDetailPanel';
+// import AccessDetailPanel from './AccessDetailPanel';
 
 const CameraCompo = styled.div`
     width: 100%;
     height: 100%;
-    position: static;
+    /* position: relative; */
     padding-top:10px;
     padding-left:10px;
     .plugin-panel{
@@ -21,13 +21,20 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation004 = ({ id, ctrlPanel, accessPanel }) => {
+const CameraLocation003 = ({ 
+    id,
+    ctrlPanel,
+    accessPanel,
+    alarmPanel,
+    expandMap,
+    data
+ }) => {
 
     const [form, setForm] = useState({
-        ip: 'openworks2.iptime.org',
-        port: '1234',
-        username: 'admin',
-        password: 'work1801!@',
+        ip: data.cctv_ip,
+        port: data.cctv_port,
+        username: data.cctv_user_id,
+        password: data.cctv_pw,
         rtspPort: 80,
         protocol: 0,
         timeout: 5,
@@ -61,7 +68,7 @@ const CameraLocation004 = ({ id, ctrlPanel, accessPanel }) => {
         setLocate(!Locate)
     }
     /**
-     * @pa`ram{string} key 컨트롤 인덱스
+     * @param{string} key 컨트롤 인덱스
      * @param{boolean} flag 진위값
      * @description 영상 이동 조작
      */
@@ -138,48 +145,52 @@ const CameraLocation004 = ({ id, ctrlPanel, accessPanel }) => {
     }
 
 
-    // const connCCTV = async () => {
-    //     try {
-    //         const cctv = await new Dahua(`divPlugin-${id}`);
-    //         cctv.init(form);
-    //         setCamera(cctv);
-    //     } catch (error) {
+    const connCCTV = async () => {
+        try {
+            const cctv = await new Dahua(`divPlugin-${id}`);
+            cctv.init(form);
+            setCamera(cctv);
+        } catch (error) {
 
-    //     }
-    // }
+        }
+    }
 
-    // const resizeVideo = useCallback(() => {
-    //     console.log(ctrlPanel)
-    //     if (accessPanel !== null && accessPanel === 'loc003') {
-    //         Camera.hiddenScreen();
-    //     }
-    //     else if (accessPanel === null || accessPanel !== 'loc003') {
-    //         Camera.showScreen();
-    //     }
-    // }, [Camera, accessPanel]);
+    useEffect(() => {
+        console.log('CameraLocation004--->', data)
+        if (!Camera) {
+            connCCTV();
+        }
+        if (Camera) {
+            if (expandMap) {
+                Camera.hiddenScreen();
+            } else {
+                if (alarmPanel) {
+                    Camera.hiddenScreen();
+                } else {
+                    Camera.showScreen();
+                    if (ctrlPanel !== id || ctrlPanel === null) {
+                        if (Locate) {
+                            ptzLocationHandler();
+                        }
+                    }
+                }
+            }
+            console.log(Camera.setClosePlayer)
+        }
+        return () => {
+            if(Camera){
+                // Camera.hiddenScreen();
+            
+            }
+        }
+    }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
 
-
-    // useEffect(() => {
-    //     if (!Camera) {
-    //         connCCTV();
-    //     }
-    //     if (Camera) {
-    //         resizeVideo();
-    //         if (ctrlPanel !== id || ctrlPanel === null) {
-    //             if(Locate){
-    //                 ptzLocationHandler();
-    //             }
-    //         }
-    //     }
-    // }, [accessPanel, ctrlPanel]);
-
-    const resizeHandler = ()=>{
-        if(Camera){
+    const resizeHandler = () => {
+        if (Camera) {
             Camera.setReposition();
         }
     }
     window.addEventListener("resize", resizeHandler);
-
 
     return (
         <CameraCompo>
@@ -188,6 +199,7 @@ const CameraLocation004 = ({ id, ctrlPanel, accessPanel }) => {
             </div>
             {
                 ctrlPanel === id &&
+
                 <div className="controll-box">
                     <div className="ptz-mode">
                         <input
@@ -302,4 +314,4 @@ const CameraLocation004 = ({ id, ctrlPanel, accessPanel }) => {
     );
 };
 
-export default CameraLocation004;
+export default CameraLocation003;

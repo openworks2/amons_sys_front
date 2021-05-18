@@ -33,6 +33,6 @@ export const deleteBeacon = async (id) => {
 
 // 미사용 비콘 조회를 위한 get 비동기 함수
 export const getUnUsedBeacons = async () => {
-  const response = await axios.get("/api/beacon/unused");
+  const response = await axios.get(`${API}/api/beacon/unused`);
   return response.data;
 };
