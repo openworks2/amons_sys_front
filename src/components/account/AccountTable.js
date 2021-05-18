@@ -108,6 +108,12 @@ const TableCompo = styled.div`
         border: 1px solid #d8d8d8;
         opacity: 1;
         height: 47px;
+        &.clickable {
+          cursor: pointer;
+          &:hover {
+            background: #f6f6f6 0% 0% no-repeat padding-box !important;
+          }
+        }
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -187,9 +193,10 @@ const TableCompo = styled.div`
 
   .ui.table td.active,
   .ui.table tr.active {
-    background: #f9fafb !important;
+    background: #f4f4f4 0% 0% no-repeat padding-box !important;
     &:hover {
-      background: #f9fafb !important;
+      background: #f4f4f4 0% 0% no-repeat padding-box !important;
+      opacity: 0.8;
     }
   }
 
@@ -292,9 +299,9 @@ const AccountTable = ({
 
   const idSearchOptions = [
     { key: "4", value: null, text: "아이디 전체" },
-    { key: "0", value: 0, text: "super" },
-    { key: "1", value: 1, text: "관리자" },
-    { key: "2", value: 2, text: "사용자" },
+    // { key: "0", value: 0, text: "super" },
+    // { key: "1", value: 1, text: "관리자" },
+    // { key: "2", value: 2, text: "사용자" },
   ];
 
   // 삭제 모달
@@ -343,7 +350,8 @@ const AccountTable = ({
   };
 
   useEffect(() => {
-    const _data = data;
+    let _data = data;
+    _data = _data.filter((el) => el.acc_role === 2);
     setCurrentData(_data);
   }, [data]);
 
@@ -375,7 +383,7 @@ const AccountTable = ({
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
       return (
         <Table.Row
-          className="table-row"
+          className={item ? "table-row clickable" : "table-row"}
           key={index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
@@ -401,7 +409,7 @@ const AccountTable = ({
             {item && item.acc_mail && item.acc_mail}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
-            {item && item.description && item.description}
+            {item && item.acc_description && item.acc_description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
             {item && selectedId && item.acc_id === selectedId && (

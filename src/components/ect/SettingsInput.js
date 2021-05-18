@@ -164,8 +164,9 @@ const InputCompo = styled.div`
     @media screen and (max-height: 970px) {
       top: 68vh;
     }
-    &.green {
-      background-color: green;
+    &:focus {
+      background-color: #f1592f;
+      color: #ffffff;
     }
   }
   .ui.form .field .prompt.label {
@@ -248,9 +249,6 @@ const SettingsInput = ({
       }
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
-
-    console.log("주소 데이타 ~~~data");
-    console.log(data);
 
     onChangeAddress(data.sido, data.sigungu, data.bname);
 
@@ -337,7 +335,7 @@ const SettingsInput = ({
         </div>
         {saveMessage ? (
           <Button
-            className="modify-button green"
+            className="modify-button check"
             onClick={(e) => {
               e.stopPropagation();
             }}

@@ -124,6 +124,12 @@ const TableCompo = styled.div`
         border: 1px solid #d8d8d8;
         opacity: 1;
         height: 47px;
+        &.clickable {
+          cursor: pointer;
+          &:hover {
+            background: #f6f6f6 0% 0% no-repeat padding-box !important;
+          }
+        }
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -221,9 +227,10 @@ const TableCompo = styled.div`
 
   .ui.table td.active,
   .ui.table tr.active {
-    background: #f9fafb !important;
+    background: #f4f4f4 0% 0% no-repeat padding-box !important;
     &:hover {
-      background: #f9fafb !important;
+      background: #f4f4f4 0% 0% no-repeat padding-box !important;
+      opacity: 0.8;
     }
   }
 
@@ -457,7 +464,7 @@ const WorkerTable = ({
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
       return (
         <Table.Row
-          className="table-row"
+          className={item ? "table-row clickable" : "table-row"}
           key={index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
@@ -480,10 +487,7 @@ const WorkerTable = ({
           </Table.Cell>
           <Table.Cell className="table-cell sms" name="sms">
             {item && (
-              <Checkbox
-                className="sms-check"
-                checked={item.wk_sms_yn === 1 ? true : false}
-              />
+              <Checkbox className="sms-check" checked={item.wk_sms_yn} />
             )}
           </Table.Cell>
           <Table.Cell className="table-cell age" name="age">

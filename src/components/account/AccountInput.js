@@ -273,7 +273,7 @@ const AccountInput = ({
     acc_tel,
     acc_mail,
     acc_role,
-    description,
+    acc_description,
   } = formData;
 
   // 중복확인 통과상태에서 아이디 값 바꿀 시 다시 중복확인 해야함.
@@ -295,7 +295,7 @@ const AccountInput = ({
         <div className="resizable-area">
           <div className="role-area">
             <div className="form-title role">계정 권한</div>
-            <Radio
+            {/* <Radio
               label="관리자"
               className="radio-row one"
               id="admin"
@@ -303,7 +303,7 @@ const AccountInput = ({
               value={1}
               checked={acc_role && acc_role === 1}
               onChange={(e, target) => onRadioChange(e, target)}
-            />
+            /> */}
             <Radio
               label="사용자"
               className="radio-row two"
@@ -413,10 +413,10 @@ const AccountInput = ({
             <label className="input-form title">비고</label>
             <textarea
               className="input-form description"
-              id="description"
-              name="description"
+              id="acc_description"
+              name="acc_description"
               placeholder="비고 입력란"
-              value={description ? description : ""}
+              value={acc_description ? acc_description : ""}
               onChange={onChange}
             />
           </Form.Field>

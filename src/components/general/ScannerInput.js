@@ -322,7 +322,7 @@ const ScannerInput = ({
               scn_address &&
               splitByColonInput(scn_address)
                 .toUpperCase()
-                .replace(/[^a-z|^A-Z|^0-9]*$/g, "")
+                .replace(/[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ]*$/g, "")
             }
             onChange={onChange}
             error={addressError}

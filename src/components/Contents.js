@@ -29,47 +29,105 @@ import LoginLogContainer from "../containers/ect/LoginLogContainer";
 // import CompanyContatiner from "./general/CompanyContainer";
 // import HomeShortcut from "./home/HomeShortcut";
 
-const Contents = ({openFullScreenMode}) => {
-
-// ect(기타관리)
+const Contents = ({ openFullScreenMode, role }) => {
+  // ect(기타관리)
 
   return (
     <>
-      <Route path="/amons/home/" component={() => <HomeShortcut openFullScreenMode={openFullScreenMode} />} exact />
-      <Route path="/amons/home/monitor" component={MonitorContainer} />
-      {/* *******************************log 이력조회****************************** */}
-      <Route path="/amons/home/log/diglog" component={LogDigContatiner} />
-      <Route path="/amons/home/log/workerlog" component={LogWorkerContainer} />
-      <Route
-        path="/amons/home/log/vehiclelog"
-        component={LogVehicleContainer}
-      />
-      <Route path="/amons/home/log/alarm" component={AlarmContainer} />
+      {(role === 0 || role === 1 || role === 2) && (
+        <>
+          <Route
+            path="/amons/home/"
+            component={() => (
+              <HomeShortcut openFullScreenMode={openFullScreenMode} />
+            )}
+            exact
+          />
+          <Route path="/amons/home/monitor" component={MonitorContainer} />
+          {/* *******************************log 이력조회****************************** */}
+          <Route path="/amons/home/log/diglog" component={LogDigContatiner} />
+          <Route
+            path="/amons/home/log/workerlog"
+            component={LogWorkerContainer}
+          />
+          <Route
+            path="/amons/home/log/vehiclelog"
+            component={LogVehicleContainer}
+          />
+          <Route path="/amons/home/log/alarm" component={AlarmContainer} />
+        </>
+      )}
       {/* *****************************field 현장관리******************************** */}
-      <Route path="/amons/home/field/local" component={LocalContatiner} />
-      <Route path="/amons/home/field/announce" component={AnnounceContainer} />
-      <Route path="/amons/home/field/dig" component={DigContainer} />
-      <Route path="/amons/home/field/process" component={ProcessContainer} />
+      {role === 0 && (
+        <Route path="/amons/home/field/local" component={LocalContatiner} />
+      )}
+      {(role === 0 || role === 1) && (
+        <>
+          <Route
+            path="/amons/home/field/announce"
+            component={AnnounceContainer}
+          />
+          <Route path="/amons/home/field/dig" component={DigContainer} />
+          <Route
+            path="/amons/home/field/process"
+            component={ProcessContainer}
+          />
+        </>
+      )}
       {/* *****************************general 일반관리****************************** */}
-      <Route path="/amons/home/general/company" component={CompanyContatiner} />
-      <Route path="/amons/home/general/worker" component={WorkerContainer} />
-      <Route path="/amons/home/general/vehicle" component={VehicleContainer} />
-      <Route path="/amons/home/general/beacon" component={BeaconContainer} />
-      <Route path="/amons/home/general/scanner" component={ScannerContainer} />
-      <Route path="/amons/home/general/cctv" component={CctvContainer} />
+      {(role === 0 || role === 1) && (
+        <>
+          <Route
+            path="/amons/home/general/company"
+            component={CompanyContatiner}
+          />
+          <Route
+            path="/amons/home/general/worker"
+            component={WorkerContainer}
+          />
+          <Route
+            path="/amons/home/general/vehicle"
+            component={VehicleContainer}
+          />
+          <Route
+            path="/amons/home/general/beacon"
+            component={BeaconContainer}
+          />
+        </>
+      )}
+      {role === 0 && (
+        <>
+          <Route
+            path="/amons/home/general/scanner"
+            component={ScannerContainer}
+          />
+          <Route path="/amons/home/general/cctv" component={CctvContainer} />
+        </>
+      )}
       {/* *****************************account 계정관리****************************** */}
-      <Route path="/amons/home/account" component={AccountContainer} />
+      {(role === 0 || role === 1) && (
+        <Route path="/amons/home/account" component={AccountContainer} />
+      )}
       {/* *******************************ect 기타관리****************************** */}
-      <Route path="/amons/home/ect/settings" component={SettingsContainer} />
-      <Route
-        path="/amons/home/ect/kickworker"
-        component={KickOutWorkerContainer}
-      />
-      <Route
-        path="/amons/home/ect/kickvehicle"
-        component={KickOutVehicleContainer}
-      />
-      <Route path="/amons/home/ect/loginlog" component={LoginLogContainer} />
+      {(role === 0 || role === 1) && (
+        <Route path="/amons/home/ect/settings" component={SettingsContainer} />
+      )}
+      {role === 0 && (
+        <>
+          <Route
+            path="/amons/home/ect/kickworker"
+            component={KickOutWorkerContainer}
+          />
+          <Route
+            path="/amons/home/ect/kickvehicle"
+            component={KickOutVehicleContainer}
+          />
+          <Route
+            path="/amons/home/ect/loginlog"
+            component={LoginLogContainer}
+          />
+        </>
+      )}
     </>
   );
 };

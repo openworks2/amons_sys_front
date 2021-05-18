@@ -286,6 +286,12 @@ const TableCompo = styled.div`
         border: 1px solid #d8d8d8;
         opacity: 1;
         height: 47px;
+        &.clickable {
+          cursor: pointer;
+          &:hover {
+            background: #f6f6f6 0% 0% no-repeat padding-box !important;
+          }
+        }
         .table-cell {
           text-align: center;
           padding-top: 0px;
