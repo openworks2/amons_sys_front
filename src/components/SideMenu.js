@@ -86,7 +86,6 @@ const SideMenuCompo = styled.div`
 `;
 
 const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
-
   return (
     <SideMenuCompo className="sidemenu-compo">
       <Sidebar
@@ -96,7 +95,7 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl }) => {
         inverted
         onHide={() => callSideMenuHandler}
         vertical
-        visible={callSideMenu}
+        visible={currentUrl !== "home" || currentUrl !== "monitering"}
         className="sidemenu"
       >
         {/* ================================================================ */}
