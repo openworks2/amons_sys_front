@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Icon, Table, Pagination } from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
 import axios from "axios";
+import { API } from "../../lib/server.config";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import "moment/locale/ko";
@@ -473,7 +474,7 @@ const LogDigTable = ({
     let searchData = [];
     try {
       const response = await axios.post(
-        `/api/dig/digs/search`,
+        `${API}/api/dig/digs/search`,
         searchCondition
       );
       searchData = response.data;
