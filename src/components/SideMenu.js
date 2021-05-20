@@ -114,8 +114,8 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl, role }) => {
             {(role === 0 || role === 1 || role === 2) && (
               <>
                 <Menu.Item
-                  as={Link}
-                  to="/amons/home/monitor"
+                  as={"a"}
+                  href="/amons/home/monitor"
                   className="sidemenu-title"
                   name="moniter"
                   active={currentUrl === "moniter"}
@@ -368,7 +368,7 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl, role }) => {
               <>
                 <Menu.Item
                   as={"a"}
-                  to="/amons/home/monitor"
+                  href="/amons/home/monitor"
                   className="sidemenu-title"
                   name="moniter"
                   active={currentUrl === "moniter"}
