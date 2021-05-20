@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Moment from 'react-moment';
+import { API } from '../../../lib/server.config';
 
 const WorkerDetailCompo = styled.div`
     width: 330px;
@@ -119,7 +120,7 @@ const WorkerDetailComponent = ({ selectItem }) => {
                 <div className="image-box">
                     {
                         item.wk_image ?
-                            <img src={`http://192.168.0.39:3000/uploads/${item.wk_image}`} alt="이미지" />
+                            <img src={`${API}/upload/${item.wk_image}`} alt="이미지" />
                             : <div className="empty-image-box">사진없음</div>
 
                     }

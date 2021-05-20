@@ -1,14 +1,17 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Moment from 'react-moment';
 import 'moment-timezone';
+
+
+
 
 const AlarmModalCompo = styled.div`
     width: 100%;
     height: 93.6%;
     position: absolute;
-    background-color: rgba(255,0,0,0.7);
+    /* background-color: rgba(255,0,0,0.7); */
     top: 69px;
     z-index: 998;
     display: flex;
@@ -17,11 +20,16 @@ const AlarmModalCompo = styled.div`
     @media screen and (max-height: 937px) {
         height: 72rem;
     }
+
+    /* -webkit-animation:blink 1.5s ease-in-out infinite alternate; 
+    -moz-animation:blink 1.5s ease-in-out infinite alternate;*/ 
+
     .alarm-modal{
         width:752px;
         height: 537px;
         background-color:#2E2E2E;
         border: 1px solid #646464;
+        z-index: 998;
         .header{
             height: 159px;
             display:flex;
@@ -134,6 +142,22 @@ const AlarmModalCompo = styled.div`
     }
 `;
 
+const BgModal = styled.div`
+    background-color: rgba(255,0,0,0.7);
+    z-index: 997;
+    position: absolute;
+    /* width: 100rem; */
+    /* height: 123rem; */
+    width: 100%;
+    height: 100%;
+    z-index: 997;
+    @media screen and (max-height: 937px) {
+        height: 72rem;
+    }
+`;
+
+
+
 const AlarmModal = ({ setOpenAlarmModal, bleAlarmList }) => {
 
     const birthCalculator = (birth) => {
@@ -164,6 +188,7 @@ const AlarmModal = ({ setOpenAlarmModal, bleAlarmList }) => {
         }
     };
     const tableRender = (items = []) => {
+        console.log('tableRender->', items);
         return items.map(item => (
             <>
                 {
@@ -174,7 +199,7 @@ const AlarmModal = ({ setOpenAlarmModal, bleAlarmList }) => {
                                 {item.bc_receive_time}
                             </Moment>
                         </td>
-                        <td className="location">{item.scn_name}</td>
+                        <td className="location">{item.local_name}</td>
                         <td className="company">{item.wk_co_name}</td>
                         <td className="name">{item.wk_name}</td>
                         <td className="age">{`${birthCalculator(item.wk_birth)}세`}</td>
@@ -234,8 +259,12 @@ const AlarmModal = ({ setOpenAlarmModal, bleAlarmList }) => {
                     />
                 </div>
             </div>
+            <BgModal className="backgroud-modal" />
         </AlarmModalCompo>
     );
 };
+
+
+
 
 export default AlarmModal;

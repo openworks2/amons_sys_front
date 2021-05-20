@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTag, faExpand } from "@fortawesome/pro-solid-svg-icons";
+import { CLIENT } from '../../lib/server.config';
 
 const MapCompo = styled.div`
     width: 100%;
     height: 100%;
-    background-image: url('http://192.168.0.39:3001/map/map_bg.png');
+    background-image: url('${CLIENT}/map/map_bg.png');
     background-repeat: no-repeat;
     position:relative;
         .buttom-box{
@@ -367,15 +368,16 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     useEffect(() => {
         bind(first, setStateDig1);
         bind(second, setStateDig2);
-    }, [first, second]);
+    }, [data]);
 
     useEffect(() => {
         // bind(first, setStateDig1);
         // bind(second, setStateDig2);
-        if(dig1.length===0){
+        console.log(dig1)
+        if (dig1.length === 0) {
             bind(first, setStateDig1);
         }
-        if(dig2.length===0){
+        if (dig2.length === 0) {
             bind(second, setStateDig2);
         }
         if (bleData && dig1 && dig2) {

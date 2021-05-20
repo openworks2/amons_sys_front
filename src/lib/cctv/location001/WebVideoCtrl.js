@@ -157,6 +157,7 @@ export const WebVideoCtrl = (function (e) {
 	}
 
 	var connect = function (port) {
+		var _this = this;
 		return $.Deferred(function (def) {
 			try {
 				var url = 'ws://127.0.0.1:' + port;
@@ -164,7 +165,6 @@ export const WebVideoCtrl = (function (e) {
 				window['camera001'] = socket = new WebSocket(url);
 				socket.onopen = function () {
 					console.log('open'); 
-					console.log('ReadyState-->', socket.readyState)
 				};
 				socket.onerror = function (e) { console.log('error:' + e.code) };
 				socket.onmessage = function (msg) {
@@ -176,11 +176,11 @@ export const WebVideoCtrl = (function (e) {
 					}
 				};
 				socket.onclose = function () {
-					window.socket = undefined;
-					pluginObject = undefined;
-					socket = undefined;
+					console.log(this)
+					console.log(_this)
+					console.log(WebVideoCtrl)
+					disConnect();
 
-					console.log('Websocket Closed!!!')
 					def.reject();
 				};
 			} catch (e) {
@@ -188,6 +188,16 @@ export const WebVideoCtrl = (function (e) {
 			}
 		}).promise();
 	}
+
+	var disConnect = function(){
+		
+		// WebVideoCtrl.logout("hhh4-1.iptime.org");
+		window.socket = undefined;
+		pluginObject = undefined;
+		socket = undefined;
+		console.log('Websocket Closed!!!')
+	}
+
 
 	//브라우저 유형 가져 오기
 	var browser = function () {
@@ -609,7 +619,9 @@ export const WebVideoCtrl = (function (e) {
 	*@return Boolean
 	*/
 	var logout = function (ip) {
+		
 		var info = WebVideoCtrl.getDeviceInfo(ip);
+		console.log(info)
 		if (typeof info !== "undefined") {
 			pluginObject.LogoutDevice(info.deviceID).done(function (ret) {
 				//제거 장치

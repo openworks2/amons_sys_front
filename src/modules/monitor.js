@@ -31,7 +31,9 @@ const GET_ENVIRONMENT_ERROR = 'monitor/GET_ENVIRONMENT_ERROR';
 const RECEIVE_MONITOR = 'monitor/RECEIVE_MONITOR';
 
 const TOGGLE_DRILLRATE_PANEL = 'monitor/TOGGLE_DRILLRATE_PANEL';
-const TOGGLE_SOS_SITUACTION = 'monitor/TOGGLE_SOS_SITUACTION';
+const CLOSED_ALARM_PANEL = 'monitor/CLOSED_ALARM_PANEL';
+const SET_SOS_SITUACTION = 'monitor/SET_SOS_SITUACTION';
+const INIT_SOS_SITUACTION = 'moniotr/INIT_SOS_SITUACTION'
 
 export const getMonitor = createPromiseThunk(
     GET_MONITOR,
@@ -49,12 +51,24 @@ export const getBleBeacon = createPromiseThunk(
 
 let socket;
 export const receiveMonitor = () => dispatch => {
-    socket = io.connect(API);  //3000번 포트 사용(서버)
-
-    socket.emit('getData', 'scanner')
-    socket.on('getData', (data) => {
-        dispatch({ type: GET_SCANNER_SOCKET, payload: data })
-    });
+    console.log('receiveMonitor>>', socket)
+    if (!socket) {
+        socket = io.connect(API);  //3000번 포트 사용(서버)
+        socket.emit('getData', 'scanner')
+        socket.on('getData', (data) => {
+            console.log('data-->', data)
+            const filterAlarm = data.beacon.filter(item => item.bc_emergency === 2 && item.wk_id && item);
+            console.log('filterAlarm-->>>>>>>>', filterAlarm)
+            if (filterAlarm.length > 0) {
+                const payload = {
+                    sosSituation: true,
+                    sosList: filterAlarm
+                }
+                dispatch({ type: SET_SOS_SITUACTION, payload });
+            }
+            dispatch({ type: GET_SCANNER_SOCKET, payload: data })
+        });
+    }
 }
 
 export const socketDisconnet = () => dispatch => {
@@ -66,7 +80,11 @@ export const setRatePanel = () => dispatch => {
 }
 
 export const setSOSSituation = boolean => dispatch => {
-    dispatch({ type: TOGGLE_SOS_SITUACTION, payload: boolean });
+    dispatch({ type: SET_SOS_SITUACTION, payload: boolean });
+}
+
+export const setInitSOSSituation = () => dispatch => {
+    dispatch({ type: INIT_SOS_SITUACTION });
 }
 
 export const getWeather = createPromiseThunk(
@@ -78,6 +96,9 @@ export const getEnvironment = createPromiseThunk(
     GET_ENVIRONMENT,
     monitorAPI.getEnvironment
 )
+export const cloaseAlarmPanel = () => dispatch => {
+    dispatch({ type: CLOSED_ALARM_PANEL });
+}
 
 const initialState = {
     monitor: reducerUtils.initial(),
@@ -86,7 +107,9 @@ const initialState = {
     weather: reducerUtils.initial(),
     environment: reducerUtils.initial(),
     ratePanel: false,
+    alarmPanel: false,
     sosSituation: false,
+    sosList: [],
 }
 
 const getMonitorReducer = handleAsyncActions(
@@ -191,11 +214,29 @@ export default function monitor(state = initialState, action) {
                 ...state,
                 ratePanel: !state.ratePanel
             };
-        case TOGGLE_SOS_SITUACTION:
+        case SET_SOS_SITUACTION:
+
             return {
                 ...state,
-                sosSituation: action.payload
+                alarmPanel: true,
+                sosSituation: action.payload.sosSituation,
+                sosList: [
+                    ...state.sosList,
+                    ...action.payload.sosList
+                ]
             };
+        case INIT_SOS_SITUACTION:
+            return {
+                ...state,
+                alarmPanel: state.alarmPanel ? !state.alarmPanel : state.alarmPanel,
+                sosSituation: false,
+                sosList: []
+            };
+        case CLOSED_ALARM_PANEL:
+            return {
+                ...state,
+                alarmPanel: false,
+            }
         default:
             return state;
 

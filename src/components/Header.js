@@ -16,7 +16,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/pro-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { setSOSSituation } from "../modules/monitor";
+import { setInitSOSSituation } from "../modules/monitor";
 
 const HeaderCompo = styled.div`
   position: fixed !important;
@@ -204,7 +204,7 @@ const Header = ({
   }, [sosSituation]);
 
   const sosAlarmOffHandler = () => {
-    dispatch(setSOSSituation(false));
+    dispatch(setInitSOSSituation());
   };
 
   return (
@@ -246,11 +246,11 @@ const Header = ({
             </div>
           )}
           <div className="shortcut-button-box">
-            <a href="/amons/home">
+            <Link to="/amons/home">
               <div className="shortcut-button home">
                 <FontAwesomeIcon icon={faHomeAlt} />
               </div>
-            </a>
+            </Link>
 
             <div className="button-name">HOME</div>
           </div>

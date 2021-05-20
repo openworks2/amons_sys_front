@@ -168,7 +168,9 @@ const Notice = ({ announceList, rollingCount }) => {
     const dataBinding = () => {
         let titleList = [];
         announceList.map(item => {
-            titleList.push(item.ann_title)
+            if(item.ann_preview===1){
+                titleList.push(item.ann_title)
+            }
             return item;
         });
         setRollData(titleList)

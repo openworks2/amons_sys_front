@@ -164,7 +164,6 @@ export const WebVideoCtrl = (function (e) {
 				window['camera001'] = socket = new WebSocket(url);
 				socket.onopen = function () {
 					console.log('open'); 
-					console.log('ReadyState-->', socket.readyState)
 				};
 				socket.onerror = function (e) { console.log('error:' + e.code) };
 				socket.onmessage = function (msg) {
