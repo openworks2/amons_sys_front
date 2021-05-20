@@ -66,6 +66,18 @@ const CompanyTableCompo = styled.div`
         border: 1px solid #d8d8d8;
         opacity: 1;
         height: 47px;
+        &.clickable {
+          cursor: pointer;
+          &:hover {
+            background: #f6f6f6 0% 0% no-repeat padding-box !important;
+          }
+        }
+        &.clickable {
+          cursor: pointer;
+          &:hover {
+            background: #f6f6f6 0% 0% no-repeat padding-box !important;
+          }
+        }
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -146,9 +158,10 @@ const CompanyTableCompo = styled.div`
 
   .ui.table td.active,
   .ui.table tr.active {
-    background: #f9fafb !important;
+    background: #f4f4f4 0% 0% no-repeat padding-box !important;
     &:hover {
-      background: #f9fafb !important;
+      background: #f4f4f4 0% 0% no-repeat padding-box !important;
+      opacity: 0.8;
     }
   }
 
@@ -199,7 +212,7 @@ const CompanyTable = ({
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
       return (
         <Table.Row
-          className="table-row"
+          className={company ? "table-row clickable" : "table-row"}
           key={index}
           id={"scroll" + index}
           active={company && index === clickedIndex}

@@ -394,6 +394,7 @@ const VehicleContainer = () => {
       initActiveRow();
       initFormData();
       initFiles();
+      makeBeaconList(unUsedBeaconData);
     }
   };
 
@@ -419,6 +420,7 @@ const VehicleContainer = () => {
       putData.append("file", files.selectFile);
       putData.append("reqBody", JSON.stringify(formData));
       dispatch(putVehicle(formData.vh_index, putData));
+      dispatch(getUnUsedBeacons());
     }
   };
 

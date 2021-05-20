@@ -93,7 +93,7 @@ const AccountContatiner = () => {
     acc_tel: "",
     acc_mail: "",
     acc_role: 2,
-    description: "",
+    acc_description: "",
   });
 
   // form onChange Event
@@ -102,7 +102,7 @@ const AccountContatiner = () => {
     const value = e.target.value;
     // 입력값 state 에 저장
     if (name === "acc_user_id") {
-      let _acc_user_id = value.replace(/[^a-z|^A-Z|^0-9]*$/g, "");
+      let _acc_user_id = value.replace(/[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ]*$/g, "");
       setFormData({
         ...formData,
         acc_user_id: _acc_user_id,
@@ -159,7 +159,7 @@ const AccountContatiner = () => {
       acc_tel: "",
       acc_mail: "",
       acc_role: 2,
-      description: "",
+      acc_description: "",
     });
   };
 
@@ -189,7 +189,7 @@ const AccountContatiner = () => {
         acc_tel: findItem.acc_tel,
         acc_mail: findItem.acc_mail,
         acc_role: findItem.acc_role,
-        description: findItem.description,
+        acc_description: findItem.acc_description,
       });
       setTimeout(() => {
         setDuplicationCheck(true);

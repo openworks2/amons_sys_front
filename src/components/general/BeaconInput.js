@@ -173,11 +173,26 @@ const BeaconInput = ({
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
   const { bc_address, bc_description } = formData;
 
+  const splitByColon = (str = "") => {
+    let length = str.length;
+    let point = str.length % 2;
+    let splitedStr = "";
+
+    splitedStr = str.substring(0, point);
+    while (point < length) {
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += str.substring(point, point + 2);
+      point += 2;
+    }
+
+    return splitedStr;
+  };
+
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
 
     if (_str.length > 12) {
-      return str.substring(0, 17);
+      return splitByColon(_str.substring(0, 12));
     }
 
     let length = _str.length;
@@ -212,7 +227,7 @@ const BeaconInput = ({
             required
             value={splitByColonInput(bc_address)
               .toUpperCase()
-              .replace(/[^a-z|^A-Z|^0-9]*$/g, "")}
+              .replace(/[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ]*$/g, "")}
             onChange={onChange}
             error={addressError}
           />

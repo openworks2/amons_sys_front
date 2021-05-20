@@ -198,7 +198,12 @@ const LogVehicleContainer = () => {
           vh_co_index: selectedCompany === "" ? null : selectedCompany,
         },
       }).then((response) => {
-        saveAs(new Blob([response.data]), "막장 잔류이력(차량).xlsx");
+        saveAs(
+          new Blob([response.data]),
+          `막장 잔류이력(차량)_${moment(_startDate).format(
+            "YYYY년MM월DD일_HH시mm분ss초"
+          )}___${moment(_endDate).format("YYYY년MM월DD일_HH시mm분ss초")}.xlsx`
+        );
       });
     } catch (e) {
       console.log(e);

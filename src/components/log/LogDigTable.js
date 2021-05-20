@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Icon, Table, Pagination } from "semantic-ui-react";
 import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
 import axios from "axios";
+import { API } from "../../lib/server.config";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import "moment/locale/ko";
@@ -286,6 +287,12 @@ const TableCompo = styled.div`
         border: 1px solid #d8d8d8;
         opacity: 1;
         height: 47px;
+        &.clickable {
+          cursor: pointer;
+          &:hover {
+            background: #f6f6f6 0% 0% no-repeat padding-box !important;
+          }
+        }
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -467,7 +474,7 @@ const LogDigTable = ({
     let searchData = [];
     try {
       const response = await axios.post(
-        `/api/dig/digs/search`,
+        `${API}/api/dig/digs/search`,
         searchCondition
       );
       searchData = response.data;

@@ -217,7 +217,7 @@ const PreviewBox = styled.div`
   padding: 0px;
   .tri-angle {
     position: absolute;
-    top: 125px;
+    top: 130px;
     left: 163px;
     width: 0px;
     height: 0px;

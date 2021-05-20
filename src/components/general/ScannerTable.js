@@ -181,6 +181,12 @@ const TableCompo = styled.div`
         border: 1px solid #d8d8d8;
         opacity: 1;
         height: 47px;
+        &.clickable {
+          cursor: pointer;
+          &:hover {
+            background: #f6f6f6 0% 0% no-repeat padding-box !important;
+          }
+        }
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -282,9 +288,10 @@ const TableCompo = styled.div`
 
   .ui.table td.active,
   .ui.table tr.active {
-    background: #f9fafb !important;
+    background: #f4f4f4 0% 0% no-repeat padding-box !important;
     &:hover {
-      background: #f9fafb !important;
+      background: #f4f4f4 0% 0% no-repeat padding-box !important;
+      opacity: 0.8;
     }
   }
   .ui.checkbox input:checked ~ label:after {
@@ -399,25 +406,6 @@ const ScannerTable = ({
     initPage();
   };
 
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 12) {
-      return str.substring(0, 17);
-    }
-
-    let length = _str.length;
-    let point = _str.length % 2;
-    let splitedStr = "";
-    splitedStr = _str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
-      point += 2;
-    }
-    return splitedStr;
-  };
-
   const splitByColon = (str = "") => {
     let length = str.length;
     let point = str.length % 2;
@@ -430,6 +418,25 @@ const ScannerTable = ({
       point += 2;
     }
 
+    return splitedStr;
+  };
+
+  const splitByColonInput = (str) => {
+    let _str = str.replace(/\:/g, "");
+
+    if (_str.length > 12) {
+      return splitByColon(_str.substring(0, 12));
+    }
+
+    let length = _str.length;
+    let point = _str.length % 2;
+    let splitedStr = "";
+    splitedStr = _str.substring(0, point);
+    while (point < length) {
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += _str.substring(point, point + 2);
+      point += 2;
+    }
     return splitedStr;
   };
 
@@ -468,7 +475,7 @@ const ScannerTable = ({
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
       return (
         <Table.Row
-          className="table-row"
+          className={item ? "table-row clickable" : "table-row"}
           key={index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
@@ -571,7 +578,7 @@ const ScannerTable = ({
                   searchValue &&
                   splitByColonInput(searchValue)
                     .toUpperCase()
-                    .replace(/[^a-z|^A-Z|^0-9]*$/g, "")
+                    .replace(/[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ]*$/g, "")
                 }
                 onChange={onSearchChange}
                 onKeyPress={(e) => {

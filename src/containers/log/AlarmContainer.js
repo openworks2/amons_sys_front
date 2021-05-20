@@ -245,7 +245,12 @@ const AlarmContainer = () => {
           to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
         },
       }).then((response) => {
-        saveAs(new Blob([response.data]), "알람이력(작업자).xlsx");
+        saveAs(
+          new Blob([response.data]),
+          `알람이력(작업자)_${moment(_startDate).format(
+            "YYYY년MM월DD일_HH시mm분ss초"
+          )}___${moment(_endDate).format("YYYY년MM월DD일_HH시mm분ss초")}.xlsx`
+        );
       });
     } catch (e) {
       console.log(e);

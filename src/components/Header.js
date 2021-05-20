@@ -49,8 +49,12 @@ const HeaderCompo = styled.div`
         justify-content: center;
         align-items: center;
         font-size: 15px;
+        #sidemenu-disabled {
+          color: #2e2e2e;
+        }
         &:hover {
           cursor: pointer;
+          color: #f1592a;
         }
       }
     }
@@ -108,6 +112,7 @@ const HeaderCompo = styled.div`
           &:hover {
             cursor: pointer;
             color: #72afd2;
+            /* color: #f1592a; */
           }
           &.alarm {
             background-color: #c23235;
@@ -159,6 +164,9 @@ const HeaderCompo = styled.div`
         svg {
           color: #ffffff;
           opacity: 0.7;
+          &:hover {
+            color: #f1592a;
+          }
         }
       }
     }
@@ -171,6 +179,7 @@ const Header = ({
   triggerFull,
   exitFull,
   onLogout,
+  currentUrl,
 }) => {
   const { sosSituation } = useSelector((state) => state.monitor);
 
@@ -203,7 +212,11 @@ const Header = ({
       <div className="left-area">
         <div className="sidemenu-button-box">
           <div className="sidemenu-button" onClick={callSideMenuHandler}>
-            <FontAwesomeIcon icon={faBars} />
+            {currentUrl !== "home" && currentUrl !== "monitor" ? (
+              <FontAwesomeIcon icon={faBars} id="sidemenu-disabled" />
+            ) : (
+              <FontAwesomeIcon icon={faBars} id="sidemenu-abled" />
+            )}
           </div>
         </div>
         <div className="monitor-title-box">

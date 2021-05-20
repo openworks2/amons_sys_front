@@ -125,11 +125,12 @@ const ScannerContainer = () => {
 
   // mac address 입력 / 출력
   //입력
+
   const splitByColonInput = (str) => {
     let _str = str.replace(/\:/g, "");
 
     if (_str.length > 12) {
-      return str.substring(0, 17);
+      return splitByColon(_str.substring(0, 12));
     }
 
     let length = _str.length;

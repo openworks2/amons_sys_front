@@ -69,11 +69,11 @@ const HomeContainer = () => {
   const initialUserInfo = useCallback(async () => {
     const loggedInfo = storage.get("user"); // 로그인 정보를 로컬스토리지에서 가져오기
     if (!loggedInfo) {
-      return // 로그인 정보가 없다면 멈춤
+      return; // 로그인 정보가 없다면 멈춤
     } else {
-      console.log('loggedInfo--->', loggedInfo)
-      setUser(loggedInfo)
-    };
+      console.log("loggedInfo--->", loggedInfo);
+      setUser(loggedInfo);
+    }
 
     dispatch(setLogindInfoAsync(loggedInfo));
     try {
@@ -132,6 +132,7 @@ const HomeContainer = () => {
         triggerFull={openFullScreenMode}
         exitFull={closeFullScreenMode}
         onLogout={onLogout}
+        currentUrl={currentUrl}
       />
       <SideMenu
         callSideMenu={callSideMenu}
@@ -143,7 +144,10 @@ const HomeContainer = () => {
       {currentUrl && currentUrl !== "home" && currentUrl !== "monitor" && (
         <ContentTitle currentUrl={currentUrl}></ContentTitle>
       )}
-      <Contents openFullScreenMode={openFullScreenMode} />
+      <Contents
+        openFullScreenMode={openFullScreenMode}
+        role={user !== null ? user.acc_role : null}
+      />
 
       {/* </ContentsCompo> */}
     </HomeCompo>
