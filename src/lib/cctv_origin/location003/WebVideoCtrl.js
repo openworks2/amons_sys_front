@@ -161,7 +161,7 @@ export const WebVideoCtrl = (function (e) {
 			try {
 				var url = 'ws://127.0.0.1:' + port;
 
-				window['camera004'] = socket = new WebSocket(url);
+				window.socket = socket = new WebSocket(url);
 				socket.onopen = function () {
 					console.log('open'); 
 					console.log('ReadyState-->', socket.readyState)

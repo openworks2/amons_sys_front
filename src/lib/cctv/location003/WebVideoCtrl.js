@@ -43,7 +43,6 @@ export const WebVideoCtrl = (function (e) {
 
 	//이벤트 처리 기능
 	function handleEvent(message) {
-		//console.log(message);
 		var messageObject = $.parseJSON(message);
 		if (("event" in messageObject)) {
 			var eventType = messageObject["event"];
@@ -161,8 +160,11 @@ export const WebVideoCtrl = (function (e) {
 		return $.Deferred(function (def) {
 			try {
 				var url = 'ws://127.0.0.1:' + port;
-				socket = new WebSocket(url);
-				socket.onopen = function () { console.log('open') };
+
+				window['camera003'] = socket = new WebSocket(url);
+				socket.onopen = function () {
+					console.log('open'); 
+				};
 				socket.onerror = function (e) { console.log('error:' + e.code) };
 				socket.onmessage = function (msg) {
 					if (msg.data === "websocketserver connect ok") {//올바른 웹 소프트 서비스를 나타냅니다
@@ -173,6 +175,11 @@ export const WebVideoCtrl = (function (e) {
 					}
 				};
 				socket.onclose = function () {
+					window.socket = undefined;
+					pluginObject = undefined;
+					socket = undefined;
+
+					console.log('Websocket Closed!!!')
 					def.reject();
 				};
 			} catch (e) {
@@ -213,7 +220,6 @@ export const WebVideoCtrl = (function (e) {
 	*@return void
 	*/
 	function insertPluginObject(sContainerID, iWidth, iHeight) {
-		console.log('12312321321')
 		g_container = sContainerID;
 		//IE 브라우저라면
 		if (browser().msie) {
@@ -376,9 +382,11 @@ export const WebVideoCtrl = (function (e) {
 				//console.log(JSON.stringify(methodParams));
 				var defer = $.Deferred();
 				defMap[g_id] = defer;
-				g_id++;
+				g_id++
 				if (browser().websocket) {
-					socket.send(JSON.stringify(methodParams));
+					if (socket && socket.readyState === 1) {
+						socket.send(JSON.stringify(methodParams));
+					}
 				} else {
 					document.getElementById("dhVideo").PostMessage(JSON.stringify(methodParams));
 				}
@@ -389,9 +397,8 @@ export const WebVideoCtrl = (function (e) {
 
 	function checkReady() {
 		try {
-			console.log('>>>>>>>pluginObject--->',pluginObject)
 			pluginObject = {};
-			
+
 			RegisterMethod();
 			if (browser().msie || browser().npapi) {
 				//모니터 이벤트
@@ -434,8 +441,7 @@ export const WebVideoCtrl = (function (e) {
 	*@return Boolean
 	*/
 	var createMultiNodeDisplay = function (iNum) {
-		iNum=37;
-		console.log('createMultiNodeDisplay-->', iNum)
+		iNum = 37;
 		pluginObject.CreateMultiNodeDisplay(iNum);
 	};
 
@@ -457,7 +463,12 @@ export const WebVideoCtrl = (function (e) {
 	*@return Boolean
 	*/
 	var resizeVideo = function (left, top, width, height) {
-		pluginObject.ResizeVideo(left, top, width, height);
+		if (pluginObject) {
+			pluginObject.ResizeVideo(left, top, width, height);
+		} else {
+			return
+		}
+
 	}
 
 	/**
@@ -493,7 +504,6 @@ export const WebVideoCtrl = (function (e) {
 	*/
 	var login = function (sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout, fnSuccess, fnFail) {
 		pluginObject.LoginDevice(sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout).done(function (ret) {
-			console.log('>>>ret--->',ret)
 			if (ret > 0) {
 				//장치 정보를 삽입하십시오
 				pluginObject.GetChannelTotal(ret).done(function (channelNum) {
@@ -961,7 +971,6 @@ export const WebVideoCtrl = (function (e) {
 	*@description PTZ 위치 지정을 활성화합니다
 	*/
 	var enablePTZLocate = function () {
-		console.log('pluginObject-->',pluginObject)
 		return pluginObject.ActivePTZLocate(true);
 	}
 
@@ -1337,7 +1346,11 @@ export const WebVideoCtrl = (function (e) {
 			//바인딩 탭 디스플레이/숨겨진 상태 변경 이벤트
 			var evtname = visProp.replace(/[H|h]idden/, '') + 'visibilitychange';
 			document.addEventListener(evtname, function () {
-				pluginObject.ShowWindow(!isHidden());
+				if (pluginObject) {
+					pluginObject.ShowWindow(!isHidden());
+				} else {
+					return
+				}
 			}, false);
 		}
 	}

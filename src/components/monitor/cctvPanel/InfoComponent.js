@@ -106,6 +106,7 @@ const InfoComponent = ({
 }) => {
 
     const scannerListRender = (items = []) => {
+        console.log('scannerListRender-->',items);
         const _Component = items.map((item) => {
             return <div key={item.scn_id}>
                 <div className={item.scn_result === 'open' ? "nms-status on" : "nms-status off"}>

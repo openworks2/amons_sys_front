@@ -6,7 +6,7 @@ import { faTag, faExpand } from "@fortawesome/pro-solid-svg-icons";
 const MapCompo = styled.div`
     width: 100%;
     height: 100%;
-    background-image: url('../../map/map_bg.png');
+    background-image: url('http://192.168.0.39:3001/map/map_bg.png');
     background-repeat: no-repeat;
     position:relative;
         .buttom-box{
@@ -243,7 +243,6 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     const [dig2, setDig2] = useState([]);
 
     const bind = (data, callback) => {
-
         const block_Length = data.total_length / data.block_Amount; // 1개 블록 당 거리
 
         let mapArr = []
@@ -365,11 +364,20 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
         callback(updateDig)
 
     }
-
-
     useEffect(() => {
         bind(first, setStateDig1);
         bind(second, setStateDig2);
+    }, [first, second]);
+
+    useEffect(() => {
+        // bind(first, setStateDig1);
+        // bind(second, setStateDig2);
+        if(dig1.length===0){
+            bind(first, setStateDig1);
+        }
+        if(dig2.length===0){
+            bind(second, setStateDig2);
+        }
         if (bleData && dig1 && dig2) {
             bleDataBinding(bleData, dig1, setDig1);
             bleDataBinding(bleData, dig2, setDig2);
