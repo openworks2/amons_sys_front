@@ -224,7 +224,11 @@ const MonitorContainer = () => {
                     <div className="left-bottom-box map-box">
                         {
                             monitor.data &&
-                            <MapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} bleData={beacon.data && beacon.data} />
+                            <MapComponent
+                                setOpenExpandMapHandler={setOpenExpandMapHandler}
+                                data={monitor.data && monitor.data}
+                                bleData={beacon.data}
+                            />
                         }
                     </div>
                 </div>
@@ -238,7 +242,7 @@ const MonitorContainer = () => {
                         </div>
                         <div className="cctv-panel">
                             <div className="top-cctv">
-                                {monitor.data && beacon.data && environment.data &&
+                                {monitor.data &&
                                     <CctvComponent
                                         way="right"
                                         id="loc001"
@@ -251,12 +255,12 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[0]}
                                         scanner={scanner.data && localScanner(monitor.data[0].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[0].local_index)}
-                                        processDisabled={environment.data[0].process_disabled}
+                                        processDisabled={environment.data && environment.data[0].process_disabled}
                                     />
                                 }
                             </div>
                             <div className="bottom-cctv">
-                                {monitor.data && beacon.data &&
+                                {monitor.data &&
                                     <CctvComponent
                                         way="right"
                                         id="loc002"
@@ -269,7 +273,7 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[2]}
                                         scanner={scanner.data && localScanner(monitor.data[2].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[2].local_index)}
-                                        processDisabled={environment.data[0].process_disabled}
+                                        processDisabled={environment.data && environment.data[0].process_disabled}
 
                                     />
                                 }
@@ -298,7 +302,7 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[1]}
                                         scanner={scanner.data && localScanner(monitor.data[1].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[1].local_index)}
-                                        processDisabled={environment.data[0].process_disabled}
+                                        processDisabled={environment.data && environment.data[0].process_disabled}
 
                                     />
                                 }
@@ -317,7 +321,7 @@ const MonitorContainer = () => {
                                         data={monitor.data && monitor.data[3]}
                                         scanner={scanner.data && localScanner(monitor.data[3].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[3].local_index)}
-                                        processDisabled={environment.data[0].process_disabled}
+                                        processDisabled={environment.data && environment.data[0].process_disabled}
 
                                     />
                                 }

@@ -94,15 +94,34 @@ const HomeContainer = () => {
     const url = document.location.href;
     const splitUrl = url.split("/");
     const location = splitUrl[splitUrl.length - 1];
+    if(currentUrl!=='monitor'){
+      if(window.camera001){
+        window['camera001'].close();
+        window['camera001']=undefined;
+      } 
+      if(window.camera002){
+        window['camera002'].close();
+        window['camera002']=undefined;
+      }
+      if(window.camera003){
+        window['camera003'].close();
+        window['camera003']=undefined;
+      }
+      if(window.camera004){
+        window['camera004'].close();
+        window['camera004']=undefined;
+      }
+    }
     setCurrentUrl(location);
   });
 
   useEffect(() => {
     console.log(">>>>>>>>>>>>>>>HomeContainer");
-
     console.log("login--->>", login);
     initialUserInfo();
   }, []);
+
+
 
   if (!storage.get("user")) return <Redirect to="/amons/signin" />;
   return (

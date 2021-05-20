@@ -8,7 +8,7 @@ const DrillMapCompo = styled.div`
     width: 100%;
     height: 100%;
     /* background-color: aqua; */
-    background-image: url('../../progress/dig_bg_1.png');
+    background-image: url('http://192.168.0.39:3001/progress/dig_bg_1.png');
     background-repeat:no-repeat;
     position: relative;
     .location-top{
@@ -131,8 +131,9 @@ const DrillMapCompo = styled.div`
 `;
 
 const DrillMapComponent = ({ ratePanelOpen, data }) => {
-
+    console.log('drrillasdfkjasdkfljsdakfljsadkf')
     useEffect(() => {
+        
     }, []);
 
     // 천단위 콤마
@@ -147,7 +148,7 @@ const DrillMapComponent = ({ ratePanelOpen, data }) => {
     }
 
     return (
-        <DrillMapCompo>
+        <DrillMapCompo className="drillMap-component">
             <div className="location-top">
                 <div className="text-box left-top-text">
                     <div className="location-title">{data[0].local_name}</div>

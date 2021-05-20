@@ -160,12 +160,8 @@ export const WebVideoCtrl = (function (e) {
 		return $.Deferred(function (def) {
 			try {
 				var url = 'ws://127.0.0.1:' + port;
-
-				window['camera004'] = socket = new WebSocket(url);
-				socket.onopen = function () {
-					console.log('open'); 
-					console.log('ReadyState-->', socket.readyState)
-				};
+				socket = new WebSocket(url);
+				socket.onopen = function () { console.log('open') };
 				socket.onerror = function (e) { console.log('error:' + e.code) };
 				socket.onmessage = function (msg) {
 					if (msg.data === "websocketserver connect ok") {//올바른 웹 소프트 서비스를 나타냅니다
@@ -176,11 +172,6 @@ export const WebVideoCtrl = (function (e) {
 					}
 				};
 				socket.onclose = function () {
-					window.socket = undefined;
-					pluginObject = undefined;
-					socket = undefined;
-
-					console.log('Websocket Closed!!!')
 					def.reject();
 				};
 			} catch (e) {
@@ -383,11 +374,9 @@ export const WebVideoCtrl = (function (e) {
 				//console.log(JSON.stringify(methodParams));
 				var defer = $.Deferred();
 				defMap[g_id] = defer;
-				g_id++
+				g_id++;
 				if (browser().websocket) {
-					if (socket.readyState === 1) {
-						socket.send(JSON.stringify(methodParams));
-					}
+					socket.send(JSON.stringify(methodParams));
 				} else {
 					document.getElementById("dhVideo").PostMessage(JSON.stringify(methodParams));
 				}
@@ -398,6 +387,7 @@ export const WebVideoCtrl = (function (e) {
 
 	function checkReady() {
 		try {
+			console.log('>>>>>>>pluginObject--->', pluginObject)
 			pluginObject = {};
 
 			RegisterMethod();
@@ -443,6 +433,7 @@ export const WebVideoCtrl = (function (e) {
 	*/
 	var createMultiNodeDisplay = function (iNum) {
 		iNum = 37;
+		console.log('createMultiNodeDisplay-->', iNum)
 		pluginObject.CreateMultiNodeDisplay(iNum);
 	};
 
@@ -505,6 +496,7 @@ export const WebVideoCtrl = (function (e) {
 	*/
 	var login = function (sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout, fnSuccess, fnFail) {
 		pluginObject.LoginDevice(sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout).done(function (ret) {
+			console.log('>>>ret--->', ret)
 			if (ret > 0) {
 				//장치 정보를 삽입하십시오
 				pluginObject.GetChannelTotal(ret).done(function (channelNum) {
@@ -972,6 +964,7 @@ export const WebVideoCtrl = (function (e) {
 	*@description PTZ 위치 지정을 활성화합니다
 	*/
 	var enablePTZLocate = function () {
+		console.log('pluginObject-->', pluginObject)
 		return pluginObject.ActivePTZLocate(true);
 	}
 

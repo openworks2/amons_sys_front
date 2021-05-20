@@ -121,7 +121,6 @@ Dahua.prototype = {
                 _this.clickLogin(obj);
 
             }).fail(function () {
-                console.log('ws 확인--->>>>',window.camera001);
                 alert("플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
             });
         }
