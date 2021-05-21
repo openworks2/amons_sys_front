@@ -427,7 +427,7 @@ const ExpandMapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     useEffect(() => {
         bind(first, setStateDig1);
         bind(second, setStateDig2);
-    }, []);
+    }, [data]);
 
     return (
         <ExpandMapCompo className="expand-map-component">

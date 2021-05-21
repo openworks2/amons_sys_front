@@ -131,7 +131,6 @@ const MonitorContainer = () => {
     }
 
     const openAccessPanel = (id) => {
-        console.log(id)
         if (accessPanel === id) {
             setOpenAccessPanel(null)
         } else {
@@ -175,7 +174,7 @@ const MonitorContainer = () => {
         const clzName = e.target.parentNode.className
         console.log(clzName)
         if (clzName === 'detail-panel-button' || clzName === 'table-box' || clzName === 'table-item') {
-            // return
+            return
         }
         else if (clzName !== 'detail-panel-button') {
             setOpenAccessPanel(null)
@@ -216,7 +215,10 @@ const MonitorContainer = () => {
     return (
         <MonitorCompo className="monitor-component" >
             <TopCompo className="top-component" />
-            <BodyCompo className="body-component" onMouseDown={targetClick}>
+            <BodyCompo
+                className="body-component"
+            onMouseDown={targetClick}
+            >
                 <div className="left-compo">
                     <div className="left-top-box info-box">
                         {monitor.data && beacon.data &&
@@ -233,10 +235,10 @@ const MonitorContainer = () => {
                     </div>
                     <div className="left-bottom-box map-box">
                         {
-                            monitor.data &&
+                            monitor.data && monitor.data.length > 0 &&
                             <MapComponent
                                 setOpenExpandMapHandler={setOpenExpandMapHandler}
-                                data={monitor.data && monitor.data}
+                                data={monitor.data}
                                 bleData={beacon.data}
                             />
                         }

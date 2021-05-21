@@ -37,6 +37,7 @@ const CctvCompo = styled.div`
         position: relative;
         left: -146px;
         top: -452px;
+        z-index: 900;
         .ptz-mode{
             width: 100%;
             height: 33px;

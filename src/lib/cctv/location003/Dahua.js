@@ -61,60 +61,72 @@ Dahua.prototype = {
         /**
          * @description 최초 로그인 
          */
-        let _this = this;
-        _this.count += 1;
-        WebVideoCtrl.checkPluginInstall().done(function () {
-            console.log('objectId-->', _this.objectId)
-            WebVideoCtrl.insertPluginObject(_this.objectId, 300, 300);
-            //초기화 플러그인
-            WebVideoCtrl.initPlugin("Protocol2", function () {
-                WebVideoCtrl.setOpInfoCallback(_this.showOPInfo);
-                let left = _this.position.left = _this.camOCX.offsetLeft;
-                let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
-                let width = _this.position.width = _this.camOCX.offsetWidth;
-                let height = _this.position.height = _this.camOCX.offsetHeight;
+        if (WebVideoCtrl.getPlayerInfo()) {
+            console.log('00.plugin initsadkjfsdkflj')
 
-                WebVideoCtrl.resizeVideo(left, top, width, height);
-                //비디오 창을 만듭니다
-                WebVideoCtrl.createMultiNodeDisplay(36);
-                //비디오 창의 표시를 설정하십시오
-                // var num = parseInt($("#wndNum").find("option:selected").val());
-                //Windows 세분화 수를 설정합니다
-                WebVideoCtrl.setSplitNum(_this.splitNum);
-                //등록 문제
-                WebVideoCtrl.registerEvent("SelectedView", _this.responseSelectedViewSignal);
-                //초기화 경로
-                WebVideoCtrl.getUserDirectory().done(function (szDir) {
-                    console.log('szDir->', szDir)
-                    let szPath = `${szDir}\\LiveRecord"`;
-                    _this.filePath.liveRecord = szPath;
-                    szPath = `${szDir}\\Download"`;
-                    _this.filePath.download = szPath;
+            return
+        }
+        else {
+            let _this = this;
+            _this.count += 1;
+            WebVideoCtrl.checkPluginInstall().done(function () {
+                console.log('objectId-->', _this.objectId)
+                WebVideoCtrl.insertPluginObject(_this.objectId, 300, 300);
+                //초기화 플러그인
+                WebVideoCtrl.initPlugin("Protocol2", function () {
+                    WebVideoCtrl.setOpInfoCallback(_this.showOPInfo);
+                    let left = _this.position.left = _this.camOCX.offsetLeft;
+                    let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
+                    let width = _this.position.width = _this.camOCX.offsetWidth;
+                    let height = _this.position.height = _this.camOCX.offsetHeight;
+                    console.log(left, '/', top, '/', width, '/', height)
 
-                    szPath = `${szDir}\\LiveSnapshot"`;
-                    _this.filePath.liveSnapshot = szPath;
+                    WebVideoCtrl.resizeVideo(left, top, width, height);
+                    //비디오 창을 만듭니다
+                    WebVideoCtrl.createMultiNodeDisplay(36);
+                    //비디오 창의 표시를 설정하십시오
+                    // var num = parseInt($("#wndNum").find("option:selected").val());
+                    //Windows 세분화 수를 설정합니다
+                    WebVideoCtrl.setSplitNum(_this.splitNum);
+                    //등록 문제
+                    WebVideoCtrl.registerEvent("SelectedView", _this.responseSelectedViewSignal);
+                    //초기화 경로
+                    WebVideoCtrl.getUserDirectory().done(function (szDir) {
+                        console.log('szDir->', szDir)
+                        let szPath = `${szDir}\\LiveRecord"`;
+                        _this.filePath.liveRecord = szPath;
+                        szPath = `${szDir}\\Download"`;
+                        _this.filePath.download = szPath;
 
-                    szPath = `${szDir}\\PlaybackPicPath"`;
-                    _this.filePath.playBackPicPath = szPath;
+                        szPath = `${szDir}\\LiveSnapshot"`;
+                        _this.filePath.liveSnapshot = szPath;
 
-                    szPath = `${szDir}\\PlaybackFilePath"`;
-                    _this.filePath.playBackFilePath = szPath;
+                        szPath = `${szDir}\\PlaybackPicPath"`;
+                        _this.filePath.playBackPicPath = szPath;
 
-                    console.log(_this.filePath)
-                    // $("#tabs").tabs();
-                    //숨겨진 창 일련 번호 선택 상자
-                    // $("#winIndex").hide();
+                        szPath = `${szDir}\\PlaybackFilePath"`;
+                        _this.filePath.playBackFilePath = szPath;
+
+                        console.log(_this.filePath)
+                        // $("#tabs").tabs();
+                        //숨겨진 창 일련 번호 선택 상자
+                        // $("#winIndex").hide();
+                    });
                 });
+                // $("#tabs_ptz").tabs();
+                // $("#tabs_playback").tabs();
+                // $("#tabs_control").tabs();
+                // $("#closePtzLocate").hide();
+                // $("#openPtzLocate").show();
+                _this.clickLogin(obj);
+
+            }).fail(function () {
+                console.log('ws 확인--->>>>',window.camera001);
+                // window.location.reload();
+                alert("001>>>>>플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
+                
             });
-            // $("#tabs_ptz").tabs();
-            // $("#tabs_playback").tabs();
-            // $("#tabs_control").tabs();
-            // $("#closePtzLocate").hide();
-            // $("#openPtzLocate").show();
-            _this.clickLogin(obj);
-        }).fail(function () {
-            alert("플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
-        });
+        }
     },
     clickLogin(obj) {
         console.log("clickLogin--->", obj)
@@ -262,7 +274,7 @@ Dahua.prototype = {
             var iMode = parseInt(_this.winMode, 10);
             console.log('iMode->', iMode)
 
-            if (0 == iMode) {
+            if (0 === iMode) {
                 WebVideoCtrl.connectRealVideo(sIP, iChannel, iStreamType, function (iPlayerID) {
                     _this.showOPInfo(sIP + " Channel:" + iChannel.toString() + " Live succeed");
                 },
@@ -287,6 +299,10 @@ Dahua.prototype = {
         } else {
             return
         }
+    },
+    setClosePlayer() {
+        console.log('setClosePlayer!!!')
+        // WebVideoCtrl.closePlayer()
     },
     clickStopRealPlay() {
         /**
@@ -449,6 +465,7 @@ Dahua.prototype = {
 
     },
     hiddenScreen() {
+        console.log('hiddenScreen')
         WebVideoCtrl.resizeVideo(0, 0, 0, 0);
     },
     showScreen() {
@@ -465,6 +482,11 @@ Dahua.prototype = {
         let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
         let width = _this.position.width = _this.camOCX.offsetWidth;
         let height = _this.position.height = _this.camOCX.offsetHeight;
+        console.log(left)
+        console.log(top)
+        console.log(width)
+        console.log(height)
+
 
         WebVideoCtrl.resizeVideo(left, top, width, height);
     },
@@ -477,5 +499,35 @@ Dahua.prototype = {
             right: _this.position.height
         }
         return _position;
+    },
+    onScrollHandler() {
+        const _this = this;
+        console.log(document.getElementById(_this.objectId));
+        if (document.getElementById(_this.objectId)) {
+            let coverInfo = document.getElementById(_this.objectId).getBoundingClientRect() || null;
+
+            if (coverInfo) {
+                const pos = {
+                    width: coverInfo.width,
+                    height: coverInfo.height,
+                    top: coverInfo.top + window.pageYOffset,
+                    left: coverInfo.left + window.pageXOffset,
+                    topToWindow: coverInfo.top,
+                    leftToWindow: coverInfo.left
+                };
+                const headerHeight = 0;
+                const dE = document.documentElement;
+                const windowBorder = Math.ceil((window.outerWidth - window.innerWidth) / 2);
+                const windowHeader = window.outerHeight - window.innerHeight - windowBorder;
+                const left = Math.max(pos.leftToWindow, 0) + (WebVideoCtrl.browser().firefox ? 0 : windowBorder);
+                const top = Math.max(pos.topToWindow, headerHeight) + windowHeader;
+                const width = Math.min(pos.width, dE.clientWidth - Math.max(pos.leftToWindow, 0), Math.max(pos.width - (dE.scrollLeft - pos.left), 0));
+                const height = Math.min(pos.height, dE.clientHeight - Math.max(headerHeight, pos.topToWindow), Math.max(pos.height - (dE.scrollTop - pos.top) - headerHeight, 0));
+                WebVideoCtrl.resizeVideo(left, top, width, height);
+
+            }
+        }
     }
+
 }
+

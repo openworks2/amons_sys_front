@@ -125,7 +125,7 @@ export const WebVideoCtrl = (function (e) {
 				def.reject();
 			}
 			else {
-				var port = 23482;
+				var port = 23480;
 				connect(port).done(function () {
 					def.resolve();
 				}).fail(function () {

@@ -32,7 +32,7 @@ const HomeContainer = () => {
 
   const dispatch = useDispatch();
 
-  const [fullState, setState] = useState(false);
+  const [fullState, setScreenState] = useState(false);
   // 전체화면 설정
   const openFullScreenMode = () => {
     console.log(2134234);
@@ -47,11 +47,17 @@ const HomeContainer = () => {
     } else if (docV.msRequestFullscreen) {
       docV.msRequestFullscreen();
     }
+    if(!fullState){
+      setScreenState(true);
+    }
   };
 
   const closeFullScreenMode = () => {
     // var docV = document.documentElement;
     document.webkitExitFullscreen();
+    if(fullState){
+      setScreenState(false);
+    }
   };
 
   // 사이드바 호출 버튼 핸들러

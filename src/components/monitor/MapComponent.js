@@ -244,6 +244,8 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     const [dig2, setDig2] = useState([]);
 
     const bind = (data, callback) => {
+        console.log('bind--->',data);
+
         const block_Length = data.total_length / data.block_Amount; // 1개 블록 당 거리
 
         let mapArr = []
@@ -300,11 +302,14 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     }
 
     const setStateDig1 = (data) => {
+        console.log('setStateDig1--->',data);
         setDig1(data);
     }
     const setStateDig2 = (data) => {
+        console.log('setStateDig2--->',data);
         setDig2(data);
     }
+
 
     const bleDataBinding = (data, dig, callback) => {
         const updateDig = dig.map((item, index, array) => {
@@ -366,6 +371,8 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
 
     }
     useEffect(() => {
+        console.log('first-->',first)
+        console.log('second-->',second)
         bind(first, setStateDig1);
         bind(second, setStateDig2);
     }, [data]);
@@ -373,19 +380,18 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     useEffect(() => {
         // bind(first, setStateDig1);
         // bind(second, setStateDig2);
-        console.log(dig1)
-        if (dig1.length === 0) {
-            bind(first, setStateDig1);
-        }
-        if (dig2.length === 0) {
-            bind(second, setStateDig2);
-        }
+        // if (dig1.length === 0) {
+        //     bind(first, setStateDig1);
+        // }
+        // if (dig2.length === 0) {
+        //     bind(second, setStateDig2);
+        // }
         if (bleData && dig1 && dig2) {
             bleDataBinding(bleData, dig1, setDig1);
             bleDataBinding(bleData, dig2, setDig2);
         }
+        console.log('map----->?>>>',data);
     }, [bleData]);
-
     const setOpenCheckBox = () => {
         setCheckBox(!checkBox);
     }
@@ -466,12 +472,12 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
             <div className="map-area">
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance001" />
                 {
-                    rendering(273, 4, dig1)
+                    dig1.length>0 && rendering(273, 4, dig1)
                 }
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance002" />
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance003" />
                 {
-                    rendering(353, 147, dig2)
+                     dig2.length>0 &&rendering(353, 147, dig2)
                 }
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance004" />
             </div>

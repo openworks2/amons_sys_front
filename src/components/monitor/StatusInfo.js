@@ -195,7 +195,7 @@ const StatusInfo = ({ localInfo, bleData }) => {
             <i className="fas fa-hard-hat"></i>
             <div className="status-box">
                 <div className="top-contents worker-count-top">
-                    <span className="box-title">총 잔류인원</span>
+                    <span className="box-title">총 막장인원</span>
                 </div>
                 <div className="bottom-contents">
                     <div className="bottom-left">
@@ -211,7 +211,7 @@ const StatusInfo = ({ localInfo, bleData }) => {
             </div>
             <div className="status-box">
                 <div className="top-contents vehicle-count-top">
-                    <span className="box-title">총 잔류차량</span>
+                    <span className="box-title">총 막장차량</span>
                 </div>
                 <div className="bottom-contents">
                     <div className="bottom-left">
