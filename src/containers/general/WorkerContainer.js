@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import WorkerInput from "../../components/general/WorkerInput";
 import WorkerTable from "../../components/general/WorkerTable";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getUnUsedBeacons } from "../../modules/beacons";
 import { getCompanies } from "../../modules/companies";
@@ -12,7 +11,7 @@ import {
   deleteWorker,
   putWorker,
 } from "../../modules/workers";
-import moment from "moment";
+import moment, { now } from "moment";
 import "moment/locale/ko";
 
 const ContentsCompo = styled.div`
@@ -71,6 +70,21 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const WorkerContatiner = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Click Area ]
+  // [ File Upload Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Componets Area ]
+
+  // [ Redux Area ] ======================================================================
+
   const { data, loading, error } = useSelector(
     (state) => state.workers.workers
   );
@@ -80,12 +94,43 @@ const WorkerContatiner = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUnUsedBeacons());
-    dispatch(getCompanies());
     dispatch(getWorkers());
-  }, [dispatch]);
+    dispatch(getCompanies());
+    dispatch(getUnUsedBeacons());
+  }, []);
+
+  // [ State Area ] ======================================================================
 
   const today = new Date();
+
+  const [companyList, setCompanyList] = useState([]);
+  const [companySearchList, setCompanySearchList] = useState([]);
+  const [unUsedBeaconList, setUnUsedBeaconList] = useState([]);
+  // 실제 파일 데이터 저장
+  const [files, setFiles] = useState({
+    selectFile: null,
+  });
+  // input안에 들어갈 사진 이름
+  const [fileName, setFileName] = useState("");
+  // 미리보기 modal
+  const [previewOpen, setPreviewOpen] = useState(false);
+  // 현재 업로드 된 이미지 정보 (서버 말고 클라이언트 단)
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const [companyError, setCompanyError] = useState(undefined);
+  const [ageError, setAgeError] = useState(undefined);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  // 클릭된 row의 데이터
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
 
   const [formData, setFormData] = useState({
     wk_id: null,
@@ -108,13 +153,53 @@ const WorkerContatiner = () => {
     image_file: null,
   });
 
-  useEffect(() => {
-    makeCompanyList(companyData);
-  }, [companyData, formData.co_index]);
+  // [ Init Area ] ======================================================================
 
-  useEffect(() => {
-    makeBeaconList(unUsedBeaconData);
-  }, [unUsedBeaconData, formData.bc_index]);
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
+  const initFiles = () => {
+    setFiles({
+      selectFile: null,
+    });
+  };
+
+  const initActiveRow = () => {
+    setSelectedRow({
+      selectedId: null,
+      selectedItem: undefined,
+      clickedIndex: null,
+    });
+  };
+  const initFormData = () => {
+    setFormData({
+      ...formData,
+      wk_id: null,
+      wk_index: null,
+      wk_name: "",
+      wk_phone: "",
+      wk_position: "",
+      wk_nation: "",
+      wk_birth: today,
+      wk_blood_type: "0",
+      wk_blood_group: "0",
+      wk_sms_yn: false,
+      wk_image: "",
+      co_index: null,
+      co_name: null,
+      co_sector: null,
+      bc_id: null,
+      bc_index: null,
+      bc_address: null,
+      image_file: null,
+    });
+  };
+
+  // [ Common Logic Area ] ======================================================================
 
   const addZero = (str, digit) => {
     if (str.length >= digit) {
@@ -148,9 +233,9 @@ const WorkerContatiner = () => {
     return splitedStr;
   };
 
-  const [companyList, setCompanyList] = useState([]);
-  const [companySearchList, setCompanySearchList] = useState([]);
-  const [unUsedBeaconList, setUnUsedBeaconList] = useState([]);
+  useEffect(() => {
+    makeCompanyList(companyData);
+  }, [companyData]);
 
   const makeCompanyList = (data) => {
     if (data) {
@@ -180,24 +265,18 @@ const WorkerContatiner = () => {
     }
   };
 
+  useEffect(() => {
+    makeBeaconList(unUsedBeaconData);
+  }, [unUsedBeaconData]);
+
   const makeBeaconList = (data) => {
     if (data) {
       let _unUsedBeaconList = [];
       _unUsedBeaconList.push({ key: 0, text: "할당 없음", value: null });
-      if (formData.bc_address && formData.bc_index) {
-        // 선택한 줄이 있을 경우, 해당 데이터 추가
-        _unUsedBeaconList.push({
-          key: 1,
-          text: `${addZero(formData.bc_id)} : 
-          ${splitByColonInput(formData.bc_address)}`,
-          value: formData.bc_index,
-          address: formData.bc_address,
-        });
-      }
       data.map((item, index) => {
         _unUsedBeaconList.push({
-          key: index + 2,
-          text: `${addZero(item.bc_id)} : 
+          key: index,
+          text: `${addZero(item.bc_id, 3)} : 
           ${splitByColonInput(item.bc_address)}`,
           value: item.bc_index,
           address: item.bc_address,
@@ -207,6 +286,115 @@ const WorkerContatiner = () => {
       setUnUsedBeaconList(_unUsedBeaconList);
     }
   };
+
+  const makeBeaconListOnCreate = () => {
+    if (formData.bc_index) {
+      let _unUsedBeaconList = unUsedBeaconList.filter(
+        (el) => el.value !== formData.bc_index
+      );
+      setUnUsedBeaconList(_unUsedBeaconList);
+    }
+  };
+
+  const makeBeaconListOnUpdate = () => {
+    let originalWorker = data.find((el) => el.wk_index === formData.wk_index);
+    let _unUsedBeaconList = unUsedBeaconList;
+    // 1.이전 값과 비교해서
+    // 2.이전 값과 현재 값이 다르다면(변경되었다면),
+    if (originalWorker.bc_index !== formData.bc_index) {
+      // 2-1.변경한 값이 NULL 이라면 (비콘 할당 해제)
+      if (formData.bc_index === null) {
+        // 2-1-1. 이전 값을 비콘 리스트에 추가.
+        let unUsedBeacon = {
+          key: now() + 1,
+          text: `${addZero(originalWorker.bc_id, 3)} : 
+              ${splitByColonInput(originalWorker.bc_address)}`,
+          value: originalWorker.bc_index,
+          address: originalWorker.bc_address,
+          bc_id: originalWorker.bc_id,
+        };
+        _unUsedBeaconList.push(unUsedBeacon);
+        setUnUsedBeaconList(_unUsedBeaconList);
+      }
+      // 2-2.변경한 값이 NULL 이 아니라면 (할당 비콘 변경)
+      else {
+        // 2-2-1. 바뀐 값을 비콘 리스트에서 제거.
+        _unUsedBeaconList = _unUsedBeaconList.filter(
+          (el) => el.value !== formData.bc_index
+        );
+        setUnUsedBeaconList(_unUsedBeaconList);
+        // 2-2-2. 이전 값이 NULL 이 아니라면 비콘 리스트에 추가.
+        if (originalWorker.bc_id) {
+          let unUsedBeacon = {
+            key: now() + 2,
+            text: `${addZero(originalWorker.bc_id, 3)} : 
+                ${splitByColonInput(originalWorker.bc_address)}`,
+            value: originalWorker.bc_index,
+            address: originalWorker.bc_address,
+            bc_id: originalWorker.bc_id,
+          };
+          _unUsedBeaconList.push(unUsedBeacon);
+          setUnUsedBeaconList(_unUsedBeaconList);
+        }
+      }
+    }
+    // 이전 값과 이후 값이 동일한 경우 비콘 리스트는 바뀌지 않음.
+  };
+
+  const makeBeaconListOnDelete = () => {
+    if (formData.bc_index !== null) {
+      let _unUsedBeaconList = unUsedBeaconList;
+      let unUsedBeacon = {
+        key: now() + 1,
+        text: `${addZero(formData.bc_id, 3)} : 
+        ${splitByColonInput(formData.bc_address)}`,
+        value: formData.bc_index,
+        address: formData.bc_address,
+        bc_id: formData.bc_id,
+      };
+      _unUsedBeaconList.push(unUsedBeacon);
+      setUnUsedBeaconList(_unUsedBeaconList);
+    }
+  };
+
+  // const makeBeaconListOnActive = () => {
+  //   let _unUsedBeaconList = unUsedBeaconList;
+
+  //   let unUsedBeacon = {
+  //     key: now() + 1,
+  //     text: `${addZero(formData.bc_id, 3)} :
+  //       ${splitByColonInput(formData.bc_address)}`,
+  //     value: formData.bc_index,
+  //     address: formData.bc_address,
+  //     bc_id: formData.bc_id,
+  //   };
+  //   _unUsedBeaconList.push(unUsedBeacon);
+  //   setUnUsedBeaconList(_unUsedBeaconList);
+  // };
+
+  // const makeBeaconListOnDeactive = () => {
+  //   let _unUsedBeaconList = unUsedBeaconList.filter(
+  //     (el) => el.value !== formData.bc_index
+  //   );
+  //   setUnUsedBeaconList(_unUsedBeaconList);
+  // };
+
+  // useEffect(() => {
+  //   // 비콘리스트 정렬
+  //   if (unUsedBeaconList) {
+  //     let _unUsedBeaconList = unUsedBeaconList.sort(function (a, b) {
+  //       return a.bc_id - b.bc_id;
+  //     });
+  //     setUnUsedBeaconList(_unUsedBeaconList);
+  //   }
+  // }, [
+  //   makeBeaconList,
+  //   makeBeaconListOnCreate,
+  //   makeBeaconListOnUpdate,
+  //   makeBeaconListOnDelete,
+  // ]);
+
+  // [ Change Area ] ======================================================================
 
   // form onChange Event
   const onChange = (e) => {
@@ -219,8 +407,7 @@ const WorkerContatiner = () => {
     });
   };
 
-  // form onSelectChant Event
-
+  // form onSelectChange Event
   const onSelectChange = (e, seletedValue) => {
     const name = seletedValue.name;
     const value = seletedValue.value;
@@ -254,7 +441,6 @@ const WorkerContatiner = () => {
   };
 
   // datepicker
-
   const onChangeDate = (date) => {
     let _date = date;
     if (_date === null || undefined) {
@@ -266,51 +452,34 @@ const WorkerContatiner = () => {
     });
   };
 
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
-
-  const initActiveRow = () => {
-    setSelectedRow({
-      selectedId: null,
-      selectedItem: undefined,
-      clickedIndex: null,
+  // 페이지 네이션
+  const onPageChange = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo;
+    setPageInfo({
+      ...PreState,
+      activePage: _activePage,
     });
-  };
-  const initFormData = () => {
-    setFormData({
-      ...formData,
-      wk_id: null,
-      wk_index: null,
-      wk_name: "",
-      wk_phone: "",
-      wk_position: "",
-      wk_nation: "",
-      wk_birth: today,
-      wk_blood_type: "0",
-      wk_blood_group: "0",
-      wk_sms_yn: false,
-      wk_image: "",
-      co_index: null,
-      co_name: null,
-      co_sector: null,
-      bc_id: null,
-      bc_index: null,
-      bc_address: null,
-      image_file: null,
-    });
+    initActiveRow();
+    initFormData();
+    initFiles();
+    setImagePreview(null);
   };
 
-  // table row 클릭 핸들러
+  // [ Click Area ] ======================================================================
+
   const activeHandler = (e, index, selectedId) => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
       initFiles();
+      setImagePreview(null);
+      setPreviewOpen(false);
     } else {
+      setImagePreview(null);
+      setPreviewOpen(false);
+
       const findItem = data.find((worker) => worker.wk_id === selectedId);
 
       setSelectedRow({
@@ -343,52 +512,44 @@ const WorkerContatiner = () => {
     }
   };
 
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
-
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
-  };
-
-  const onPageChange = (e, { activePage }) => {
-    e.preventDefault();
-    let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
-      ...PreState,
-      activePage: _activePage,
-    });
-    // 활성화된 로우 초기화
-    initActiveRow();
-    initFormData();
-    initFiles();
-  };
-
-  // 사진 업로드
-
-  const [files, setFiles] = useState({
-    selectFile: null,
-  });
-
-  const initFiles = () => {
-    setFiles({
-      selectFile: null,
-    });
-  };
+  // [ File Upload Area ] =================================================================
 
   const handleFileInputChange = (e) => {
+    let deletedImageForm = {
+      ...formData,
+      wk_image: null,
+    };
+    setFormData(deletedImageForm);
     setFiles({
       selectFile: e.target.files[0],
     });
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    if (theFile) {
+      const reader = new FileReader();
+      reader.readAsDataURL(theFile);
+      reader.onloadend = (finishedEvent) => {
+        const {
+          currentTarget: { result },
+        } = finishedEvent;
+        setImagePreview(result);
+      };
+    }
   };
 
-  const [fileName, setFileName] = useState("");
+  const imageDeleteHandler = (e) => {
+    e.stopPropagation();
+    initFiles();
+    let deletedImageForm = {
+      ...formData,
+      wk_image: null,
+    };
+    setImagePreview(null);
+    setFormData(deletedImageForm);
+    setPreviewOpen(false);
+  };
 
   // 가짜 input form 이미지 이름 바꾸기
   useEffect(() => {
@@ -405,21 +566,10 @@ const WorkerContatiner = () => {
     } else {
       setFileName(null);
     }
-  }, [handleFileInputChange, activeHandler]);
+  }, [handleFileInputChange, activeHandler, files]);
 
-  const imageDeleteHandler = (e) => {
-    e.stopPropagation();
-    initFiles();
-    let deletedImageForm = {
-      ...formData,
-      wk_image: null,
-    };
-    setFormData(deletedImageForm);
-  };
+  // [ Create Area ] ======================================================================
 
-  const [companyError, setCompanyError] = useState(undefined);
-  const [ageError, setAgeError] = useState(undefined);
-  // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
@@ -452,17 +602,17 @@ const WorkerContatiner = () => {
       createData.append("file", files.selectFile);
       createData.append("reqBody", JSON.stringify(formData));
       dispatch(postWorker(createData));
+      makeBeaconListOnCreate();
       initActiveRow();
       initFormData();
       initFiles();
+      setImagePreview(null);
     }
   };
 
-  // UPDATE
-  const updateHandler = (e) => {
-    // let filteredData = data.filter((item) => item.bc_id !== formData.bc_id);
-    // 중복값 검사를 위해 자기 자신을 뺀 데이터 값.
+  // [ Update Area ] ======================================================================
 
+  const updateHandler = (e) => {
     const calAge = (birth) => {
       let currentYear = today.getFullYear();
       let age = currentYear - birth.substring(0, 4) + 1;
@@ -495,21 +645,28 @@ const WorkerContatiner = () => {
         wk_io_state: findItem.wk_io_state,
         created_date: findItem.wk_create_date,
         modified_date: today,
+        wk_image: fileName,
       });
       const putData = new FormData();
       putData.append("file", files.selectFile);
       putData.append("reqBody", JSON.stringify(formData));
       dispatch(putWorker(formData.wk_index, putData));
+      makeBeaconListOnUpdate();
     }
   };
 
-  // DELETE
+  // [ Delete Area ] ======================================================================
+
   const deleteHandler = (e, wk_id) => {
     dispatch(deleteWorker(wk_id));
+    makeBeaconListOnDelete();
     initActiveRow();
     initFormData();
     initFiles();
+    setImagePreview(null);
   };
+
+  // [ Componets Area ]===================================================================
 
   if (error) {
     return (
@@ -540,7 +697,12 @@ const WorkerContatiner = () => {
             companyError={companyError}
             ageError={ageError}
             fileName={fileName}
+            imagePreview={imagePreview}
+            previewOpen={previewOpen}
+            setPreviewOpen={setPreviewOpen}
             imageDeleteHandler={imageDeleteHandler}
+            addZero={addZero}
+            splitByColonInput={splitByColonInput}
           />
         </div>
         <div className="table-box">

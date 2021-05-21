@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import { Form, Button, Select, Modal, Input } from "semantic-ui-react";
+import { API } from "../../lib/server.config";
+import { Form, Button, Select, Modal, Input, Image } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { FaImage, FaRegCalendarAlt, FaBackspace } from "react-icons/fa";
 
@@ -153,6 +154,41 @@ const InputCompo = styled.div`
     font-weight: initial !important;
   }
 
+  .image-preview-button {
+    text-align: right;
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    margin-top: -4px;
+    margin-bottom: -20px;
+    margin-right: 10px;
+    cursor: pointer;
+    &:hover {
+      color: #f1592a !important;
+    }
+  }
+  .image-preview-box {
+    display: block;
+    height: 130px;
+    width: 88%;
+    background-color: #f2f2f2;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    border: 3px solid #f2f2f2;
+    .profile-img {
+      display: block;
+      margin: 2px;
+      margin-left: auto;
+      margin-right: auto;
+      width: auto;
+      height: 120px !important;
+      border-radius: 5px;
+      border-color: 3px solid black;
+    }
+  }
+
   .form-title.photo {
     margin-top: -3px;
     margin-bottom: 3px;
@@ -255,7 +291,12 @@ const VehicleInput = ({
   unUsedBeaconList,
   companyError,
   fileName,
+  imagePreview,
+  previewOpen,
+  setPreviewOpen,
   imageDeleteHandler,
+  addZero,
+  splitByColonInput,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -273,6 +314,7 @@ const VehicleInput = ({
     co_name,
     bc_index,
     bc_address,
+    bc_id,
   } = formData;
 
   return (
@@ -326,7 +368,10 @@ const VehicleInput = ({
             label="비콘 사용 정보"
             options={unUsedBeaconList}
             placeholder={
-              vh_id ? !bc_index && "할당없음" : "할당할 비콘을 선택해 주세요."
+              selectedItem && bc_address
+                ? `${addZero(bc_id, 3)} : 
+          ${splitByColonInput(bc_address)}`
+                : "할당할 비콘을 선택해 주세요."
             }
             name="bc_index"
             onChange={(e, value) => onSelectChange(e, value)}
@@ -338,7 +383,41 @@ const VehicleInput = ({
             method="post"
             enctype="multipart/form-data"
           >
+            {(imagePreview || vh_image) && previewOpen === false && (
+              <div
+                className="image-preview-button"
+                onClick={() => {
+                  setPreviewOpen(true);
+                }}
+              >
+                [미리보기]
+              </div>
+            )}
+            {(imagePreview || vh_image) && previewOpen === true && (
+              <div
+                className="image-preview-button"
+                onClick={() => {
+                  setPreviewOpen(false);
+                }}
+              >
+                [닫기]
+              </div>
+            )}
             <div className="form-title photo">사진</div>
+            {previewOpen && (
+              <div className="image-preview-box">
+                {/* 이미지 미리보기 : 서버에 올라가지 않은 상태 / 서버에서 받아온 상태*/}
+                {imagePreview ? (
+                  <Image src={imagePreview} centered className="profile-img" />
+                ) : (
+                  <Image
+                    src={`${API}/upload/${vh_image}`}
+                    centered
+                    className="profile-img"
+                  />
+                )}
+              </div>
+            )}
             <label for="input-image-file" className="photo-box">
               <div className="icon-box">
                 <FaImage className="photo-icon" />

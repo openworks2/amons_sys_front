@@ -635,12 +635,15 @@ const ScannerTable = ({
             </Table.Row>
           </Table.Header>
           {/* ===============================테이블 바디===================================== */}
-          <Table.Cell className="table-body" colSpan="12">
+          <Table.Cell className="table-body" colSpan="12" key="table-body">
             <div className="resizable-table-body">{tableRender(viewItems)}</div>
           </Table.Cell>
           {/* =============================테이블 푸터(페이지네이션)============================== */}
           <Table.Footer className="table-footer">
-            <Table.Row className="table-pagination-row">
+            <Table.Row
+              className="table-pagination-row"
+              key="table-pagination-row"
+            >
               <Table.HeaderCell colSpan="12" className="table-pagination-row">
                 {totalPages > 1 && (
                   <Pagination

@@ -11,6 +11,8 @@ import {
   putVehicle,
   deleteVehicle,
 } from "../../modules/vehicles";
+import moment, { now } from "moment";
+import "moment/locale/ko";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -68,6 +70,21 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const VehicleContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Click Area ]
+  // [ File Upload Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Componets Area ]
+
+  // [ Redux Area ] ======================================================================
+
   const { data, loading, error } = useSelector(
     (state) => state.vehicles.vehicles
   );
@@ -77,10 +94,36 @@ const VehicleContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getVehicles());
     dispatch(getUnUsedBeacons());
     dispatch(getCompanies());
-    dispatch(getVehicles());
-  }, [dispatch]);
+  }, []);
+
+  // [ State Area ] ======================================================================
+
+  const today = new Date();
+
+  const [companyList, setCompanyList] = useState([]);
+  const [companyError, setCompanyError] = useState(undefined);
+  const [companySearchList, setCompanySearchList] = useState([]);
+  const [unUsedBeaconList, setUnUsedBeaconList] = useState([]);
+  const [files, setFiles] = useState({
+    selectFile: null,
+  });
+  const [fileName, setFileName] = useState("");
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
 
   const [formData, setFormData] = useState({
     vh_id: null,
@@ -99,13 +142,49 @@ const VehicleContainer = () => {
     bc_address: null,
   });
 
-  useEffect(() => {
-    makeCompanyList(companyData);
-  }, [companyData, formData.co_index]);
+  // [ Init Area ] ======================================================================
 
-  useEffect(() => {
-    makeBeaconList(unUsedBeaconData);
-  }, [unUsedBeaconData, formData.bc_index]);
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
+  const initFiles = () => {
+    setFiles({
+      selectFile: null,
+    });
+  };
+
+  const initActiveRow = () => {
+    setSelectedRow({
+      selectedId: null,
+      selectedItem: undefined,
+      clickedIndex: null,
+    });
+  };
+  const initFormData = () => {
+    setFormData({
+      ...formData,
+      vh_id: null,
+      vh_index: null,
+      created_date: null,
+      modified_date: null,
+      vh_name: "",
+      vh_number: "",
+      description: "",
+      vh_image: "",
+      vh_io_state: null,
+      co_id: null,
+      co_index: null,
+      co_name: null,
+      bc_index: null,
+      bc_address: null,
+    });
+  };
+
+  // [ Common Logic Area ] ======================================================================
 
   const addZero = (str, digit) => {
     if (str.length >= digit) {
@@ -124,7 +203,7 @@ const VehicleContainer = () => {
     let _str = str.replace(/\:/g, "");
 
     if (_str.length > 12) {
-      return str.substring(0, 16);
+      return str.substring(0, 17);
     }
 
     let length = _str.length;
@@ -139,9 +218,9 @@ const VehicleContainer = () => {
     return splitedStr;
   };
 
-  const [companyList, setCompanyList] = useState([]);
-  const [companySearchList, setCompanySearchList] = useState([]);
-  const [unUsedBeaconList, setUnUsedBeaconList] = useState([]);
+  useEffect(() => {
+    makeCompanyList(companyData);
+  }, [companyData]);
 
   const makeCompanyList = (data) => {
     if (data) {
@@ -171,24 +250,18 @@ const VehicleContainer = () => {
     }
   };
 
+  useEffect(() => {
+    makeBeaconList(unUsedBeaconData);
+  }, [unUsedBeaconData]);
+
   const makeBeaconList = (data) => {
     if (data) {
       let _unUsedBeaconList = [];
       _unUsedBeaconList.push({ key: 0, text: "할당 없음", value: null });
-      if (formData.bc_address && formData.bc_index) {
-        // 선택한 줄이 있을 경우, 해당 데이터 추가
-        _unUsedBeaconList.push({
-          key: 1,
-          text: `${addZero(formData.bc_id)} : 
-            ${splitByColonInput(formData.bc_address)}`,
-          value: formData.bc_index,
-          address: formData.bc_address,
-        });
-      }
       data.map((item, index) => {
         _unUsedBeaconList.push({
-          key: index + 2,
-          text: `${addZero(item.bc_id)} : 
+          key: index,
+          text: `${addZero(item.bc_id, 3)} : 
           ${splitByColonInput(item.bc_address)}`,
           value: item.bc_index,
           address: item.bc_address,
@@ -198,6 +271,115 @@ const VehicleContainer = () => {
       setUnUsedBeaconList(_unUsedBeaconList);
     }
   };
+
+  const makeBeaconListOnCreate = () => {
+    if (formData.bc_index) {
+      let _unUsedBeaconList = unUsedBeaconList.filter(
+        (el) => el.value !== formData.bc_index
+      );
+      setUnUsedBeaconList(_unUsedBeaconList);
+    }
+  };
+
+  const makeBeaconListOnUpdate = () => {
+    let originalVehicle = data.find((el) => el.vh_index === formData.vh_index);
+    let _unUsedBeaconList = unUsedBeaconList;
+    // 1.이전 값과 비교해서
+    // 2.이전 값과 현재 값이 다르다면(변경되었다면),
+    if (originalVehicle.bc_index !== formData.bc_index) {
+      // 2-1.변경한 값이 NULL 이라면 (비콘 할당 해제)
+      if (formData.bc_index === null) {
+        // 2-1-1. 이전 값을 비콘 리스트에 추가.
+        let unUsedBeacon = {
+          key: now() + 1,
+          text: `${addZero(originalVehicle.bc_id, 3)} : 
+              ${splitByColonInput(originalVehicle.bc_address)}`,
+          value: originalVehicle.bc_index,
+          address: originalVehicle.bc_address,
+          bc_id: originalVehicle.bc_id,
+        };
+        _unUsedBeaconList.push(unUsedBeacon);
+        setUnUsedBeaconList(_unUsedBeaconList);
+      }
+      // 2-2.변경한 값이 NULL 이 아니라면 (할당 비콘 변경)
+      else {
+        // 2-2-1. 바뀐 값을 비콘 리스트에서 제거.
+        _unUsedBeaconList = _unUsedBeaconList.filter(
+          (el) => el.value !== formData.bc_index
+        );
+        setUnUsedBeaconList(_unUsedBeaconList);
+        // 2-2-2. 이전 값이 NULL 이 아니라면 비콘 리스트에 추가.
+        if (originalVehicle.bc_id) {
+          let unUsedBeacon = {
+            key: now() + 2,
+            text: `${addZero(originalVehicle.bc_id, 3)} : 
+                ${splitByColonInput(originalVehicle.bc_address)}`,
+            value: originalVehicle.bc_index,
+            address: originalVehicle.bc_address,
+            bc_id: originalVehicle.bc_id,
+          };
+          _unUsedBeaconList.push(unUsedBeacon);
+          setUnUsedBeaconList(_unUsedBeaconList);
+        }
+      }
+    }
+    // 이전 값과 이후 값이 동일한 경우 비콘 리스트는 바뀌지 않음.
+  };
+
+  const makeBeaconListOnDelete = () => {
+    if (formData.bc_index !== null) {
+      let _unUsedBeaconList = unUsedBeaconList;
+      let unUsedBeacon = {
+        key: now() + 1,
+        text: `${addZero(formData.bc_id, 3)} : 
+        ${splitByColonInput(formData.bc_address)}`,
+        value: formData.bc_index,
+        address: formData.bc_address,
+        bc_id: formData.bc_id,
+      };
+      _unUsedBeaconList.push(unUsedBeacon);
+      setUnUsedBeaconList(_unUsedBeaconList);
+    }
+  };
+
+  // const makeBeaconListOnActive = () => {
+  //   let _unUsedBeaconList = unUsedBeaconList;
+
+  //   let unUsedBeacon = {
+  //     key: now() + 1,
+  //     text: `${addZero(formData.bc_id, 3)} :
+  //       ${splitByColonInput(formData.bc_address)}`,
+  //     value: formData.bc_index,
+  //     address: formData.bc_address,
+  //     bc_id: formData.bc_id,
+  //   };
+  //   _unUsedBeaconList.push(unUsedBeacon);
+  //   setUnUsedBeaconList(_unUsedBeaconList);
+  // };
+
+  // const makeBeaconListOnDeactive = () => {
+  //   let _unUsedBeaconList = unUsedBeaconList.filter(
+  //     (el) => el.value !== formData.bc_index
+  //   );
+  //   setUnUsedBeaconList(_unUsedBeaconList);
+  // };
+
+  // useEffect(() => {
+  //   // 비콘리스트 정렬
+  //   if (unUsedBeaconList) {
+  //     let _unUsedBeaconList = unUsedBeaconList.sort(function (a, b) {
+  //       return a.bc_id - b.bc_id;
+  //     });
+  //     setUnUsedBeaconList(_unUsedBeaconList);
+  //   }
+  // }, [
+  //   makeBeaconList,
+  //   makeBeaconListOnCreate,
+  //   makeBeaconListOnUpdate,
+  //   makeBeaconListOnDelete,
+  // ]);
+
+  // [ Change Area ] ======================================================================
 
   // form onChange Event
   const onChange = (e) => {
@@ -210,7 +392,7 @@ const VehicleContainer = () => {
     });
   };
 
-  // form onSelectChant Event
+  // form onSelectChange Event
   const onSelectChange = (e, seletedValue) => {
     const name = seletedValue.name;
     const value = seletedValue.value;
@@ -232,47 +414,34 @@ const VehicleContainer = () => {
     }
   };
 
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
-
-  const initActiveRow = () => {
-    setSelectedRow({
-      selectedId: null,
-      selectedItem: undefined,
-      clickedIndex: null,
+  // 페이지 네이션
+  const onPageChange = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo;
+    setPageInfo({
+      ...PreState,
+      activePage: _activePage,
     });
-  };
-  const initFormData = () => {
-    setFormData({
-      ...formData,
-      vh_id: null,
-      vh_index: null,
-      created_date: null,
-      modified_date: null,
-      vh_name: "",
-      vh_number: "",
-      description: "",
-      vh_image: "",
-      vh_io_state: null,
-      co_id: null,
-      co_index: null,
-      co_name: null,
-      bc_index: null,
-      bc_address: null,
-    });
+    initActiveRow();
+    initFormData();
+    initFiles();
+    setImagePreview(null);
   };
 
-  // table row 클릭 핸들러
+  // [ Click Area ] ======================================================================
+
   const activeHandler = (e, index, selectedId) => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
       initFormData();
       initFiles();
+      setImagePreview(null);
+      setPreviewOpen(false);
     } else {
+      setImagePreview(null);
+      setPreviewOpen(false);
+
       const findItem = data.find((vehicle) => vehicle.vh_id === selectedId);
 
       setSelectedRow({
@@ -296,56 +465,47 @@ const VehicleContainer = () => {
         bc_address: findItem.bc_address,
         description: findItem.description,
       });
-
-      setFileName(formData.vh_image);
     }
   };
 
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
-
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
-  };
-
-  const onPageChange = (e, { activePage }) => {
-    e.preventDefault();
-    let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
-      ...PreState,
-      activePage: _activePage,
-    });
-    // 활성화된 로우 초기화
-    initActiveRow();
-    initFormData();
-  };
-
-  // 사진 업로드
-
-  const [files, setFiles] = useState({
-    selectFile: null,
-  });
-
-  const initFiles = () => {
-    setFiles({
-      selectFile: null,
-    });
-  };
+  // [ File Upload Area ] ======================================================================
 
   const handleFileInputChange = (e) => {
+    let deletedImageForm = {
+      ...formData,
+      vh_image: null,
+    };
+    setFormData(deletedImageForm);
     setFiles({
       selectFile: e.target.files[0],
     });
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    if (theFile) {
+      const reader = new FileReader();
+      reader.readAsDataURL(theFile);
+      reader.onloadend = (finishedEvent) => {
+        const {
+          currentTarget: { result },
+        } = finishedEvent;
+        setImagePreview(result);
+      };
+    }
   };
 
-  const [fileName, setFileName] = useState("");
+  const imageDeleteHandler = (e) => {
+    e.stopPropagation();
+    initFiles();
+    let deletedImageForm = {
+      ...formData,
+      vh_image: null,
+    };
+    setImagePreview(null);
+    setFormData(deletedImageForm);
+    setPreviewOpen(false);
+  };
 
   // 가짜 input form 이미지 이름 바꾸기
   useEffect(() => {
@@ -362,22 +522,10 @@ const VehicleContainer = () => {
     } else {
       setFileName(null);
     }
-  }, [handleFileInputChange, activeHandler]);
+  }, [handleFileInputChange, activeHandler, files]);
 
-  const imageDeleteHandler = (e) => {
-    e.stopPropagation();
-    initFiles();
-    let deletedImageForm = {
-      ...formData,
-      vh_image: null,
-    };
-    setFormData(deletedImageForm);
-  };
+  // [ Create Area ] ======================================================================
 
-  const today = new Date();
-
-  const [companyError, setCompanyError] = useState(undefined);
-  // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
@@ -391,14 +539,16 @@ const VehicleContainer = () => {
       createData.append("file", files.selectFile);
       createData.append("reqBody", JSON.stringify(formData));
       dispatch(postVehicle(createData));
+      makeBeaconListOnCreate();
       initActiveRow();
       initFormData();
       initFiles();
-      makeBeaconList(unUsedBeaconData);
+      setImagePreview(null);
     }
   };
 
-  // UPDATE
+  // [ Update Area ] ======================================================================
+
   const updateHandler = (e) => {
     e.preventDefault();
     if (!formData.co_index) {
@@ -411,7 +561,7 @@ const VehicleContainer = () => {
       const findItem = selectedRow.selectedItem;
       setFormData({
         ...formData,
-        vh_image: formData.vh_image,
+        vh_image: fileName,
         vh_io_state: findItem.vh_io_state,
         created_date: findItem.created_date,
         modified_date: today,
@@ -420,17 +570,22 @@ const VehicleContainer = () => {
       putData.append("file", files.selectFile);
       putData.append("reqBody", JSON.stringify(formData));
       dispatch(putVehicle(formData.vh_index, putData));
-      dispatch(getUnUsedBeacons());
+      makeBeaconListOnUpdate();
     }
   };
 
-  // DELETE
+  // [ Delete Area ] ======================================================================
+
   const deleteHandler = (e, vh_id) => {
     dispatch(deleteVehicle(vh_id));
+    makeBeaconListOnDelete();
     initActiveRow();
     initFormData();
     initFiles();
+    setImagePreview(null);
   };
+
+  // [ Compoents Area ] ======================================================================
 
   if (error) {
     return (
@@ -459,7 +614,12 @@ const VehicleContainer = () => {
             unUsedBeaconList={unUsedBeaconList}
             companyError={companyError}
             fileName={fileName}
+            imagePreview={imagePreview}
+            previewOpen={previewOpen}
+            setPreviewOpen={setPreviewOpen}
             imageDeleteHandler={imageDeleteHandler}
+            addZero={addZero}
+            splitByColonInput={splitByColonInput}
           />
         </div>
         <div className="table-box">
