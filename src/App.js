@@ -12,7 +12,7 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
 .ui.modal.transition.visible.active.confirm-modal{
       width : 500px;
-      height: 27.5em;
+      height: 24.5em;
       text-align: center;
       align-items: center;
       top : 30%;

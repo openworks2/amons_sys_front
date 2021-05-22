@@ -120,6 +120,7 @@ const HomeContainer = () => {
       if (window.camera004) {
         window['camera004'].close();
         window['camera004'] = undefined;
+
       }
     }
     setCurrentUrl(location);
@@ -132,12 +133,8 @@ const HomeContainer = () => {
   }, []);
   
   useEffect(()=>{
-    console.log(">>>>>>>>>>>>>>>HomeContainer-->",sosSituation);
-    console.log(">>>>>>>>>>>>>>>sosList-->",sosList);
 
   },[sosSituation]);
-
-
 
   // if (!storage.get("user")) return <Redirect to="/amons/signin" />;
   return (

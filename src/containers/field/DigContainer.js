@@ -135,7 +135,7 @@ const DigContainer = () => {
 
   // 누적 굴진율 퍼센트 구하기
   const getDigAmountPercent = (plan_length, dig_length) => {
-    return ((dig_length / plan_length) * 100).toFixed(1) + "%";
+    return ((minusComma(dig_length) / plan_length) * 100).toFixed(1) + "%";
   };
 
   // 0 추가
@@ -184,6 +184,36 @@ const DigContainer = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === "dig_length") {
+      if (formData.local_index) {
+        if (localData.find((el) => el.local_index === formData.local_index)) {
+          let _plan_length = localData.find(
+            (el) => el.local_index === formData.local_index
+          ).plan_length;
+          if (minusComma(formData.dig_length) > _plan_length) {
+            setDigLengthError("*누적 굴진량이 계획 연장거리를 초과합니다.");
+            setTimeout(() => {
+              setDigLengthError(undefined);
+            }, 1500);
+          }
+        }
+      }
+      let _value = value.toString();
+      _value = _value.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+      _value = _value.replace(/,/g, ""); // , 값 공백처리
+      if (_value.length > 4) {
+        _value = _value.substring(0, 4);
+      }
+      console.log("_value");
+      console.log(_value);
+      setFormData({
+        ...formData,
+        dig_length: addComma(
+          _value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ),
+      });
+    }
   };
 
   const onChangeDate = (date) => {
@@ -307,6 +337,7 @@ const DigContainer = () => {
 
   const [localError, setLocalError] = useState(undefined);
   const [dateError, setDateError] = useState(undefined);
+  const [digLengthError, setDigLengthError] = useState(undefined);
 
   // CREATE
   const createHandler = (e) => {
@@ -395,6 +426,7 @@ const DigContainer = () => {
             localData={localData}
             localList={localList}
             localError={localError}
+            digLengthError={digLengthError}
             addComma={addComma}
             localInfo={localInfo}
             currentLatestDigInfo={currentLatestDigInfo}

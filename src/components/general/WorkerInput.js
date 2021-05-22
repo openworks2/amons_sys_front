@@ -295,6 +295,20 @@ const InputCompo = styled.div`
     }
   }
 
+  .image-preview-button {
+    text-align: right;
+    font-family: "NotoSansKR-Medium" !important;
+    color: #2e2e2e;
+    font-size: 14px !important;
+    margin-top: -4px;
+    margin-bottom: -20px;
+    margin-right: 10px;
+    cursor: pointer;
+    &:hover {
+      color: #f1592a !important;
+    }
+  }
+
   .form-title.photo {
     margin-top: -3px;
     margin-bottom: 3px;
@@ -370,6 +384,38 @@ const InputCompo = styled.div`
     //에러 색상
     display: none;
   }
+  .image-preview-box {
+    display: block;
+    height: 130px;
+    width: 88%;
+    background-color: #f2f2f2;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    border: 3px solid #f2f2f2;
+    .profile-img {
+      display: block;
+      margin: 2px;
+      margin-left: auto;
+      margin-right: auto;
+      width: auto;
+      height: 120px !important;
+      border-radius: 5px;
+      border-color: 3px solid black;
+    }
+  }
+  #input-focus {
+    width: 0px !important;
+    height: 0px !important;
+    padding: 0px !important;
+    border: 0px !important;
+    &:focus {
+      margin-top: 150px !important;
+      display: block;
+      border: 0px !important;
+    }
+  }
 `;
 const InputError = styled.div`
   margin-bottom: -4px;
@@ -409,7 +455,12 @@ const WorkerInput = ({
   companyError,
   ageError,
   fileName,
+  imagePreview,
+  previewOpen,
+  setPreviewOpen,
   imageDeleteHandler,
+  addZero,
+  splitByColonInput,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -429,6 +480,7 @@ const WorkerInput = ({
     bc_index,
     co_name,
     bc_address,
+    bc_id,
   } = formData;
 
   const bloodType = [
@@ -608,7 +660,7 @@ const WorkerInput = ({
                   )}
                   className="input-form birth"
                   locale={ko}
-                  dateFormat="yyyy.MM.dd"
+                  dateFormat="yyyy-MM-dd"
                   name="wk_birth"
                   shouldCloseOnSelect
                   useWeekdaysShort
@@ -659,6 +711,7 @@ const WorkerInput = ({
               required
             />
           </div>
+
           <Form.Input
             label="국적"
             className="input-form nation"
@@ -675,13 +728,14 @@ const WorkerInput = ({
             label="비콘 사용 정보"
             options={unUsedBeaconList}
             placeholder={
-              formData.wk_id
-                ? !formData.bc_index && "할당없음"
+              selectedItem && bc_address
+                ? `${addZero(bc_id, 3)} : 
+            ${splitByColonInput(bc_address)}`
                 : "할당할 비콘을 선택해 주세요."
             }
             name="bc_index"
             onChange={(e, value) => onSelectChange(e, value)}
-            value={formData.bc_index}
+            value={bc_index && bc_index}
             required
           />
           <Form.Field
@@ -689,12 +743,44 @@ const WorkerInput = ({
             method="post"
             enctype="multipart/form-data"
           >
+            {(imagePreview || wk_image) && previewOpen === false && (
+              <div
+                className="image-preview-button"
+                onClick={() => {
+                  setPreviewOpen(true);
+                  document.getElementById("input-focus").focus();
+                }}
+              >
+                [미리보기]
+              </div>
+            )}
+            {(imagePreview || wk_image) && previewOpen === true && (
+              <div
+                className="image-preview-button"
+                onClick={() => {
+                  setPreviewOpen(false);
+                }}
+              >
+                [닫기]
+              </div>
+            )}
             <div className="form-title photo" id="photo-title-unique">
               사진
             </div>
-            {/* 이미지 미리보기 : 서버에 올라간 상태 */}
-            {/* {wk_image && <Image src={`${API}/uploads/${wk_image}`} />} */}
-            {/* 이미지 미리보기 : 서버에 올라가지 않은 상태 */}
+            {previewOpen && (
+              <div className="image-preview-box">
+                {/* 이미지 미리보기 : 서버에 올라가지 않은 상태 / 서버에서 받아온 상태*/}
+                {imagePreview ? (
+                  <Image src={imagePreview} centered className="profile-img" />
+                ) : (
+                  <Image
+                    src={`${API}/upload/${wk_image}`}
+                    centered
+                    className="profile-img"
+                  />
+                )}
+              </div>
+            )}
             <label for="input-image-file" className="photo-box">
               <div className="icon-box">
                 <FaImage className="photo-icon" />
@@ -719,6 +805,7 @@ const WorkerInput = ({
               onChange={handleFileInputChange}
               style={{ display: "none" }}
             />
+            <Input id="input-focus" readOnly />
           </Form.Field>
         </div>
         {selectedItem ? (

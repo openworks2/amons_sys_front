@@ -201,6 +201,7 @@ const InputCompo = styled.div`
         text-align: left;
         letter-spacing: 0px;
         opacity: 1;
+
         &.date-area {
           height: 70px;
           width: 321px;
@@ -231,6 +232,9 @@ const InputCompo = styled.div`
                 border: 0px;
                 height: 25px;
                 color: black;
+                &:disabled {
+                  color: #7c7c7c;
+                }
               }
               vertical-align: middle;
               display: inline-block;
@@ -353,6 +357,17 @@ const InputError = styled.div`
   opacity: 1;
 `;
 
+const DigLengthError = styled.div`
+  margin-bottom: -9px;
+  margin-top: -10px;
+  font-family: "NotoSansKR-Regular";
+  font-size: 13px;
+  text-align: right;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
+`;
+
 const DigInput = ({
   onChange,
   onSelectChange,
@@ -364,6 +379,7 @@ const DigInput = ({
   initActiveRow,
   localList,
   localError,
+  digLengthError,
   addComma,
   localInfo,
   currentLatestDigInfo,
@@ -503,9 +519,13 @@ const DigInput = ({
               name="dig_length"
               placeholder="누적 굴진량을 입력해주세요."
               required
-              value={dig_length && addComma(dig_length)}
+              value={dig_length && dig_length}
               onChange={onChange}
+              error={digLengthError}
             />
+            {digLengthError && (
+              <DigLengthError>{digLengthError}</DigLengthError>
+            )}
           </div>
           <div className="input-form date-area">
             <div className="form-title">입력일</div>
@@ -573,7 +593,7 @@ const DigInput = ({
                     )}
                     className="input-form date"
                     locale={ko}
-                    dateFormat="yyyy.MM.dd"
+                    dateFormat="yyyy-MM-dd"
                     name="record_date"
                     shouldCloseOnSelect
                     useWeekdaysShort
@@ -581,6 +601,7 @@ const DigInput = ({
                     placeholder="입력일을 선택해주세요."
                     onChange={(date) => onChangeDate(date)}
                     required
+                    disabled={selectedItem}
                     dayClassName={(date) =>
                       getDayName(createDate(date)) === "토"
                         ? "saturday"
