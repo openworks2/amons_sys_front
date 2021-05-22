@@ -170,14 +170,20 @@ const MonitorContainer = () => {
     }
 
     const targetClick = (e) => {
-        console.log('targetClick-->', e.target.parentNode)
         const clzName = e.target.parentNode.className
-        console.log(clzName)
-        if (clzName === 'detail-panel-button' || clzName === 'table-box' || clzName === 'table-item') {
-            return
+        if (clzName === 'detail-panel-button active' || e.target.closest('.detail-panel-button') || e.target.closest('.table-box')) {
+            return;
         }
-        else if (clzName !== 'detail-panel-button') {
-            setOpenAccessPanel(null)
+        else if(clzName === 'ptz-control-button active' || e.target.closest('.controll-box')){
+            return;
+        }
+        else {
+            if(openAccessPanel !== null){
+                setOpenAccessPanel(null)
+            }
+            if(ctrlPanel !== null){
+                setOpenCtrlPanel(null);
+            }
         }
     }
 
@@ -212,12 +218,15 @@ const MonitorContainer = () => {
     }, [beacon]);
 
 
+    document.addEventListener('mousedown', targetClick)
+
+
     return (
         <MonitorCompo className="monitor-component" >
             <TopCompo className="top-component" />
             <BodyCompo
                 className="body-component"
-            onMouseDown={targetClick}
+                // onMouseDown={targetClick}
             >
                 <div className="left-compo">
                     <div className="left-top-box info-box">
@@ -235,10 +244,10 @@ const MonitorContainer = () => {
                     </div>
                     <div className="left-bottom-box map-box">
                         {
-                            monitor.data && monitor.data.length > 0 &&
+                            monitor.data &&
                             <MapComponent
                                 setOpenExpandMapHandler={setOpenExpandMapHandler}
-                                data={monitor.data}
+                                location={monitor.data}
                                 bleData={beacon.data}
                             />
                         }

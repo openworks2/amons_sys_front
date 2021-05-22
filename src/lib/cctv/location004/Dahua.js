@@ -502,7 +502,7 @@ Dahua.prototype = {
     },
     onScrollHandler() {
         const _this = this;
-        console.log(document.getElementById(_this.objectId));
+          
         if (document.getElementById(_this.objectId)) {
             let coverInfo = document.getElementById(_this.objectId).getBoundingClientRect() || null;
 

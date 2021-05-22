@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTag, faExpand } from "@fortawesome/pro-solid-svg-icons";
@@ -175,13 +175,18 @@ const MapCompo = styled.div`
         }
     }
 `;
-const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
+const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
     const [checkBox, setCheckBox] = useState(false);
     const [showItem, setItem] = useState({
         worker: true,
         vehicle: true,
         cctv: true
     });
+
+
+    const [dig1, setDig1] = useState([]);
+    const [dig2, setDig2] = useState([]);
+
     /*
         const [first, setFirst] = useState({
             total_length: 3359, // 총 굴진거리
@@ -203,36 +208,36 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
     */
 
     const [first, setFirst] = useState({
-        total_length: data[0].plan_length + data[1].plan_length, // 총 굴진거리
-        forward_index: data[0].local_index,
-        forward_Length: data[0].plan_length, // 정방향 굴진거리 (함양 시점 방향)
-        forward_dig: data[0].dig_length, // 정방향 진행 굴진거리
+        total_length: location[0].plan_length + location[1].plan_length, // 총 굴진거리
+        forward_index: location[0].local_index,
+        forward_Length: location[0].plan_length, // 정방향 굴진거리 (함양 시점 방향)
+        forward_dig: location[0].dig_length, // 정방향 진행 굴진거리
         forward_device: {
-            cctv: data[0].cctv_id ? data[0].cctv_pos_x : 0
+            cctv: location[0].cctv_id ? location[0].cctv_pos_x : 0
         },
-        revers_index: data[1].local_index,
-        revers_length: data[1].plan_length,// 역방향 굴진거리 (함양 종점 방향)
-        revers_dig: data[1].dig_length, // 역방향 진행 굴진거리
+        revers_index: location[1].local_index,
+        revers_length: location[1].plan_length,// 역방향 굴진거리 (함양 종점 방향)
+        revers_dig: location[1].dig_length, // 역방향 진행 굴진거리
         revers_device: {
-            cctv: data[1].cctv_id ? data[1].cctv_pos_x : 0
+            cctv: location[1].cctv_id ? location[1].cctv_pos_x : 0
         },
         block_Amount: 10, // 맵 블록 갯수
     });
 
 
     const [second, setSecond] = useState({
-        total_length: data[2].plan_length + data[3].plan_length, // 총 굴진거리
-        forward_index: data[2].local_index,
-        forward_Length: data[2].plan_length, // 정방향 굴진거리 (함양 시점 방향)
-        forward_dig: data[2].dig_length, // 정방향 진행 굴진거리
+        total_length: location[2].plan_length + location[3].plan_length, // 총 굴진거리
+        forward_index: location[2].local_index,
+        forward_Length: location[2].plan_length, // 정방향 굴진거리 (함양 시점 방향)
+        forward_dig: location[2].dig_length, // 정방향 진행 굴진거리
         forward_device: {
-            cctv: data[2].cctv_id ? data[2].cctv_pos_x : 0
+            cctv: location[2].cctv_id ? location[2].cctv_pos_x : 0
         },
-        revers_index: data[3].local_index,
-        revers_length: data[3].plan_length,// 역방향 굴진거리 (함양 종점 방향)
-        revers_dig: data[3].dig_length, // 역방향 진행 굴진거리
+        revers_index: location[3].local_index,
+        revers_length: location[3].plan_length,// 역방향 굴진거리 (함양 종점 방향)
+        revers_dig: location[3].dig_length, // 역방향 진행 굴진거리
         revers_device: {
-            cctv: data[3].cctv_id ? data[3].cctv_pos_x : 0
+            cctv: location[3].cctv_id ? location[3].cctv_pos_x : 0
         },
         block_Amount: 10 // 맵 블록 갯수
     })
@@ -240,11 +245,9 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
 
 
 
-    const [dig1, setDig1] = useState([]);
-    const [dig2, setDig2] = useState([]);
 
     const bind = (data, callback) => {
-        console.log('bind--->',data);
+        console.log('dig1--->',dig1);
 
         const block_Length = data.total_length / data.block_Amount; // 1개 블록 당 거리
 
@@ -298,17 +301,18 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
                 obj
             ]
         }
+        console.log('mapArr--->',mapArr);
         callback(mapArr)
     }
 
     const setStateDig1 = (data) => {
         console.log('setStateDig1--->',data);
         setDig1(data);
-    }
+    };
     const setStateDig2 = (data) => {
         console.log('setStateDig2--->',data);
         setDig2(data);
-    }
+    };
 
 
     const bleDataBinding = (data, dig, callback) => {
@@ -375,22 +379,23 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
         console.log('second-->',second)
         bind(first, setStateDig1);
         bind(second, setStateDig2);
-    }, [data]);
+    }, [location]);
 
     useEffect(() => {
         // bind(first, setStateDig1);
         // bind(second, setStateDig2);
-        // if (dig1.length === 0) {
-        //     bind(first, setStateDig1);
-        // }
-        // if (dig2.length === 0) {
-        //     bind(second, setStateDig2);
-        // }
+        if (dig1.length === 0) {
+            bind(first, setStateDig1);
+        }
+        if (dig2.length === 0) {
+            bind(second, setStateDig2);
+        }
         if (bleData && dig1 && dig2) {
             bleDataBinding(bleData, dig1, setDig1);
             bleDataBinding(bleData, dig2, setDig2);
         }
-        console.log('map----->?>>>',data);
+        console.log('map----->?>>>',location);
+        console.log('>>this-->',this)
     }, [bleData]);
     const setOpenCheckBox = () => {
         setCheckBox(!checkBox);
@@ -415,7 +420,10 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
 
 
 
-    const rendering = (initTopPoint, initLeftPoint, items) => {
+    const rendering = useCallback((initTopPoint, initLeftPoint, items) => {
+        console.log('initTopPoint->>',initTopPoint);
+        console.log('initLeftPoint->>',initLeftPoint);
+        console.log('items->>',items);
         return <>
             {items.map((item, index) => {
                 const _blockStyled = {
@@ -459,7 +467,7 @@ const MapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
                 </div>
             })}
         </>
-    }
+    },[dig1, dig2]);
 
     return (
         <MapCompo className="map-component">
