@@ -154,57 +154,57 @@ const CameraLocation002 = ({
         }
     }
 
-    // const connCCTV = async () => {
-    //     const cctv = await new Dahua(`divPlugin-${id}`);
-    //     cctv.init(form);
-    //     setCamera(cctv);
-    // }
+    const connCCTV = async () => {
+        const cctv = await new Dahua(`divPlugin-${id}`);
+        cctv.init(form);
+        setCamera(cctv);
+    }
 
-    // const resizeVideo = useCallback(() => {
-    //     console.log(ctrlPanel)
-    //     if (accessPanel !== null && accessPanel === 'loc004') {
-    //         Camera.hiddenScreen();
-    //     }
-    //     else if (accessPanel === null || accessPanel !== 'loc004') {
-    //         Camera.showScreen();
-    //     }
-    // }, [Camera, accessPanel]);
+    const resizeVideo = useCallback(() => {
+        console.log(ctrlPanel)
+        if (accessPanel !== null && accessPanel === 'loc004') {
+            Camera.hiddenScreen();
+        }
+        else if (accessPanel === null || accessPanel !== 'loc004') {
+            Camera.showScreen();
+        }
+    }, [Camera, accessPanel]);
 
 
-    // useEffect(() => {
-    //     console.log('CameraLocation002--->',data)
-    //     if (!Camera) {
-    //         connCCTV();
-    //     }
-    //     if (Camera) {
-    //         if(expandMap){
-    //             Camera.hiddenScreen();
-    //         } else {
-    //             if(alarmPanel){
-    //                 Camera.hiddenScreen();
-    //             } else {
-    //                 resizeVideo();
-    //                 if (ctrlPanel !== id || ctrlPanel === null) {
-    //                     if (Locate) {
-    //                         ptzLocationHandler();
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // },[accessPanel, ctrlPanel, alarmPanel, expandMap]);
+    useEffect(() => {
+        console.log('CameraLocation002--->',data)
+        if (!Camera) {
+            connCCTV();
+        }
+        if (Camera) {
+            if(expandMap){
+                Camera.hiddenScreen();
+            } else {
+                if(alarmPanel){
+                    Camera.hiddenScreen();
+                } else {
+                    resizeVideo();
+                    if (ctrlPanel !== id || ctrlPanel === null) {
+                        if (Locate) {
+                            ptzLocationHandler();
+                        }
+                    }
+                }
+            }
+        }
+    },[accessPanel, ctrlPanel, alarmPanel, expandMap]);
 
-    // const resizeHandler = () => {
-    //     if (Camera) {
-    //         Camera.setReposition();
-    //     }
-    // }
-    // window.addEventListener("resize", resizeHandler);
-    // window.addEventListener("scroll",()=>{
-    //     if(Camera){
-    //         Camera.onScrollHandler();
-    //     }
-    // })
+    const resizeHandler = () => {
+        if (Camera) {
+            Camera.setReposition();
+        }
+    }
+    window.addEventListener("resize", resizeHandler);
+    window.addEventListener("scroll",()=>{
+        if(Camera){
+            Camera.onScrollHandler();
+        }
+    })
 
 
     return (
