@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getCompanies } from "../../modules/companies";
 import { getRemainWorkers, postRemainWorkersSearch } from "../../modules/bles";
-import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
 import { API } from "../../lib/server.config";
@@ -55,18 +54,22 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const KickOutWorkerContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Kickout Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] =====================================================
+
   const { data, loading, error } = useSelector(
     (state) => state.bles.bleWorkers
   );
-
   const localData = useSelector((state) => state.locals.locals.data);
   const companyData = useSelector((state) => state.companies.companies.data);
-
-  // 검색 기능 table 데이터 처리
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentData, setCurrentData] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState("");
 
   const dispatch = useDispatch();
 
@@ -80,41 +83,38 @@ const KickOutWorkerContainer = () => {
     // };
     // dispatch(postBleVehiclesSearch(searchCondition));
     dispatch(getRemainWorkers());
-  }, []);
-
-  useEffect(() => {
     dispatch(getLocals());
     dispatch(getCompanies());
-  }, [dispatch]);
+  }, []);
 
-  useEffect(() => {
-    makeLocalList(localData);
-  }, [localData]);
+  // [ State Area ] ======================================================
+
+  const [categorieValue, setCategorieValue] = useState(null); // 노선 카테고리 선택
+  const [searchValue, setSearchValue] = useState(""); // 검색 입력
+  const [currentData, setCurrentData] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(""); //소속사 dropdown
+  const [companyList, setCompanyList] = useState([]);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  // [ Init Area ] ======================================================
+
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
+  //  [ Common Logic Area ] =====================================================
 
   useEffect(() => {
     makeCompanyList(companyData);
   }, [companyData]);
 
-  const [localList, setLocalList] = useState([]);
-
-  const makeLocalList = (data) => {
-    if (data) {
-      let _localList = [];
-      const _data = data.filter((el) => el.local_used !== 0);
-
-      _data.map((item, index) => {
-        _localList.push({
-          key: index,
-          text: item.local_name,
-          value: item.local_index,
-          name: item.local_name,
-        });
-      });
-      setLocalList(_localList);
-    }
-  };
-
-  const [companyList, setCompanyList] = useState([]);
   const makeCompanyList = (data) => {
     if (data) {
       let _companyList = [];
@@ -136,17 +136,7 @@ const KickOutWorkerContainer = () => {
     }
   };
 
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
-  };
+  // [ Change Area ] =====================================================
 
   const onPageChange = (e, { activePage }) => {
     e.preventDefault();
@@ -174,8 +164,6 @@ const KickOutWorkerContainer = () => {
     setCategorieValue(_value);
   };
 
-  const today = new Date();
-
   // 데이터 조회 (post )
   const onSearch = (startDate, endDate) => {
     let _local_index = categorieValue;
@@ -189,17 +177,6 @@ const KickOutWorkerContainer = () => {
     };
     dispatch(postRemainWorkersSearch(searchCondition));
     initPage();
-  };
-
-  const kickoutHandler = async (bc_index) => {
-    try {
-      const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
-    } catch (e) {
-      console.log(e);
-    }
-    let _data = data;
-    _data = _data.filter((el) => el.bc_index !== bc_index);
-    setCurrentData(_data);
   };
 
   useEffect(() => {
@@ -219,6 +196,21 @@ const KickOutWorkerContainer = () => {
       setCurrentData(tempData);
     }
   }, [data, categorieValue]);
+
+  // [ Kickout Area ] =====================================================
+
+  const kickoutHandler = async (bc_index) => {
+    try {
+      const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
+    } catch (e) {
+      console.log(e);
+    }
+    let _data = data;
+    _data = _data.filter((el) => el.bc_index !== bc_index);
+    setCurrentData(_data);
+  };
+
+  // [ Components Area ] =====================================================
 
   if (error) {
     return (

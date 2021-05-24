@@ -6,7 +6,12 @@ import Header from "../components/Header";
 import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { Redirect } from "react-router";
-import { cloaseAlarmPanel, setInitSOSSituation, setRatePanel, setSOSSituation } from "../modules/monitor";
+import {
+  cloaseAlarmPanel,
+  setInitSOSSituation,
+  setRatePanel,
+  setSOSSituation,
+} from "../modules/monitor";
 import useFullscreen from "../lib/useFullscrenn";
 import {
   loginCheckAsync,
@@ -26,7 +31,9 @@ const HomeCompo = styled.div`
 
 const HomeContainer = () => {
   const { login } = useSelector((state) => state.login);
-  const { sosSituation, sosList, alarmPanel } = useSelector((state) => state.monitor);
+  const { sosSituation, sosList, alarmPanel } = useSelector(
+    (state) => state.monitor
+  );
 
   const [user, setUser] = useState(null);
 
@@ -47,7 +54,7 @@ const HomeContainer = () => {
     } else if (docV.msRequestFullscreen) {
       docV.msRequestFullscreen();
     }
-    if(!fullState){
+    if (!fullState) {
       setScreenState(true);
     }
   };
@@ -55,7 +62,7 @@ const HomeContainer = () => {
   const closeFullScreenMode = () => {
     // var docV = document.documentElement;
     document.webkitExitFullscreen();
-    if(fullState){
+    if (fullState) {
       setScreenState(false);
     }
   };
@@ -74,8 +81,8 @@ const HomeContainer = () => {
     dispatch(setRatePanel());
   };
   const setOpenAlarmModal = () => {
-    dispatch(cloaseAlarmPanel())
-  }
+    dispatch(cloaseAlarmPanel());
+  };
   const initialUserInfo = useCallback(async () => {
     const loggedInfo = storage.get("user"); // 로그인 정보를 로컬스토리지에서 가져오기
     if (!loggedInfo) {
@@ -104,23 +111,22 @@ const HomeContainer = () => {
     const url = document.location.href;
     const splitUrl = url.split("/");
     const location = splitUrl[splitUrl.length - 1];
-    if (currentUrl !== 'monitor') {
+    if (currentUrl !== "monitor") {
       if (window.camera001) {
-        window['camera001'].close();
-        window['camera001'] = undefined;
+        window["camera001"].close();
+        window["camera001"] = undefined;
       }
       if (window.camera002) {
-        window['camera002'].close();
-        window['camera002'] = undefined;
+        window["camera002"].close();
+        window["camera002"] = undefined;
       }
       if (window.camera003) {
-        window['camera003'].close();
-        window['camera003'] = undefined;
+        window["camera003"].close();
+        window["camera003"] = undefined;
       }
       if (window.camera004) {
-        window['camera004'].close();
-        window['camera004'] = undefined;
-
+        window["camera004"].close();
+        window["camera004"] = undefined;
       }
     }
     setCurrentUrl(location);
@@ -128,13 +134,11 @@ const HomeContainer = () => {
 
   useEffect(() => {
     console.log("login--->>", login);
-    
+
     initialUserInfo();
   }, []);
-  
-  useEffect(()=>{
 
-  },[sosSituation]);
+  useEffect(() => {}, [sosSituation]);
 
   // if (!storage.get("user")) return <Redirect to="/amons/signin" />;
   return (
@@ -163,9 +167,12 @@ const HomeContainer = () => {
       />
 
       {/* </ContentsCompo> */}
-      {
-        alarmPanel && <AlarmModal setOpenAlarmModal={setOpenAlarmModal} bleAlarmList={sosList} />
-      }
+      {alarmPanel && (
+        <AlarmModal
+          setOpenAlarmModal={setOpenAlarmModal}
+          bleAlarmList={sosList}
+        />
+      )}
     </HomeCompo>
   );
 };
