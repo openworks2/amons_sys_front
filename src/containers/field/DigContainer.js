@@ -64,10 +64,33 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const DigContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Click Area ]
+  // [ File Upload Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Componets Area ]
+
+  // [ Redux Area ] ===============================================================
+
   const { data, loading, error } = useSelector((state) => state.digs.digs);
   const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getLocals());
+    dispatch(getDigs());
+  }, []);
+
+  // [ State Area ] ===============================================================
+
   const today = new Date();
 
   const [localInfo, setLocalInfo] = useState({});
@@ -83,11 +106,6 @@ const DigContainer = () => {
     local_index: null,
   });
   const [localList, setLocalList] = useState([]);
-
-  useEffect(() => {
-    dispatch(getLocals());
-    dispatch(getDigs());
-  }, [dispatch]);
 
   useEffect(() => {
     makeLocalList(localData);

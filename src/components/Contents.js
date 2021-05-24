@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route } from "react-router";
+import { Route, Redirect } from "react-router";
 // log (이력조회)
 import AlarmContainer from "../containers/log/AlarmContainer";
 import LogWorkerContainer from "../containers/log/LogWorkerContainer";
@@ -34,6 +34,9 @@ const Contents = ({ openFullScreenMode, role }) => {
 
   return (
     <>
+      {(role !== 0 || role !== 1 || role !== 2) && (
+        <Redirect to="/amons/signin" />
+      )}
       {(role === 0 || role === 1 || role === 2) && (
         <>
           <Route
