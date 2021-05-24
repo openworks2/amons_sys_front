@@ -153,7 +153,9 @@ const HomeContainer = () => {
       />
       <SideMenu
         callSideMenu={callSideMenu}
+        setCallSideMenu={setCallSideMenu}
         callSideMenuHandler={callSideMenuHandler}
+        openFullScreenMode={openFullScreenMode}
         currentUrl={currentUrl}
         role={user !== null ? user.acc_role : null}
       />
