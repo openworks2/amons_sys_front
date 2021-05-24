@@ -34,9 +34,6 @@ const Contents = ({ openFullScreenMode, role }) => {
 
   return (
     <>
-      {(role !== 0 || role !== 1 || role !== 2) && (
-        <Redirect to="/amons/signin" />
-      )}
       {(role === 0 || role === 1 || role === 2) && (
         <>
           <Route
