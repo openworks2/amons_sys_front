@@ -136,7 +136,8 @@ const HomeContainer = () => {
 
   },[sosSituation]);
 
-  // if (!storage.get("user")) return <Redirect to="/amons/signin" />;
+
+  if (!storage.get("user")) return <Redirect to="/amons/signin" />;
   return (
     <HomeCompo className="Home-component">
       <Header
