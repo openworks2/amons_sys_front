@@ -60,24 +60,25 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const SettingsContatiner = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Update Area  ]
+  // [ Components Area ]
+
+  // [ Redux Area ] =====================================================
+
   const { data, loading, error } = useSelector(
     (state) => state.settings.settings
   );
 
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({
-    env_index: "HH2106001",
-    announce_rolling: 0,
-    process_disabled: "0",
-    kma_sido: "",
-    kma_gun: "",
-    kma_dong: "",
-  });
-
   useEffect(() => {
     dispatch(getSettings());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -93,21 +94,22 @@ const SettingsContatiner = () => {
     }
   }, [data]);
 
-  const today = new Date();
+  // [ State Area ] ======================================================
 
-  // form onChange Event
-  const onChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    // 입력값 state 에 저장
-    if (name === "announce_rolling") {
-      let _announce_rolling = value.replace(/[^0-9]*$/g, "");
-      setFormData({
-        ...formData,
-        announce_rolling: _announce_rolling,
-      });
-    }
-  };
+  const [saveMessage, setSaveMessage] = useState(null);
+  const [addressError, setAddressError] = useState(null);
+  const [sliderTimeError, setSliderTimeError] = useState(null);
+
+  const [formData, setFormData] = useState({
+    env_index: "HH2106001",
+    announce_rolling: 0,
+    process_disabled: "0",
+    kma_sido: "",
+    kma_gun: "",
+    kma_dong: "",
+  });
+
+  //  [ Common Logic Area ] =====================================================
 
   const sidoParser = (sido) => {
     let str = "";
@@ -136,6 +138,21 @@ const SettingsContatiner = () => {
     return str;
   };
 
+  // [ Change Area ] =====================================================
+
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    // 입력값 state 에 저장
+    if (name === "announce_rolling") {
+      let _announce_rolling = value.replace(/[^0-9]*$/g, "");
+      setFormData({
+        ...formData,
+        announce_rolling: _announce_rolling,
+      });
+    }
+  };
+
   const onChangeAddress = (sido, gun, dong) => {
     const newAddressFormData = {
       ...formData,
@@ -155,11 +172,8 @@ const SettingsContatiner = () => {
     });
   };
 
-  const [saveMessage, setSaveMessage] = useState(null);
-  const [addressError, setAddressError] = useState(null);
-  const [sliderTimeError, setSliderTimeError] = useState(null);
+  // [ Update Area ] ======================================================================
 
-  // UPDATE
   const updateHandler = (e) => {
     if (!formData.kma_dong) {
       setAddressError("*주소를 검색해 주세요.");
@@ -186,6 +200,8 @@ const SettingsContatiner = () => {
       }, 1350);
     }
   };
+
+  // [ Components Area ] =====================================================
 
   if (error) {
     return (

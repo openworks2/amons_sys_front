@@ -53,24 +53,26 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const LoginLogContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Change Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] =====================================================
   const { data, loading, error } = useSelector(
     (state) => state.accounts.loginRecords
   );
-
-  // 검색 기능 table 데이터 처리
-  const [searchValue, setSearchValue] = useState("");
-  const [currentData, setCurrentData] = useState([]);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     const searchCondition = {
-      from_date: new Date(),
-      to_date: new Date(),
+      from_date: 0,
+      to_date: 0,
       ip: null,
     };
-    console.log("searchCondition");
-    console.log(searchCondition);
+    // 최초 get 안해옴.
     dispatch(postLoginRecordsSearch(searchCondition));
   }, []);
 
@@ -79,17 +81,26 @@ const LoginLogContainer = () => {
     setCurrentData(_data);
   }, [data]);
 
-  // 페이지 네이션
+  // [ State Area ] ======================================================
+
+  const [searchValue, setSearchValue] = useState("");
+  const [currentData, setCurrentData] = useState([]);
+
   const [pageInfo, setPageInfo] = useState({
     activePage: 1, // 현재 페이지
     itemsPerPage: 14, // 페이지 당 item 수
   });
+
+  // [ Init Area ] ======================================================
+
   const initPage = () => {
     setPageInfo({
       activePage: 1,
       itemsPerPage: 14,
     });
   };
+
+  // [ Change Area ] =====================================================
 
   const onPageChange = (e, { activePage }) => {
     e.preventDefault();
@@ -101,13 +112,10 @@ const LoginLogContainer = () => {
     });
   };
 
-  // serach input 입력
   const onSearchChange = (e) => {
     const _searchValue = e.target.value;
     setSearchValue(_searchValue);
   };
-
-  const today = new Date();
 
   // 데이터 조회 (post )
   const onSearch = (startDate, endDate) => {
@@ -121,6 +129,9 @@ const LoginLogContainer = () => {
     dispatch(postLoginRecordsSearch(searchCondition));
     initPage();
   };
+
+  // [ Components Area ] =====================================================
+
   if (error) {
     return (
       <ErrMsg className="err-msg">

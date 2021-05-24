@@ -81,7 +81,7 @@ const WorkerContatiner = () => {
   // [ Create Area ]
   // [ Update Area ]
   // [ Delete Area ]
-  // [ Componets Area ]
+  // [ Components Area ]
 
   // [ Redux Area ] ======================================================================
 
@@ -448,7 +448,7 @@ const WorkerContatiner = () => {
     }
     setFormData({
       ...formData,
-      wk_birth: moment(_date).format("YYYY.MM.DD"),
+      wk_birth: moment(_date).format("YYYY-MM-DD"),
     });
   };
 
@@ -666,7 +666,7 @@ const WorkerContatiner = () => {
     setImagePreview(null);
   };
 
-  // [ Componets Area ]===================================================================
+  // [ Components Area ]===================================================================
 
   if (error) {
     return (

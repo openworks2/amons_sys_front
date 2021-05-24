@@ -64,6 +64,11 @@ const VehicleDetailCompo = styled.div`
             }
             .vehicle-info{
                 height: 18px;
+                text-overflow: ellipsis;
+                width: 165px;
+                overflow: hidden;
+                white-space: nowrap;
+                color:#D8D8D8;
                 label{
                     color:#7C7C7C;
                 }

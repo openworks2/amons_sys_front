@@ -7,6 +7,7 @@
 // }
 
 // import { WebVideoCtrl } from "./module/WebVideoCtrl";
+import { CLIENT } from '../../server.config';
 import { Foundation } from './foundation';
 import { WebVideoCtrl } from './WebVideoCtrl';
 
@@ -62,15 +63,12 @@ Dahua.prototype = {
          * @description 최초 로그인 
          */
         if (WebVideoCtrl.getPlayerInfo()) {
-            console.log('00.plugin initsadkjfsdkflj')
-
             return
         }
         else {
             let _this = this;
             _this.count += 1;
             WebVideoCtrl.checkPluginInstall().done(function () {
-                console.log('objectId-->', _this.objectId)
                 WebVideoCtrl.insertPluginObject(_this.objectId, 300, 300);
                 //초기화 플러그인
                 WebVideoCtrl.initPlugin("Protocol2", function () {
@@ -79,7 +77,6 @@ Dahua.prototype = {
                     let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
                     let width = _this.position.width = _this.camOCX.offsetWidth;
                     let height = _this.position.height = _this.camOCX.offsetHeight;
-                    console.log(left, '/', top, '/', width, '/', height)
 
                     WebVideoCtrl.resizeVideo(left, top, width, height);
                     //비디오 창을 만듭니다
@@ -92,7 +89,6 @@ Dahua.prototype = {
                     WebVideoCtrl.registerEvent("SelectedView", _this.responseSelectedViewSignal);
                     //초기화 경로
                     WebVideoCtrl.getUserDirectory().done(function (szDir) {
-                        console.log('szDir->', szDir)
                         let szPath = `${szDir}\\LiveRecord"`;
                         _this.filePath.liveRecord = szPath;
                         szPath = `${szDir}\\Download"`;
@@ -107,7 +103,6 @@ Dahua.prototype = {
                         szPath = `${szDir}\\PlaybackFilePath"`;
                         _this.filePath.playBackFilePath = szPath;
 
-                        console.log(_this.filePath)
                         // $("#tabs").tabs();
                         //숨겨진 창 일련 번호 선택 상자
                         // $("#winIndex").hide();
@@ -121,15 +116,20 @@ Dahua.prototype = {
                 _this.clickLogin(obj);
 
             }).fail(function () {
-                console.log('ws 확인--->>>>',window.camera001);
-                // window.location.reload();
-                alert("001>>>>>플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
-                
+                // alert("001>>>>>플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
+                // const result = window.confirm("001>>>>>플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
+                const result = window.confirm("플러그인이 설치되지 않았거나 실행되지 않았습니다. 확인를 누르면 WebPlugin.exe 패키지가 다운로드 됩니다.！");
+                console.log('result--->', result)
+                if(result){
+                    window.location.assign(`${CLIENT}/plugin/webplugin.exe`);
+                    alert('WebPlugin.exe 설치 후 브라우저를 다시 시작해주세요.');
+                }else {
+                    window.location.reload();
+                }
             });
         }
     },
     clickLogin(obj) {
-        console.log("clickLogin--->", obj)
         let _this = this;
         let { ip, port, username, password, rtspPort = 80, protocol = 0, timeout = 5, streamType = 1, channel = 1 } = obj;
 
@@ -146,7 +146,6 @@ Dahua.prototype = {
         // var port = parseInt(port);
         //현재 장치가 이미 로그인한지 확인하십시오
         var deviceInfo = WebVideoCtrl.getDeviceInfo(szIP);
-        console.log(_this.objectId, '-->01.deviceInfo-->', deviceInfo)
         if (typeof deviceInfo !== "undefined") {
             console.log("Login Success!!!")
             if (WebVideoCtrl.logout(szIP)) {
@@ -156,7 +155,6 @@ Dahua.prototype = {
                 // DemoUI.removeDeviceInfo(szIP);
             }
         }
-        console.log('00.connectInfo-->', _this.connectInfo)
 
         let _connectInfo = _this.connectInfo;
         _this.connectInfo = {
@@ -171,18 +169,14 @@ Dahua.prototype = {
         }
         _this.streamType = streamType;
         _this.channel = channel;
-        console.log('11.connectInfo-->', _this.connectInfo)
-        console.log('12.channel-->', _this.channel)
         WebVideoCtrl.login(szIP, szPort, szUsername, szPassword, szRtspPort, szProtocol, szTimeout,
             function (sIp, iDeviceID) {
                 _this.showOPInfo(sIp + " Login Succeed ");
                 //삽입 장치
                 // DemoUI.addDeviceIP(sIp);
                 //채널 번호를 가져옵니다
-                console.log('--->', iDeviceID)
                 WebVideoCtrl.getChannelNumber(iDeviceID).done(function (ret) {
                     //채널 데이터를 업데이트합니다
-                    console.log('ret--->', ret)
                     // DemoUI.modifyChannelList(ret);
                     _this.clickStartRealPlay();
                 });
@@ -192,7 +186,6 @@ Dahua.prototype = {
                 _this.showOPInfo(szIP + " Login Fail ", iErrorCode, sError);
             }
         );
-        console.log('WebVideoCtrl--->', WebVideoCtrl)
     },
     clickLogout() {
         /**
@@ -202,7 +195,6 @@ Dahua.prototype = {
         let _this = this;
         // 현재 로그인 된 IP 수집
         let ip = _this.connectInfo.szIP;
-        console.log(ip)
         if (WebVideoCtrl.logout(ip)) {
             console.log('로그아웃!!!!!')
 
@@ -224,7 +216,6 @@ Dahua.prototype = {
         _this.connectInfo.szProtocol = undefined
         _this.connectInfo.szTitmeout = undefined
 
-        console.log('removeConnectionInfo--->', _this.connectInfo)
     },
     showOPInfo(szInfo, status, error) {
         var szTip = "<div>" + Foundation.dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss") + " " + szInfo;
@@ -232,7 +223,6 @@ Dahua.prototype = {
             szTip += "(" + status.toString() + ", " + error.toString() + ")";
         }
         szTip += "</div>";
-        console.log('showOPinfo--->', szTip)
         // $("#opinfo").html(szTip + $("#opinfo").html());
     },
     responseSelectedViewSignal(iNodeIndex, iViewIndex, iWinID) {
@@ -256,9 +246,7 @@ Dahua.prototype = {
         let _this = this;
         //현재 선택된 장치 IP를 가져옵니다
         // var sIP = DemoUI.getCurDeviceIP();
-        console.log(_this.connectInfo)
         var sIP = _this.connectInfo.szIP;
-        console.log('szIP--->', sIP)
         if (sIP) {
 
             //채널 번호를 가져옵니다
@@ -267,12 +255,10 @@ Dahua.prototype = {
             //코드 현재 유형을 가져옵니다
             // var iStreamType = parseInt($("#streamtype").val(), 10);
             var iStreamType = parseInt(_this.streamType, 10)
-            console.log('0.iStreamType->', iStreamType)
             // console.log('1.iStreamType->',$("#streamtype").val())
             //창 선택 모드
             // var iMode = parseInt($("#winMode").val(), 10);
             var iMode = parseInt(_this.winMode, 10);
-            console.log('iMode->', iMode)
 
             if (0 === iMode) {
                 WebVideoCtrl.connectRealVideo(sIP, iChannel, iStreamType, function (iPlayerID) {
@@ -286,7 +272,6 @@ Dahua.prototype = {
                 //창 일련 번호
                 // var iWinIndex = parseInt($("#winIndex").val(), 10);
                 var iWinIndex = _this.winIndex;
-                console.log('iWinIndex->', iWinIndex)
 
                 WebVideoCtrl.connectRealVideoEx(iWinIndex, sIP, iChannel, iStreamType, function (iPlayerID) {
                     _this.showOPInfo(sIP + " Channel:" + iChannel.toString() + " Live succeed");
@@ -301,8 +286,7 @@ Dahua.prototype = {
         }
     },
     setClosePlayer() {
-        console.log('setClosePlayer!!!')
-        // WebVideoCtrl.closePlayer()
+        WebVideoCtrl.closePlayer()
     },
     clickStopRealPlay() {
         /**
@@ -351,7 +335,6 @@ Dahua.prototype = {
         * @description 좌상 이동        
         */
         let speed = this.ptzSpeed;
-        console.log('ptzSpeed--->>', speed)
 
         WebVideoCtrl.moveUpperLeft(speed, speed, flag);
 
@@ -465,7 +448,6 @@ Dahua.prototype = {
 
     },
     hiddenScreen() {
-        console.log('hiddenScreen')
         WebVideoCtrl.resizeVideo(0, 0, 0, 0);
     },
     showScreen() {
@@ -482,11 +464,6 @@ Dahua.prototype = {
         let top = _this.position.top = _this.camOCX.offsetTop + window.outerHeight - window.innerHeight;
         let width = _this.position.width = _this.camOCX.offsetWidth;
         let height = _this.position.height = _this.camOCX.offsetHeight;
-        console.log(left)
-        console.log(top)
-        console.log(width)
-        console.log(height)
-
 
         WebVideoCtrl.resizeVideo(left, top, width, height);
     },

@@ -127,6 +127,10 @@ const AlarmContainer = () => {
     });
   };
 
+  useEffect(() => {
+    console.log(formData);
+  });
+
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
@@ -156,6 +160,8 @@ const AlarmContainer = () => {
       initActiveRow();
       initFormData();
     } else {
+      initFormData();
+
       const findItem = data.find((alarm) => alarm.emg_seq === selectedId);
 
       setSelectedRow({
@@ -266,6 +272,9 @@ const AlarmContainer = () => {
     };
 
     dispatch(putAlarm(newAlarm.emg_seq, newAlarm));
+
+    initActiveRow();
+    initFormData();
   };
 
   if (error) {
