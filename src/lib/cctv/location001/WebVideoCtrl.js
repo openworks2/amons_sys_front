@@ -125,16 +125,19 @@ export const WebVideoCtrl = (function (e) {
 				def.reject();
 			}
 			else {
+				console.log('def-->',def)
 				var port = 23480;
 				connect(port).done(function () {
 					def.resolve();
+					
 				}).fail(function () {
 					var ele = document.createElement('iframe');
 					ele.src = 'CustomerWebSocketServer://' + port;
 					ele.style.display = 'none';
 					document.body.appendChild(ele);
-
 					port++;
+					ele.translate=false;
+					console.log(ele)
 					setTimeout(function () {
 						reconnect(port, def);
 					}, 2000);
@@ -145,10 +148,13 @@ export const WebVideoCtrl = (function (e) {
 
 	var reconnect = function (port, def) {
 		if (port > 23488) {
+			disConnect();
+			window.location.reload();
 			return def.reject();
 		}
-
+		
 		connect(port).done(function () {
+			
 			return def.resolve();
 		}).fail(function () {
 			port++;
@@ -157,6 +163,7 @@ export const WebVideoCtrl = (function (e) {
 	}
 
 	var connect = function (port) {
+		var _this = this;
 		return $.Deferred(function (def) {
 			try {
 				var url = 'ws://127.0.0.1:' + port;
@@ -164,7 +171,6 @@ export const WebVideoCtrl = (function (e) {
 				window['camera001'] = socket = new WebSocket(url);
 				socket.onopen = function () {
 					console.log('open'); 
-					console.log('ReadyState-->', socket.readyState)
 				};
 				socket.onerror = function (e) { console.log('error:' + e.code) };
 				socket.onmessage = function (msg) {
@@ -176,11 +182,11 @@ export const WebVideoCtrl = (function (e) {
 					}
 				};
 				socket.onclose = function () {
-					window.socket = undefined;
-					pluginObject = undefined;
-					socket = undefined;
+					console.log(this)
+					console.log(_this)
+					console.log(WebVideoCtrl)
+					disConnect();
 
-					console.log('Websocket Closed!!!')
 					def.reject();
 				};
 			} catch (e) {
@@ -188,6 +194,16 @@ export const WebVideoCtrl = (function (e) {
 			}
 		}).promise();
 	}
+
+	var disConnect = function(){
+		
+		// WebVideoCtrl.logout("hhh4-1.iptime.org");
+		window.socket = undefined;
+		pluginObject = undefined;
+		socket = undefined;
+		console.log('Websocket Closed!!!')
+	}
+
 
 	//브라우저 유형 가져 오기
 	var browser = function () {
@@ -399,7 +415,7 @@ export const WebVideoCtrl = (function (e) {
 	function checkReady() {
 		try {
 			pluginObject = {};
-
+		
 			RegisterMethod();
 			if (browser().msie || browser().npapi) {
 				//모니터 이벤트
@@ -504,6 +520,7 @@ export const WebVideoCtrl = (function (e) {
 	*@param{Function} fnFail    실패한 실패 후 콜백 함수
 	*/
 	var login = function (sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout, fnSuccess, fnFail) {
+		console.log('pluginOubject-->',pluginObject)
 		pluginObject.LoginDevice(sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout).done(function (ret) {
 			if (ret > 0) {
 				//장치 정보를 삽입하십시오
@@ -609,7 +626,9 @@ export const WebVideoCtrl = (function (e) {
 	*@return Boolean
 	*/
 	var logout = function (ip) {
+		
 		var info = WebVideoCtrl.getDeviceInfo(ip);
+		console.log(info)
 		if (typeof info !== "undefined") {
 			pluginObject.LogoutDevice(info.deviceID).done(function (ret) {
 				//제거 장치
@@ -656,10 +675,6 @@ export const WebVideoCtrl = (function (e) {
 				} else {
 					return
 				}
-
-
-
-
 			})
 		});
 	}

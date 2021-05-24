@@ -125,7 +125,7 @@ export const WebVideoCtrl = (function (e) {
 				def.reject();
 			}
 			else {
-				var port = 23480;
+				var port = 23481;
 				connect(port).done(function () {
 					def.resolve();
 				}).fail(function () {
@@ -164,7 +164,6 @@ export const WebVideoCtrl = (function (e) {
 				window['camera004'] = socket = new WebSocket(url);
 				socket.onopen = function () {
 					console.log('open'); 
-					console.log('ReadyState-->', socket.readyState)
 				};
 				socket.onerror = function (e) { console.log('error:' + e.code) };
 				socket.onmessage = function (msg) {
@@ -176,17 +175,23 @@ export const WebVideoCtrl = (function (e) {
 					}
 				};
 				socket.onclose = function () {
-					window.socket = undefined;
-					pluginObject = undefined;
-					socket = undefined;
-
-					console.log('Websocket Closed!!!')
+					disConnect();
 					def.reject();
 				};
 			} catch (e) {
 				def.reject();
 			}
 		}).promise();
+	}
+
+	var disConnect = function(){
+		// WebVideoCtrl.logout("hhh4-1.iptime.org");
+
+		window.socket = undefined;
+		pluginObject = undefined;
+		socket = undefined;
+
+		console.log('Websocket Closed!!!')
 	}
 
 	//브라우저 유형 가져 오기

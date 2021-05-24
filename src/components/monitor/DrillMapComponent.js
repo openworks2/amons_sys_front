@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import DrillRatePanel from './DrillRatePanel';
 import { ProgressBar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { CLIENT } from '../../lib/server.config';
 
 const DrillMapCompo = styled.div`
     width: 100%;
     height: 100%;
     /* background-color: aqua; */
-    background-image: url('http://192.168.0.39:3001/progress/dig_bg_1.png');
+    background-image: url('${CLIENT}/progress/dig_bg_1.png');
     background-repeat:no-repeat;
     position: relative;
     .location-top{

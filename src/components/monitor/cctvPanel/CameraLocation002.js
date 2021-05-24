@@ -200,6 +200,13 @@ const CameraLocation002 = ({
         }
     }
     window.addEventListener("resize", resizeHandler);
+    window.addEventListener("scroll",()=>{
+        if(Camera){
+            Camera.onScrollHandler();
+        }
+    })
+
+
     return (
         <CameraCompo>
             <div className="plugin-panel">

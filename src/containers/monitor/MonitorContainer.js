@@ -95,7 +95,7 @@ const BodyCompo = styled.div`
 
 const MonitorContainer = () => {
 
-    const { monitor, scanner, weather, beacon, ratePanel, sosSituation, environment } = useSelector(state => {
+    const { monitor, scanner, weather, beacon, ratePanel, sosSituation, environment, alarmPanel } = useSelector(state => {
         return state.monitor
     });
 
@@ -108,11 +108,8 @@ const MonitorContainer = () => {
 
     // 컨트롤 패널 OPEN
     const [ctrlPanel, setOpenCtrlPanel] = useState(null);
-    // 출입 관리 패너 open
+    // 출입 관리 패널 open
     const [accessPanel, setOpenAccessPanel] = useState(null);
-    // SOS 알람 
-    const [alarmPanel, setOpenAlarmPanel] = useState(false);
-    const [bleAlarmList, setBleAlarmList] = useState([]);
     // 맵 확대
     const [expandMap, setOpenExpandMap] = useState(false);
 
@@ -134,7 +131,6 @@ const MonitorContainer = () => {
     }
 
     const openAccessPanel = (id) => {
-        console.log(id)
         if (accessPanel === id) {
             setOpenAccessPanel(null)
         } else {
@@ -143,9 +139,9 @@ const MonitorContainer = () => {
         }
     }
 
-    const setOpenAlarmModal = () => {
-        setOpenAlarmPanel(!alarmPanel);
-    }
+    // const setOpenAlarmModal = () => {
+    //     setOpenAlarmPanel(!alarmPanel);
+    // }
 
 
     const setOpenExpandMapHandler = () => {
@@ -173,40 +169,65 @@ const MonitorContainer = () => {
         return filterBeacons;
     }
 
+    const targetClick = (e) => {
+        const clzName = e.target.parentNode.className
+        if (clzName === 'detail-panel-button active' || e.target.closest('.detail-panel-button') || e.target.closest('.table-box')) {
+            return;
+        }
+        else if(clzName === 'ptz-control-button active' || e.target.closest('.controll-box')){
+            return;
+        }
+        else {
+            if(openAccessPanel !== null){
+                setOpenAccessPanel(null)
+            }
+            if(ctrlPanel !== null){
+                setOpenCtrlPanel(null);
+            }
+        }
+    }
+
+
     useEffect(() => {
         getDispatch();
         // socket.emit("roomjoin", 'dong');  // been이라는 방 만들기
         // dispatch(receiveMonitor());
 
         return () => {
-            console.log('12312321321312321213')
             dispatch(socketDisconnet());
         }
     }, [dispatch]);
 
-    useEffect(() => {
-        if (beacon.data) {
-            const filterAlarm = beacon.data.filter(item => item.bc_emergency === 2 && item.wk_id && item);
-            if (filterAlarm.length > 0) {
-                setOpenAlarmPanel(true);
 
-                setBleAlarmList([
-                    ...bleAlarmList,
-                    ...filterAlarm
-                ])
-                if (!sosSituation) {
-                    dispatch(setSOSSituation(true))
-                }
-                console.log('filterAlarm->', filterAlarm)
-            }
-        }
+    useEffect(() => {
+        // if (beacon.data) {
+        //     const filterAlarm = beacon.data.filter(item => item.bc_emergency === 2 && item.wk_id && item);
+        //     if (filterAlarm.length > 0) {
+        //         setOpenAlarmPanel(true);
+
+        //         setBleAlarmList([
+        //             ...bleAlarmList,
+        //             ...filterAlarm
+        //         ])
+        //         if (!sosSituation) {
+        //             dispatch(setSOSSituation(true))
+        //         }
+        //         console.log('filterAlarm->', filterAlarm)
+        //     }
+        // }
     }, [beacon]);
 
 
+    document.addEventListener('mousedown', targetClick)
+
+
     return (
-        <MonitorCompo className="monitor-component">
+        <MonitorCompo className="monitor-component" >
             <TopCompo className="top-component" />
-            <BodyCompo className="body-component">
+            <BodyCompo
+                className="body-component"
+                // onMouseDown={targetClick}
+            >
                 <div className="left-compo">
                     <div className="left-top-box info-box">
                         {monitor.data && beacon.data &&
@@ -226,7 +247,7 @@ const MonitorContainer = () => {
                             monitor.data &&
                             <MapComponent
                                 setOpenExpandMapHandler={setOpenExpandMapHandler}
-                                data={monitor.data && monitor.data}
+                                location={monitor.data}
                                 bleData={beacon.data}
                             />
                         }
@@ -270,7 +291,7 @@ const MonitorContainer = () => {
                                         openAccessPanel={openAccessPanel}
                                         alarmPanel={alarmPanel}
                                         expandMap={expandMap}
-                                        data={monitor.data && monitor.data[2]}
+                                        data={monitor.data && monitor.data.length > 0 && monitor.data[2]}
                                         scanner={scanner.data && localScanner(monitor.data[2].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[2].local_index)}
                                         processDisabled={environment.data && environment.data[0].process_disabled}
@@ -333,9 +354,9 @@ const MonitorContainer = () => {
                     expandMap && <ExpandMapComponent setOpenExpandMapHandler={setOpenExpandMapHandler} data={monitor.data && monitor.data} bleData={beacon.data && beacon.data} />
                 }
             </BodyCompo>
-            {
+            {/* {
                 alarmPanel && <AlarmModal setOpenAlarmModal={setOpenAlarmModal} bleAlarmList={bleAlarmList} />
-            }
+            } */}
         </MonitorCompo>
     );
 };

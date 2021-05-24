@@ -47,6 +47,11 @@ const LocStatusCompo = styled.div`
                 font-family:"NotoSansKR-Regular";
                 color:#FFFFFF;
             }
+            .value-unit{
+                font-size: 15px;
+                font-family:"NotoSansKR-Regular";
+                color:#FFFFFF;
+            }
         }
 
 
@@ -215,13 +220,17 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData, scann
             <div className="state-box worker-box">
                 <div className="contents-box">
                     <p className="title-icon worker-icon"><FontAwesomeIcon icon={faUserHardHat} /></p>
-                    <p className="current-value worker-value">{bleCount.worker < 10 ? `0${bleCount.worker}` : bleCount.worker}</p>
+                    <span className="current-value worker-value">{bleCount.worker < 10 ? `0${bleCount.worker}` : bleCount.worker}</span>
+                    &nbsp;
+                    <span className="value-unit">명</span>
                 </div>
             </div>
             <div className="state-box vehicle-box">
                 <div className="contents-box">
                     <p className="title-icon vehicle-icon"><FontAwesomeIcon icon={faTruck} /></p>
-                    <p className="current-value vehicle-value">{bleCount.vehicle < 10 ? `0${bleCount.vehicle}` : bleCount.vehicle}</p>
+                    <span className="current-value vehicle-value">{bleCount.vehicle < 10 ? `0${bleCount.vehicle}` : bleCount.vehicle}</span>
+                    &nbsp;
+                    <span className="value-unit">대</span>
                 </div>
             </div>
             <div className="state-box progress-box">
@@ -234,13 +243,15 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData, scann
                                 : planLength
                         }
                     </p>
-                    <p className="current-value progress-value">
+                    <span className="current-value progress-value">
                         {
                             digLength > 999
                                 ? digLength.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
                                 : digLength
                         }
-                    </p>
+                    </span>
+                    &nbsp;
+                    <span className="value-unit">m</span>
                 </div>
             </div>
             {
