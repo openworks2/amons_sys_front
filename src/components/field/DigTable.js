@@ -535,8 +535,13 @@ const DigTable = ({
                     ) &&
                     localData.find(
                       (el) => el.local_index === selectedItem.local_index
-                    ).local_name + selectedItem.created_date
-                  } `}
+                    ).local_name
+                  } 노선의 `}
+                {moment(selectedItem && selectedItem.record_date).format(
+                  "YYYY년 MM월 DD일"
+                )}
+              </p>
+              <p className="confirm-modal text">
                 굴진 이력을 삭제하시겠습니까?
               </p>
             </Modal.Description>

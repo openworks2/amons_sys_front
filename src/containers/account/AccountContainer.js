@@ -68,6 +68,19 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const AccountContatiner = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Click Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] =====================================================
   const { data, loading, error } = useSelector(
     (state) => state.accounts.accounts
   );
@@ -78,7 +91,25 @@ const AccountContatiner = () => {
     dispatch(getAccounts());
   }, [dispatch]);
 
+  // [ State Area ] ======================================================
+
   const today = new Date();
+
+  const [idError, setIdError] = useState(undefined);
+  const [passwordError, setPasswordError] = useState(undefined);
+  const [passwordCheckError, setPasswordCheckError] = useState(undefined);
+  const [duplicationCheck, setDuplicationCheck] = useState(true);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
 
   const [formData, setFormData] = useState({
     acc_id: null,
@@ -96,46 +127,7 @@ const AccountContatiner = () => {
     acc_description: "",
   });
 
-  // form onChange Event
-  const onChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    // 입력값 state 에 저장
-    if (name === "acc_user_id") {
-      let _acc_user_id = value.replace(/[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ]*$/g, "");
-      setFormData({
-        ...formData,
-        acc_user_id: _acc_user_id,
-      });
-    } else if (name === "acc_name") {
-      let _acc_name = value.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "");
-      setFormData({
-        ...formData,
-        acc_name: _acc_name,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  const onRadioChange = (e, target) => {
-    let _acc_role = target.value;
-
-    setFormData({
-      ...formData,
-      acc_role: _acc_role,
-    });
-  };
-
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
+  // [ Init Area ] ======================================================
 
   const initActiveRow = () => {
     setSelectedRow({
@@ -144,6 +136,7 @@ const AccountContatiner = () => {
       clickedIndex: null,
     });
   };
+
   const initFormData = () => {
     setFormData({
       ...formData,
@@ -163,46 +156,6 @@ const AccountContatiner = () => {
     });
   };
 
-  // table row 클릭 핸들러
-  const activeHandler = (e, index, selectedId) => {
-    if (index === selectedRow.clickedIndex) {
-      initActiveRow();
-      initFormData();
-      setDuplicationCheck(false);
-    } else {
-      const findItem = data.find((account) => account.acc_id === selectedId);
-
-      setSelectedRow({
-        selectedId: findItem.acc_id,
-        selectedItem: findItem,
-        clickedIndex: index,
-      });
-
-      setFormData({
-        ...formData,
-        acc_id: findItem.acc_id,
-        created_date: findItem.created_date,
-        modified_date: findItem.modified_date,
-        acc_name: findItem.acc_name,
-        acc_user_id: findItem.acc_user_id,
-        acc_phone: findItem.acc_phone,
-        acc_tel: findItem.acc_tel,
-        acc_mail: findItem.acc_mail,
-        acc_role: findItem.acc_role,
-        acc_description: findItem.acc_description,
-      });
-      setTimeout(() => {
-        setDuplicationCheck(true);
-      }, 10);
-    }
-  };
-
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
-
   const initPage = () => {
     setPageInfo({
       activePage: 1,
@@ -210,23 +163,7 @@ const AccountContatiner = () => {
     });
   };
 
-  const onPageChange = (e, { activePage }) => {
-    e.preventDefault();
-    let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
-      ...PreState,
-      activePage: _activePage,
-    });
-    // 활성화된 로우 초기화
-    initActiveRow();
-    initFormData();
-  };
-
-  const [idError, setIdError] = useState(undefined);
-  const [passwordError, setPasswordError] = useState(undefined);
-  const [passwordCheckError, setPasswordCheckError] = useState(undefined);
-  const [duplicationCheck, setDuplicationCheck] = useState(true);
+  //  [ Common Logic Area ] =====================================================
 
   const duplicationCheckHandler = async () => {
     let auth = false;
@@ -261,7 +198,90 @@ const AccountContatiner = () => {
     }
   };
 
-  // CREATE
+  // [ Change Area ] =====================================================
+
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    // 입력값 state 에 저장
+    if (name === "acc_user_id") {
+      let _acc_user_id = value.replace(/[^a-z|^A-Z|^0-9|^ㄱ-ㅎ|^ㅏ-ㅣ]*$/g, "");
+      setFormData({
+        ...formData,
+        acc_user_id: _acc_user_id,
+      });
+    } else if (name === "acc_name") {
+      let _acc_name = value.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "");
+      setFormData({
+        ...formData,
+        acc_name: _acc_name,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const onRadioChange = (e, target) => {
+    let _acc_role = target.value;
+
+    setFormData({
+      ...formData,
+      acc_role: _acc_role,
+    });
+  };
+
+  const onPageChange = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo;
+    setPageInfo({
+      ...PreState,
+      activePage: _activePage,
+    });
+    initActiveRow();
+    initFormData();
+  };
+
+  // [ Click Area ] =====================================================
+
+  const activeHandler = (e, index, selectedId) => {
+    if (index === selectedRow.clickedIndex) {
+      initActiveRow();
+      initFormData();
+      setDuplicationCheck(false);
+    } else {
+      const findItem = data.find((account) => account.acc_id === selectedId);
+
+      setSelectedRow({
+        selectedId: findItem.acc_id,
+        selectedItem: findItem,
+        clickedIndex: index,
+      });
+
+      setFormData({
+        ...formData,
+        acc_id: findItem.acc_id,
+        created_date: findItem.created_date,
+        modified_date: findItem.modified_date,
+        acc_name: findItem.acc_name,
+        acc_user_id: findItem.acc_user_id,
+        acc_phone: findItem.acc_phone,
+        acc_tel: findItem.acc_tel,
+        acc_mail: findItem.acc_mail,
+        acc_role: findItem.acc_role,
+        acc_description: findItem.acc_description,
+      });
+      setTimeout(() => {
+        setDuplicationCheck(true);
+      }, 10);
+    }
+  };
+
+  // [ Create Area ] =====================================================
+
   const createHandler = (e) => {
     e.preventDefault();
     if (!duplicationCheck) {
@@ -289,7 +309,8 @@ const AccountContatiner = () => {
     }
   };
 
-  // UPDATE
+  // [ Update Area ] =====================================================
+
   const updateHandler = (e) => {
     if (!duplicationCheck) {
       setIdError("*중복 확인을 먼저 해주세요.");
@@ -315,12 +336,15 @@ const AccountContatiner = () => {
     }
   };
 
-  // DELETE
+  // [ Delete Area ] =====================================================
+
   const deleteHandler = (e, acc_id) => {
     dispatch(deleteAccount(acc_id));
     initActiveRow();
     initFormData();
   };
+
+  // [ Componets Area ] =====================================================
 
   if (error) {
     return (

@@ -27,6 +27,6 @@ export const putCctv = async (index, data) => {
 
 // ID로 데이터 삭제를 위한 DELTE 비동기 함수
 export const deleteCctv = async (id) => {
-  const response = await axios.delete(`${API}s/api/cctv/cctvs/${id}`);
+  const response = await axios.delete(`${API}/api/cctv/cctvs/${id}`);
   return response.data;
 };

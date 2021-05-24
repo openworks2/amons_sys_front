@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route } from "react-router";
+import { Route, Redirect } from "react-router";
 // log (이력조회)
 import AlarmContainer from "../containers/log/AlarmContainer";
 import LogWorkerContainer from "../containers/log/LogWorkerContainer";

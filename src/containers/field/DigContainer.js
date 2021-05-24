@@ -64,74 +64,102 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const DigContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Click Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] ===============================================================
+
   const { data, loading, error } = useSelector((state) => state.digs.digs);
   const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getLocals());
+    dispatch(getDigs());
+  }, []);
+
+  // [ State Area ] ===============================================================
+
   const today = new Date();
 
   const [localInfo, setLocalInfo] = useState({});
+  const [localList, setLocalList] = useState([]);
   const [currentLatestDigInfo, setCurrentLatestDigInfo] = useState({}); // 현재 조회 중인 로컬인덱스의 가장 최신 로그
+
+  const [localError, setLocalError] = useState(undefined);
+  const [dateError, setDateError] = useState(undefined);
+  const [digLengthError, setDigLengthError] = useState(undefined);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
 
   const [formData, setFormData] = useState({
     dig_seq: null,
     created_date: null,
     modified_date: null,
-    record_date: moment(today).format("YYYY.MM.DD"),
+    record_date: moment(today).format("YYYY-MM-DD"),
     dig_length: null,
     description: "",
     local_index: null,
   });
-  const [localList, setLocalList] = useState([]);
 
-  useEffect(() => {
-    dispatch(getLocals());
-    dispatch(getDigs());
-  }, [dispatch]);
+  // [ Init Area ] ======================================================================
 
-  useEffect(() => {
-    makeLocalList(localData);
-  }, [localData, formData.local_index]);
-
-  const makeLocalList = (data) => {
-    if (data) {
-      let _localList = [];
-      const _data = data.filter((el) => el.local_used !== 0);
-      _data.map((item, index) => {
-        _localList.push({
-          key: index,
-          text: item.local_name,
-          value: item.local_index,
-          name: item.local_name,
-        });
-      });
-      setLocalList(_localList);
-    }
-  };
-
-  // form onSelectChant Event
-  const onSelectChange = (e, seletedValue) => {
-    const name = seletedValue.name;
-    const value = seletedValue.value;
-
+  const initSeq = () => {
     setFormData({
       ...formData,
-      [name]: value,
+      dig_seq: null,
+      record_date: moment(formData.record_date).format("YYYY-MM-DD"),
     });
   };
 
-  useEffect(() => {
-    if (!selectedRow.selectedId && data && formData.local_index) {
-      let _digData = data;
-      _digData = _digData.filter(
-        (el) => el.local_index === formData.local_index
-      );
-      _digData = _digData.sort((a, b) =>
-        b.record_date.localeCompare(a.record_date)
-      )[0];
-      setCurrentLatestDigInfo(_digData);
-    }
-  }, [onSelectChange]);
+  const initActiveRow = () => {
+    setSelectedRow({
+      selectedId: null,
+      selectedItem: undefined,
+      clickedIndex: null,
+    });
+  };
+
+  const initFormData = () => {
+    setFormData({
+      ...formData,
+      dig_seq: null,
+      created_date: null,
+      modified_date: null,
+      record_date: moment(today).format("YYYY-MM-DD"),
+      dig_length: "",
+      description: "",
+      local_index: null,
+    });
+  };
+
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
+  // [ Common Logic Area ] ======================================================================
 
   // 누적 굴진율 퍼센트 구하기
   const getDigAmountPercent = (plan_length, dig_length) => {
@@ -153,7 +181,6 @@ const DigContainer = () => {
   };
 
   // 미터 콤마 더하기 빼기
-
   const addComma = (num) => {
     let _num = num.toString();
     _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
@@ -165,17 +192,99 @@ const DigContainer = () => {
   };
 
   const minusComma = (num) => {
-    let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      // 4자리 초과시 뒷자리 자르기
-      _num = _num.substring(0, 4);
+    if (num) {
+      let _num = num.toString();
+      _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+      _num = _num.replace(/,/g, ""); // , 값 공백처리
+      if (_num.length > 4) {
+        // 4자리 초과시 뒷자리 자르기
+        _num = _num.substring(0, 4);
+      }
+      return _num;
     }
-    return _num;
   };
 
-  // form onChange Event
+  useEffect(() => {
+    makeLocalList(localData);
+  }, [localData, formData.local_index]);
+
+  const makeLocalList = (data) => {
+    if (data) {
+      let _localList = [];
+      const _data = data.filter((el) => el.local_used !== 0);
+      _data.map((item, index) => {
+        _localList.push({
+          key: index,
+          text: item.local_name,
+          value: item.local_index,
+          name: item.local_name,
+        });
+      });
+      setLocalList(_localList);
+    }
+  };
+
+  const date_descending = (a, b) => {
+    let dateA = new Date(a["record_date"]).getTime();
+    let dateB = new Date(b["record_date"]).getTime();
+    return dateA < dateB ? 1 : -1;
+  };
+
+  const isAlreadyTyped = () => {
+    // 현재 입력하려는 record_date 와 일치하는 데이터가 이미 있는지
+    // true : 있음 (수정).
+    // false : 없음 (등록).
+    if (formData.local_index) {
+      let _data = data.filter((el) => el.local_index === formData.local_index);
+      _data = _data.find(
+        (el) =>
+          moment(el.record_date).format("YYYY-MM-DD") === formData.record_date
+      );
+      if (_data) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const isMeterHigherThanYesterday = () => {
+    // 현재 노선의 바로 전 데이터 확인
+    // sort 로 확인해보기?
+    // 이전 데이터가 있다면 이거보단 높아야지 입력가능하다.
+    // true : 높음.
+    // false : 같거나 낮음.
+    let _data = data.filter((el) => el.local_index === formData.local_index);
+    _data = _data.sort(date_descending);
+    console.log(_data);
+    console.log("moment(_data[0].record_date).format(");
+    console.log(moment(_data[0].record_date).format("YYYY-MM-DD"));
+    console.log("formData.record_date");
+    console.log(formData.record_date);
+    let _index = _data.findIndex(
+      (el) =>
+        moment(el.record_date).format("YYYY-MM-DD").toString() ===
+        formData.record_date.toString()
+    );
+    alert(_index);
+
+    //만약 리턴값이 0이라면 가장 최신의 데이터고
+    // 리턴값이 -1 이라면 해당하는 날짜가 없다는 뜻.
+    //
+  };
+
+  const isMeterLessThanTomorrow = () => {
+    // 현재 노선의 바로 앞 데이터 확인
+    // sort 로 확인해보기?
+    // 이후 데이터가 있다면 이거보단 낮아야지 입력가능하다.
+    // true : 낮음.
+    // false : 같거나 높음.
+    let _data = data.filter((el) => el.local_index === formData.local_index);
+    _data = _data.sort(date_descending);
+  };
+
+  // [ Change Area ] ======================================================================
+
   const onChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -216,6 +325,29 @@ const DigContainer = () => {
     }
   };
 
+  const onSelectChange = (e, seletedValue) => {
+    const name = seletedValue.name;
+    const value = seletedValue.value;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    if (!selectedRow.selectedId && data && formData.local_index) {
+      let _digData = data;
+      _digData = _digData.filter(
+        (el) => el.local_index === formData.local_index
+      );
+      _digData = _digData.sort((a, b) =>
+        b.record_date.localeCompare(a.record_date)
+      )[0];
+      setCurrentLatestDigInfo(_digData);
+    }
+  }, [onSelectChange]);
+
   const onChangeDate = (date) => {
     let _date = date;
     if (_date === null || undefined) {
@@ -223,44 +355,24 @@ const DigContainer = () => {
     }
     setFormData({
       ...formData,
-      record_date: moment(_date).format("YYYY.MM.DD"),
+      record_date: moment(_date).format("YYYY-MM-DD"),
     });
   };
 
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
-
-  const initActiveRow = () => {
-    setSelectedRow({
-      selectedId: null,
-      selectedItem: undefined,
-      clickedIndex: null,
+  const onPageChange = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo;
+    setPageInfo({
+      ...PreState,
+      activePage: _activePage,
     });
-  };
-  const initFormData = () => {
-    setFormData({
-      ...formData,
-      dig_seq: null,
-      created_date: null,
-      modified_date: null,
-      record_date: moment(today).format("YYYY.MM.DD"),
-      dig_length: "",
-      description: "",
-      local_index: null,
-    });
+    // 활성화된 로우 초기화
+    initActiveRow();
+    initFormData();
   };
 
-  const initSeq = () => {
-    setFormData({
-      ...formData,
-      dig_seq: null,
-      record_date: moment(formData.record_date).format("YYYY.MM.DD"),
-    });
-  };
+  // [ Click Area ] ======================================================================
 
   // table row 클릭 핸들러
   const activeHandler = (e, index, selectedId) => {
@@ -309,41 +421,13 @@ const DigContainer = () => {
     }
   }, [activeHandler]);
 
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
+  // [ Create Area ] ======================================================================
 
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
-  };
-
-  const onPageChange = (e, { activePage }) => {
-    e.preventDefault();
-    let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
-      ...PreState,
-      activePage: _activePage,
-    });
-    // 활성화된 로우 초기화
-    initActiveRow();
-    initFormData();
-  };
-
-  const [localError, setLocalError] = useState(undefined);
-  const [dateError, setDateError] = useState(undefined);
-  const [digLengthError, setDigLengthError] = useState(undefined);
-
-  // CREATE
   const createHandler = (e) => {
     e.preventDefault();
 
     let _dig_length = minusComma(formData.dig_length);
+    let result = isAlreadyTyped();
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
@@ -354,18 +438,21 @@ const DigContainer = () => {
       setTimeout(() => {
         setLocalError(undefined);
       }, 1350);
-    } else {
-      let newDig = {
-        ...formData,
-        dig_length: _dig_length,
-      };
-      dispatch(postDig(newDig));
-      initActiveRow();
-      initFormData();
+    } else if (result) {
+      isMeterHigherThanYesterday();
+      alert("successe");
+      // let newDig = {
+      //   ...formData,
+      //   dig_length: _dig_length,
+      // };
+      // dispatch(postDig(newDig));
+      // initActiveRow();
+      // initFormData();
     }
   };
 
-  // UPDATE
+  // [ Update Area ] ======================================================================
+
   const updateHandler = (e) => {
     e.preventDefault();
 
@@ -394,12 +481,15 @@ const DigContainer = () => {
     }
   };
 
-  // DELETE
+  // [ Delete Area ] ======================================================================
+
   const deleteHandler = (e, dig_seq) => {
     dispatch(deleteDig(dig_seq));
     initActiveRow();
     initFormData();
   };
+
+  // [ Components Area ]===================================================================
 
   if (error) {
     return (

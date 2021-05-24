@@ -85,10 +85,20 @@ const SideMenuCompo = styled.div`
   }
 `;
 
-const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl, role }) => {
+const SideMenu = ({
+  callSideMenu,
+  setCallSideMenu,
+  callSideMenuHandler,
+  openFullScreenMode,
+  currentUrl,
+  role,
+}) => {
   console.log("SideMenu-->", role);
   useEffect(() => {
     console.log(currentUrl);
+    if (currentUrl === "monitor") {
+      setCallSideMenu(false);
+    }
   }, [currentUrl]);
   return (
     <SideMenuCompo className="sidemenu-compo">
@@ -109,20 +119,23 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl, role }) => {
         {/* ================================================================ */}
         <div className="divide-line" />
 
-        { (
+        {
           <>
             {(role === 0 || role === 1 || role === 2) && (
               <>
-                <Menu.Item
-                  as={Link}
-                  to="/amons/home/monitor"
-                  className="sidemenu-title"
-                  name="moniter"
-                  active={currentUrl === "moniter"}
-                >
-                  모니터링
-                  <FaDesktop className="side-icon" />
-                </Menu.Item>
+                <div onClick={openFullScreenMode}>
+                  <Menu.Item
+                    as={Link}
+                    to="/amons/home/monitor"
+                    className="sidemenu-title"
+                    name="moniter"
+                    active={currentUrl === "moniter"}
+                  >
+                    모니터링
+                    <FaDesktop className="side-icon" />
+                  </Menu.Item>
+                </div>
+
                 {/* ================================================================ */}
                 <div className="divide-line" />
                 <Menu.Item
@@ -361,7 +374,7 @@ const SideMenu = ({ callSideMenu, callSideMenuHandler, currentUrl, role }) => {
               </>
             )}
           </>
-        )}
+        }
       </Sidebar>
     </SideMenuCompo>
   );

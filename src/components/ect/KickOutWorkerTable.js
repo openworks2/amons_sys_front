@@ -1023,7 +1023,9 @@ const KickOutWorkerTable = ({
           onOpen={() => setDeleteModalOpen(true)}
           open={deleteModalOpen}
         >
-          <Modal.Header className="confirm-modal header">삭제</Modal.Header>
+          <Modal.Header className="confirm-modal header">
+            강제 퇴출
+          </Modal.Header>
           <Modal.Content className="confirm-modal content">
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />

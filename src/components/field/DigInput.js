@@ -10,6 +10,7 @@ import getYear from "date-fns/getYear";
 import getMonth from "date-fns/getMonth";
 import moment from "moment";
 import "moment/locale/ko";
+import { isToday } from "date-fns";
 registerLocale("ko", ko);
 const _ = require("lodash");
 
@@ -259,6 +260,10 @@ const InputCompo = styled.div`
     }
   }
 
+  .react-datepicker__day--disabled {
+    color: #ccc !important;
+  }
+
   #dig_length {
     width: 282px;
   }
@@ -398,6 +403,8 @@ const DigInput = ({
     local_index,
   } = formData;
 
+  const today = new Date();
+
   const years = _.range(2019, getYear(new Date()) + 3, 1); // 수정
   const months = [
     "1월",
@@ -413,6 +420,10 @@ const DigInput = ({
     "11월",
     "12월",
   ];
+
+  const [endDate, setEndDate] = useState(
+    new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59)
+  );
 
   // 요일 반환
   const getDayName = (date) => {
@@ -597,6 +608,7 @@ const DigInput = ({
                     name="record_date"
                     shouldCloseOnSelect
                     useWeekdaysShort
+                    maxDate={endDate}
                     selected={record_date ? new Date(record_date) : new Date()}
                     placeholder="입력일을 선택해주세요."
                     onChange={(date) => onChangeDate(date)}

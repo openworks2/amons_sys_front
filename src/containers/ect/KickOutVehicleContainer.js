@@ -9,7 +9,6 @@ import {
   getRemainVehicles,
   postRemainVehiclesSearch,
 } from "../../modules/bles";
-import { saveAs } from "file-saver";
 import moment from "moment";
 import "moment/locale/ko";
 import { API } from "../../lib/server.config";
@@ -58,18 +57,22 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const KickOutVehicleContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Kickout Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] =====================================================
+
   const { data, loading, error } = useSelector(
     (state) => state.bles.bleVehicles
   );
-
   const localData = useSelector((state) => state.locals.locals.data);
   const companyData = useSelector((state) => state.companies.companies.data);
-
-  // 검색 기능 table 데이터 처리
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentData, setCurrentData] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState("");
 
   const dispatch = useDispatch();
 
@@ -83,41 +86,38 @@ const KickOutVehicleContainer = () => {
     // };
     // dispatch(postBleVehiclesSearch(searchCondition));
     dispatch(getRemainVehicles());
-  }, []);
-
-  useEffect(() => {
     dispatch(getLocals());
     dispatch(getCompanies());
-  }, [dispatch]);
+  }, []);
 
-  useEffect(() => {
-    makeLocalList(localData);
-  }, [localData]);
+  // [ State Area ] ======================================================
+
+  const [categorieValue, setCategorieValue] = useState(null); // 노선 카테고리 선택
+  const [searchValue, setSearchValue] = useState(""); // 검색 입력
+  const [currentData, setCurrentData] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(""); //소속사 dropdown
+  const [companyList, setCompanyList] = useState([]);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  // [ Init Area ] ======================================================
+
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
+  //  [ Common Logic Area ] =====================================================
 
   useEffect(() => {
     makeCompanyList(companyData);
   }, [companyData]);
 
-  const [localList, setLocalList] = useState([]);
-
-  const makeLocalList = (data) => {
-    if (data) {
-      let _localList = [];
-      const _data = data.filter((el) => el.local_used !== 0);
-
-      _data.map((item, index) => {
-        _localList.push({
-          key: index,
-          text: item.local_name,
-          value: item.local_index,
-          name: item.local_name,
-        });
-      });
-      setLocalList(_localList);
-    }
-  };
-
-  const [companyList, setCompanyList] = useState([]);
   const makeCompanyList = (data) => {
     if (data) {
       let _companyList = [];
@@ -139,17 +139,7 @@ const KickOutVehicleContainer = () => {
     }
   };
 
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
-  };
+  // [ Change Area ] =====================================================
 
   const onPageChange = (e, { activePage }) => {
     e.preventDefault();
@@ -165,7 +155,6 @@ const KickOutVehicleContainer = () => {
     setSelectedCompany(seletedValue.value);
   };
 
-  // serach input 입력
   const onSearchChange = (e) => {
     const _searchValue = e.target.value;
     setSearchValue(_searchValue);
@@ -176,8 +165,6 @@ const KickOutVehicleContainer = () => {
     const _value = value.value;
     setCategorieValue(_value);
   };
-
-  const today = new Date();
 
   // 데이터 조회 (post )
   const onSearch = (startDate, endDate) => {
@@ -192,14 +179,6 @@ const KickOutVehicleContainer = () => {
     };
     dispatch(postRemainVehiclesSearch(searchCondition));
     initPage();
-  };
-
-  const kickoutHandler = async (bc_index) => {
-    const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
-
-    let _data = data;
-    _data = _data.filter((el) => el.bc_index !== bc_index);
-    setCurrentData(_data);
   };
 
   useEffect(() => {
@@ -219,6 +198,18 @@ const KickOutVehicleContainer = () => {
       setCurrentData(tempData);
     }
   }, [data, categorieValue]);
+
+  // [ Kickout Area ] =====================================================
+
+  const kickoutHandler = async (bc_index) => {
+    const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
+
+    let _data = data;
+    _data = _data.filter((el) => el.bc_index !== bc_index);
+    setCurrentData(_data);
+  };
+
+  // [ Components Area ] =====================================================
 
   if (error) {
     return (

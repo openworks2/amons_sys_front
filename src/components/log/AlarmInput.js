@@ -181,7 +181,7 @@ const AlarmInput = ({
             name="emg_writer"
             placeholder="작성자를 입력해 주세요."
             required
-            value={emg_writer && emg_writer}
+            value={emg_writer ? emg_writer : ""}
             onChange={onChange}
             disabled={!selectedItem}
           />
