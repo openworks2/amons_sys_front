@@ -20,14 +20,14 @@ const CameraCompo = styled.div`
 `;
 
 
-const CameraLocation003 = ({ 
+const CameraLocation003 = ({
     id,
     ctrlPanel,
     accessPanel,
     alarmPanel,
     expandMap,
     data
- }) => {
+}) => {
 
     const [form, setForm] = useState({
         ip: data.cctv_ip,
@@ -43,10 +43,10 @@ const CameraLocation003 = ({
 
     const [Camera, setCamera] = useState(null);
 
-    const [radio, setRadio] = useState(null);
+    const [radio, setRadio] = useState('zoom');
 
     const [Locate, setLocate] = useState(false);
-    const [PTZ, setPTZ] = useState(null);
+    const [PTZ, setPTZ] = useState('zoom');
 
     const onRadioChange = (e) => {
         const { name } = e.target;
@@ -168,36 +168,60 @@ const CameraLocation003 = ({
                 } else {
                     // resizeVideo();
                     Camera.showScreen();
-                    if (ctrlPanel !== id || ctrlPanel === null) {
-                        if (Locate) {
-                            ptzLocationHandler();
-                        }
-                    }
+                    // if (ctrlPanel !== id || ctrlPanel === null) {
+                    //     if (Locate) {
+                    //         ptzLocationHandler();
+                    //     }
+                    // }
                 }
             }
             console.log(Camera.setClosePlayer)
         }
         return () => {
-            if(Camera){
+            if (Camera) {
                 // Camera.hiddenScreen();
-            
+
             }
         }
-    }, [accessPanel, ctrlPanel, alarmPanel, expandMap]);
+    }, [alarmPanel, expandMap]);
+
+
+    useEffect(()=>{
+        if(Camera){
+            if (ctrlPanel !== id || ctrlPanel === null) {
+                if (Locate) {
+                    ptzLocationHandler();
+                }
+            }
+        } else {
+            return;
+        }
+
+    },[accessPanel, ctrlPanel]);
 
     const resizeHandler = () => {
         if (Camera) {
-            Camera.setReposition();
+            if (expandMap || alarmPanel) {
+                Camera.hiddenScreen();
+            } else {
+                Camera.setReposition();
+            }
+        }
+    }
+
+    const scrollHandler = () => {
+        if (Camera) {
+            if (expandMap || alarmPanel) {
+                Camera.hiddenScreen();
+            } else {
+                Camera.onScrollHandler();
+            }
         }
     }
     window.addEventListener("resize", resizeHandler);
-    window.addEventListener("scroll",()=>{
-        if(Camera){
-            Camera.onScrollHandler();
-        }
-    })
+    window.addEventListener("scroll", scrollHandler);
 
-    
+
     return (
         <CameraCompo>
             <div className="plugin-panel">

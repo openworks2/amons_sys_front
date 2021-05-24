@@ -176,6 +176,7 @@ const MapCompo = styled.div`
     }
 `;
 const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
+    console.log('MapCompo-->', location);
     const [checkBox, setCheckBox] = useState(false);
     const [showItem, setItem] = useState({
         worker: true,
@@ -247,7 +248,7 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
 
 
     const bind = (data, callback) => {
-        console.log('dig1--->',dig1);
+        console.log('dig1--->', dig1);
 
         const block_Length = data.total_length / data.block_Amount; // 1개 블록 당 거리
 
@@ -301,16 +302,16 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
                 obj
             ]
         }
-        console.log('mapArr--->',mapArr);
+        console.log('mapArr--->', mapArr);
         callback(mapArr)
     }
 
     const setStateDig1 = (data) => {
-        console.log('setStateDig1--->',data);
+        console.log('setStateDig1--->', data);
         setDig1(data);
     };
     const setStateDig2 = (data) => {
-        console.log('setStateDig2--->',data);
+        console.log('setStateDig2--->', data);
         setDig2(data);
     };
 
@@ -375,8 +376,8 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
 
     }
     useEffect(() => {
-        console.log('first-->',first)
-        console.log('second-->',second)
+        console.log('first-->', first)
+        console.log('second-->', second)
         bind(first, setStateDig1);
         bind(second, setStateDig2);
     }, [location]);
@@ -390,12 +391,12 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
         if (dig2.length === 0) {
             bind(second, setStateDig2);
         }
-        if (bleData && dig1 && dig2) {
+        if (bleData && bleData.length > 0 && dig1.length > 0 && dig2.length > 0) {
             bleDataBinding(bleData, dig1, setDig1);
             bleDataBinding(bleData, dig2, setDig2);
         }
-        console.log('map----->?>>>',location);
-        console.log('>>this-->',this)
+        console.log('map----->?>>>', location);
+        console.log('>>this-->', this)
     }, [bleData]);
     const setOpenCheckBox = () => {
         setCheckBox(!checkBox);
@@ -421,9 +422,9 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
 
 
     const rendering = useCallback((initTopPoint, initLeftPoint, items) => {
-        console.log('initTopPoint->>',initTopPoint);
-        console.log('initLeftPoint->>',initLeftPoint);
-        console.log('items->>',items);
+        console.log('initTopPoint->>', initTopPoint);
+        console.log('initLeftPoint->>', initLeftPoint);
+        console.log('items->>', items);
         return <>
             {items.map((item, index) => {
                 const _blockStyled = {
@@ -467,7 +468,7 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
                 </div>
             })}
         </>
-    },[dig1, dig2]);
+    }, [dig1, dig2]);
 
     return (
         <MapCompo className="map-component">
@@ -480,12 +481,12 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
             <div className="map-area">
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance001" />
                 {
-                    dig1.length>0 && rendering(273, 4, dig1)
+                    dig1.length > 0 && rendering(273, 4, dig1)
                 }
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance002" />
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance003" />
                 {
-                     dig2.length>0 &&rendering(353, 147, dig2)
+                    dig2.length > 0 && rendering(353, 147, dig2)
                 }
                 <img src="../../map/entrance.png" alt="입구" className="entrance-image" id="entrance004" />
             </div>

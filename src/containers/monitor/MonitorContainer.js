@@ -190,11 +190,9 @@ const MonitorContainer = () => {
 
     useEffect(() => {
         getDispatch();
-        // socket.emit("roomjoin", 'dong');  // been이라는 방 만들기
-        // dispatch(receiveMonitor());
 
         return () => {
-            dispatch(socketDisconnet());
+            // dispatch(socketDisconnet());
         }
     }, [dispatch]);
 

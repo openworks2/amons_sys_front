@@ -41,6 +41,8 @@ export const WebVideoCtrl = (function (e) {
 	//조작 정보 로그 함수
 	var showOpInfo;
 
+	var loginIp;
+
 	//이벤트 처리 기능
 	function handleEvent(message) {
 		var messageObject = $.parseJSON(message);
@@ -125,16 +127,19 @@ export const WebVideoCtrl = (function (e) {
 				def.reject();
 			}
 			else {
-				var port = 23481;
+				console.log('def-->', def)
+				var port = 23480;
 				connect(port).done(function () {
 					def.resolve();
+
 				}).fail(function () {
 					var ele = document.createElement('iframe');
 					ele.src = 'CustomerWebSocketServer://' + port;
 					ele.style.display = 'none';
 					document.body.appendChild(ele);
-
 					port++;
+					ele.translate = false;
+					console.log(ele)
 					setTimeout(function () {
 						reconnect(port, def);
 					}, 2000);
@@ -145,10 +150,13 @@ export const WebVideoCtrl = (function (e) {
 
 	var reconnect = function (port, def) {
 		if (port > 23488) {
+			disConnect();
+			window.location.reload();
 			return def.reject();
 		}
 
 		connect(port).done(function () {
+
 			return def.resolve();
 		}).fail(function () {
 			port++;
@@ -157,13 +165,14 @@ export const WebVideoCtrl = (function (e) {
 	}
 
 	var connect = function (port) {
+		var _this = this;
 		return $.Deferred(function (def) {
 			try {
 				var url = 'ws://127.0.0.1:' + port;
 
 				window['camera003'] = socket = new WebSocket(url);
 				socket.onopen = function () {
-					console.log('open'); 
+					console.log('open');
 				};
 				socket.onerror = function (e) { console.log('error:' + e.code) };
 				socket.onmessage = function (msg) {
@@ -175,7 +184,11 @@ export const WebVideoCtrl = (function (e) {
 					}
 				};
 				socket.onclose = function () {
+					console.log(this)
+					console.log(_this)
+					console.log(WebVideoCtrl)
 					disConnect();
+
 					def.reject();
 				};
 			} catch (e) {
@@ -184,13 +197,14 @@ export const WebVideoCtrl = (function (e) {
 		}).promise();
 	}
 
-	var disConnect = function(){
+	var disConnect = function () {
+		console.log('loginIP--->', loginIp);
 		// WebVideoCtrl.logout("hhh4-1.iptime.org");
+		logout(loginIp);
 
 		window.socket = undefined;
 		pluginObject = undefined;
 		socket = undefined;
-
 		console.log('Websocket Closed!!!')
 	}
 
@@ -391,8 +405,10 @@ export const WebVideoCtrl = (function (e) {
 				defMap[g_id] = defer;
 				g_id++
 				if (browser().websocket) {
-					if (socket && socket.readyState === 1) {
-						socket.send(JSON.stringify(methodParams));
+					if (socket) {
+						if (socket.readyState === 1) {
+							socket.send(JSON.stringify(methodParams));
+						}
 					}
 				} else {
 					document.getElementById("dhVideo").PostMessage(JSON.stringify(methodParams));
@@ -449,7 +465,11 @@ export const WebVideoCtrl = (function (e) {
 	*/
 	var createMultiNodeDisplay = function (iNum) {
 		iNum = 37;
-		pluginObject.CreateMultiNodeDisplay(iNum);
+		if (pluginObject) {
+			pluginObject.CreateMultiNodeDisplay(iNum);
+		} else {
+			return;
+		}
 	};
 
 	/**
@@ -458,7 +478,11 @@ export const WebVideoCtrl = (function (e) {
 	*@return Boolean
 	*/
 	var setSplitNum = function (iNum) {
-		pluginObject.SetSplitNum(iNum * iNum);
+		if(pluginObject){
+			pluginObject.SetSplitNum(iNum * iNum);
+		} else{
+			return;
+		}
 	}
 
 	/**
@@ -510,7 +534,9 @@ export const WebVideoCtrl = (function (e) {
 	*@param{Function} fnFail    실패한 실패 후 콜백 함수
 	*/
 	var login = function (sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout, fnSuccess, fnFail) {
+		console.log('pluginOubject-->', pluginObject)
 		pluginObject.LoginDevice(sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout).done(function (ret) {
+			loginIp = sIp
 			if (ret > 0) {
 				//장치 정보를 삽입하십시오
 				pluginObject.GetChannelTotal(ret).done(function (channelNum) {
@@ -615,13 +641,19 @@ export const WebVideoCtrl = (function (e) {
 	*@return Boolean
 	*/
 	var logout = function (ip) {
+
 		var info = WebVideoCtrl.getDeviceInfo(ip);
 		if (typeof info !== "undefined") {
-			pluginObject.LogoutDevice(info.deviceID).done(function (ret) {
-				//제거 장치
-				deviceInfoMap.remove(ip);
-				return true;
-			})
+			if(pluginObject){
+				pluginObject.LogoutDevice(info.deviceID).done(function (ret) {
+					//제거 장치
+					deviceInfoMap.remove(ip);
+					loginIp = undefined;
+					return true;
+				})
+			} else {
+				return;
+			}
 		}
 	}
 
@@ -662,10 +694,6 @@ export const WebVideoCtrl = (function (e) {
 				} else {
 					return
 				}
-
-
-
-
 			})
 		});
 	}
