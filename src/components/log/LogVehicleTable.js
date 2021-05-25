@@ -249,6 +249,9 @@ const CategorieMenuCompo = styled.div`
         top: 12px;
         font-size: 16px;
         cursor: pointer;
+        &.disabled {
+          cursor: default;
+        }
       }
       &:hover {
         color: #f1592a !important;
@@ -363,6 +366,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
       .sms-check,
       .ui.checkbox input.hidden + label {
@@ -419,7 +423,7 @@ const TableCompo = styled.div`
           &.blank {
             width: 422px;
             @media screen and (max-height: 970px) {
-              width: 412px;
+              width: 418px;
             }
           }
         }
@@ -465,6 +469,7 @@ const TableCompo = styled.div`
 
 const LogVehicleTable = ({
   pageInfo,
+  data,
   currentData,
   localData,
   companyList,
@@ -872,15 +877,22 @@ const LogVehicleTable = ({
             </div>
           </Menu.Menu>
           <Menu.Menu>
-            <Menu.Item
-              className="table-categorie-menu download"
-              onClick={() => {
-                downloadHandler(startDate, endDate);
-              }}
-            >
-              다운로드
-              <FaFileDownload className="table-categorie-menu download-icon" />
-            </Menu.Item>
+            {data && data.length > 0 ? (
+              <Menu.Item
+                className="table-categorie-menu download"
+                onClick={() => {
+                  downloadHandler(startDate, endDate);
+                }}
+              >
+                다운로드
+                <FaFileDownload className="table-categorie-menu download-icon" />
+              </Menu.Item>
+            ) : (
+              <Menu.Item className="table-categorie-menu download" disabled>
+                다운로드
+                <FaFileDownload className="table-categorie-menu download-icon disabled" />
+              </Menu.Item>
+            )}
           </Menu.Menu>
         </Menu>
       </CategorieMenuCompo>

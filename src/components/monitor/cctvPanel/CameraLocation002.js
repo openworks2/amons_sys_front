@@ -8,7 +8,6 @@ import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fo
 const CameraCompo = styled.div`
     width: 100%;
     height: 100%;
-    /* position: relative; */
     padding-top:10px;
     padding-left:10px;
     .plugin-panel{
@@ -26,13 +25,15 @@ const CameraLocation002 = ({
     accessPanel,
     alarmPanel,
     expandMap,
-    data
+    data,
+    repositionAct,
+    scrollAct
 }) => {
     const [form, setForm] = useState({
-        ip: 'dhh3-4.iptime.org',
-        port: '1113',
-        username: 'admin',
-        password: 'work1801!@',
+        ip: data.cctv_ip,
+        port: data.cctv_port,
+        username: data.cctv_user_id,
+        password: data.cctv_pw,
         rtspPort: 80,
         protocol: 0,
         timeout: 5,
@@ -172,7 +173,6 @@ const CameraLocation002 = ({
 
 
     useEffect(() => {
-        console.log('CameraLocation002--->', data)
         if (!Camera) {
             connCCTV();
         }
@@ -190,26 +190,40 @@ const CameraLocation002 = ({
         }
     }, [alarmPanel, expandMap]);
 
-    useEffect(()=>{
-        if(Camera){
+    useEffect(() => {
+        if (Camera) {
             if (ctrlPanel !== id || ctrlPanel === null) {
                 if (Locate) {
                     ptzLocationHandler();
                 }
+                resizeVideo();
             }
         } else {
             return;
         }
 
-    },[accessPanel, ctrlPanel]);
+    }, [accessPanel, ctrlPanel]);
 
+    useEffect(() => {
+        if (Camera && repositionAct) {
+            Camera.setReposition();
+        }
+    }, [repositionAct]);
+
+    useEffect(() => {
+        if (Camera && scrollAct) {
+            if (expandMap || alarmPanel) {
+                Camera.hiddenScreen();
+            } else {
+                Camera.onScrollHandler();
+            }
+        }
+    }, [scrollAct]);
 
     const resizeHandler = () => {
         if (Camera) {
             if (expandMap || alarmPanel) {
                 Camera.hiddenScreen();
-            } else {
-                Camera.setReposition();
             }
         }
     }
@@ -224,8 +238,6 @@ const CameraLocation002 = ({
         }
     }
     window.addEventListener("resize", resizeHandler);
-    window.addEventListener("scroll", scrollHandler);
-
 
     return (
         <CameraCompo>

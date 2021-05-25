@@ -8,7 +8,6 @@ import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight, faSearch } from "@fo
 const CameraCompo = styled.div`
     width: 100%;
     height: 100%;
-    /* position: relative; */
     padding-top:10px;
     padding-left:10px;
     .plugin-panel{
@@ -26,7 +25,9 @@ const CameraLocation003 = ({
     accessPanel,
     alarmPanel,
     expandMap,
-    data
+    data,
+    repositionAct,
+    scrollAct
 }) => {
 
     const [form, setForm] = useState({
@@ -155,7 +156,6 @@ const CameraLocation003 = ({
     }
 
     useEffect(() => {
-        console.log('CameraLocation004--->', data)
         if (!Camera) {
             connCCTV();
         }
@@ -185,7 +185,6 @@ const CameraLocation003 = ({
     }, [alarmPanel, expandMap]);
 
 
-    
     useEffect(()=>{
         if(Camera){
             if (ctrlPanel !== id || ctrlPanel === null) {
@@ -199,13 +198,29 @@ const CameraLocation003 = ({
 
     },[accessPanel, ctrlPanel]);
 
+
+    useEffect(() => {
+        if (Camera && repositionAct) {
+            Camera.setReposition();
+        }
+    }, [repositionAct]);
+
+    useEffect(() => {
+        if (Camera && scrollAct) {
+            if (expandMap || alarmPanel) {
+                Camera.hiddenScreen();
+            } else {
+                Camera.onScrollHandler();
+            }
+        }
+    }, [scrollAct]);
+
+
     const resizeHandler = () => {
         if (Camera) {
             if (expandMap || alarmPanel) {
                 Camera.hiddenScreen();
-            } else {
-                Camera.setReposition();
-            }
+            } 
         }
     }
 
@@ -219,7 +234,6 @@ const CameraLocation003 = ({
         }
     }
     window.addEventListener("resize", resizeHandler);
-    window.addEventListener("scroll", scrollHandler);
     return (
         <CameraCompo>
             <div className="plugin-panel">

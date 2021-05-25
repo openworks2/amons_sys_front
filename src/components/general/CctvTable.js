@@ -111,9 +111,6 @@ const TableCompo = styled.div`
     &.ip {
       width: 203px;
       text-align: left;
-      @media screen and (max-height: 970px) {
-        width: 193px;
-      }
     }
     &.port {
       width: 61px;
@@ -127,7 +124,7 @@ const TableCompo = styled.div`
     &.description {
       width: 182px;
       @media screen and (max-height: 970px) {
-        width: 183px;
+        width: 173px;
       }
     }
     &.trash-icon {
@@ -162,6 +159,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
       .sms-check,
       .ui.checkbox input.hidden + label {
@@ -192,21 +190,12 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
-            @media screen and (max-height: 970px) {
-              width: 53px;
-            }
           }
           &.local {
             width: 101px;
-            @media screen and (max-height: 970px) {
-              width: 102px;
-            }
           }
           &.pos-x {
             width: 101px;
-            @media screen and (max-height: 970px) {
-              width: 101px;
-            }
           }
           &.tab-order-num {
             width: 70px;
@@ -217,9 +206,6 @@ const TableCompo = styled.div`
           &.ip {
             width: 203px;
             text-align: left;
-            @media screen and (max-height: 970px) {
-              width: 193px;
-            }
           }
           &.port {
             width: 61px;
@@ -232,10 +218,16 @@ const TableCompo = styled.div`
           }
           &.description {
             width: 182px;
+            @media screen and (max-height: 970px) {
+              width: 173px;
+            }
           }
           &.trash-icon {
-            width: 55px !important ;
+            width: 55px;
             color: #7d7d7d;
+            @media screen and (max-height: 970px) {
+              width: 60px;
+            }
           }
           &.trash-icon-button {
             height: 25px;

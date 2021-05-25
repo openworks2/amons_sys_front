@@ -84,6 +84,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
 
       .table-row {
@@ -110,48 +111,36 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 52px;
-            @media screen and (max-height: 970px) {
-              width: 53px;
-            }
           }
           &.address {
             width: 176px !important;
             text-align: left;
-            @media screen and (max-height: 970px) {
-              width: 179px !important;
-            }
           }
           &.id {
             width: 81px;
-            @media screen and (max-height: 970px) {
-              width: 82px;
-            }
           }
           &.used-type {
             width: 159px;
             text-align: left;
-            @media screen and (max-height: 970px) {
-              width: 161px;
-            }
           }
           &.battery-remain {
             width: 119px;
           }
           &.battery-time {
             width: 178px;
-            @media screen and (max-height: 970px) {
-              width: 180px;
-            }
           }
           &.description {
             width: 368px;
             @media screen and (max-height: 970px) {
-              width: 362px;
+              width: 359px;
             }
           }
           &.trash-icon {
-            width: 55px !important ;
+            width: 55px;
             color: #7d7d7d;
+            @media screen and (max-height: 970px) {
+              width: 60px;
+            }
           }
           &.trash-icon-button {
             height: 25px;

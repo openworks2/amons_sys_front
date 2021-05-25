@@ -56,6 +56,7 @@ const CompanyTableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
       .table-row {
         font-size: 14px;
@@ -112,11 +113,11 @@ const CompanyTableCompo = styled.div`
           }
           &.trash-icon {
             color: #7d7d7d;
-            width: 55px !important ;
+            width: 55px;
             margin: 0px;
             padding: 0px;
             @media screen and (max-height: 970px) {
-              width: 53px !important;
+              width: 60px;
             }
           }
           &.trash-icon-button {

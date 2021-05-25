@@ -31,6 +31,10 @@ const GET_ENVIRONMENT_ERROR = 'monitor/GET_ENVIRONMENT_ERROR';
 const RECEIVE_MONITOR = 'monitor/RECEIVE_MONITOR';
 
 const TOGGLE_DRILLRATE_PANEL = 'monitor/TOGGLE_DRILLRATE_PANEL';
+
+const TOGGLE_CAMERA_REPOSITION = 'monitor/TOGGLE_CAMERA_REPOSITION'
+
+
 const CLOSED_ALARM_PANEL = 'monitor/CLOSED_ALARM_PANEL';
 const SET_SOS_SITUACTION = 'monitor/SET_SOS_SITUACTION';
 const INIT_SOS_SITUACTION = 'moniotr/INIT_SOS_SITUACTION'
@@ -96,8 +100,15 @@ export const getEnvironment = createPromiseThunk(
     GET_ENVIRONMENT,
     monitorAPI.getEnvironment
 )
-export const cloaseAlarmPanel = () => dispatch => {
+export const closeAlarmPanel = () => dispatch => {
     dispatch({ type: CLOSED_ALARM_PANEL });
+}
+
+export const toggleCameraReposition = () => dispatch => {
+    dispatch({ type: TOGGLE_CAMERA_REPOSITION });
+    setTimeout(() => {
+        dispatch({ type: TOGGLE_CAMERA_REPOSITION });
+    }, 500);
 }
 
 const initialState = {
@@ -110,6 +121,7 @@ const initialState = {
     alarmPanel: false,
     sosSituation: false,
     sosList: [],
+    repositionAction: false
 }
 
 const getMonitorReducer = handleAsyncActions(
@@ -236,6 +248,11 @@ export default function monitor(state = initialState, action) {
             return {
                 ...state,
                 alarmPanel: false,
+            }
+        case TOGGLE_CAMERA_REPOSITION:
+            return {
+                ...state,
+                repositionAction: !state.repositionAction
             }
         default:
             return state;
