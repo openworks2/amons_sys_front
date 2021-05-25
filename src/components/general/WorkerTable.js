@@ -109,6 +109,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
       .sms-check,
       .ui.checkbox input.hidden + label {
@@ -172,9 +173,6 @@ const TableCompo = styled.div`
           }
           &.blood {
             width: 100px;
-            @media screen and (max-height: 970px) {
-              width: 100px;
-            }
           }
           &.nation {
             width: 154px;
@@ -186,12 +184,15 @@ const TableCompo = styled.div`
           &.beacon {
             width: 230px;
             @media screen and (max-height: 970px) {
-              width: 228px;
+              width: 229px;
             }
           }
           &.trash-icon {
-            width: 55px !important ;
+            width: 55px;
             color: #7d7d7d;
+            @media screen and (max-height: 970px) {
+              width: 60px;
+            }
           }
           &.trash-icon-button {
             height: 25px;
@@ -477,6 +478,7 @@ const WorkerTable = ({
           <Table.Cell className="table-cell company" name="company">
             {item &&
               companyData &&
+              companyData.find((el) => el.co_index === item.co_index) &&
               companyData.find((el) => el.co_index === item.co_index).co_name}
           </Table.Cell>
           <Table.Cell className="table-cell position" name="position">
