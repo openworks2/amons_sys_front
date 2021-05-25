@@ -100,7 +100,7 @@ export const getEnvironment = createPromiseThunk(
     GET_ENVIRONMENT,
     monitorAPI.getEnvironment
 )
-export const cloaseAlarmPanel = () => dispatch => {
+export const closeAlarmPanel = () => dispatch => {
     dispatch({ type: CLOSED_ALARM_PANEL });
 }
 
