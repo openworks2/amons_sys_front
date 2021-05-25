@@ -131,6 +131,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
       .sms-check,
       .ui.checkbox input.hidden + label {
@@ -174,9 +175,6 @@ const TableCompo = styled.div`
           }
           &.plan {
             width: 101px;
-            @media screen and (max-height: 970px) {
-              width: 101px;
-            }
           }
           &.amount {
             width: 121px;
@@ -196,8 +194,11 @@ const TableCompo = styled.div`
             }
           }
           &.trash-icon {
-            width: 55px !important ;
+            width: 55px;
             color: #7d7d7d;
+            @media screen and (max-height: 970px) {
+              width: 61px;
+            }
           }
           &.trash-icon-button {
             height: 25px;

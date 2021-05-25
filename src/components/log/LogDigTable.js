@@ -276,6 +276,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
 
       .table-row {
@@ -302,9 +303,6 @@ const TableCompo = styled.div`
           vertical-align: middle;
           &.no {
             width: 53px;
-            @media screen and (max-height: 970px) {
-              width: 54px;
-            }
           }
           &.date {
             width: 110px;
@@ -323,7 +321,7 @@ const TableCompo = styled.div`
             width: 97px;
             color: #ce3f3f;
             @media screen and (max-height: 970px) {
-              width: 89px;
+              width: 95px;
             }
           }
         }

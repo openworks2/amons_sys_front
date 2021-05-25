@@ -236,7 +236,7 @@ const ScannerInput = ({
     scn_result,
     scn_start_time,
     scn_stop_time,
-    description,
+    scn_description,
     local_index,
     closed_count,
   } = formData;
@@ -355,10 +355,10 @@ const ScannerInput = ({
             <label className="input-form title">비고</label>
             <textarea
               className="input-form description"
-              id="description"
-              name="description"
+              id="scn_description"
+              name="scn_description"
               placeholder="비고 입력란"
-              value={description ? description : ""}
+              value={scn_description ? scn_description : ""}
               onChange={onChange}
             />
           </Form.Field>

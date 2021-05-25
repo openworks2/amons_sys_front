@@ -40,8 +40,6 @@ const TableCompo = styled.div`
     }
     &.role {
       width: 88px;
-      @media screen and (max-height: 970px) {
-      }
     }
     &.id {
       width: 200px;
@@ -93,6 +91,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
       .sms-check,
       .ui.checkbox input.hidden + label {
@@ -122,10 +121,7 @@ const TableCompo = styled.div`
           padding-right: 15px;
           vertical-align: middle;
           &.no {
-            width: 53px;
-            @media screen and (max-height: 970px) {
-              width: 53px;
-            }
+            width: 52px;
           }
           &.role {
             width: 88px;
@@ -133,15 +129,9 @@ const TableCompo = styled.div`
           &.id {
             width: 200px;
             text-align: left;
-            @media screen and (max-height: 970px) {
-              width: 201px;
-            }
           }
           &.name {
             width: 150px;
-            @media screen and (max-height: 970px) {
-              width: 151px;
-            }
           }
           &.phone {
             width: 140px;
@@ -152,12 +142,15 @@ const TableCompo = styled.div`
           &.description {
             width: 269px;
             @media screen and (max-height: 970px) {
-              width: 261px;
+              width: 260px;
             }
           }
           &.trash-icon {
-            width: 54px !important ;
+            width: 54px;
             color: #7d7d7d;
+            @media screen and (max-height: 970px) {
+              width: 60px;
+            }
           }
           &.trash-icon-button {
             height: 25px;
@@ -311,7 +304,7 @@ const AccountTable = ({
   // 검색하고 curreunt page 1 로 이동시켜줘야 함.
   const [categorieValue, setCategorieValue] = useState(null);
   const [searchValue, setSearchValue] = useState("");
-  const [currentData, setCurrentData] = useState([]);
+  const [currentData, setCurrentData] = useState(data);
 
   const onChangeCategorie = (e, value) => {
     const _value = value.value;
@@ -349,12 +342,6 @@ const AccountTable = ({
     initPage();
   };
 
-  useEffect(() => {
-    let _data = data;
-    _data = _data.filter((el) => el.acc_role === 2);
-    setCurrentData(_data);
-  }, [data]);
-
   const roleStrReturn = (role) => {
     let str = "";
     if (role === 2) {
@@ -367,11 +354,16 @@ const AccountTable = ({
 
   // 테이블
 
-  const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
+  const totalPages = Math.ceil(
+    currentData.filter((el) => el.acc_role === 2).length / itemsPerPage,
+    1
   );
+  const viewItems = currentData
+    .filter((el) => el.acc_role === 2)
+    .slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 

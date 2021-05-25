@@ -67,9 +67,6 @@ const TableCompo = styled.div`
     padding-right: 15px !important;
     &.no {
       width: 52px;
-      @media screen and (max-height: 970px) {
-        width: 51px;
-      }
     }
     &.local {
       width: 141px;
@@ -128,6 +125,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
 
       .ui.checkbox input.hidden + label {
@@ -160,15 +158,12 @@ const TableCompo = styled.div`
           &.no {
             width: 53px;
             @media screen and (max-height: 970px) {
-              width: 52px;
+              left: 50px !important;
             }
           }
           &.local {
             width: 141px;
             text-align: left;
-            @media screen and (max-height: 970px) {
-              width: 142px;
-            }
           }
           &.prev {
             width: 127px;
@@ -176,7 +171,7 @@ const TableCompo = styled.div`
               position: absolute;
               left: 321px;
               @media screen and (max-height: 970px) {
-                left: 320px;
+                left: 321px;
               }
               margin-top: -9px;
               width: 17px;
@@ -197,7 +192,7 @@ const TableCompo = styled.div`
           &.description {
             width: 541px;
             @media screen and (max-height: 970px) {
-              width: 533px;
+              width: 539px;
             }
           }
           /* &.trash-icon {

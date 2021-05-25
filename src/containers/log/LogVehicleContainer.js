@@ -202,7 +202,7 @@ const LogVehicleContainer = () => {
           new Blob([response.data]),
           `막장 잔류이력(차량)_${moment(_startDate).format(
             "YYYY년MM월DD일_HH시mm분ss초"
-          )}___${moment(_endDate).format("YYYY년MM월DD일_HH시mm분ss초")}.xlsx`
+          )}___${moment(_endDate).format("YYYY년MM월DD일_HH시mm분ss초")}.xls`
         );
       });
     } catch (e) {
@@ -257,6 +257,7 @@ const LogVehicleContainer = () => {
             <LogVehicleTable
               className="logvehicle-table-box"
               pageInfo={pageInfo}
+              data={data}
               currentData={currentData}
               localData={localData}
               companyList={companyList}

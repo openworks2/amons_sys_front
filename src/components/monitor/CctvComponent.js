@@ -212,7 +212,9 @@ const CctvComponent = ({
     data,
     scanner,
     bleData,
-    processDisabled
+    processDisabled,
+    repositionAct,
+    scrollAct
 }) => {
 
     const [ctrlTarget, setTarget] = useState({
@@ -272,6 +274,8 @@ const CctvComponent = ({
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
                         data={data && data}
+                        repositionAct={repositionAct}
+                        scrollAct={scrollAct}
                     />
                 }
                 {
@@ -286,6 +290,8 @@ const CctvComponent = ({
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
                         data={data && data}
+                        repositionAct={repositionAct}
+                        scrollAct={scrollAct}
                     />
                 }
                 {
@@ -300,6 +306,8 @@ const CctvComponent = ({
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
                         data={data && data}
+                        repositionAct={repositionAct}
+                        scrollAct={scrollAct}
                     />
                 }
                 {
@@ -314,6 +322,8 @@ const CctvComponent = ({
                         alarmPanel={alarmPanel}
                         expandMap={expandMap}
                         data={data && data}
+                        repositionAct={repositionAct}
+                        scrollAct={scrollAct}
                     />
                 }
             </div>
