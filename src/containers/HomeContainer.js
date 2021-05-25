@@ -7,10 +7,11 @@ import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { Redirect } from "react-router";
 import {
-  cloaseAlarmPanel,
+  closeAlarmPanel,
   setInitSOSSituation,
   setRatePanel,
   setSOSSituation,
+  toggleCameraReposition,
 } from "../modules/monitor";
 import useFullscreen from "../lib/useFullscrenn";
 import {
@@ -57,6 +58,9 @@ const HomeContainer = () => {
     if (!fullState) {
       setScreenState(true);
     }
+    setTimeout(() => {
+      dispatch(toggleCameraReposition())
+    }, 1000);
   };
 
   const closeFullScreenMode = () => {
@@ -81,7 +85,7 @@ const HomeContainer = () => {
     dispatch(setRatePanel());
   };
   const setOpenAlarmModal = () => {
-    dispatch(cloaseAlarmPanel());
+    dispatch(closeAlarmPanel());
   };
   const initialUserInfo = useCallback(async () => {
     const loggedInfo = storage.get("user"); // 로그인 정보를 로컬스토리지에서 가져오기
@@ -138,7 +142,16 @@ const HomeContainer = () => {
     initialUserInfo();
   }, []);
 
+
   useEffect(() => {}, [sosSituation]);
+
+  window.onkeydown = (e) => {
+    if (e.key === 'F11') {
+      setTimeout(() => {
+        dispatch(toggleCameraReposition())
+      }, 1000);
+    }
+  }
 
 
   if (!storage.get("user")) return <Redirect to="/amons/signin" />;
