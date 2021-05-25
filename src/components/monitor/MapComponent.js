@@ -391,7 +391,7 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
         if (dig2.length === 0) {
             bind(second, setStateDig2);
         }
-        if (bleData && bleData.length > 0 && dig1.length > 0 && dig2.length > 0) {
+        if (bleData && dig1.length > 0 && dig2.length > 0) {
             bleDataBinding(bleData, dig1, setDig1);
             bleDataBinding(bleData, dig2, setDig2);
         }
