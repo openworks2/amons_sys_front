@@ -95,7 +95,7 @@ const ScannerContainer = () => {
     scn_result: null,
     scn_start_time: null,
     scn_stop_time: null,
-    description: "",
+    scn_description: "",
     local_index: null,
     closed_count: null,
   });
@@ -218,6 +218,8 @@ const ScannerContainer = () => {
       ...formData,
       [name]: value,
     });
+
+    console.log(formData);
   };
 
   // form onSelectChant Event
@@ -263,7 +265,7 @@ const ScannerContainer = () => {
       scn_result: null,
       scn_start_time: null,
       scn_stop_time: null,
-      description: "",
+      scn_description: "",
       local_index: null,
       closed_count: null,
     });
@@ -294,7 +296,7 @@ const ScannerContainer = () => {
         scn_name: findItem.scn_name,
         scn_ip: findItem.scn_ip,
         scn_port: findItem.scn_port,
-        description: findItem.description,
+        scn_description: findItem.scn_description,
         local_index: findItem.local_index,
         closed_count: findItem.closed_count,
       });

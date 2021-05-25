@@ -248,39 +248,123 @@ const DigContainer = () => {
     }
   };
 
-  const isMeterHigherThanYesterday = () => {
-    // 현재 노선의 바로 전 데이터 확인
-    // sort 로 확인해보기?
-    // 이전 데이터가 있다면 이거보단 높아야지 입력가능하다.
-    // true : 높음.
-    // false : 같거나 낮음.
+  const getConditionOnPost = () => {
     let _data = data.filter((el) => el.local_index === formData.local_index);
+    _data.push(formData);
     _data = _data.sort(date_descending);
     console.log(_data);
-    console.log("moment(_data[0].record_date).format(");
-    console.log(moment(_data[0].record_date).format("YYYY-MM-DD"));
-    console.log("formData.record_date");
-    console.log(formData.record_date);
     let _index = _data.findIndex(
       (el) =>
         moment(el.record_date).format("YYYY-MM-DD").toString() ===
-        formData.record_date.toString()
+        moment(formData.record_date).format("YYYY-MM-DD").toString()
     );
-    alert(_index);
-
-    //만약 리턴값이 0이라면 가장 최신의 데이터고
-    // 리턴값이 -1 이라면 해당하는 날짜가 없다는 뜻.
-    //
+    return {
+      maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
+      minLength: _data[_index + 1] && _data[_index + 1].dig_length,
+    };
   };
 
-  const isMeterLessThanTomorrow = () => {
-    // 현재 노선의 바로 앞 데이터 확인
-    // sort 로 확인해보기?
-    // 이후 데이터가 있다면 이거보단 낮아야지 입력가능하다.
-    // true : 낮음.
-    // false : 같거나 높음.
+  const getConditionOnPut = () => {
+    console.log("^&^&^^&^&^& 수정시");
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data = _data.sort(date_descending);
+    console.log("_data");
+    console.log(_data);
+    let _index = _data.findIndex(
+      (el) =>
+        moment(el.record_date).format("YYYY-MM-DD").toString() ===
+        moment(formData.record_date).format("YYYY-MM-DD").toString()
+    );
+    console.log("_index");
+    console.log(_index);
+    return {
+      maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
+      minLength: _data[_index + 1] && _data[_index + 1].dig_length,
+    };
+  };
+
+  const conditionalPost = (condition, _dig_length) => {
+    let maxTestResult = condition.maxLength
+      ? _dig_length < condition.maxLength
+        ? true
+        : false
+      : true;
+    let minTestResult = condition.minLength
+      ? _dig_length > condition.minLength
+        ? true
+        : false
+      : true;
+
+    if (minTestResult) {
+      if (maxTestResult) {
+        let newDig = {
+          ...formData,
+          dig_length: _dig_length,
+        };
+        dispatch(postDig(newDig));
+      } else {
+        setDigLengthError(
+          `*이후 입력일에 입력된굴진량(${condition.maxLength}m)보다 작아야합니다.`
+        );
+        setTimeout(() => {
+          setDigLengthError(undefined);
+        }, 3000);
+      }
+    } else {
+      setDigLengthError(
+        `*이전 입력일에 입력된굴진량(${condition.minLength}m)보다 커야합니다.`
+      );
+      setTimeout(() => {
+        setDigLengthError(undefined);
+      }, 3000);
+    }
+  };
+
+  const conditionalPut = (condition, _dig_length) => {
+    let maxTestResult = condition.maxLength
+      ? _dig_length < condition.maxLength
+        ? true
+        : false
+      : true;
+    let minTestResult = condition.minLength
+      ? _dig_length > condition.minLength
+        ? true
+        : false
+      : true;
+
+    if (minTestResult) {
+      if (maxTestResult) {
+        let _dig_seq = formData.dig_seq;
+        if (!selectedRow.selectedItem) {
+          _dig_seq = data.find(
+            (el) =>
+              moment(el.record_date).format("YYYY-MM-DD").toString() ===
+              moment(formData.record_date).format("YYYY-MM-DD").toString()
+          ).dig_seq;
+        }
+        let newDig = {
+          ...formData,
+          dig_seq: _dig_seq,
+          modified_date: today,
+          dig_length: _dig_length,
+        };
+        dispatch(putDig(_dig_seq, newDig));
+      } else {
+        setDigLengthError(
+          `*이후 입력일에 입력된굴진량(${condition.maxLength}m)보다 작아야합니다.`
+        );
+        setTimeout(() => {
+          setDigLengthError(undefined);
+        }, 3000);
+      }
+    } else {
+      setDigLengthError(
+        `*이전 입력일에 입력된굴진량(${condition.minLength}m)보다 커야합니다.`
+      );
+      setTimeout(() => {
+        setDigLengthError(undefined);
+      }, 3000);
+    }
   };
 
   // [ Change Area ] ======================================================================
@@ -295,27 +379,12 @@ const DigContainer = () => {
     });
 
     if (name === "dig_length") {
-      if (formData.local_index) {
-        if (localData.find((el) => el.local_index === formData.local_index)) {
-          let _plan_length = localData.find(
-            (el) => el.local_index === formData.local_index
-          ).plan_length;
-          if (minusComma(formData.dig_length) > _plan_length) {
-            setDigLengthError("*누적 굴진량이 계획 연장거리를 초과합니다.");
-            setTimeout(() => {
-              setDigLengthError(undefined);
-            }, 1500);
-          }
-        }
-      }
       let _value = value.toString();
       _value = _value.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
       _value = _value.replace(/,/g, ""); // , 값 공백처리
       if (_value.length > 4) {
         _value = _value.substring(0, 4);
       }
-      console.log("_value");
-      console.log(_value);
       setFormData({
         ...formData,
         dig_length: addComma(
@@ -425,29 +494,31 @@ const DigContainer = () => {
 
   const createHandler = (e) => {
     e.preventDefault();
-
     let _dig_length = minusComma(formData.dig_length);
     let result = isAlreadyTyped();
+
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
-      }, 1350);
+      }, 3000);
     } else if (_dig_length > localInfo.plan_length) {
       setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
       setTimeout(() => {
         setLocalError(undefined);
-      }, 1350);
+      }, 3000);
     } else if (result) {
-      isMeterHigherThanYesterday();
-      alert("successe");
-      // let newDig = {
-      //   ...formData,
-      //   dig_length: _dig_length,
-      // };
-      // dispatch(postDig(newDig));
-      // initActiveRow();
-      // initFormData();
+      //result = true (수정)
+      let condition = getConditionOnPut();
+      conditionalPut(condition, _dig_length);
+      initActiveRow();
+      initFormData();
+    } else {
+      //result = false (등록)
+      let condition = getConditionOnPost();
+      conditionalPost(condition, _dig_length);
+      initActiveRow();
+      initFormData();
     }
   };
 
@@ -462,22 +533,15 @@ const DigContainer = () => {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
-      }, 1350);
+      }, 3000);
     } else if (_dig_length > localInfo.plan_length) {
       setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
       setTimeout(() => {
         setLocalError(undefined);
-      }, 1350);
+      }, 3000);
     } else {
-      // 성공
-      const findItem = selectedRow.selectedItem;
-
-      let newDig = {
-        ...formData,
-        modified_date: today,
-        dig_length: _dig_length,
-      };
-      dispatch(putDig(newDig.dig_seq, newDig));
+      let condition = getConditionOnPut();
+      conditionalPut(condition, _dig_length);
     }
   };
 

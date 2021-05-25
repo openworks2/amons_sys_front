@@ -79,6 +79,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
 
       .table-row {
@@ -126,7 +127,7 @@ const TableCompo = styled.div`
           &.preview {
             width: 115px;
             @media screen and (max-height: 970px) {
-              width: 109px;
+              width: 110px;
             }
           }
           &.date {
@@ -136,8 +137,11 @@ const TableCompo = styled.div`
             }
           }
           &.trash-icon {
-            width: 55px !important ;
+            width: 55px;
             color: #7d7d7d;
+            @media screen and (max-height: 970px) {
+              width: 60px;
+            }
           }
           &.trash-icon-button {
             height: 25px;

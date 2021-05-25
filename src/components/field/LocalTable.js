@@ -30,18 +30,12 @@ const TableCompo = styled.div`
     &.name {
       text-align: left;
       width: 171px;
-      @media screen and (max-height: 970px) {
-        width: 169px;
-      }
     }
     &.length {
       width: 81px;
     }
     &.description {
-      width: 569px;
-      @media screen and (max-height: 970px) {
-        width: 562px;
-      }
+      width: 567px;
     }
     &.created-date {
       width: 130px;
@@ -50,7 +44,7 @@ const TableCompo = styled.div`
       width: 130px;
     }
     &.trash-icon {
-      width: 55px !important ;
+      width: 57px !important ;
       color: #7d7d7d;
     }
     &.trash-icon-button {
@@ -81,6 +75,7 @@ const TableCompo = styled.div`
       &::-webkit-scrollbar {
         -webkit-appearance: none;
         margin: 0px;
+        width: 4px;
       }
 
       .table-row {
@@ -134,14 +129,14 @@ const TableCompo = styled.div`
             }
           }
           &.modified-date {
-            width: 130px !important;
-            @media screen and (max-height: 970px) {
-              width: 130px;
-            }
+            width: 130px;
           }
           &.trash-icon {
-            width: 55px !important ;
+            width: 55px;
             color: #7d7d7d;
+            @media screen and (max-height: 970px) {
+              width: 61px;
+            }
           }
           &.trash-icon-button {
             height: 25px;
