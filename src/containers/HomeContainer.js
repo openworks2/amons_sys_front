@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import ContentTitle from "../components/ContentTitle";
 import SideMenu from "../components/SideMenu";
 import { Redirect } from "react-router";
-import { cloaseAlarmPanel, setInitSOSSituation, setRatePanel, setSOSSituation } from "../modules/monitor";
+import { cloaseAlarmPanel, setInitSOSSituation, setRatePanel, setSOSSituation, toggleCameraReposition } from "../modules/monitor";
 import useFullscreen from "../lib/useFullscrenn";
 import {
   loginCheckAsync,
@@ -47,15 +47,18 @@ const HomeContainer = () => {
     } else if (docV.msRequestFullscreen) {
       docV.msRequestFullscreen();
     }
-    if(!fullState){
+    if (!fullState) {
       setScreenState(true);
     }
+    setTimeout(() => {
+      dispatch(toggleCameraReposition())
+    }, 1000);
   };
 
   const closeFullScreenMode = () => {
     // var docV = document.documentElement;
     document.webkitExitFullscreen();
-    if(fullState){
+    if (fullState) {
       setScreenState(false);
     }
   };
@@ -127,16 +130,24 @@ const HomeContainer = () => {
 
   useEffect(() => {
     console.log("login--->>", login);
-    
+
     initialUserInfo();
   }, []);
-  
-  useEffect(()=>{
-    console.log(">>>>>>>>>>>>>>>HomeContainer-->",sosSituation);
-    console.log(">>>>>>>>>>>>>>>sosList-->",sosList);
 
-  },[sosSituation]);
+  useEffect(() => {
+    console.log(">>>>>>>>>>>>>>>HomeContainer-->", sosSituation);
+    console.log(">>>>>>>>>>>>>>>sosList-->", sosList);
 
+  }, [sosSituation]);
+
+
+  window.onkeydown = (e) => {
+    if (e.key === 'F11') {
+      setTimeout(() => {
+        dispatch(toggleCameraReposition())
+      }, 1000);
+    }
+  }
 
 
   if (!storage.get("user")) return <Redirect to="/amons/signin" />;

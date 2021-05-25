@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import AlarmModal from '../../components/monitor/AlarmModal';
@@ -95,7 +95,7 @@ const BodyCompo = styled.div`
 
 const MonitorContainer = () => {
 
-    const { monitor, scanner, weather, beacon, ratePanel, sosSituation, environment, alarmPanel } = useSelector(state => {
+    const { monitor, scanner, weather, beacon, ratePanel, sosSituation, environment, alarmPanel, repositionAction } = useSelector(state => {
         return state.monitor
     });
 
@@ -112,6 +112,8 @@ const MonitorContainer = () => {
     const [accessPanel, setOpenAccessPanel] = useState(null);
     // 맵 확대
     const [expandMap, setOpenExpandMap] = useState(false);
+
+    const [fullScreen, setFullScreen] = useState(false);
 
     const [location, setLocation] = useState({
         loc001: undefined,
@@ -174,14 +176,14 @@ const MonitorContainer = () => {
         if (clzName === 'detail-panel-button active' || e.target.closest('.detail-panel-button') || e.target.closest('.table-box')) {
             return;
         }
-        else if(clzName === 'ptz-control-button active' || e.target.closest('.controll-box')){
+        else if (clzName === 'ptz-control-button active' || e.target.closest('.controll-box')) {
             return;
         }
         else {
-            if(openAccessPanel !== null){
+            if (openAccessPanel !== null) {
                 setOpenAccessPanel(null)
             }
-            if(ctrlPanel !== null){
+            if (ctrlPanel !== null) {
                 setOpenCtrlPanel(null);
             }
         }
@@ -198,33 +200,67 @@ const MonitorContainer = () => {
 
 
     useEffect(() => {
-        // if (beacon.data) {
-        //     const filterAlarm = beacon.data.filter(item => item.bc_emergency === 2 && item.wk_id && item);
-        //     if (filterAlarm.length > 0) {
-        //         setOpenAlarmPanel(true);
-
-        //         setBleAlarmList([
-        //             ...bleAlarmList,
-        //             ...filterAlarm
-        //         ])
-        //         if (!sosSituation) {
-        //             dispatch(setSOSSituation(true))
-        //         }
-        //         console.log('filterAlarm->', filterAlarm)
+        // if(window.screen.width === window.innerWidth && window.screen.height === window.innerHeight){
+        //     console.log("full screen");
+        //     if(!fullScreen){
+        //         setFullScreen(true)
+        //     }
+        // } else {
+        //     console.log("nomal screen");
+        //     if(fullScreen){
+        //         setFullScreen(false)
         //     }
         // }
     }, [beacon]);
 
+    const [action, setAtion] = useState(false);
+    const onStartRePosition = (e) => {
+        setAtion(true);
+
+    }
+    const onStopRePosition = () => {
+        setAtion(false);
+    }
 
     document.addEventListener('mousedown', targetClick)
 
+    window.onkeydown = (e) => {
+        console.log(e)
+        // if(e.key==='F11'){
+        //     setFullScreen(true);
+        //     e.preventDefault();
+        //     return;
+        // }
+    }
+
+
+    const timeout = useRef(null);
+    const [scrollAct, setScrollAct] = useState(false);
+    window.onscroll = e => {
+        console.log(e);
+        if(timeout.current){
+            console.log(timeout.current)
+            setScrollAct(false);
+        } else {
+            timeout.current = setTimeout(()=>{
+                timeout.current=null;
+                console.log('after--->>>>>',timeout.current)
+                setScrollAct(true)
+            }, 1000)
+            
+        }
+    }
 
     return (
-        <MonitorCompo className="monitor-component" >
+        <MonitorCompo className="monitor-component"
+        // onMouseDown={onStartRePosition} 
+        // onMouseUp={onStopRePosition}
+        // onMouseMove={onStartRePosition}
+        >
             <TopCompo className="top-component" />
             <BodyCompo
                 className="body-component"
-                // onMouseDown={targetClick}
+            // onMouseDown={targetClick}
             >
                 <div className="left-compo">
                     <div className="left-top-box info-box">
@@ -275,6 +311,9 @@ const MonitorContainer = () => {
                                         scanner={scanner.data && localScanner(monitor.data[0].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[0].local_index)}
                                         processDisabled={environment.data && environment.data[0].process_disabled}
+                                        fullScreen={fullScreen}
+                                        repositionAct={repositionAction}
+                                        scrollAct={scrollAct}
                                     />
                                 }
                             </div>
@@ -293,6 +332,8 @@ const MonitorContainer = () => {
                                         scanner={scanner.data && localScanner(monitor.data[2].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[2].local_index)}
                                         processDisabled={environment.data && environment.data[0].process_disabled}
+                                        repositionAct={repositionAction}
+                                        scrollAct={scrollAct}
 
                                     />
                                 }
@@ -322,7 +363,8 @@ const MonitorContainer = () => {
                                         scanner={scanner.data && localScanner(monitor.data[1].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[1].local_index)}
                                         processDisabled={environment.data && environment.data[0].process_disabled}
-
+                                        repositionAct={repositionAction}
+                                        scrollAct={scrollAct}
                                     />
                                 }
                             </div>
@@ -341,7 +383,8 @@ const MonitorContainer = () => {
                                         scanner={scanner.data && localScanner(monitor.data[3].local_index)}
                                         bleData={beacon.data && localBeacon(monitor.data[3].local_index)}
                                         processDisabled={environment.data && environment.data[0].process_disabled}
-
+                                        repositionAct={repositionAction}
+                                        scrollAct={scrollAct}
                                     />
                                 }
                             </div>

@@ -146,7 +146,7 @@ const WorkerDetailComponent = ({ selectItem }) => {
                     </div>
                     <div className="worker-info">
                         <label>혈액형: </label>
-                        <span>{`${TransBloodType(item.wk_blood_type)} ${item.wk_blood_group === 0 ? 'RH+' : 'RH-'}`}-</span>
+                        <span>{`${TransBloodType(item.wk_blood_type)} ${item.wk_blood_group === 0 ? 'RH+' : 'RH-'}`}</span>
                     </div>
                     <div className="worker-info residence-time">
                         <span>체류시간:</span>
