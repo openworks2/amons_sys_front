@@ -634,7 +634,6 @@ export const WebVideoCtrl = (function (e) {
     fnSuccess,
     fnFail
   ) {
-    console.log("pluginOubject-->", pluginObject);
     pluginObject
       .LoginDevice(
         sIp,
