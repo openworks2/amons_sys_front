@@ -252,7 +252,6 @@ const DigContainer = () => {
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data.push(formData);
     _data = _data.sort(date_descending);
-    console.log(_data);
     let _index = _data.findIndex(
       (el) =>
         moment(el.record_date).format("YYYY-MM-DD").toString() ===
@@ -265,18 +264,13 @@ const DigContainer = () => {
   };
 
   const getConditionOnPut = () => {
-    console.log("^&^&^^&^&^& 수정시");
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data = _data.sort(date_descending);
-    console.log("_data");
-    console.log(_data);
     let _index = _data.findIndex(
       (el) =>
         moment(el.record_date).format("YYYY-MM-DD").toString() ===
         moment(formData.record_date).format("YYYY-MM-DD").toString()
     );
-    console.log("_index");
-    console.log(_index);
     return {
       maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
       minLength: _data[_index + 1] && _data[_index + 1].dig_length,

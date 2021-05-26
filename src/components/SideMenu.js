@@ -93,9 +93,7 @@ const SideMenu = ({
   currentUrl,
   role,
 }) => {
-  console.log("SideMenu-->", role);
   useEffect(() => {
-    console.log(currentUrl);
     if (currentUrl === "monitor") {
       setCallSideMenu(false);
     }

@@ -31,7 +31,6 @@ const DUPLICATION_LOGOUT = "account/DUPLICATION_LOGOUT";
 const DUPLICATION_LOGOUT_SUCCESS = "account/DUPLICATION_LOGOUT_SUCCESS";
 const DUPLICATION_LOGOUT_ERROR = "account/DUPLICATION_LOGOUT_ERROR";
 
-
 // 액션 trunk 함수
 /* 로그인 요청 액션 */
 // export const getBridges = createPromiseThunk(GET_BRIDGES, bridgeAPI.getBridges);
@@ -47,8 +46,10 @@ export const logOutAsync = createPromiseThunkByLogOut(
 );
 
 /* 로그인 체크 액션 */
-export const loginCheckAsync = createPromiseThunkByLoginCheck(LOGIN_CHECK, loginAPI.checkStatus);
-
+export const loginCheckAsync = createPromiseThunkByLoginCheck(
+  LOGIN_CHECK,
+  loginAPI.checkStatus
+);
 
 /* 로그인 데이터 추가 액션- localStarage에는 존재, state에는 login.login.data에 없다. */
 export const setLogindInfoAsync = (logindInfo) => (dispatch) => {
@@ -71,9 +72,21 @@ const initialState = {
   login: reducerUtilsByAuth.initial(),
 };
 
-const loginAuthReducer = handleAsyncActionsByLogin(LOGIN_ACCOUNT, "login", true);
-const logOutAuthReducer = handleAsyncActionsByLogOut(LOGOUT_ACCOUNT, "login", true);
-const logInCheckAuthReducer = handleAsyncActionsByLoginCheck(LOGIN_CHECK, "login", true);
+const loginAuthReducer = handleAsyncActionsByLogin(
+  LOGIN_ACCOUNT,
+  "login",
+  true
+);
+const logOutAuthReducer = handleAsyncActionsByLogOut(
+  LOGOUT_ACCOUNT,
+  "login",
+  true
+);
+const logInCheckAuthReducer = handleAsyncActionsByLoginCheck(
+  LOGIN_CHECK,
+  "login",
+  true
+);
 
 // 리듀서
 export default function accounts(state = initialState, action) {
@@ -93,14 +106,13 @@ export default function accounts(state = initialState, action) {
     case LOGIN_CHECK_ERROR:
       return logInCheckAuthReducer(state, action);
     case SET_LOGGED_INFO:
-      console.log('loginedINfo-->',action.payload)
       return {
         ...state,
         login: {
           ...state.login,
           data: action.payload,
           logined: true,
-          validated: true
+          validated: true,
         },
       };
     case DUPLICATION_LOGOUT:

@@ -3,7 +3,6 @@
  */
 export const createPromiseThunk = (type, promiseCreator) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
-  console.log("type---->", type);
   return (param) => async (dispatch) => {
     dispatch({ type });
     try {
@@ -83,14 +82,10 @@ export const createPromiseThunkOfPut = (
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
 
   return (param, data) => async (dispatch) => {
-    console.log("data-->", data);
     const id = idSelector(param);
     dispatch({ type, meta: id });
     try {
       const payload = await promiseCreator(param, data);
-      console.log("id-->", id);
-      console.log("payload-->", payload);
-      console.log("SUCCESS-->", payload);
       dispatch({ type: SUCCESS, payload, meta: id });
     } catch (e) {
       dispatch({
@@ -221,9 +216,6 @@ export const handleAsyncActionsOfPostGet = (type, key, keepData) => {
           [key]: reducerUtils.loading(keepData ? state[key].data : null),
         };
       case SUCCESS:
-        console.log("action.payload");
-        console.log(action.payload);
-        console.log("action.payload");
         return {
           ...state,
           [key]: {
@@ -298,9 +290,6 @@ export const handleAsyncActionsOfPostOrderByTime = (type, key, keepData) => {
  */
 export const handleAsyncActionsOfPut = (type, key, index, keepData) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
-  console.log("PUT!!!");
-
-  console.log(">>>>>>>>>>key->", key);
   return (state, action) => {
     switch (action.type) {
       case type:
@@ -309,8 +298,6 @@ export const handleAsyncActionsOfPut = (type, key, index, keepData) => {
           [key]: reducerUtils.loading(keepData ? state[key].data : null),
         };
       case SUCCESS:
-        console.log("state->", state);
-        console.log("payload->", action.payload);
         return {
           ...state,
           [key]: {
