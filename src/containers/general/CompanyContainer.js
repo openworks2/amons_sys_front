@@ -18,7 +18,7 @@ const ContentsCompo = styled.div`
   padding-right: 130px;
   position: relative;
 `;
-
+//
 const ContentsBodyCompo = styled.div`
   min-width: 1630px !important;
   min-height: 720px !important;
