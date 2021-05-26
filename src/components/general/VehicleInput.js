@@ -348,7 +348,7 @@ const VehicleInput = ({
             name="vh_name"
             placeholder="차량 종류를 입력해주세요."
             required
-            value={vh_name}
+            value={vh_name && vh_name}
             onChange={onChange}
           />
           <Form.Input
@@ -359,7 +359,7 @@ const VehicleInput = ({
             name="vh_number"
             placeholder="차량 번호를 입력해주세요."
             required
-            value={vh_number}
+            value={vh_number && vh_number}
             onChange={onChange}
           />
           <Form.Field

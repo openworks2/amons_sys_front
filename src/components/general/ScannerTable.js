@@ -459,6 +459,7 @@ const ScannerTable = ({
           <Table.Cell className="table-cell local" name="local">
             {item &&
               item.local_index &&
+              localData &&
               localData.find((el) => el.local_index === item.local_index) &&
               (localData.find((el) => el.local_index === item.local_index)
                 .local_used === 0

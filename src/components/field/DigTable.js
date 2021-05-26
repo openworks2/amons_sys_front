@@ -291,7 +291,7 @@ const DigTable = ({
   const onClickCategorie = (e, value) => {
     initActiveRow();
     initPage();
-    initSeq();
+    initFormData();
     const _value = value.value;
     setCategorieValue(_value);
   };
@@ -326,6 +326,7 @@ const DigTable = ({
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
+    console.log("tableRender");
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
@@ -386,19 +387,22 @@ const DigTable = ({
             {item && item.description && item.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.dig_seq === selectedId && (
-              <Button
-                className="trash-icon-button"
-                onClick={(e) => {
-                  // 상위 테이블 로우에 걸어줬던 버튼 떄문에 이벤트 버블링 생긴다.
-                  // 버블링 막고 독립적인 버튼으로 만들어 주기.
-                  e.stopPropagation();
-                  setDeleteModalOpen(true);
-                }}
-              >
-                <FaTrash />
-              </Button>
-            )}
+            {item &&
+              selectedId &&
+              item.dig_seq > 4 &&
+              item.dig_seq === selectedId && (
+                <Button
+                  className="trash-icon-button"
+                  onClick={(e) => {
+                    // 상위 테이블 로우에 걸어줬던 버튼 떄문에 이벤트 버블링 생긴다.
+                    // 버블링 막고 독립적인 버튼으로 만들어 주기.
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
+                  }}
+                >
+                  <FaTrash />
+                </Button>
+              )}
           </Table.Cell>
         </Table.Row>
       );

@@ -455,7 +455,7 @@ const VehicleContainer = () => {
         vh_id: findItem.vh_id,
         vh_index: findItem.vh_index,
         vh_name: findItem.vh_name,
-        vh_number: findItem.vh_name,
+        vh_number: findItem.vh_number,
         vh_image: findItem.vh_image,
         co_id: findItem.co_id,
         co_index: findItem.co_index,

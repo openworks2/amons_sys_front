@@ -252,6 +252,9 @@ const InputCompo = styled.div`
         &.dig-length {
           margin-top: 2px;
           margin-bottom: 10px;
+          &:disabled {
+            color: #ccc !important;
+          }
         }
         &.description {
           height: 105px;
@@ -491,11 +494,13 @@ const DigInput = ({
                   {selectedRow.selectedId
                     ? localInfo &&
                       localInfo.plan_length &&
+                      dig_length > 0 &&
                       getDigAmountPercent(localInfo.plan_length, dig_length)
                     : localInfo &&
                       localInfo.plan_length &&
                       currentLatestDigInfo &&
                       currentLatestDigInfo.dig_length &&
+                      currentLatestDigInfo.dig_length > 0 &&
                       getDigAmountPercent(
                         localInfo.plan_length,
                         currentLatestDigInfo.dig_length
@@ -533,6 +538,11 @@ const DigInput = ({
               value={dig_length && dig_length}
               onChange={onChange}
               error={digLengthError}
+              disabled={
+                selectedRow &&
+                selectedRow.selectedItem &&
+                selectedRow.selectedItem.dig_seq < 5
+              }
             />
             {digLengthError && (
               <DigLengthError>{digLengthError}</DigLengthError>

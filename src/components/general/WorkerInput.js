@@ -568,7 +568,10 @@ const WorkerInput = ({
             name="wk_name"
             placeholder="이름을 입력해주세요."
             required
-            value={wk_name.replace(/[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣]*$/g, "")}
+            value={wk_name.replace(
+              /[^a-z|^A-Z|^ㄱ-ㅎ|^ㅏ-ㅣ|^가-힣|^0-9]*$/g,
+              ""
+            )}
             onChange={onChange}
           />
           <div className="input-form phone-sms-area">

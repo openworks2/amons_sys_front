@@ -163,7 +163,13 @@ const DigContainer = () => {
 
   // 누적 굴진율 퍼센트 구하기
   const getDigAmountPercent = (plan_length, dig_length) => {
-    return ((minusComma(dig_length) / plan_length) * 100).toFixed(1) + "%";
+    let _percent = ((minusComma(dig_length) / plan_length) * 100).toFixed(1);
+
+    if (_percent > 100) {
+      return "굴진거리초과";
+    } else {
+      return _percent + "%";
+    }
   };
 
   // 0 추가
@@ -395,6 +401,7 @@ const DigContainer = () => {
     setFormData({
       ...formData,
       [name]: value,
+      dig_length: "",
     });
   };
 
