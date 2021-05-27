@@ -43,7 +43,6 @@ const HomeContainer = () => {
   const [fullState, setScreenState] = useState(false);
   // 전체화면 설정
   const openFullScreenMode = () => {
-    console.log(2134234);
     let docV = document.documentElement;
     // docV.webkitRequestFullscreen();
     if (docV.requestFullscreen) {

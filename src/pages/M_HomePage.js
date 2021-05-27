@@ -1,10 +1,11 @@
 import React from 'react';
+import HomeContainer from '../containers/M_HomeContainer';
 
 const M_HomePage = () => {
     return (
-        <div>
-            
-        </div>
+        <>
+            <HomeContainer/>
+        </>
     );
 };
 

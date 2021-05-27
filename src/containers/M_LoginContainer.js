@@ -4,7 +4,7 @@ import { Redirect } from 'react-router';
 import { Button, Form, Input } from "semantic-ui-react";
 import styled from 'styled-components';
 import storage from '../lib/starage';
-import { loginAsync } from '../modules/login';
+import { loginAsync, loginCheckAsync } from '../modules/login';
 
 const LoginCompo = styled.div`
     width: 100%;
