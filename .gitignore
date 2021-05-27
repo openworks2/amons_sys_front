@@ -26,3 +26,4 @@ yarn-error.log*
 SideMenu copy.js
 SideMenu_dev.js
 /cctv_origin
+server.config.js

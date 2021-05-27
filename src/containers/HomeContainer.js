@@ -43,7 +43,6 @@ const HomeContainer = () => {
   const [fullState, setScreenState] = useState(false);
   // 전체화면 설정
   const openFullScreenMode = () => {
-    console.log(2134234);
     let docV = document.documentElement;
     // docV.webkitRequestFullscreen();
     if (docV.requestFullscreen) {
@@ -59,7 +58,7 @@ const HomeContainer = () => {
       setScreenState(true);
     }
     setTimeout(() => {
-      dispatch(toggleCameraReposition())
+      dispatch(toggleCameraReposition());
     }, 1000);
   };
 
@@ -92,7 +91,6 @@ const HomeContainer = () => {
     if (!loggedInfo) {
       return; // 로그인 정보가 없다면 멈춤
     } else {
-      console.log("loggedInfo--->", loggedInfo);
       setUser(loggedInfo);
     }
 
@@ -111,7 +109,6 @@ const HomeContainer = () => {
   };
 
   useEffect(() => {
-    console.log(">>>>>>>>>>>>>>>HomeContainer");
     const url = document.location.href;
     const splitUrl = url.split("/");
     const location = splitUrl[splitUrl.length - 1];
@@ -137,22 +134,19 @@ const HomeContainer = () => {
   });
 
   useEffect(() => {
-    console.log("login--->>", login);
-
     initialUserInfo();
   }, []);
 
-
   useEffect(() => { }, [sosSituation]);
 
+
   window.onkeydown = (e) => {
-    if (e.key === 'F11') {
+    if (e.key === "F11") {
       setTimeout(() => {
-        dispatch(toggleCameraReposition())
+        dispatch(toggleCameraReposition());
       }, 1000);
     }
-  }
-
+  };
 
   if (!storage.get("user")) return <Redirect to="/amons/signin" />;
 

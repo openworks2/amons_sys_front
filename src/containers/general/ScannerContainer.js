@@ -218,8 +218,6 @@ const ScannerContainer = () => {
       ...formData,
       [name]: value,
     });
-
-    console.log(formData);
   };
 
   // form onSelectChant Event

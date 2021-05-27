@@ -127,10 +127,6 @@ const AlarmContainer = () => {
     });
   };
 
-  useEffect(() => {
-    console.log(formData);
-  });
-
   // 클릭된 row의 데이터
   const [selectedRow, setSelectedRow] = useState({
     selectedId: null,
@@ -259,7 +255,7 @@ const AlarmContainer = () => {
         );
       });
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 

@@ -477,7 +477,7 @@ const LogDigTable = ({
       );
       searchData = response.data;
     } catch (e) {
-      console.log("굴진 기간 조회 서버 통신 에러");
+      // console.log("굴진 기간 조회 서버 통신 에러");
     }
     if (!searchData) {
       searchData = [];

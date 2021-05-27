@@ -174,7 +174,7 @@ const AccountContatiner = () => {
       );
       auth = response.data.auth;
     } catch (e) {
-      console.log("중복확인 서버 통신 에러");
+      // console.log("중복확인 서버 통신 에러");
     }
     if (formData.acc_user_id === "" || !formData.acc_user_id) {
       setDuplicationCheck(false);
