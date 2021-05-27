@@ -272,10 +272,14 @@ const WorkerContatiner = () => {
   const makeBeaconList = (data) => {
     if (data) {
       let _unUsedBeaconList = [];
-      _unUsedBeaconList.push({ key: 0, text: "할당 없음", value: null });
+      _unUsedBeaconList.push({
+        key: "unUsedBeaconListNULL",
+        text: "할당 없음",
+        value: null,
+      });
       data.map((item, index) => {
         _unUsedBeaconList.push({
-          key: index,
+          key: "unUsedBeaconList" + index,
           text: `${addZero(item.bc_id, 3)} : 
           ${splitByColonInput(item.bc_address)}`,
           value: item.bc_index,
@@ -396,18 +400,15 @@ const WorkerContatiner = () => {
 
   // [ Change Area ] ======================================================================
 
-  // form onChange Event
   const onChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    // 입력값 state 에 저장
     setFormData({
       ...formData,
       [name]: value,
     });
   };
 
-  // form onSelectChange Event
   const onSelectChange = (e, seletedValue) => {
     const name = seletedValue.name;
     const value = seletedValue.value;

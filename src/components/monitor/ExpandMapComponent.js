@@ -408,7 +408,7 @@ const ExpandMapComponent = ({ setOpenExpandMapHandler, data, bleData }) => {
             <div
               className="block block "
               id={`block-${item.value}`}
-              key={index}
+              key={"tableRowKey" + index}
               style={_blockStyled}
             >
               <img

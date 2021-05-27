@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Menu, Sidebar } from "semantic-ui-react";
+import { Menu, Sidebar, Segment } from "semantic-ui-react";
 import styled from "styled-components";
 
 import { FaIdCard, FaDesktop } from "react-icons/fa";

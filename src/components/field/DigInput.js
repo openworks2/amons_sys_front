@@ -393,6 +393,7 @@ const DigInput = ({
   currentLatestDigInfo,
   onChangeDate,
   getDigAmountPercent,
+  categorieValue,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -460,7 +461,9 @@ const DigInput = ({
             placeholder="노선을 선택해주세요."
             value={local_index}
             error={localError}
-            disabled={selectedRow.selectedId}
+            disabled={
+              selectedRow.selectedId ? true : false || categorieValue !== ""
+            }
             required
           />
           {localError && <InputError>{localError}</InputError>}
@@ -485,7 +488,7 @@ const DigInput = ({
                 </Table.Cell>
                 <Table.Cell className="sub-info-table cell" singleLine>
                   {selectedRow.selectedId
-                    ? addComma(dig_length) + "m"
+                    ? dig_length && addComma(dig_length) + "m"
                     : currentLatestDigInfo &&
                       currentLatestDigInfo.dig_length &&
                       addComma(currentLatestDigInfo.dig_length) + "m"}

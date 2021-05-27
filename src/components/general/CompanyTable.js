@@ -214,7 +214,7 @@ const CompanyTable = ({
       return (
         <Table.Row
           className={company ? "table-row clickable" : "table-row"}
-          key={index}
+          key={"tableRowKey" + index}
           id={"scroll" + index}
           active={company && index === clickedIndex}
           onClick={company && ((e) => activeHandler(e, index, company.co_id))}

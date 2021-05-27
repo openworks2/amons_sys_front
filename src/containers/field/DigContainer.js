@@ -92,6 +92,9 @@ const DigContainer = () => {
 
   const today = new Date();
 
+  const [currentData, setCurrentData] = useState([]);
+  const [categorieValue, setCategorieValue] = useState(null);
+
   const [localInfo, setLocalInfo] = useState({});
   const [localList, setLocalList] = useState([]);
   const [currentLatestDigInfo, setCurrentLatestDigInfo] = useState({}); // 현재 조회 중인 로컬인덱스의 가장 최신 로그
@@ -442,6 +445,32 @@ const DigContainer = () => {
     initFormData();
   };
 
+  // [ Search Categorie Area ] ======================================================================
+
+  const onClickCategorie = (e, value) => {
+    initActiveRow();
+    initPage();
+    initFormData();
+    const _value = value.value;
+    setCategorieValue(_value);
+    const _formData = {
+      ...formData,
+      local_index: _value,
+    };
+    setFormData(_formData);
+  };
+
+  useEffect(() => {
+    let _data = data;
+    let tempData = [];
+    if (categorieValue === null) {
+      setCurrentData(_data);
+    } else {
+      tempData = _data.filter((item) => item.local_index === categorieValue);
+      setCurrentData(tempData);
+    }
+  }, [data, categorieValue]);
+
   // [ Click Area ] ======================================================================
 
   // table row 클릭 핸들러
@@ -468,6 +497,13 @@ const DigContainer = () => {
         description: findItem.description,
         local_index: findItem.local_index,
       });
+    }
+    if (categorieValue !== null) {
+      const _formData = {
+        ...formData,
+        local_index: categorieValue,
+      };
+      setFormData(_formData);
     }
   };
 
@@ -587,10 +623,11 @@ const DigContainer = () => {
             currentLatestDigInfo={currentLatestDigInfo}
             onChangeDate={onChangeDate}
             getDigAmountPercent={getDigAmountPercent}
+            categorieValue={categorieValue}
           />
         </div>
         <div className="table-box">
-          {data && (
+          {currentData && (
             <DigTable
               className="dig-table-box"
               pageInfo={pageInfo}
@@ -608,7 +645,9 @@ const DigContainer = () => {
               addComma={addComma}
               addZero={addZero}
               getDigAmountPercent={getDigAmountPercent}
-              currentLatestDigInfo={currentLatestDigInfo}
+              categorieValue={categorieValue}
+              currentData={currentData}
+              onClickCategorie={onClickCategorie}
             />
           )}
         </div>

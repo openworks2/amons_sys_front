@@ -396,7 +396,7 @@ const CctvTable = ({
       return (
         <Table.Row
           className={item ? "table-row clickable" : "table-row"}
-          key={index}
+          key={"tableRowKey" + index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.cctv_id))}

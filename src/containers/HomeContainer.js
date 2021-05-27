@@ -174,7 +174,6 @@ const HomeContainer = () => {
         openFullScreenMode={openFullScreenMode}
         role={user !== null ? user.acc_role : null}
       />
-
       {/* </ContentsCompo> */}
       {alarmPanel && (
         <AlarmModal

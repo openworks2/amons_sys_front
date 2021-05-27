@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Icon, Image } from "semantic-ui-react";
+import { Card, Icon, Image, Sidebar } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -106,7 +106,7 @@ const CardCompo = styled.div`
 const HomeShortcut = ({ openFullScreenMode }) => {
   return (
     <CardCompo>
-      <Card as={Link} to="/amons/home/monitor" className="card-component" >
+      <Card as={Link} to="/amons/home/monitor" className="card-component">
         <div className="img-box">
           <Image
             src="/main/monitoring.png"
@@ -119,7 +119,7 @@ const HomeShortcut = ({ openFullScreenMode }) => {
             <p className="hover-text">바로가기</p>
           </div>
         </div>
-        <Card.Content className="card-title" >모니터링</Card.Content>
+        <Card.Content className="card-title">모니터링</Card.Content>
       </Card>
 
       <Card as={Link} to="/amons/home/log/alarm" className="card-component">
@@ -148,7 +148,11 @@ const HomeShortcut = ({ openFullScreenMode }) => {
         </Card.Content>
       </Card>
 
-      <Card as={Link} to="/amons/home/log/vehiclelog" className="card-component">
+      <Card
+        as={Link}
+        to="/amons/home/log/vehiclelog"
+        className="card-component"
+      >
         <div className="img-box">
           <Image
             src="/main/vehicle.png"

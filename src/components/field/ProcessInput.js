@@ -399,7 +399,7 @@ const ProcessInput = ({
             placeholder="노선을 선택해주세요."
             value={local_index}
             error={localError}
-            disabled={selectedRow.selectedId}
+            disabled={selectedRow.selectedId ? true : false}
             required
           />
           {localError && <InputError>{localError}</InputError>}
@@ -480,7 +480,9 @@ const ProcessInput = ({
                   value={1}
                   checked={pcs_state && pcs_state === 1}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="발파"
@@ -489,7 +491,9 @@ const ProcessInput = ({
                   value={4}
                   checked={pcs_state && pcs_state === 4}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="강지보"
@@ -498,7 +502,9 @@ const ProcessInput = ({
                   value={7}
                   checked={pcs_state && pcs_state === 7}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="방수시트"
@@ -507,7 +513,9 @@ const ProcessInput = ({
                   value={10}
                   checked={pcs_state && pcs_state === 10}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="장비점검"
@@ -516,7 +524,9 @@ const ProcessInput = ({
                   value={13}
                   checked={pcs_state && pcs_state === 13}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
               </div>
               <div className="radio-grouper row2">
@@ -527,7 +537,9 @@ const ProcessInput = ({
                   value={2}
                   checked={pcs_state && pcs_state === 2}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="버력처리"
@@ -536,7 +548,9 @@ const ProcessInput = ({
                   value={5}
                   checked={pcs_state && pcs_state === 5}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="격자지보"
@@ -545,7 +559,9 @@ const ProcessInput = ({
                   value={8}
                   checked={pcs_state && pcs_state === 8}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="라이닝"
@@ -554,7 +570,9 @@ const ProcessInput = ({
                   value={11}
                   checked={pcs_state && pcs_state === 11}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="기타"
@@ -563,7 +581,9 @@ const ProcessInput = ({
                   value={14}
                   checked={pcs_state && pcs_state === 14}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
               </div>
               <div className="radio-grouper row3">
@@ -574,7 +594,9 @@ const ProcessInput = ({
                   value={3}
                   checked={pcs_state && pcs_state === 3}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="숏크리트"
@@ -583,7 +605,9 @@ const ProcessInput = ({
                   value={6}
                   checked={pcs_state && pcs_state === 6}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
 
                 <Radio
@@ -593,7 +617,9 @@ const ProcessInput = ({
                   value={9}
                   checked={pcs_state && pcs_state === 9}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <Radio
                   label="근무교대"
@@ -602,7 +628,9 @@ const ProcessInput = ({
                   value={12}
                   checked={pcs_state && pcs_state === 12}
                   onChange={(e, target) => onRadioChange(e, target)}
-                  disabled={selectedRow.selectedId || !local_index}
+                  disabled={
+                    selectedRow.selectedId ? true : false || !local_index
+                  }
                 />
                 <div className="blank-place"> </div>
               </div>

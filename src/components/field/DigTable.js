@@ -277,35 +277,14 @@ const DigTable = ({
   addComma,
   addZero,
   getDigAmountPercent,
+  categorieValue,
+  currentData,
+  onClickCategorie,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
+  const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
-  // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [currentData, setCurrentData] = useState([]);
-
-  const onClickCategorie = (e, value) => {
-    initActiveRow();
-    initPage();
-    initFormData();
-    const _value = value.value;
-    setCategorieValue(_value);
-  };
-
-  useEffect(() => {
-    let _data = data;
-    let tempData = [];
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      setCurrentData(tempData);
-    }
-  }, [data, categorieValue]);
 
   // 테이블
   function date_descending(a, b) {
@@ -322,8 +301,6 @@ const DigTable = ({
       (activePage - 1) * itemsPerPage + itemsPerPage
     );
 
-  const { selectedId, selectedItem, clickedIndex } = selectedRow;
-
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     console.log("tableRender");
@@ -334,7 +311,7 @@ const DigTable = ({
       return (
         <Table.Row
           className={item ? "table-row clickable" : "table-row"}
-          key={index}
+          key={"tableRowKey" + index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.dig_seq))}
