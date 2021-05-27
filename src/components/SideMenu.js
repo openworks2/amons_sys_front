@@ -28,6 +28,7 @@ const SideMenuCompo = styled.div`
   }
   .ui.inverted.vertical.labeled.icon.ui.overlay.left.visible.sidebar.sidemenu.menu {
     height: 94% !important;
+    z-index: 103;
   }
   .sidemenu {
     background: #1b1c1d 0% 0% no-repeat padding-box !important;
@@ -38,6 +39,7 @@ const SideMenuCompo = styled.div`
     padding-right: 10px;
     height: 1000px !important;
     overflow: auto !important;
+    z-index: 103;
     &::-webkit-scrollbar {
       display: none !important;
     }

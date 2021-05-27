@@ -143,7 +143,7 @@ const HomeContainer = () => {
   }, []);
 
 
-  useEffect(() => {}, [sosSituation]);
+  useEffect(() => { }, [sosSituation]);
 
   window.onkeydown = (e) => {
     if (e.key === 'F11') {
@@ -155,6 +155,14 @@ const HomeContainer = () => {
 
 
   if (!storage.get("user")) return <Redirect to="/amons/signin" />;
+
+  window.onmouseup = (e) => {
+    const SideMenuButton = e.target.closest('.sidemenu-button-box');
+    if (callSideMenu && SideMenuButton === null) {
+      setCallSideMenu(false)
+    }
+  }
+
   return (
     <HomeCompo className="Home-component">
       <Header

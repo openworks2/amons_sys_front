@@ -176,7 +176,7 @@ const MonitorContainer = () => {
         if (clzName === 'detail-panel-button active' || e.target.closest('.detail-panel-button') || e.target.closest('.table-box')) {
             return;
         }
-        else if (clzName === 'ptz-control-button active' || e.target.closest('.controll-box')) {
+        else if (clzName === 'ptz-control-button active' || e.target.closest('.ptz-control-button') || e.target.closest('.controll-box')) {
             return;
         }
         else {

@@ -124,7 +124,8 @@ Dahua.prototype = {
                     window.location.assign(`${CLIENT}/plugin/webplugin.exe`);
                     alert('WebPlugin.exe 설치 후 브라우저를 다시 시작해주세요.');
                 }else {
-                    window.location.reload();
+                    // window.location.reload();
+                    return
                 }
             });
         }
