@@ -252,6 +252,9 @@ const InputCompo = styled.div`
         &.dig-length {
           margin-top: 2px;
           margin-bottom: 10px;
+          &:disabled {
+            color: #ccc !important;
+          }
         }
         &.description {
           height: 105px;
@@ -345,6 +348,28 @@ const InputCompo = styled.div`
       top: 68vh;
     }
   }
+
+  .first-log-button {
+    width: 324px;
+    height: 50px;
+    background-color: #f1592f;
+    border: 1px solid #d8d8d8;
+    opacity: 1;
+    letter-spacing: 0px;
+    color: #ffffff;
+    position: absolute;
+    top: 70.1vh;
+    cursor: default;
+    :hover,
+    :focus {
+      background-color: #f1592f;
+      color: #ffffff;
+    }
+    @media screen and (max-height: 970px) {
+      top: 68vh;
+    }
+  }
+
   .ui.form .field .prompt.label {
     //에러 색상
     display: none;
@@ -377,6 +402,7 @@ const DigInput = ({
   onChange,
   onSelectChange,
   formData,
+  data,
   createHandler,
   updateHandler,
   selectedRow,
@@ -386,10 +412,13 @@ const DigInput = ({
   localError,
   digLengthError,
   addComma,
+  minusComma,
   localInfo,
   currentLatestDigInfo,
   onChangeDate,
   getDigAmountPercent,
+  categorieValue,
+  firstDate,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -420,6 +449,10 @@ const DigInput = ({
     "11월",
     "12월",
   ];
+
+  const [startDate, setStartDate] = useState(
+    new Date(data.find((el) => el.dig_seq === 1).record_date)
+  );
 
   const [endDate, setEndDate] = useState(
     new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59)
@@ -457,7 +490,13 @@ const DigInput = ({
             placeholder="노선을 선택해주세요."
             value={local_index}
             error={localError}
-            disabled={selectedRow.selectedId}
+            disabled={
+              selectedRow.selectedItem
+                ? true
+                : false || categorieValue
+                ? true
+                : false
+            }
             required
           />
           {localError && <InputError>{localError}</InputError>}
@@ -482,7 +521,7 @@ const DigInput = ({
                 </Table.Cell>
                 <Table.Cell className="sub-info-table cell" singleLine>
                   {selectedRow.selectedId
-                    ? addComma(dig_length) + "m"
+                    ? dig_length && addComma(dig_length) + "m"
                     : currentLatestDigInfo &&
                       currentLatestDigInfo.dig_length &&
                       addComma(currentLatestDigInfo.dig_length) + "m"}
@@ -491,11 +530,13 @@ const DigInput = ({
                   {selectedRow.selectedId
                     ? localInfo &&
                       localInfo.plan_length &&
+                      minusComma(dig_length) > 0 &&
                       getDigAmountPercent(localInfo.plan_length, dig_length)
                     : localInfo &&
                       localInfo.plan_length &&
                       currentLatestDigInfo &&
                       currentLatestDigInfo.dig_length &&
+                      currentLatestDigInfo.dig_length > 0 &&
                       getDigAmountPercent(
                         localInfo.plan_length,
                         currentLatestDigInfo.dig_length
@@ -507,7 +548,7 @@ const DigInput = ({
           <Table className="sub-info-table last-row">
             <Table.Body>
               <Table.Cell className="sub-info-table header" singleLine>
-                최종 입력일
+                {selectedRow.selectedId ? "이력 입력일" : "최종 입력일"}
               </Table.Cell>
               <Table.Cell className="sub-info-table date" singleLine>
                 {selectedRow.selectedId
@@ -528,11 +569,16 @@ const DigInput = ({
               className="input-form dig-length"
               id="dig_length"
               name="dig_length"
-              placeholder="누적 굴진량을 입력해주세요."
+              placeholder={"누적 굴진량을 입력해주세요."}
               required
               value={dig_length && dig_length}
               onChange={onChange}
               error={digLengthError}
+              disabled={
+                selectedRow &&
+                selectedRow.selectedItem &&
+                selectedRow.selectedItem.dig_seq < 5
+              }
             />
             {digLengthError && (
               <DigLengthError>{digLengthError}</DigLengthError>
@@ -608,6 +654,7 @@ const DigInput = ({
                     name="record_date"
                     shouldCloseOnSelect
                     useWeekdaysShort
+                    minDate={startDate}
                     maxDate={endDate}
                     selected={record_date ? new Date(record_date) : new Date()}
                     placeholder="입력일을 선택해주세요."
@@ -635,19 +682,30 @@ const DigInput = ({
               placeholder="비고 입력란"
               value={description ? description : ""}
               onChange={onChange}
+              disabled={
+                selectedRow &&
+                selectedRow.selectedItem &&
+                selectedRow.selectedItem.dig_seq < 5
+              }
             />
           </Form.Field>
         </div>
         {selectedItem ? (
-          <Button
-            className="modify-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setModifyOpen(true);
-            }}
-          >
-            수정
-          </Button>
+          dig_seq < 5 ? (
+            <Button className="first-log-button">
+              초기 데이터는 수정할 수 없습니다.
+            </Button>
+          ) : (
+            <Button
+              className="modify-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setModifyOpen(true);
+              }}
+            >
+              수정
+            </Button>
+          )
         ) : (
           <Button className="submit-button" type="submit">
             입력

@@ -277,35 +277,14 @@ const DigTable = ({
   addComma,
   addZero,
   getDigAmountPercent,
+  categorieValue,
+  currentData,
+  onClickCategorie,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
+  const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
-  // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [currentData, setCurrentData] = useState([]);
-
-  const onClickCategorie = (e, value) => {
-    initActiveRow();
-    initPage();
-    initSeq();
-    const _value = value.value;
-    setCategorieValue(_value);
-  };
-
-  useEffect(() => {
-    let _data = data;
-    let tempData = [];
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      setCurrentData(tempData);
-    }
-  }, [data, categorieValue]);
 
   // 테이블
   function date_descending(a, b) {
@@ -322,10 +301,9 @@ const DigTable = ({
       (activePage - 1) * itemsPerPage + itemsPerPage
     );
 
-  const { selectedId, selectedItem, clickedIndex } = selectedRow;
-
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
+    console.log("tableRender");
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
@@ -333,7 +311,7 @@ const DigTable = ({
       return (
         <Table.Row
           className={item ? "table-row clickable" : "table-row"}
-          key={index}
+          key={"tableRowKey" + index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.dig_seq))}
@@ -386,19 +364,22 @@ const DigTable = ({
             {item && item.description && item.description}
           </Table.Cell>
           <Table.Cell className="table-cell trash-icon">
-            {item && selectedId && item.dig_seq === selectedId && (
-              <Button
-                className="trash-icon-button"
-                onClick={(e) => {
-                  // 상위 테이블 로우에 걸어줬던 버튼 떄문에 이벤트 버블링 생긴다.
-                  // 버블링 막고 독립적인 버튼으로 만들어 주기.
-                  e.stopPropagation();
-                  setDeleteModalOpen(true);
-                }}
-              >
-                <FaTrash />
-              </Button>
-            )}
+            {item &&
+              selectedId &&
+              item.dig_seq > 4 &&
+              item.dig_seq === selectedId && (
+                <Button
+                  className="trash-icon-button"
+                  onClick={(e) => {
+                    // 상위 테이블 로우에 걸어줬던 버튼 떄문에 이벤트 버블링 생긴다.
+                    // 버블링 막고 독립적인 버튼으로 만들어 주기.
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
+                  }}
+                >
+                  <FaTrash />
+                </Button>
+              )}
           </Table.Cell>
         </Table.Row>
       );
@@ -418,7 +399,10 @@ const DigTable = ({
           name={item.local_name && item.local_name}
           active={categorieValue === item.local_index}
           value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
+          onClick={(e, value) => {
+            onClickCategorie(e, value);
+            document.getElementById("scroll0").scrollIntoView();
+          }}
         />
       );
     });
@@ -433,7 +417,10 @@ const DigTable = ({
             name="전체"
             active={categorieValue === null}
             value={null}
-            onClick={onClickCategorie}
+            onClick={(e, value) => {
+              onClickCategorie(e, value);
+              document.getElementById("scroll0").scrollIntoView();
+            }}
           />
           {TopMenuRender(localData)}
         </Menu>

@@ -141,12 +141,12 @@ const TableCompo = styled.div`
         border: 1px solid #d8d8d8;
         opacity: 1;
         height: 47px;
-        &.clickable {
+        /* &.clickable {
           cursor: pointer;
           &:hover {
             background: #f6f6f6 0% 0% no-repeat padding-box !important;
           }
-        }
+        } */
         .table-cell {
           text-align: center;
           padding-top: 0px;
@@ -331,10 +331,10 @@ const ProcessTable = ({
       return (
         <Table.Row
           className={item ? "table-row clickable" : "table-row"}
-          key={index}
+          key={"tableRowKey" + index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.pcs_seq))}
+          // onClick={item && ((e) => activeHandler(e, index, item.pcs_seq))}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
@@ -400,7 +400,10 @@ const ProcessTable = ({
           name={item.local_name && item.local_name}
           active={categorieValue === item.local_index}
           value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
+          onClick={(e, value) => {
+            onClickCategorie(e, value);
+            document.getElementById("scroll0").scrollIntoView();
+          }}
         />
       );
     });
@@ -415,7 +418,10 @@ const ProcessTable = ({
             name="전체"
             active={categorieValue === null}
             value={null}
-            onClick={onClickCategorie}
+            onClick={(e, value) => {
+              onClickCategorie(e, value);
+              document.getElementById("scroll0").scrollIntoView();
+            }}
           />
           {TopMenuRender(localData)}
         </Menu>

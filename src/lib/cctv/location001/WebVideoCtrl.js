@@ -1474,5 +1474,5 @@ export const WebVideoCtrl = (function (e) {
 		openPath: openPath,
 		startTourByChannel: startTourByChannel
 	};
-})(this);
 
+})(this);

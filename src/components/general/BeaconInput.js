@@ -171,7 +171,7 @@ const BeaconInput = ({
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
-  const { bc_address, bc_description } = formData;
+  const { bc_address, bc_description, wk_name, vh_name } = formData;
 
   const splitByColon = (str = "") => {
     let length = str.length;
@@ -270,6 +270,16 @@ const BeaconInput = ({
         <Modal.Content className="confirm-modal content">
           <Modal.Description className="confirm-modal description">
             <FaExclamationCircle className="confirm-modal warning-icon" />
+            {(wk_name || vh_name) && (
+              <>
+                <p className="confirm-modal text-info">
+                  *비콘이 작업자나 차량에 할당되어 있는 경우,
+                </p>
+                <p className="confirm-modal text-info">
+                  MAC 주소는 변경되지 않습니다.
+                </p>
+              </>
+            )}
             <p className="confirm-modal text">
               입력한 내용으로 수정하시겠습니까?
             </p>

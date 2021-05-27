@@ -204,7 +204,7 @@ const KickOutVehicleContainer = () => {
   const kickoutHandler = async (bc_index) => {
     const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
 
-    let _data = data;
+    let _data = currentData;
     _data = _data.filter((el) => el.bc_index !== bc_index);
     setCurrentData(_data);
   };

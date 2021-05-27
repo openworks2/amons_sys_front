@@ -126,6 +126,10 @@ Dahua.prototype = {
                     // window.location.reload();
                     return;
                 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
             });
         }
     },

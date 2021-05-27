@@ -239,6 +239,9 @@ const SettingsInput = ({
     let fullAddress = data.address;
     let extraAddress = "";
 
+    console.log(data);
+    console.log(data.address);
+
     if (data.addressType === "R") {
       if (data.bname !== "") {
         extraAddress += data.bname;
@@ -250,7 +253,7 @@ const SettingsInput = ({
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    onChangeAddress(data.sido, data.sigungu, data.bname);
+    onChangeAddress(data.sido, data.sigungu.replace(/ /gi, ""), data.bname);
 
     setIsZoneCode(data);
     setIsAddress(fullAddress);

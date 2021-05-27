@@ -137,9 +137,6 @@ const HomeContainer = () => {
     initialUserInfo();
   }, []);
 
-  useEffect(() => { }, [sosSituation]);
-
-
   window.onkeydown = (e) => {
     if (e.key === "F11") {
       setTimeout(() => {
@@ -183,7 +180,6 @@ const HomeContainer = () => {
         openFullScreenMode={openFullScreenMode}
         role={user !== null ? user.acc_role : null}
       />
-
       {/* </ContentsCompo> */}
       {alarmPanel && (
         <AlarmModal

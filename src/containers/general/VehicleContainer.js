@@ -257,10 +257,14 @@ const VehicleContainer = () => {
   const makeBeaconList = (data) => {
     if (data) {
       let _unUsedBeaconList = [];
-      _unUsedBeaconList.push({ key: 0, text: "할당 없음", value: null });
+      _unUsedBeaconList.push({
+        key: "unUsedBeaconList0",
+        text: "할당 없음",
+        value: null,
+      });
       data.map((item, index) => {
         _unUsedBeaconList.push({
-          key: index,
+          key: "unUsedBeaconList" + index,
           text: `${addZero(item.bc_id, 3)} : 
           ${splitByColonInput(item.bc_address)}`,
           value: item.bc_index,
@@ -455,7 +459,7 @@ const VehicleContainer = () => {
         vh_id: findItem.vh_id,
         vh_index: findItem.vh_index,
         vh_name: findItem.vh_name,
-        vh_number: findItem.vh_name,
+        vh_number: findItem.vh_number,
         vh_image: findItem.vh_image,
         co_id: findItem.co_id,
         co_index: findItem.co_index,

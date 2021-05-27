@@ -157,7 +157,7 @@ const SettingsContatiner = () => {
     const newAddressFormData = {
       ...formData,
       kma_sido: sidoParser(sido),
-      kma_gun: gun,
+      kma_gun: gun.replace(/ /gi, ""),
       kma_dong: dong,
     };
     setFormData(newAddressFormData);
