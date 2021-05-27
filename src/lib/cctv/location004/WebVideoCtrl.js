@@ -127,7 +127,6 @@ export const WebVideoCtrl = (function (e) {
 				def.reject();
 			}
 			else {
-				console.log('def-->', def)
 				var port = 23480;
 				connect(port).done(function () {
 					def.resolve();
@@ -137,10 +136,9 @@ export const WebVideoCtrl = (function (e) {
 					ele.src = 'CustomerWebSocketServer://' + port;
 					ele.style.display = 'none';
 					document.body.appendChild(ele);
-					port++;
+					// port++;
 					port =23481;
 					ele.translate = false;
-					console.log(ele)
 					setTimeout(function () {
 						reconnect(port, def);
 					}, 2000);
@@ -152,7 +150,6 @@ export const WebVideoCtrl = (function (e) {
 	var reconnect = function (port, def) {
 		if (port > 23480) {
 			disConnect();
-			// window.location.reload();
 			return def.reject();
 		}
 
@@ -185,9 +182,6 @@ export const WebVideoCtrl = (function (e) {
 					}
 				};
 				socket.onclose = function () {
-					console.log(this)
-					console.log(_this)
-					console.log(WebVideoCtrl)
 					disConnect();
 
 					def.reject();
@@ -199,12 +193,11 @@ export const WebVideoCtrl = (function (e) {
 	}
 
 	var disConnect = function () {
-		console.log('loginIP--->', loginIp);
 		// WebVideoCtrl.logout("hhh4-1.iptime.org");
 		logout(loginIp);
 
 		window.socket = undefined;
-		pluginObject = undefined;
+		// pluginObject = undefined;
 		socket = undefined;
 		console.log('Websocket Closed!!!')
 	}
@@ -535,7 +528,6 @@ export const WebVideoCtrl = (function (e) {
 	*@param{Function} fnFail    실패한 실패 후 콜백 함수
 	*/
 	var login = function (sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout, fnSuccess, fnFail) {
-		console.log('pluginOubject-->', pluginObject)
 		pluginObject.LoginDevice(sIp, iPort, sUserName, sPassword, iRtspPort, iProtocol, iTimeout).done(function (ret) {
 			loginIp = sIp
 			if (ret > 0) {

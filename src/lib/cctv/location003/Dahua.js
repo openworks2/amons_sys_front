@@ -119,7 +119,6 @@ Dahua.prototype = {
                 // alert("001>>>>>플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
                 // const result = window.confirm("001>>>>>플러그인을 설치하지 않았고 개발 패키지 디렉토리를 두 ​​번 클릭합니다.WebPlugin.exe 패키지 설치！");
                 const result = window.confirm("플러그인이 설치되지 않았거나 실행되지 않았습니다. 확인를 누르면 WebPlugin.exe 패키지가 다운로드 됩니다.！");
-                console.log('result--->', result)
                 if(result){
                     window.location.assign(`${CLIENT}/plugin/webplugin.exe`);
                     alert('WebPlugin.exe 설치 후 브라우저를 다시 시작해주세요.');
