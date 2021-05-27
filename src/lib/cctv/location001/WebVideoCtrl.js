@@ -137,9 +137,9 @@ export const WebVideoCtrl = (function (e) {
 					ele.src = 'CustomerWebSocketServer://' + port;
 					ele.style.display = 'none';
 					document.body.appendChild(ele);
-					port++;
+					// port++;
+					port =23481;
 					ele.translate = false;
-					console.log(ele)
 					setTimeout(function () {
 						reconnect(port, def);
 					}, 2000);
@@ -149,9 +149,9 @@ export const WebVideoCtrl = (function (e) {
 	}
 
 	var reconnect = function (port, def) {
-		if (port > 23488) {
+		if (port > 23480) {
 			disConnect();
-			window.location.reload();
+			// window.location.reload();
 			return def.reject();
 		}
 

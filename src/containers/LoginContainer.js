@@ -185,7 +185,10 @@ const LoginContainer = () => {
     dispatch(loginAsync(reqData));
   };
 
-  if (storage.get("user")) return <Redirect to="/amons/home" />;
+  // if (storage.get("user")) return <Redirect to="/amons/home" />;
+  if (storage.get("user")) { 
+    window.location.href ='/amons/home'
+  };
 
   return (
     <LoginCompo className="login-container">

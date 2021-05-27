@@ -241,7 +241,7 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData, scann
                             planLength > 999
                                 ? planLength.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
                                 : planLength
-                        }
+                        }m
                     </p>
                     <span className="current-value progress-value">
                         {
