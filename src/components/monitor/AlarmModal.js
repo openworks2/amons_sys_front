@@ -157,7 +157,7 @@ const BgModal = styled.div`
 
 const AlarmModal = ({ setOpenAlarmModal, bleAlarmList }) => {
   const birthCalculator = (birth) => {
-    const splitBirth = birth.split(".");
+    const splitBirth = birth.split("-");
     const Years =
       Number(splitBirth[0]) >= 30 ? splitBirth[0] : "20" + splitBirth[0];
     const Months = splitBirth[1];
