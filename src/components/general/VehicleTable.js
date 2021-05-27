@@ -551,9 +551,13 @@ const VehicleTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem &&
-                  `${selectedItem.vh_name} ${selectedItem.vh_number}`}
-                차량 정보를 삭제하시겠습니까?
+                {selectedItem && `차량 종류 : ${selectedItem.vh_name}`}
+              </p>
+              <p className="confirm-modal text">
+                {selectedItem && `차량 번호 : ${selectedItem.vh_number}`}
+              </p>
+              <p className="confirm-modal text">
+                해당 차량 정보를 삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>

@@ -583,8 +583,15 @@ const BeaconTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem && `${splitByColon(selectedItem.bc_address)}`}{" "}
-                비콘을 삭제하시겠습니까?
+                {selectedItem &&
+                  `관리번호 : ${addZero(selectedItem.bc_id, 3)} `}
+              </p>
+              <p className="confirm-modal text">
+                {selectedItem &&
+                  `MAC 주소 : ${splitByColon(selectedItem.bc_address)} `}
+              </p>
+              <p className="confirm-modal text">
+                해당 비콘을 삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>

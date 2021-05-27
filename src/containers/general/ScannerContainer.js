@@ -557,7 +557,7 @@ const ScannerContainer = () => {
           />
         </div>
         <div className="table-box">
-          {currentData && (
+          {data && currentData && localData && (
             <ScannerTable
               className="scanner-table-box"
               pageInfo={pageInfo}

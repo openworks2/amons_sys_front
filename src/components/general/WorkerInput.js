@@ -438,6 +438,17 @@ const AgeError = styled.div`
   color: #ff0000;
   opacity: 1;
 `;
+const SmsError = styled.div`
+  font-family: "NotoSansKR-Regular";
+  margin: 0px;
+  margin-top: -17px;
+  margin-bottom: -2px;
+  font-size: 13px;
+  text-align: right;
+  letter-spacing: 0.65px;
+  color: #ff0000;
+  opacity: 1;
+`;
 
 const WorkerInput = ({
   onChange,
@@ -454,6 +465,7 @@ const WorkerInput = ({
   unUsedBeaconList,
   companyError,
   ageError,
+  smsError,
   fileName,
   imagePreview,
   previewOpen,
@@ -575,6 +587,7 @@ const WorkerInput = ({
             onChange={onChange}
           />
           <div className="input-form phone-sms-area">
+            {smsError && <SmsError>{smsError}</SmsError>}
             <div className="phone-area">
               <div className="form-title phone">핸드폰</div>
               <NumberFormat

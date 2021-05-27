@@ -32,6 +32,11 @@ const GlobalStyle = createGlobalStyle`
         font-family: "NotoSansKR-Medium";
         font-size : 20px;
       }
+      .text-info{
+        font-family: "NotoSansKR-Medium";
+        font-size : 15px;
+        color : #f1592a !important;
+      }
 }
 .ui.modal.transition.visible.active.address-modal{
       width : 600px;

@@ -404,7 +404,10 @@ const ScannerTable = ({
           name={item.local_name && item.local_name}
           active={categorieValue === item.local_index}
           value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
+          onClick={(e, value) => {
+            onClickCategorie(e, value);
+            document.getElementById("scroll0").scrollIntoView();
+          }}
         />
       );
     });
@@ -419,7 +422,10 @@ const ScannerTable = ({
             name="전체"
             active={categorieValue === null}
             value={null}
-            onClick={onClickCategorie}
+            onClick={(e, value) => {
+              onClickCategorie(e, value);
+              document.getElementById("scroll0").scrollIntoView();
+            }}
           />
           {TopMenuRender(localData)}
           <Menu.Menu position="right">
@@ -551,8 +557,31 @@ const ScannerTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem && `${selectedItem.scn_address} `}
-                스캐너 정보를 삭제하시겠습니까?
+                {selectedItem &&
+                  `할당된 노선 :  ${
+                    selectedItem &&
+                    selectedItem.local_index &&
+                    localData &&
+                    localData.find(
+                      (el) => el.local_index === selectedItem.local_index
+                    ) &&
+                    (localData.find(
+                      (el) => el.local_index === selectedItem.local_index
+                    ).local_used === 0
+                      ? localData.find(
+                          (el) => el.local_index === selectedItem.local_index
+                        ).local_name + "(삭제됨)"
+                      : localData.find(
+                          (el) => el.local_index === selectedItem.local_index
+                        ).local_name)
+                  } `}
+              </p>
+              <p className="confirm-modal text">
+                {selectedItem &&
+                  `MAC 주소 : ${splitByColon(selectedItem.scn_address)} `}
+              </p>
+              <p className="confirm-modal text">
+                해당 스캐너 정보를 삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>

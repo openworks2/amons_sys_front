@@ -5,6 +5,7 @@ import WorkerTable from "../../components/general/WorkerTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getUnUsedBeacons } from "../../modules/beacons";
 import { getCompanies } from "../../modules/companies";
+import { getSettings } from "../../modules/settings";
 import {
   getWorkers,
   postWorker,
@@ -90,6 +91,7 @@ const WorkerContatiner = () => {
   );
   const companyData = useSelector((state) => state.companies.companies.data);
   const unUsedBeaconData = useSelector((state) => state.beacons.beacons.data);
+  const settingsData = useSelector((state) => state.settings.settings.data);
 
   const dispatch = useDispatch();
 
@@ -97,6 +99,7 @@ const WorkerContatiner = () => {
     dispatch(getWorkers());
     dispatch(getCompanies());
     dispatch(getUnUsedBeacons());
+    dispatch(getSettings());
   }, []);
 
   // [ State Area ] ======================================================================
@@ -119,6 +122,7 @@ const WorkerContatiner = () => {
 
   const [companyError, setCompanyError] = useState(undefined);
   const [ageError, setAgeError] = useState(undefined);
+  const [smsError, setSmsError] = useState(undefined);
 
   const [pageInfo, setPageInfo] = useState({
     activePage: 1, // 현재 페이지
@@ -420,10 +424,30 @@ const WorkerContatiner = () => {
     }
 
     if (name === "wk_sms_yn") {
-      setFormData({
-        ...formData,
-        [name]: !value,
-      });
+      const sms_limit = settingsData[0].sms_limit;
+      let smsCount = 0;
+      if (formData.wk_sms_yn) {
+        setFormData({ ...formData, wk_sms_yn: 0 });
+      } else {
+        data.map((el) => {
+          if (el.wk_sms_yn) {
+            smsCount += 1;
+          }
+        });
+        if (smsCount < sms_limit) {
+          setFormData({
+            ...formData,
+            [name]: !value,
+          });
+        } else {
+          setSmsError(
+            `*비상알람은 최대 ${sms_limit} 명만 수신 할 수 있습니다.`
+          );
+          setTimeout(() => {
+            setSmsError(undefined);
+          }, 1350);
+        }
+      }
     } else if (name === "bc_index") {
       const findBeacon = seletedValue.options.find((el) => el.value === value);
       const address = findBeacon.address;
@@ -697,6 +721,7 @@ const WorkerContatiner = () => {
             unUsedBeaconList={unUsedBeaconList}
             companyError={companyError}
             ageError={ageError}
+            smsError={smsError}
             fileName={fileName}
             imagePreview={imagePreview}
             previewOpen={previewOpen}
