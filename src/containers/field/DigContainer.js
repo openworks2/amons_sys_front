@@ -92,6 +92,11 @@ const DigContainer = () => {
 
   const today = new Date();
 
+  const [currentData, setCurrentData] = useState([]);
+  const [categorieValue, setCategorieValue] = useState(null);
+
+  const [firstDate, setFirstDate] = useState("");
+
   const [localInfo, setLocalInfo] = useState({});
   const [localList, setLocalList] = useState([]);
   const [currentLatestDigInfo, setCurrentLatestDigInfo] = useState({}); // 현재 조회 중인 로컬인덱스의 가장 최신 로그
@@ -139,7 +144,7 @@ const DigContainer = () => {
     });
   };
 
-  const initFormData = () => {
+  const initFormData = (local_index = null) => {
     setFormData({
       ...formData,
       dig_seq: null,
@@ -148,7 +153,7 @@ const DigContainer = () => {
       record_date: moment(today).format("YYYY-MM-DD"),
       dig_length: "",
       description: "",
-      local_index: null,
+      local_index: local_index,
     });
   };
 
@@ -163,7 +168,13 @@ const DigContainer = () => {
 
   // 누적 굴진율 퍼센트 구하기
   const getDigAmountPercent = (plan_length, dig_length) => {
-    return ((minusComma(dig_length) / plan_length) * 100).toFixed(1) + "%";
+    let _percent = ((minusComma(dig_length) / plan_length) * 100).toFixed(1);
+
+    if (_percent > 100) {
+      return "거리초과";
+    } else {
+      return _percent + "%";
+    }
   };
 
   // 0 추가
@@ -230,6 +241,23 @@ const DigContainer = () => {
     return dateA < dateB ? 1 : -1;
   };
 
+  const isFirstDigLog = () => {
+    let _data = data.filter((el) => el.local_index === formData.local_index);
+    _data = _data.find(
+      (el) =>
+        moment(el.record_date).format("YYYY-MM-DD") ===
+        moment(formData.record_date).format("YYYY-MM-DD")
+    );
+
+    let result = false;
+    if (_data) {
+      if (_data.dig_seq < 5) {
+        return (result = true);
+      }
+    }
+    return result;
+  };
+
   const isAlreadyTyped = () => {
     // 현재 입력하려는 record_date 와 일치하는 데이터가 이미 있는지
     // true : 있음 (수정).
@@ -238,7 +266,8 @@ const DigContainer = () => {
       let _data = data.filter((el) => el.local_index === formData.local_index);
       _data = _data.find(
         (el) =>
-          moment(el.record_date).format("YYYY-MM-DD") === formData.record_date
+          moment(el.record_date).format("YYYY-MM-DD") ===
+          moment(formData.record_date).format("YYYY-MM-DD")
       );
       if (_data) {
         return true;
@@ -252,7 +281,6 @@ const DigContainer = () => {
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data.push(formData);
     _data = _data.sort(date_descending);
-    console.log(_data);
     let _index = _data.findIndex(
       (el) =>
         moment(el.record_date).format("YYYY-MM-DD").toString() ===
@@ -265,18 +293,13 @@ const DigContainer = () => {
   };
 
   const getConditionOnPut = () => {
-    console.log("^&^&^^&^&^& 수정시");
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data = _data.sort(date_descending);
-    console.log("_data");
-    console.log(_data);
     let _index = _data.findIndex(
       (el) =>
         moment(el.record_date).format("YYYY-MM-DD").toString() ===
         moment(formData.record_date).format("YYYY-MM-DD").toString()
     );
-    console.log("_index");
-    console.log(_index);
     return {
       maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
       minLength: _data[_index + 1] && _data[_index + 1].dig_length,
@@ -334,14 +357,11 @@ const DigContainer = () => {
 
     if (minTestResult) {
       if (maxTestResult) {
-        let _dig_seq = formData.dig_seq;
-        if (!selectedRow.selectedItem) {
-          _dig_seq = data.find(
-            (el) =>
-              moment(el.record_date).format("YYYY-MM-DD").toString() ===
-              moment(formData.record_date).format("YYYY-MM-DD").toString()
-          ).dig_seq;
-        }
+        let _dig_seq = data.find(
+          (el) =>
+            moment(el.record_date).format("YYYY-MM-DD") ===
+            moment(formData.record_date).format("YYYY-MM-DD")
+        ).dig_seq;
         let newDig = {
           ...formData,
           dig_seq: _dig_seq,
@@ -351,7 +371,7 @@ const DigContainer = () => {
         dispatch(putDig(_dig_seq, newDig));
       } else {
         setDigLengthError(
-          `*이후 입력일에 입력된굴진량(${condition.maxLength}m)보다 작아야합니다.`
+          `*이후 굴진량(${condition.maxLength}m)보다 작아야합니다.`
         );
         setTimeout(() => {
           setDigLengthError(undefined);
@@ -359,7 +379,7 @@ const DigContainer = () => {
       }
     } else {
       setDigLengthError(
-        `*이전 입력일에 입력된굴진량(${condition.minLength}m)보다 커야합니다.`
+        `*이전 굴진량(${condition.minLength}m)보다 커야합니다.`
       );
       setTimeout(() => {
         setDigLengthError(undefined);
@@ -401,6 +421,7 @@ const DigContainer = () => {
     setFormData({
       ...formData,
       [name]: value,
+      dig_length: "",
     });
   };
 
@@ -441,13 +462,34 @@ const DigContainer = () => {
     initFormData();
   };
 
+  // [ Search Categorie Area ] ======================================================================
+
+  const onClickCategorie = (e, value) => {
+    initActiveRow();
+    initPage();
+    const _value = value.value;
+    setCategorieValue(_value);
+    initFormData(_value);
+  };
+
+  useEffect(() => {
+    let _data = data;
+    let tempData = [];
+    if (categorieValue === null) {
+      setCurrentData(_data);
+    } else {
+      tempData = _data.filter((item) => item.local_index === categorieValue);
+      setCurrentData(tempData);
+    }
+  }, [data, categorieValue]);
+
   // [ Click Area ] ======================================================================
 
   // table row 클릭 핸들러
   const activeHandler = (e, index, selectedId) => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
-      initFormData();
+      initFormData(categorieValue);
     } else {
       const findItem = data.find((digLog) => digLog.dig_seq === selectedId);
 
@@ -488,14 +530,15 @@ const DigContainer = () => {
       );
       setCurrentLatestDigInfo(_currentLatestDigInfo);
     }
-  }, [activeHandler]);
+  }, [activeHandler, formData.local_index, data]);
 
   // [ Create Area ] ======================================================================
 
   const createHandler = (e) => {
     e.preventDefault();
     let _dig_length = minusComma(formData.dig_length);
-    let result = isAlreadyTyped();
+    let isAlreadyTyped_result = isAlreadyTyped();
+    let isFirstDigLog_result = isFirstDigLog();
 
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
@@ -507,19 +550,22 @@ const DigContainer = () => {
       setTimeout(() => {
         setLocalError(undefined);
       }, 3000);
-    } else if (result) {
+    } else if (isFirstDigLog_result) {
+      setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
+      setTimeout(() => {
+        setDigLengthError(undefined);
+      }, 3000);
+    } else if (isAlreadyTyped_result) {
       //result = true (수정)
       let condition = getConditionOnPut();
-      conditionalPut(condition, _dig_length);
-      initActiveRow();
-      initFormData();
+      conditionalPut(condition, parseInt(_dig_length));
     } else {
       //result = false (등록)
       let condition = getConditionOnPost();
-      conditionalPost(condition, _dig_length);
-      initActiveRow();
-      initFormData();
+      conditionalPost(condition, parseInt(_dig_length));
     }
+    initActiveRow();
+    initFormData(categorieValue);
   };
 
   // [ Update Area ] ======================================================================
@@ -539,9 +585,14 @@ const DigContainer = () => {
       setTimeout(() => {
         setLocalError(undefined);
       }, 3000);
+    } else if (!isFirstDigLog) {
+      setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
+      setTimeout(() => {
+        setDigLengthError(undefined);
+      }, 3000);
     } else {
       let condition = getConditionOnPut();
-      conditionalPut(condition, _dig_length);
+      conditionalPut(condition, parseInt(_dig_length));
     }
   };
 
@@ -550,7 +601,7 @@ const DigContainer = () => {
   const deleteHandler = (e, dig_seq) => {
     dispatch(deleteDig(dig_seq));
     initActiveRow();
-    initFormData();
+    initFormData(categorieValue);
   };
 
   // [ Components Area ]===================================================================
@@ -567,29 +618,34 @@ const DigContainer = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <DigInput
-            className="dig-input-box"
-            onChange={onChange}
-            onSelectChange={onSelectChange}
-            formData={formData}
-            createHandler={createHandler}
-            updateHandler={updateHandler}
-            selectedRow={selectedRow}
-            initFormData={initFormData}
-            initActiveRow={initActiveRow}
-            localData={localData}
-            localList={localList}
-            localError={localError}
-            digLengthError={digLengthError}
-            addComma={addComma}
-            localInfo={localInfo}
-            currentLatestDigInfo={currentLatestDigInfo}
-            onChangeDate={onChangeDate}
-            getDigAmountPercent={getDigAmountPercent}
-          />
+          {data && currentData && (
+            <DigInput
+              className="dig-input-box"
+              onChange={onChange}
+              data={data}
+              onSelectChange={onSelectChange}
+              formData={formData}
+              createHandler={createHandler}
+              updateHandler={updateHandler}
+              selectedRow={selectedRow}
+              initFormData={initFormData}
+              initActiveRow={initActiveRow}
+              localData={localData}
+              localList={localList}
+              localError={localError}
+              digLengthError={digLengthError}
+              addComma={addComma}
+              minusComma={minusComma}
+              localInfo={localInfo}
+              currentLatestDigInfo={currentLatestDigInfo}
+              onChangeDate={onChangeDate}
+              getDigAmountPercent={getDigAmountPercent}
+              categorieValue={categorieValue}
+            />
+          )}
         </div>
         <div className="table-box">
-          {data && (
+          {data && currentData && localData && (
             <DigTable
               className="dig-table-box"
               pageInfo={pageInfo}
@@ -607,7 +663,9 @@ const DigContainer = () => {
               addComma={addComma}
               addZero={addZero}
               getDigAmountPercent={getDigAmountPercent}
-              currentLatestDigInfo={currentLatestDigInfo}
+              categorieValue={categorieValue}
+              currentData={currentData}
+              onClickCategorie={onClickCategorie}
             />
           )}
         </div>

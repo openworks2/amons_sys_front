@@ -22,7 +22,6 @@ const LocStatusCompo = styled.div`
         &:nth-child(n+2){
             margin-left:7px;
         }
-
         .contents-box{
             width: 75%;
             text-align: center;
@@ -53,8 +52,6 @@ const LocStatusCompo = styled.div`
                 color:#FFFFFF;
             }
         }
-
-
         &.process-box{
             font-family:"NotoSansKR-Regular";
             text-align: center;

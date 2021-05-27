@@ -143,10 +143,6 @@ const LoginContainer = () => {
   const initialUserInfo = useCallback(async () => {
     const loginedInfo = storage.get("user"); // 로그인 정보를 로컬스코리지에서 가져오기
     if (!loginedInfo) return; // 로그인 정보가 없다면 멈춤
-    console.log("loginedInfo--->", loginedInfo);
-    console.log("user--->", user);
-    console.log("failMsg-->", failMsg);
-
     // try {
     //     await dispatch(loginCheckAsync());
     // } catch (e) {

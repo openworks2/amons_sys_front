@@ -205,7 +205,7 @@ const KickOutWorkerContainer = () => {
     } catch (e) {
       console.log(e);
     }
-    let _data = data;
+    let _data = currentData;
     _data = _data.filter((el) => el.bc_index !== bc_index);
     setCurrentData(_data);
   };

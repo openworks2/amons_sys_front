@@ -289,154 +289,36 @@ const TableCompo = styled.div`
 
 const ScannerTable = ({
   pageInfo,
-  data,
   activeHandler,
   deleteHandler,
   onPageChange,
   selectedRow,
   initFormData,
   initActiveRow,
-  initPage,
   localData,
   addComma,
   addZero,
+  categorieValue,
+  searchValue,
+  currentData,
+  kindReturn,
+  onClickCategorie,
+  onSearchChange,
+  onSearch,
+  splitByColon,
+  splitByColonInput,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
-  // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentData, setCurrentData] = useState([]);
-
-  const onClickCategorie = (e, value) => {
-    if (selectedRow.selectedId) {
-      initActiveRow();
-      initFormData();
-    }
-    initPage();
-    const _value = value.value;
-    setCategorieValue(_value);
-  };
-
-  useEffect(() => {
-    const _data = data;
-    setCurrentData(_data);
-    let tempData = [];
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      setCurrentData(tempData);
-    }
-  }, [data, categorieValue]);
-
-  // serach input 입력
-  const onSearchChange = (e) => {
-    const _searchValue = e.target.value;
-    setSearchValue(_searchValue);
-  };
-
-  const dispatch = useDispatch();
-
-  const onSearch = (e) => {
-    const _data = data;
-    let tempData = [];
-    if (!searchValue) {
-      dispatch(getScanners());
-    }
-    if (categorieValue === null) {
-      // 전체검색
-      let _searchValue = searchValue.replace(/\:/g, "");
-      _searchValue = _searchValue.toUpperCase();
-      _searchValue = _searchValue.substring(0, 12);
-      tempData = _data.filter((item) =>
-        item.scn_address.includes(_searchValue)
-      );
-
-      setCurrentData(tempData);
-    } else {
-      // 검색
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      let _searchValue = searchValue;
-      _searchValue = _searchValue.toUpperCase();
-      _searchValue = _searchValue.substring(0, 12);
-      tempData = tempData.filter((item) =>
-        item.scn_address.includes(_searchValue)
-      );
-
-      setCurrentData(tempData);
-    }
-    if (selectedRow.selectedId) {
-      initActiveRow();
-      initFormData();
-    }
-    initPage();
-  };
-
-  const splitByColon = (str = "") => {
-    let length = str.length;
-    let point = str.length % 2;
-    let splitedStr = "";
-
-    splitedStr = str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += str.substring(point, point + 2);
-      point += 2;
-    }
-
-    return splitedStr;
-  };
-
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 12) {
-      return splitByColon(_str.substring(0, 12));
-    }
-
-    let length = _str.length;
-    let point = _str.length % 2;
-    let splitedStr = "";
-    splitedStr = _str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
-      point += 2;
-    }
-    return splitedStr;
-  };
-
-  const kindReturn = (kind) => {
-    let str = "";
-    if (kind === 0) {
-      str = "기타";
-    }
-    if (kind === 1) {
-      str = "입장";
-    }
-    if (kind === 2) {
-      str = "퇴장";
-    }
-    if (kind === 3) {
-      str = "위치측정";
-    }
-    return str;
-  };
-
-  // 테이블
+  const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData.slice(
     (activePage - 1) * itemsPerPage,
     (activePage - 1) * itemsPerPage + itemsPerPage
   );
-
-  const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
@@ -447,7 +329,7 @@ const ScannerTable = ({
       return (
         <Table.Row
           className={item ? "table-row clickable" : "table-row"}
-          key={index}
+          key={"tableRowKey" + index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.scn_id))}
@@ -459,6 +341,7 @@ const ScannerTable = ({
           <Table.Cell className="table-cell local" name="local">
             {item &&
               item.local_index &&
+              localData &&
               localData.find((el) => el.local_index === item.local_index) &&
               (localData.find((el) => el.local_index === item.local_index)
                 .local_used === 0
@@ -521,7 +404,10 @@ const ScannerTable = ({
           name={item.local_name && item.local_name}
           active={categorieValue === item.local_index}
           value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
+          onClick={(e, value) => {
+            onClickCategorie(e, value);
+            document.getElementById("scroll0").scrollIntoView();
+          }}
         />
       );
     });
@@ -536,7 +422,10 @@ const ScannerTable = ({
             name="전체"
             active={categorieValue === null}
             value={null}
-            onClick={onClickCategorie}
+            onClick={(e, value) => {
+              onClickCategorie(e, value);
+              document.getElementById("scroll0").scrollIntoView();
+            }}
           />
           {TopMenuRender(localData)}
           <Menu.Menu position="right">
@@ -668,8 +557,31 @@ const ScannerTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem && `${selectedItem.scn_address} `}
-                스캐너 정보를 삭제하시겠습니까?
+                {selectedItem &&
+                  `할당된 노선 :  ${
+                    selectedItem &&
+                    selectedItem.local_index &&
+                    localData &&
+                    localData.find(
+                      (el) => el.local_index === selectedItem.local_index
+                    ) &&
+                    (localData.find(
+                      (el) => el.local_index === selectedItem.local_index
+                    ).local_used === 0
+                      ? localData.find(
+                          (el) => el.local_index === selectedItem.local_index
+                        ).local_name + "(삭제됨)"
+                      : localData.find(
+                          (el) => el.local_index === selectedItem.local_index
+                        ).local_name)
+                  } `}
+              </p>
+              <p className="confirm-modal text">
+                {selectedItem &&
+                  `MAC 주소 : ${splitByColon(selectedItem.scn_address)} `}
+              </p>
+              <p className="confirm-modal text">
+                해당 스캐너 정보를 삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>

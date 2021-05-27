@@ -477,7 +477,7 @@ const LogDigTable = ({
       );
       searchData = response.data;
     } catch (e) {
-      console.log("굴진 기간 조회 서버 통신 에러");
+      // console.log("굴진 기간 조회 서버 통신 에러");
     }
     if (!searchData) {
       searchData = [];
@@ -521,7 +521,7 @@ const LogDigTable = ({
       return (
         <Table.Row
           className="table-row"
-          key={index}
+          key={"tableRowKey" + index}
           id={serial + "scroll" + index}
         >
           {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}

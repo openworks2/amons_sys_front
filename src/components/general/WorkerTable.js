@@ -466,7 +466,7 @@ const WorkerTable = ({
       return (
         <Table.Row
           className={item ? "table-row clickable" : "table-row"}
-          key={index}
+          key={"tableRowKey" + index}
           id={"scroll" + index}
           active={item && index === clickedIndex}
           onClick={item && ((e) => activeHandler(e, index, item.wk_id))}
@@ -654,8 +654,22 @@ const WorkerTable = ({
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
               <p className="confirm-modal text">
-                {selectedItem && `${selectedItem.wk_name}`} 작업자 정보를
-                삭제하시겠습니까?
+                {selectedItem &&
+                  companyData &&
+                  companyData.find(
+                    (el) => el.co_index === selectedItem.co_index
+                  ) &&
+                  `소속사 : ${
+                    companyData.find(
+                      (el) => el.co_index === selectedItem.co_index
+                    ).co_name
+                  }`}
+              </p>
+              <p className="confirm-modal text">
+                {selectedItem && `작업자 이름 : ${selectedItem.wk_name}`}
+              </p>
+              <p className="confirm-modal text">
+                해당 작업자 정보를 삭제하시겠습니까?
               </p>
             </Modal.Description>
           </Modal.Content>

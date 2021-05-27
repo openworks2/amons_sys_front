@@ -148,6 +148,8 @@ const BeaconContatiner = () => {
         bc_index: findItem.bc_index,
         bc_address: findItem.bc_address,
         bc_description: findItem.bc_description,
+        vh_name: findItem.vh_name,
+        wk_name: findItem.wk_name,
       });
     }
   };
@@ -202,9 +204,6 @@ const BeaconContatiner = () => {
         ...formData,
         bc_address: _bc_address,
       };
-      console.log(newBeacon);
-      console.log("newBeacon");
-      console.log(newBeacon);
       dispatch(postBeacon(newBeacon));
       initActiveRow();
       initFormData();

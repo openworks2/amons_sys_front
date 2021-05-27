@@ -67,6 +67,21 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const ScannerContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Search Categorie Area ]
+  // [ Click Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] ======================================================================
+
   const { data, loading, error } = useSelector(
     (state) => state.scanners.scanners
   );
@@ -78,6 +93,30 @@ const ScannerContainer = () => {
     dispatch(getLocals());
     dispatch(getScanners());
   }, [dispatch]);
+
+  // [ State Area ] ======================================================================
+  const today = new Date();
+
+  const [categorieValue, setCategorieValue] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [currentData, setCurrentData] = useState([]);
+
+  const [localList, setLocalList] = useState([]);
+
+  const [localError, setLocalError] = useState(undefined);
+  const [kindError, setKindError] = useState(undefined);
+  const [addressError, setAddressError] = useState(undefined);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
 
   const [formData, setFormData] = useState({
     scn_id: null,
@@ -100,145 +139,14 @@ const ScannerContainer = () => {
     closed_count: null,
   });
 
-  useEffect(() => {
-    makeLocalList(localData);
-  }, [localData, formData.local_index]);
+  // [ Init Area ] ======================================================================
 
-  const [localList, setLocalList] = useState([]);
-
-  const makeLocalList = (data) => {
-    if (data) {
-      let _localList = [];
-      const _data = data.filter((el) => el.local_used !== 0);
-
-      _data.map((item, index) => {
-        _localList.push({
-          key: index,
-          text: item.local_name,
-          value: item.local_index,
-          name: item.local_name,
-        });
-      });
-      setLocalList(_localList);
-    }
-  };
-
-  // mac address 입력 / 출력
-  //입력
-
-  const splitByColonInput = (str) => {
-    let _str = str.replace(/\:/g, "");
-
-    if (_str.length > 12) {
-      return splitByColon(_str.substring(0, 12));
-    }
-
-    let length = _str.length;
-    let point = _str.length % 2;
-    let splitedStr = "";
-    splitedStr = _str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += _str.substring(point, point + 2);
-      point += 2;
-    }
-    return splitedStr;
-  };
-  // 출력
-
-  const splitByColon = (str = "") => {
-    let length = str.length;
-    let point = str.length % 2;
-    let splitedStr = "";
-
-    splitedStr = str.substring(0, point);
-    while (point < length) {
-      if (splitedStr !== "") splitedStr += ":";
-      splitedStr += str.substring(point, point + 2);
-      point += 2;
-    }
-
-    return splitedStr;
-  };
-
-  // 0 추가
-  const addZero = (str, digit) => {
-    if (str.length >= digit) {
-      return str;
-    } else {
-      let _str = str.toString();
-      let zeros = "";
-      for (let i = 0; i < digit - _str.length; i++) {
-        zeros = zeros + "0";
-      }
-      return zeros + _str;
-    }
-  };
-
-  // 미터 콤마 더하기 빼기
-
-  const addComma = (num) => {
-    let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      _num = _num.substring(0, 4);
-    }
-    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
-  };
-
-  const minusComma = (num) => {
-    let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      // 4자리 초과시 뒷자리 자르기
-      _num = _num.substring(0, 4);
-    }
-    return _num;
-  };
-
-  // 그룹 2자리 제한
-  const groupLimit = () => {
-    let _scn_group = formData.scn_group;
-    _scn_group = _scn_group.toUpperCase().replace(/[^a-z|^A-Z|^0-9]*$/g, "");
-    if (formData.scn_group && formData.scn_group.length >= 2) {
-      _scn_group = _scn_group.substring(0, 2);
-      return _scn_group;
-    }
-    return _scn_group;
-  };
-
-  // form onChange Event
-  const onChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    // 입력값 state 에 저장
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-
-    console.log(formData);
-  };
-
-  // form onSelectChant Event
-  const onSelectChange = (e, seletedValue) => {
-    const name = seletedValue.name;
-    const value = seletedValue.value;
-
-    setFormData({
-      ...formData,
-      [name]: value,
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
     });
   };
-
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
 
   const initActiveRow = () => {
     setSelectedRow({
@@ -271,7 +179,227 @@ const ScannerContainer = () => {
     });
   };
 
-  // table row 클릭 핸들러
+  // [ Common Logic Area ] ======================================================================
+
+  const splitByColon = (str = "") => {
+    let length = str.length;
+    let point = str.length % 2;
+    let splitedStr = "";
+
+    splitedStr = str.substring(0, point);
+    while (point < length) {
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += str.substring(point, point + 2);
+      point += 2;
+    }
+
+    return splitedStr;
+  };
+
+  const splitByColonInput = (str) => {
+    let _str = str.replace(/\:/g, "");
+
+    if (_str.length > 12) {
+      return splitByColon(_str.substring(0, 12));
+    }
+
+    let length = _str.length;
+    let point = _str.length % 2;
+    let splitedStr = "";
+    splitedStr = _str.substring(0, point);
+    while (point < length) {
+      if (splitedStr !== "") splitedStr += ":";
+      splitedStr += _str.substring(point, point + 2);
+      point += 2;
+    }
+    return splitedStr;
+  };
+
+  // 0 추가
+  const addZero = (str, digit) => {
+    if (str.length >= digit) {
+      return str;
+    } else {
+      let _str = str.toString();
+      let zeros = "";
+      for (let i = 0; i < digit - _str.length; i++) {
+        zeros = zeros + "0";
+      }
+      return zeros + _str;
+    }
+  };
+
+  // 미터 콤마 더하기 빼기
+  const addComma = (num) => {
+    let _num = num.toString();
+    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+    _num = _num.replace(/,/g, ""); // , 값 공백처리
+    if (_num.length > 4) {
+      _num = _num.substring(0, 4);
+    }
+    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
+  };
+
+  const minusComma = (num) => {
+    let _num = num.toString();
+    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+    _num = _num.replace(/,/g, ""); // , 값 공백처리
+    if (_num.length > 4) {
+      // 4자리 초과시 뒷자리 자르기
+      _num = _num.substring(0, 4);
+    }
+    return _num;
+  };
+
+  // 그룹 2자리 제한
+  const groupLimit = () => {
+    let _scn_group = formData.scn_group;
+    _scn_group = _scn_group.toUpperCase().replace(/[^a-z|^A-Z|^0-9]*$/g, "");
+    if (formData.scn_group && formData.scn_group.length >= 2) {
+      _scn_group = _scn_group.substring(0, 2);
+      return _scn_group;
+    }
+    return _scn_group;
+  };
+
+  const kindReturn = (kind) => {
+    let str = "";
+    if (kind === 0) {
+      str = "기타";
+    }
+    if (kind === 1) {
+      str = "입장";
+    }
+    if (kind === 2) {
+      str = "퇴장";
+    }
+    if (kind === 3) {
+      str = "위치측정";
+    }
+    return str;
+  };
+
+  useEffect(() => {
+    makeLocalList(localData);
+  }, [localData, formData.local_index]);
+
+  const makeLocalList = (data) => {
+    if (data) {
+      let _localList = [];
+      const _data = data.filter((el) => el.local_used !== 0);
+
+      _data.map((item, index) => {
+        _localList.push({
+          key: index,
+          text: item.local_name,
+          value: item.local_index,
+          name: item.local_name,
+        });
+      });
+      setLocalList(_localList);
+    }
+  };
+
+  // [ Change Area ] ======================================================================
+
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const onSelectChange = (e, seletedValue) => {
+    const name = seletedValue.name;
+    const value = seletedValue.value;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const onPageChange = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo;
+    setPageInfo({
+      ...PreState,
+      activePage: _activePage,
+    });
+    initActiveRow();
+    initFormData();
+  };
+
+  // [ Search Categorie Area ] ======================================================================
+
+  const onSearchChange = (e) => {
+    const _searchValue = e.target.value;
+    setSearchValue(_searchValue);
+  };
+
+  const onSearch = (e) => {
+    const _data = data;
+    let tempData = [];
+    if (!searchValue) {
+      dispatch(getScanners());
+    }
+    if (categorieValue === null) {
+      // 전체검색
+      let _searchValue = searchValue.replace(/\:/g, "");
+      _searchValue = _searchValue.toUpperCase();
+      _searchValue = _searchValue.substring(0, 12);
+      tempData = _data.filter((item) =>
+        item.scn_address.includes(_searchValue)
+      );
+
+      setCurrentData(tempData);
+    } else {
+      // 검색
+      tempData = _data.filter((item) => item.local_index === categorieValue);
+      let _searchValue = searchValue;
+      _searchValue = _searchValue.toUpperCase();
+      _searchValue = _searchValue.substring(0, 12);
+      tempData = tempData.filter((item) =>
+        item.scn_address.includes(_searchValue)
+      );
+
+      setCurrentData(tempData);
+    }
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
+    initPage();
+  };
+
+  const onClickCategorie = (e, value) => {
+    if (selectedRow.selectedId) {
+      initActiveRow();
+      initFormData();
+    }
+    initPage();
+    const _value = value.value;
+    setCategorieValue(_value);
+  };
+
+  //검색에 따라 데이터 변경
+  useEffect(() => {
+    const _data = data;
+    setCurrentData(_data);
+    let tempData = [];
+    if (categorieValue === null) {
+      setCurrentData(_data);
+    } else {
+      tempData = _data.filter((item) => item.local_index === categorieValue);
+      setCurrentData(tempData);
+    }
+  }, [data, categorieValue]);
+
+  // [ Click Area ] ======================================================================
+
   const activeHandler = (e, index, selectedId) => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
@@ -303,39 +431,8 @@ const ScannerContainer = () => {
     }
   };
 
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
+  // [ Create Area ] ======================================================================
 
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
-  };
-
-  const onPageChange = (e, { activePage }) => {
-    e.preventDefault();
-    let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
-      ...PreState,
-      activePage: _activePage,
-    });
-    // 활성화된 로우 초기화
-    initActiveRow();
-    initFormData();
-  };
-
-  const today = new Date();
-
-  const [localError, setLocalError] = useState(undefined);
-  const [kindError, setKindError] = useState(undefined);
-  const [addressError, setAddressError] = useState(undefined);
-
-  // CREATE
   const createHandler = (e) => {
     e.preventDefault();
     let _scn_address = formData.scn_address.replace(/\:/g, "").toUpperCase();
@@ -372,7 +469,8 @@ const ScannerContainer = () => {
     }
   };
 
-  // UPDATE
+  // [ Update Area ] ======================================================================
+
   const updateHandler = (e) => {
     e.preventDefault();
 
@@ -417,12 +515,15 @@ const ScannerContainer = () => {
     }
   };
 
-  // DELETE
+  // [ Delete Area ] ======================================================================
+
   const deleteHandler = (e, scn_id) => {
     dispatch(deleteScanner(scn_id));
     initActiveRow();
     initFormData();
   };
+
+  // [ Components Area ]===================================================================
 
   if (error) {
     return (
@@ -456,7 +557,7 @@ const ScannerContainer = () => {
           />
         </div>
         <div className="table-box">
-          {data && (
+          {data && currentData && localData && (
             <ScannerTable
               className="scanner-table-box"
               pageInfo={pageInfo}
@@ -473,6 +574,15 @@ const ScannerContainer = () => {
               addComma={addComma}
               splitByColon={splitByColon}
               addZero={addZero}
+              categorieValue={categorieValue}
+              searchValue={searchValue}
+              currentData={currentData}
+              kindReturn={kindReturn}
+              onClickCategorie={onClickCategorie}
+              onSearchChange={onSearchChange}
+              onSearch={onSearch}
+              splitByColon={splitByColon}
+              splitByColonInput={splitByColonInput}
             />
           )}
         </div>

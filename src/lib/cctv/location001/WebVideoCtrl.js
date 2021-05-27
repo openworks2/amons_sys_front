@@ -1,4 +1,3 @@
-
 import $ from "jquery";
 import { Foundation, Map } from "./foundation";
 
@@ -1477,7 +1476,3 @@ export const WebVideoCtrl = (function (e) {
 	};
 
 })(this);
-
-
-
-

@@ -705,7 +705,10 @@ const KickOutWorkerTable = ({
           name={item.local_name && item.local_name}
           active={categorieValue === item.local_index}
           value={item.local_index && item.local_index}
-          onClick={onClickCategorie}
+          onClick={(e, value) => {
+            onClickCategorie(e, value);
+            document.getElementById("scroll0").scrollIntoView();
+          }}
         />
       );
     });
@@ -720,7 +723,10 @@ const KickOutWorkerTable = ({
             name="전체"
             active={categorieValue === null}
             value={null}
-            onClick={onClickCategorie}
+            onClick={(e, value) => {
+              onClickCategorie(e, value);
+              document.getElementById("scroll0").scrollIntoView();
+            }}
           />
           {TopMenuRender(localData)}
           <Menu.Menu className="table-company-dropdown">

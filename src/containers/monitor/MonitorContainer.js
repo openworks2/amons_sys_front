@@ -17,7 +17,6 @@ const MonitorCompo = styled.div`
     height: 100vh;
     min-width: 1920px;
     min-height: 1075px;
-
 `;
 const TopCompo = styled.div`
         width: 100vw;

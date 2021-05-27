@@ -20,10 +20,8 @@ const AlarmModalCompo = styled.div`
     @media screen and (max-height: 937px) {
         height: 72rem;
     }
-
     /* -webkit-animation:blink 1.5s ease-in-out infinite alternate; 
     -moz-animation:blink 1.5s ease-in-out infinite alternate;*/ 
-
     .alarm-modal{
         width:752px;
         height: 537px;
@@ -76,7 +74,6 @@ const AlarmModalCompo = styled.div`
                 width: 750px;
                 height: 252px;
                 /* border-bottom: 1px solid #7C7C7C; */
-
             }
             tr.row{
                 border-bottom: 1px solid #7C7C7C;
