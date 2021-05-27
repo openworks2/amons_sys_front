@@ -1,6 +1,10 @@
 import React from "react";
 import { Redirect } from "react-router";
 import styled from "styled-components";
+import {
+  isBrowser,
+  isMobile
+} from "react-device-detect";
 
 const MainComo = styled.div`
   width: 100%;
@@ -8,10 +12,13 @@ const MainComo = styled.div`
 `;
 
 const MainContainer = () => {
-
+  console.log('--->',isBrowser)
   return (
     <MainComo className="main-component">
-      <Redirect to="/amons/signin" />
+      {
+        isBrowser ?  <Redirect to="/amons/signin" /> : <Redirect to="/amons/m.signin" />
+      }
+     
     </MainComo>
   );
 };
