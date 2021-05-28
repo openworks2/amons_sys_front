@@ -202,9 +202,7 @@ const KickOutWorkerContainer = () => {
   const kickoutHandler = async (bc_index) => {
     try {
       const response = await axios.get(`${API}/api/ble/bles/out/${bc_index}`);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
     let _data = currentData;
     _data = _data.filter((el) => el.bc_index !== bc_index);
     setCurrentData(_data);
