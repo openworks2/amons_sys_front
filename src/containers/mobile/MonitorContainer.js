@@ -49,21 +49,21 @@ const MonitorCompo = styled.div`
             }
         }
     }
-    .descrition-container{
+    .contents-container{
         width: 100%;
         height: 91%;
         background-color:green;
-        /* background-color: #3d67c8; */
-        /* .contents-header{
+        .contents-header {
             width: 100%;
-            height: 20%;
-            background-color: antiquewhite;
+            height: calc(100% - 362px);
+            /* height: 100%; */
+            background: aliceblue;
         }
-        .contents-body{
+        .contents-body {
             width: 100%;
-            height: 80%;
-            background-color: aqua;
-        } */
+            height: 362px;
+            background-color: #F1592A;
+        }
     }
 `;
 
@@ -106,7 +106,7 @@ const MonitorContainer = () => {
                     }
                 </ul>
             </div>
-            <div className="descrition-container">
+            <div className="contents-container">
                 <div className="contents-header"></div>
                 <div className="contents-body"></div>
             </div>
