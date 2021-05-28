@@ -14,6 +14,7 @@ import MonitorContainer from './mobile/MonitorContainer';
 const HomeCompo = styled.div`
     width: 100%;
     height: 100%;
+    background-color: rebeccapurple;
     .header-component{
         width: 100%;
         height: 8.75%;
@@ -21,11 +22,11 @@ const HomeCompo = styled.div`
     }
     .contents-component{
         width: 100%;
-        /* height: 82.5%; */
-        height: 83vh;
+        height: 82.5%;
+        /* height: 83vh; */
         background-color: gray;
     }
-    .navigation-component{
+    .navigation{
         width: 100%;
         height: 8.75%;
         min-height: 50px;
@@ -97,7 +98,7 @@ const M_HomeContainer = () => {
                 <Route path="/amons/m.home/alarmlog" component={AlarmLogContainer} />
                 <Route path="/amons/m.home/drill" component={DrillComponent} />
             </div>
-            <div className="navigation-component">
+            <div className="navigation">
                 <Navigation navigation={navigation} onNavigation={onNavigation} />
             </div>
         </HomeCompo>

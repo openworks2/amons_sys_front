@@ -6,9 +6,11 @@ import { faDesktop, faHistory, faPen } from '@fortawesome/pro-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const NavigationCompo = styled.div`
+    width: 100%;
+    height: 100%;
     ul.navigation-container{
         width: 100%;
-        height: 4em;
+        height: 100%;
         list-style: none;
         display: flex;
         align-content: flex-start;
@@ -69,7 +71,7 @@ const NavigationCompo = styled.div`
 
 const Navigation = ({ navigation, onNavigation }) => {
     return (
-        <NavigationCompo>
+        <NavigationCompo className="navigation-component">  
             <ul className="navigation-container">
                 <li
                     className={navigation === "dashbord" ? "navi-list active" : "navi-list"}

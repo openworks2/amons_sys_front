@@ -1,5 +1,8 @@
+import { faRouter } from '@fortawesome/pro-duotone-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import LocationInfo from '../../components/mobile/LocationInfo';
 
 const MonitorCompo = styled.div`
     width: 100%;
@@ -52,19 +55,9 @@ const MonitorCompo = styled.div`
     .contents-container{
         width: 100%;
         height: 91%;
-        background-color:green;
-        .contents-header {
-            width: 100%;
-            height: calc(100% - 362px);
-            /* height: 100%; */
-            background: aliceblue;
-        }
-        .contents-body {
-            width: 100%;
-            height: 362px;
-            background-color: #F1592A;
-        }
+
     }
+
 `;
 
 const MonitorContainer = () => {
@@ -107,8 +100,7 @@ const MonitorContainer = () => {
                 </ul>
             </div>
             <div className="contents-container">
-                <div className="contents-header"></div>
-                <div className="contents-body"></div>
+                <LocationInfo />
             </div>
         </MonitorCompo>
     );
