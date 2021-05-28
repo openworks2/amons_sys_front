@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   Button,
@@ -7,10 +7,8 @@ import {
   Pagination,
   Modal,
   Menu,
-  Input,
 } from "semantic-ui-react";
-import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { FaTrash, FaMinusCircle } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko";
 
@@ -264,15 +262,12 @@ const TableCompo = styled.div`
 
 const DigTable = ({
   pageInfo,
-  data,
   activeHandler,
   deleteHandler,
   onPageChange,
   selectedRow,
   initFormData,
   initActiveRow,
-  initSeq,
-  initPage,
   localData,
   addComma,
   addZero,
@@ -287,11 +282,11 @@ const DigTable = ({
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 테이블
-  function date_descending(a, b) {
+  const date_descending = (a, b) => {
     var dateA = new Date(a["record_date"]).getTime();
     var dateB = new Date(b["record_date"]).getTime();
     return dateA < dateB ? 1 : -1;
-  }
+  };
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData
@@ -303,7 +298,7 @@ const DigTable = ({
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
-    console.log("tableRender");
+    console.log("table render");
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
