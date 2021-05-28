@@ -649,15 +649,12 @@ const DigContainer = () => {
             <DigTable
               className="dig-table-box"
               pageInfo={pageInfo}
-              data={data}
               activeHandler={activeHandler}
               deleteHandler={deleteHandler}
               onPageChange={onPageChange}
               selectedRow={selectedRow}
               initFormData={initFormData}
               initActiveRow={initActiveRow}
-              initSeq={initSeq}
-              initPage={initPage}
               localData={localData}
               localList={localList}
               addComma={addComma}

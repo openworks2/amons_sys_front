@@ -239,9 +239,6 @@ const SettingsInput = ({
     let fullAddress = data.address;
     let extraAddress = "";
 
-    console.log(data);
-    console.log(data.address);
-
     if (data.addressType === "R") {
       if (data.bname !== "") {
         extraAddress += data.bname;
