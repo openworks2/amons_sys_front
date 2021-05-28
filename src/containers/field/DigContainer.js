@@ -95,8 +95,6 @@ const DigContainer = () => {
   const [currentData, setCurrentData] = useState([]);
   const [categorieValue, setCategorieValue] = useState(null);
 
-  const [firstDate, setFirstDate] = useState("");
-
   const [localInfo, setLocalInfo] = useState({});
   const [localList, setLocalList] = useState([]);
   const [currentLatestDigInfo, setCurrentLatestDigInfo] = useState({}); // 현재 조회 중인 로컬인덱스의 가장 최신 로그
@@ -217,7 +215,7 @@ const DigContainer = () => {
 
   useEffect(() => {
     makeLocalList(localData);
-  }, [localData, formData.local_index]);
+  }, [localData]);
 
   const makeLocalList = (data) => {
     if (data) {
@@ -423,20 +421,9 @@ const DigContainer = () => {
       [name]: value,
       dig_length: "",
     });
-  };
 
-  useEffect(() => {
-    if (!selectedRow.selectedId && data && formData.local_index) {
-      let _digData = data;
-      _digData = _digData.filter(
-        (el) => el.local_index === formData.local_index
-      );
-      _digData = _digData.sort((a, b) =>
-        b.record_date.localeCompare(a.record_date)
-      )[0];
-      setCurrentLatestDigInfo(_digData);
-    }
-  }, [onSelectChange]);
+    setCategorieValue(value);
+  };
 
   const onChangeDate = (date) => {
     let _date = date;
@@ -530,7 +517,20 @@ const DigContainer = () => {
       );
       setCurrentLatestDigInfo(_currentLatestDigInfo);
     }
-  }, [activeHandler, formData.local_index, data]);
+  }, [formData.local_index]);
+
+  useEffect(() => {
+    if (!selectedRow.selectedId && data && formData.local_index) {
+      let _digData = data;
+      _digData = _digData.filter(
+        (el) => el.local_index === formData.local_index
+      );
+      _digData = _digData.sort((a, b) =>
+        b.record_date.localeCompare(a.record_date)
+      )[0];
+      setCurrentLatestDigInfo(_digData);
+    }
+  }, [formData.local_index]);
 
   // [ Create Area ] ======================================================================
 

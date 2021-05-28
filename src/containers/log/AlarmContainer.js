@@ -85,7 +85,7 @@ const AlarmContainer = () => {
 
   useEffect(() => {
     dispatch(getLocals());
-  }, [dispatch]);
+  }, []);
 
   const [formData, setFormData] = useState({
     emg_seq: null,

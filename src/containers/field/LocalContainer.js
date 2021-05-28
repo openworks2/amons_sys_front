@@ -72,7 +72,7 @@ const LocalContainer = () => {
 
   useEffect(() => {
     dispatch(getLocals());
-  }, [dispatch]);
+  }, []);
 
   const [filteredData, setFilteredData] = useState([]);
 
@@ -81,7 +81,7 @@ const LocalContainer = () => {
       const _filteredData = data.filter((el) => el.local_used !== 0);
       setFilteredData(_filteredData);
     }
-  }, [dispatch, data]);
+  }, [data]);
 
   const [formData, setFormData] = useState({
     local_id: null,

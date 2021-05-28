@@ -94,7 +94,7 @@ const ProcessContainer = () => {
   useEffect(() => {
     dispatch(getLocals());
     dispatch(getProcesses());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     makeLocalList(localData);

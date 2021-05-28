@@ -9,6 +9,8 @@ import {
   putCompany,
   deleteCompany,
 } from "../../modules/companies";
+import { getWorkers } from "../../modules/workers";
+import { getVehicle, getVehicles } from "../../modules/vehicles";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -68,11 +70,16 @@ const CompanyContatiner = () => {
     (state) => state.companies.companies
   );
 
+  const workerData = useSelector((state) => state.workers.workers.data);
+  const vehicleData = useSelector((state) => state.vehicles.vehicles.data);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getCompanies());
-  }, [dispatch]);
+    dispatch(getVehicles());
+    dispatch(getWorkers());
+  }, []);
 
   const [formData, setFormData] = useState({
     co_id: undefined,
@@ -215,6 +222,8 @@ const CompanyContatiner = () => {
               className="company-table-box"
               pageInfo={pageInfo}
               data={data}
+              workerData={workerData}
+              vehicleData={vehicleData}
               activeHandler={activeHandler}
               deleteHandler={deleteHandler}
               onPageChange={onPageChange}

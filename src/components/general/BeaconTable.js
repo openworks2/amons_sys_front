@@ -399,6 +399,7 @@ const BeaconTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+    console.log("table-render-console-log-hello");
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -578,7 +579,11 @@ const BeaconTable = ({
           onOpen={() => setDeleteModalOpen(true)}
           open={deleteModalOpen}
         >
-          <Modal.Header className="confirm-modal header">삭제</Modal.Header>
+          <Modal.Header className="confirm-modal header">
+            {selectedItem && (selectedItem.wk_name || selectedItem.vh_name)
+              ? "삭제할 수 없습니다"
+              : "삭제"}
+          </Modal.Header>
           <Modal.Content className="confirm-modal content">
             <Modal.Description className="confirm-modal description">
               <FaMinusCircle className="confirm-modal delete-icon" />
@@ -590,34 +595,63 @@ const BeaconTable = ({
                 {selectedItem &&
                   `MAC 주소 : ${splitByColon(selectedItem.bc_address)} `}
               </p>
-              <p className="confirm-modal text">
-                해당 비콘을 삭제하시겠습니까?
-              </p>
+              {selectedItem &&
+              (selectedItem.wk_name || selectedItem.vh_name) ? (
+                <>
+                  <p className="confirm-modal text-info">
+                    해당 비콘은 작업자나 차량에 할당되어 있어 삭제 할 수
+                    없습니다.
+                  </p>
+                  <p className="confirm-modal text-info">
+                    삭제하려면 먼저 할당을 해제해 주십시오.
+                  </p>
+                </>
+              ) : (
+                <p className="confirm-modal text">
+                  해당 비콘을 삭제하시겠습니까?
+                </p>
+              )}
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions className="confirm-modal actions">
-            <Button
-              className="confirm-modal button delete"
-              color="red"
-              content="삭제"
-              labelPosition="right"
-              icon="checkmark"
-              onClick={(e) => {
-                deleteHandler(e, selectedId);
-                setDeleteModalOpen(false);
-              }}
-            />
-            <Button
-              className="confirm-modal button cancel"
-              color="black"
-              onClick={() => {
-                setDeleteModalOpen(false);
-                initFormData();
-                initActiveRow();
-              }}
-            >
-              취소
-            </Button>
+            {selectedItem && (selectedItem.wk_name || selectedItem.vh_name) ? (
+              <Button
+                className="confirm-modal button cancel"
+                color="black"
+                onClick={() => {
+                  setDeleteModalOpen(false);
+                  initFormData();
+                  initActiveRow();
+                }}
+              >
+                확인
+              </Button>
+            ) : (
+              <>
+                <Button
+                  className="confirm-modal button delete"
+                  color="red"
+                  content="삭제"
+                  labelPosition="right"
+                  icon="checkmark"
+                  onClick={(e) => {
+                    deleteHandler(e, selectedId);
+                    setDeleteModalOpen(false);
+                  }}
+                />
+                <Button
+                  className="confirm-modal button cancel"
+                  color="black"
+                  onClick={() => {
+                    setDeleteModalOpen(false);
+                    initFormData();
+                    initActiveRow();
+                  }}
+                >
+                  취소
+                </Button>
+              </>
+            )}
           </Modal.Actions>
         </Modal>
       </TableCompo>

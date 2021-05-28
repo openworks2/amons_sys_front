@@ -208,14 +208,17 @@ const CategorieMenuCompo = styled.div`
   }
 
   .search-box {
-    margin-top: 2px;
-    width: 302px;
-    height: 35px;
-    border-radius: 0px;
-    background-color: #f2f2f2;
-    &:hover,
-    &:focus {
-      background-color: #f1592a !important;
+    margin-top: -2px;
+    width: 300px;
+    height: 40px;
+    .search-input {
+      margin: 1px;
+      height: 40px;
+      border: 1px solid #dededf !important;
+      &:hover,
+      &:focus {
+        border-color: #f1592a !important;
+      }
     }
   }
   .search-icon {
@@ -380,7 +383,6 @@ const TableCompo = styled.div`
       .ui.checkbox input.hidden + label {
         cursor: default !important;
       }
-
       .table-row {
         font-size: 14px;
         font-family: "NotoSansKR-Regular";
@@ -627,6 +629,7 @@ const KickOutWorkerTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+    console.log("table-render-console-log-hello");
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;

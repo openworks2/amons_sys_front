@@ -74,7 +74,7 @@ const AnnounceContainer = () => {
 
   useEffect(() => {
     dispatch(getAnnounces());
-  }, [dispatch]);
+  }, []);
 
   const [formData, setFormData] = useState({
     ann_id: null,

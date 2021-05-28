@@ -92,7 +92,7 @@ const ScannerContainer = () => {
   useEffect(() => {
     dispatch(getLocals());
     dispatch(getScanners());
-  }, [dispatch]);
+  }, []);
 
   // [ State Area ] ======================================================================
   const today = new Date();
@@ -537,24 +537,26 @@ const ScannerContainer = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <ScannerInput
-            className="scanner-input-box"
-            onChange={onChange}
-            onSelectChange={onSelectChange}
-            formData={formData}
-            createHandler={createHandler}
-            updateHandler={updateHandler}
-            selectedRow={selectedRow}
-            initFormData={initFormData}
-            initActiveRow={initActiveRow}
-            localList={localList}
-            localError={localError}
-            kindError={kindError}
-            addressError={addressError}
-            addComma={addComma}
-            splitByColonInput={splitByColonInput}
-            groupLimit={groupLimit}
-          />
+          {localData && (
+            <ScannerInput
+              className="scanner-input-box"
+              onChange={onChange}
+              onSelectChange={onSelectChange}
+              formData={formData}
+              createHandler={createHandler}
+              updateHandler={updateHandler}
+              selectedRow={selectedRow}
+              initFormData={initFormData}
+              initActiveRow={initActiveRow}
+              localList={localList}
+              localError={localError}
+              kindError={kindError}
+              addressError={addressError}
+              addComma={addComma}
+              splitByColonInput={splitByColonInput}
+              groupLimit={groupLimit}
+            />
+          )}
         </div>
         <div className="table-box">
           {data && currentData && localData && (

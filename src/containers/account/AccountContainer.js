@@ -89,7 +89,7 @@ const AccountContatiner = () => {
 
   useEffect(() => {
     dispatch(getAccounts());
-  }, [dispatch]);
+  }, []);
 
   // [ State Area ] ======================================================
 

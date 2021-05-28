@@ -548,7 +548,7 @@ const DigInput = ({
           <Table className="sub-info-table last-row">
             <Table.Body>
               <Table.Cell className="sub-info-table header" singleLine>
-                {selectedRow.selectedId ? "이력 입력일" : "최종 입력일"}
+                최종 입력일
               </Table.Cell>
               <Table.Cell className="sub-info-table date" singleLine>
                 {selectedRow.selectedId

@@ -209,11 +209,12 @@ const CategorieMenuCompo = styled.div`
         color: #f1592a !important;
       }
     }
+
     &.download {
       text-align: left;
       cursor: pointer;
       border: 0px 0px 0px 1px solid #d8d8d8;
-      color: #d8d8d8;
+      color: #f1592a !important;
       .download-icon {
         border: 0px;
         width: 30px;
@@ -496,6 +497,7 @@ const AlarmTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+    console.log("table-render-console-log-hello");
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -841,6 +843,7 @@ const AlarmTable = ({
             {data && data.length > 0 ? (
               <Menu.Item
                 className="table-categorie-menu download"
+                id="download-button"
                 onClick={() => {
                   downloadHandler(startDate, endDate);
                 }}
