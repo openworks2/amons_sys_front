@@ -55,14 +55,11 @@ export const getBleBeacon = createPromiseThunk(
 
 let socket;
 export const receiveMonitor = () => dispatch => {
-    console.log('receiveMonitor>>', socket)
     if (!socket) {
         socket = io.connect(API);  //3000번 포트 사용(서버)
         socket.emit('getData', 'scanner')
         socket.on('getData', (data) => {
-            console.log('data-->', data)
             const filterAlarm = data.beacon.filter(item => item.bc_emergency === 2 && item.wk_id && item);
-            console.log('filterAlarm-->>>>>>>>', filterAlarm)
             if (filterAlarm.length > 0) {
                 const payload = {
                     sosSituation: true,
@@ -171,7 +168,6 @@ export default function monitor(state = initialState, action) {
             }
         case GET_SCANNER_SOCKET:
             const { scanner, beacon } = action.payload;
-            // console.log(s)
             const scannerList = Object.values(scanner);
             return {
                 ...state,
@@ -227,15 +223,24 @@ export default function monitor(state = initialState, action) {
                 ratePanel: !state.ratePanel
             };
         case SET_SOS_SITUACTION:
-
+            const actionList = action.payload.sosList;
+            const stateList = state.sosList;
+            let tempList=[
+                ...actionList,
+                ...stateList
+            ];
+            const temp = tempList.reduce(function (acc, current) {
+                if (acc.findIndex(({ bc_index }) => bc_index === current.bc_index) === -1) {
+                  acc.push(current);
+                }
+                return acc;
+              }, []);
+            
             return {
                 ...state,
                 alarmPanel: true,
                 sosSituation: action.payload.sosSituation,
-                sosList: [
-                    ...state.sosList,
-                    ...action.payload.sosList
-                ]
+                sosList: temp
             };
         case INIT_SOS_SITUACTION:
             return {

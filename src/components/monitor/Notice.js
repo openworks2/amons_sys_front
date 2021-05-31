@@ -73,6 +73,10 @@ const NoticeCompo = styled.div`
 
         .rolling_box ul li p {
             font-size: 15px;
+            height: 41px;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .before_slide {
@@ -90,14 +94,9 @@ const Notice = ({ announceList, rollingCount }) => {
     const [rollingData, setRollData] = useState([]);
 
     let intervalId = useRef();
-    const rollingAction = (items=[]) => {
-        // let rollingData = [
-        //     '우리 현장에는 당신의 안전보다 우선인 작업이 없습니다. 제목만 2줄 까지 출력하고 클릭시 내용을 출력 합시다.',
-        //     '안전합시다!',
-        //     '관리항목에서 현장명, 시행사, 시공사를 넣었으면 좋겠다. 이것은 곧정으로 들어간다.'
-        // ]    // 롤링할 데이터를 넣으면 됩니다 갯수 제한 없어요
-            console.log('announceList>>>>>', rollingCount)
+    const rollingAction = (items = []) => {
 
+       let rollingData = items
 
         let timer = rollingCount // 롤링되는 주기 입니다 (1000 => 1초)
 
@@ -109,7 +108,8 @@ const Notice = ({ announceList, rollingCount }) => {
         let listCnt = 1
 
         //위 선언은 따로 완전히 수정하지 않는 한 조정할 필요는 없습니다.
-        first.children[0].innerHTML = items[0]
+
+        first.children[0].innerHTML = rollingData[0]
 
         intervalId = setInterval(() => {
             if (move === 2) {
@@ -122,7 +122,7 @@ const Notice = ({ announceList, rollingCount }) => {
                 third.classList.remove('card_sliding_after')
                 third.classList.remove('card_sliding')
 
-                move = 1
+                move = 0
             } else if (move === 1) {
                 first.classList.remove('card_sliding_after')
                 first.classList.add('card_sliding')
@@ -133,7 +133,7 @@ const Notice = ({ announceList, rollingCount }) => {
                 third.classList.remove('card_sliding')
                 third.classList.add('card_sliding_after')
 
-                move = 0
+                move = 2
             } else if (move === 0) {
                 first.classList.remove('card_sliding_after')
                 first.classList.remove('card_sliding')
@@ -144,14 +144,14 @@ const Notice = ({ announceList, rollingCount }) => {
                 third.classList.remove('card_sliding_after')
                 third.classList.add('card_sliding')
 
-                move = 2
+                move = 1
             }
 
-            if (dataCnt < (items.length - 1)) {
-                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = items[dataCnt]
+            if (dataCnt < (rollingData.length - 1)) {
+                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = rollingData[dataCnt]
                 dataCnt++
-            } else if (dataCnt === items.length - 1) {
-                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = items[dataCnt]
+            } else if (dataCnt === rollingData.length - 1) {
+                document.getElementById('rolling_box').children[listCnt].children[0].innerHTML = rollingData[dataCnt]
                 dataCnt = 0
             }
 
@@ -161,21 +161,36 @@ const Notice = ({ announceList, rollingCount }) => {
                 listCnt = 0
             }
 
-            // console.log(listCnt)
+            console.log(listCnt)
         }, timer);
     }
 
     const dataBinding = () => {
         let titleList = [];
         announceList.map(item => {
-            if(item.ann_preview===1){
+            if (item.ann_preview === 1) {
                 titleList.push(item.ann_title)
             }
             return item;
         });
         setRollData(titleList)
-        if(titleList.length > 0){
+        if (titleList.length > 1) {
             rollingAction(titleList);
+        } else if(titleList.length === 1){
+
+            let first = document.getElementById('first'),
+                second = document.getElementById('second'),
+                third = document.getElementById('third')
+            first.classList.remove('card_sliding')
+            first.classList.add('card_sliding_after')
+
+            second.classList.remove('card_sliding_after')
+            second.classList.add('card_sliding')
+
+            third.classList.remove('card_sliding_after')
+            third.classList.remove('card_sliding')
+            document.getElementById('rolling_box').children[1].children[0].innerHTML = titleList[0]
+
         }
     };
 

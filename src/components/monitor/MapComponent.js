@@ -251,18 +251,19 @@ const MapComponent = ({ setOpenExpandMapHandler, location, bleData }) => {
         console.log('dig1--->', dig1);
 
         const block_Length = data.total_length / data.block_Amount; // 1개 블록 당 거리
-
         let mapArr = []
+        const _forwardDig = data.forward_dig > 0 && data.forward_dig<336 ? data.forward_dig+336 : data.forward_dig;
         for (let i = 1; i <= data.block_Amount; i++) {
+            
             const obj = {
                 id: i,
                 value: i,
                 local_index: (block_Length * i) <= data.forward_Length ? data.forward_index : data.revers_index,
                 total_length: data.total_length,
                 open: (block_Length * i) <= data.forward_Length
-                    ? (data.forward_dig >= (block_Length * i)
+                    ? (data.forward_dig+336 >= (block_Length * i)
                         ? true  // 굴착   
-                        : false   // 미굴착
+                        : false // 미굴착
                     )     //정방향 이라면 
                     : (data.revers_dig + 306 >= (data.total_length - (block_Length * (i - 1))) // 1블럭당 306m로 구간이 짧아 1블럭을 기본으로 추가 해준다.
                         ? true // 굴착
