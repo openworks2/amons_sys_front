@@ -287,7 +287,7 @@ const DigTable = ({
     let dateB = new Date(b["record_date"]).getTime();
     let indexA = a["local_index"];
     let indexB = b["local_index"];
-    return dateA < dateB ? (indexA > indexB ? 0 : 1) : -1;
+    return dateA > dateB ? -1 : indexA > indexB ? 0 : 1;
   };
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
@@ -299,7 +299,6 @@ const DigTable = ({
     );
 
   const tableRender = (items = []) => {
-    console.log("table-render-console-log-hello");
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -421,7 +420,7 @@ const DigTable = ({
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">최근 누적 굴진 이력</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">

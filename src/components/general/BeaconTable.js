@@ -12,6 +12,8 @@ import {
 import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
 import { getBeacons } from "../../modules/beacons";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import "moment/locale/ko";
 
 const TableCompo = styled.div`
   margin-left: 22px;
@@ -125,6 +127,9 @@ const TableCompo = styled.div`
           }
           &.battery-remain {
             width: 119px;
+            &.danger {
+              color: #b22222;
+            }
           }
           &.battery-time {
             width: 178px;
@@ -399,7 +404,7 @@ const BeaconTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
-    console.log("table-render-console-log-hello");
+
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -425,13 +430,21 @@ const BeaconTable = ({
             {!item ? "" : item.bc_used_type === 1 ? item.wk_name : item.vh_name}
           </Table.Cell>
           <Table.Cell
-            className="table-cell battery-remain"
+            className={
+              item && item.battery_remain
+                ? item.battery_remain < 11
+                  ? "table-cell battery-remain danger"
+                  : "table-cell battery-remain"
+                : "table-cell battery-remain"
+            }
             name="battery-remain"
           >
-            {item && item.bc_remain}
+            {item && item.battery_remain}
           </Table.Cell>
           <Table.Cell className="table-cell battery-time" name="battery-time">
-            {item && item.bc_time}
+            {item &&
+              item.battery_time &&
+              moment(item.battery_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell description" name="description">
             {item && item.bc_description}
@@ -489,7 +502,7 @@ const BeaconTable = ({
       </SearchCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">비콘 목록</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">
@@ -599,11 +612,22 @@ const BeaconTable = ({
               (selectedItem.wk_name || selectedItem.vh_name) ? (
                 <>
                   <p className="confirm-modal text-info">
-                    해당 비콘은 작업자나 차량에 할당되어 있어 삭제 할 수
-                    없습니다.
+                    해당 비콘은
+                    {selectedItem && selectedItem.wk_name
+                      ? " " + selectedItem.wk_name + " 작업자에 "
+                      : selectedItem.vh_name
+                      ? " " + selectedItem.vh_name + " 차량에 "
+                      : " "}
+                    할당되어 있어 삭제 할 수 없습니다.
                   </p>
                   <p className="confirm-modal text-info">
-                    삭제하려면 먼저 할당을 해제해 주십시오.
+                    삭제하려면 먼저
+                    {selectedItem && selectedItem.wk_name
+                      ? " " + selectedItem.wk_name + " 작업자의 "
+                      : selectedItem.vh_name
+                      ? " " + selectedItem.vh_name + " 차량의 "
+                      : " "}
+                    비콘 할당을 해제해 주십시오.
                   </p>
                 </>
               ) : (

@@ -210,7 +210,7 @@ const CompanyTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
-    console.log("table-render-console-log-hello");
+
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((company, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -258,7 +258,7 @@ const CompanyTable = ({
   return (
     <CompanyTableCompo className="company-table-compo">
       <p className="subtitle">소속사 목록</p>
-      <Table celled padded selectable>
+      <Table celled padded selectable unstackable>
         <Table.Header className="table-header">
           <Table.Row className="table-header-row">
             <Table.HeaderCell singleLine className="table-header no">

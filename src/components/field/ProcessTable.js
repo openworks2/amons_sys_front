@@ -323,7 +323,6 @@ const ProcessTable = ({
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
   const tableRender = (items = []) => {
-    console.log("table-render-console-log-hello");
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -426,7 +425,7 @@ const ProcessTable = ({
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">공정상태 변경 이력</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">

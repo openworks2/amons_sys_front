@@ -500,7 +500,7 @@ const DigInput = ({
             required
           />
           {localError && <InputError>{localError}</InputError>}
-          <Table className="sub-info-table">
+          <Table className="sub-info-table" unstackable>
             <Table.Body className="sub-info-table body">
               <Table.Row className="sub-info-table row">
                 <Table.Cell className="sub-info-table header" singleLine>
