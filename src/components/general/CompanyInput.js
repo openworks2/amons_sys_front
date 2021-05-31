@@ -70,6 +70,7 @@ const CompanyInputCompo = styled.div`
   }
 
   .input-form.description {
+    resize: none;
     height: 105px !important;
   }
 

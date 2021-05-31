@@ -71,6 +71,7 @@ const DigContainer = () => {
   // [ Common Logic Area ]
   // [ Change Area ]
   // [ Click Area ]
+  // [ Search Categorie Area ]
   // [ Create Area ]
   // [ Update Area ]
   // [ Delete Area ]
@@ -243,8 +244,7 @@ const DigContainer = () => {
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data = _data.find(
       (el) =>
-        moment(el.record_date).format("YYYY-MM-DD") ===
-        moment(formData.record_date).format("YYYY-MM-DD")
+        moment(el.record_date).unix() === moment(formData.record_date).unix()
     );
 
     let result = false;
@@ -264,8 +264,7 @@ const DigContainer = () => {
       let _data = data.filter((el) => el.local_index === formData.local_index);
       _data = _data.find(
         (el) =>
-          moment(el.record_date).format("YYYY-MM-DD") ===
-          moment(formData.record_date).format("YYYY-MM-DD")
+          moment(el.record_date).unix() === moment(formData.record_date).unix()
       );
       if (_data) {
         return true;
@@ -281,8 +280,7 @@ const DigContainer = () => {
     _data = _data.sort(date_descending);
     let _index = _data.findIndex(
       (el) =>
-        moment(el.record_date).format("YYYY-MM-DD").toString() ===
-        moment(formData.record_date).format("YYYY-MM-DD").toString()
+        moment(el.record_date).unix() === moment(formData.record_date).unix()
     );
     return {
       maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
@@ -295,8 +293,7 @@ const DigContainer = () => {
     _data = _data.sort(date_descending);
     let _index = _data.findIndex(
       (el) =>
-        moment(el.record_date).format("YYYY-MM-DD").toString() ===
-        moment(formData.record_date).format("YYYY-MM-DD").toString()
+        moment(el.record_date).unix() === moment(formData.record_date).unix()
     );
     return {
       maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
@@ -357,8 +354,8 @@ const DigContainer = () => {
       if (maxTestResult) {
         let _dig_seq = data.find(
           (el) =>
-            moment(el.record_date).format("YYYY-MM-DD") ===
-            moment(formData.record_date).format("YYYY-MM-DD")
+            moment(el.record_date).unix() ===
+            moment(formData.record_date).unix()
         ).dig_seq;
         let newDig = {
           ...formData,
@@ -444,7 +441,6 @@ const DigContainer = () => {
       ...PreState,
       activePage: _activePage,
     });
-    // 활성화된 로우 초기화
     initActiveRow();
     initFormData();
   };
@@ -469,68 +465,6 @@ const DigContainer = () => {
       setCurrentData(tempData);
     }
   }, [data, categorieValue]);
-
-  // [ Click Area ] ======================================================================
-
-  // table row 클릭 핸들러
-  const activeHandler = (e, index, selectedId) => {
-    if (index === selectedRow.clickedIndex) {
-      initActiveRow();
-      initFormData(categorieValue);
-    } else {
-      const findItem = data.find((digLog) => digLog.dig_seq === selectedId);
-
-      setSelectedRow({
-        selectedId: findItem.dig_seq,
-        selectedItem: findItem,
-        clickedIndex: index,
-      });
-
-      setFormData({
-        ...formData,
-        dig_seq: findItem.dig_seq,
-        created_date: findItem.created_date,
-        modified_date: findItem.modified_date,
-        record_date: findItem.record_date,
-        dig_length: findItem.dig_length,
-        description: findItem.description,
-        local_index: findItem.local_index,
-      });
-    }
-  };
-
-  useEffect(() => {
-    // 클릭 된 열 있을 시 노선 정보 대입하기
-    if (formData.local_index === null || undefined) {
-      setLocalInfo(null);
-      setCurrentLatestDigInfo(null);
-    } else {
-      let _localInfo = localData.find(
-        (el) => el.local_index === formData.local_index
-      );
-
-      setLocalInfo(_localInfo);
-
-      let _currentLatestDigInfo = {};
-      _currentLatestDigInfo = data.find(
-        (el) => el.local_index === formData.local_index
-      );
-      setCurrentLatestDigInfo(_currentLatestDigInfo);
-    }
-  }, [formData.local_index]);
-
-  useEffect(() => {
-    if (!selectedRow.selectedId && data && formData.local_index) {
-      let _digData = data;
-      _digData = _digData.filter(
-        (el) => el.local_index === formData.local_index
-      );
-      _digData = _digData.sort((a, b) =>
-        b.record_date.localeCompare(a.record_date)
-      )[0];
-      setCurrentLatestDigInfo(_digData);
-    }
-  }, [formData.local_index]);
 
   // [ Create Area ] ======================================================================
 
@@ -603,6 +537,60 @@ const DigContainer = () => {
     initActiveRow();
     initFormData(categorieValue);
   };
+
+  // [ Click Area ] ======================================================================
+
+  const activeHandler = (e, index, selectedId) => {
+    if (index === selectedRow.clickedIndex) {
+      initActiveRow();
+      initFormData(categorieValue);
+    } else {
+      const findItem = data.find((digLog) => digLog.dig_seq === selectedId);
+
+      setSelectedRow({
+        selectedId: findItem.dig_seq,
+        selectedItem: findItem,
+        clickedIndex: index,
+      });
+
+      setFormData({
+        ...formData,
+        dig_seq: findItem.dig_seq,
+        created_date: findItem.created_date,
+        modified_date: findItem.modified_date,
+        record_date: findItem.record_date,
+        dig_length: findItem.dig_length,
+        description: findItem.description,
+        local_index: findItem.local_index,
+      });
+    }
+  };
+
+  useEffect(() => {
+    // 노선 정보가 있을 때 input 안의 테이블에 넣을 노선 정보 최신화 하기
+    if (formData.local_index === null || formData.local_index === undefined) {
+      setLocalInfo(null);
+      setCurrentLatestDigInfo(null);
+    } else {
+      // 노선 정보 state 대입
+      let _localInfo = localData.find(
+        (el) => el.local_index === formData.local_index
+      );
+      setLocalInfo(_localInfo);
+      // 가장 최신 굴진 데이터 state 대입
+      let _currentLatestDigInfo = data.filter(
+        (el) => el.local_index === formData.local_index
+      );
+      _currentLatestDigInfo = _currentLatestDigInfo.sort(date_descending)[0];
+      setCurrentLatestDigInfo(_currentLatestDigInfo);
+    }
+  }, [
+    formData.local_index,
+    categorieValue,
+    createHandler,
+    updateHandler,
+    deleteHandler,
+  ]);
 
   // [ Components Area ]===================================================================
 

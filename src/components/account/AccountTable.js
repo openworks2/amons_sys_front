@@ -11,8 +11,6 @@ import {
   Input,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { getAccounts } from "../../modules/accounts";
-import { useDispatch } from "react-redux";
 
 const TableCompo = styled.div`
   margin-left: 22px;
@@ -287,6 +285,13 @@ const AccountTable = ({
   initFormData,
   initActiveRow,
   initPage,
+  onSearch,
+  roleStrReturn,
+  categorieValue,
+  searchValue,
+  currentData,
+  onChangeCategorie,
+  onSearchChange,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -297,62 +302,7 @@ const AccountTable = ({
     // { key: "2", value: 2, text: "사용자" },
   ];
 
-  // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentData, setCurrentData] = useState(data);
-
-  const onChangeCategorie = (e, value) => {
-    const _value = value.value;
-    setCategorieValue(_value);
-  };
-
-  // serach input 입력
-  const onSearchChange = (e) => {
-    const _searchValue = e.target.value;
-    setSearchValue(_searchValue);
-  };
-
-  const dispatch = useDispatch();
-
-  const onSearch = (e) => {
-    const _data = data;
-    let tempData = [];
-    if (!searchValue) {
-      dispatch(getAccounts());
-    }
-    if (categorieValue === null) {
-      // 전체검색
-      tempData = _data.filter((item) => item.acc_user_id.includes(searchValue));
-      setCurrentData(tempData);
-    } else {
-      // 검색
-      tempData = _data.filter((item) => item.acc_role === categorieValue);
-      tempData = tempData.filter((item) =>
-        item.acc_user_id.includes(searchValue)
-      );
-      setCurrentData(tempData);
-    }
-    initActiveRow();
-    initFormData();
-    initPage();
-  };
-
-  const roleStrReturn = (role) => {
-    let str = "";
-    if (role === 2) {
-      str = "사용자";
-    } else {
-      str = "관리자";
-    }
-    return str;
-  };
-
-  // 테이블
 
   const totalPages = Math.ceil(
     currentData.filter((el) => el.acc_role === 2).length / itemsPerPage,

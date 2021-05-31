@@ -247,7 +247,8 @@ const InputCompo = styled.div`
           margin-top: 14px;
         }
         &.description {
-          height: 105px !important;
+          resize: none;
+          height: 105px;
         }
         &.dig-length {
           margin-top: 2px;
@@ -255,9 +256,6 @@ const InputCompo = styled.div`
           &:disabled {
             color: #ccc !important;
           }
-        }
-        &.description {
-          height: 105px;
         }
       }
     }
@@ -312,10 +310,6 @@ const InputCompo = styled.div`
 
   .ui.form .required.field > label:after {
     content: "" !important;
-  }
-
-  .input-form.description {
-    height: 105px !important;
   }
 
   .submit-button {

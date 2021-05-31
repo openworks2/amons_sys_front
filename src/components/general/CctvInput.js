@@ -92,6 +92,7 @@ const InputCompo = styled.div`
           margin-top: 14px;
         }
         &.description {
+          resize: none;
           height: 105px !important;
         }
         &.pos-x {
@@ -99,8 +100,7 @@ const InputCompo = styled.div`
           margin-top: 6px;
           margin-bottom: 15px;
         }
-        &.description {
-        }
+
         &.port {
           margin-bottom: 10px;
         }
@@ -143,10 +143,6 @@ const InputCompo = styled.div`
 
   .ui.form .required.field > label:after {
     content: "" !important;
-  }
-
-  .input-form.description {
-    height: 105px !important;
   }
 
   .submit-button {

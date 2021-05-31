@@ -540,15 +540,16 @@ const AlarmTable = ({
               moment(item.emg_start_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell writer" name="writer">
-            {item && item.emg_writer && item.emg_writer}
+            {item && (item.emg_writer ? item.emg_writer : "•")}
           </Table.Cell>
           <Table.Cell className="table-cell emg-end-time" name="emg-end-time">
             {item &&
-              item.emg_end_time &&
-              moment(item.emg_end_time).format("YYYY-MM-DD HH:mm:ss")}
+              (item.emg_end_time
+                ? moment(item.emg_end_time).format("YYYY-MM-DD HH:mm:ss")
+                : "•")}
           </Table.Cell>
           <Table.Cell className="table-cell result" name="result">
-            {item && item.emg_result && item.emg_result}
+            {item && (item.emg_result ? item.emg_result : "•")}
           </Table.Cell>
         </Table.Row>
       );

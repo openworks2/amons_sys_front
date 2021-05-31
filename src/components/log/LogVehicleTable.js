@@ -613,13 +613,13 @@ const LogVehicleTable = ({
                     .local_name)}
           </Table.Cell>
           <Table.Cell className="table-cell company" name="company">
-            {item && item.vh_co_name && item.vh_co_name}
+            {item && item.co_name && item.co_name}
           </Table.Cell>
           <Table.Cell className="table-cell name" name="name">
-            {item && item.vh_name && item.vh_name}
+            {item && item.name && item.name}
           </Table.Cell>
           <Table.Cell className="table-cell number" name="number">
-            {item && item.vh_number && item.vh_number}
+            {item && item.number && item.number}
           </Table.Cell>
           <Table.Cell className="table-cell input-time" name="input-time">
             {item &&

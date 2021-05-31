@@ -351,6 +351,7 @@ const InputCompo = styled.div`
     font-size: 12px;
   }
   .input-form.description {
+    resize: none;
     height: 105px !important;
   }
 

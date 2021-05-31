@@ -75,8 +75,8 @@ const LogVehicleContainer = () => {
       local_index: "",
       from_date: "",
       to_date: "",
-      vh_name: "",
-      vh_co_index: "",
+      name: "",
+      co_index: "",
     };
     dispatch(postBleVehiclesSearch(searchCondition));
   }, []);
@@ -194,8 +194,8 @@ const LogVehicleContainer = () => {
           local_index: _local_index,
           from_date: moment(_startDate).format("YYYY-MM-DD HH:mm:ss"),
           to_date: moment(_endDate).format("YYYY-MM-DD HH:mm:ss"),
-          vh_name: searchValue === "" ? null : searchValue,
-          vh_co_index: selectedCompany === "" ? null : selectedCompany,
+          name: searchValue === "" ? null : searchValue,
+          co_index: selectedCompany === "" ? null : selectedCompany,
         },
       }).then((response) => {
         saveAs(
@@ -220,8 +220,8 @@ const LogVehicleContainer = () => {
       local_index: _local_index,
       from_date: moment(startDate).format("YYYY-MM-DD HH:mm:ss"),
       to_date: moment(endDate).format("YYYY-MM-DD HH:mm:ss"),
-      vh_name: searchValue === "" ? null : searchValue,
-      vh_co_index: selectedCompany === "" ? null : selectedCompany,
+      name: searchValue === "" ? null : searchValue,
+      co_index: selectedCompany === "" ? null : selectedCompany,
     };
     dispatch(postBleVehiclesSearch(searchCondition));
     initPage();

@@ -273,48 +273,20 @@ const ProcessTable = ({
   initPage,
   localData,
   stateToString,
+  dateDescending,
+  onClickCategorie,
+  categorieValue,
+  currentData,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // 검색 기능 table 데이터 처리
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [currentData, setCurrentData] = useState([]);
-
-  const onClickCategorie = (e, target) => {
-    initPage();
-    if (selectedRow.selectedId) {
-      initActiveRow();
-      initFormData();
-    }
-    const _target = target.value;
-    setCategorieValue(_target);
-  };
-
-  useEffect(() => {
-    let _data = data;
-
-    let tempData = [];
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      setCurrentData(tempData);
-    }
-  }, [data, categorieValue]);
-
   // 테이블
-  function date_descending(a, b) {
-    var dateA = new Date(a["created_date"]).getTime();
-    var dateB = new Date(b["created_date"]).getTime();
-    return dateA < dateB ? 1 : -1;
-  }
-
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData
-    .sort(date_descending)
+    .sort(dateDescending)
     .slice(
       (activePage - 1) * itemsPerPage,
       (activePage - 1) * itemsPerPage + itemsPerPage

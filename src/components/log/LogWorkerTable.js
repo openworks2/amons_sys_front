@@ -622,16 +622,16 @@ const LogWorkerTable = ({
                     .local_name)}
           </Table.Cell>
           <Table.Cell className="table-cell name" name="name">
-            {item && item.wk_name && item.wk_name}
+            {item && item.name && item.name}
           </Table.Cell>
           <Table.Cell className="table-cell company" name="company">
-            {item && item.wk_co_name && item.wk_co_name}
+            {item && item.co_name && item.co_name}
           </Table.Cell>
           <Table.Cell className="table-cell position" name="position">
-            {item && item.wk_position && item.wk_position}
+            {item && item.position && item.position}
           </Table.Cell>
           <Table.Cell className="table-cell nation" name="nation">
-            {item && item.wk_nation && item.wk_nation}
+            {item && item.nation && item.nation}
           </Table.Cell>
           <Table.Cell className="table-cell input-time" name="input-time">
             {item &&
