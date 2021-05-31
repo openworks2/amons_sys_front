@@ -10,8 +10,6 @@ import {
   Input,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { getScanners } from "../../modules/scanners";
-import { useDispatch } from "react-redux";
 
 const CategorieMenuCompo = styled.div`
   .ui.pointing.table-categorie-menu-box.menu {
@@ -40,6 +38,10 @@ const CategorieMenuCompo = styled.div`
       margin: 0px !important;
       padding: 0px !important;
       font-family: "NotoSansKR-Regular";
+      #search-input-box {
+        font-family: "RobotoMono-Medium" !important;
+        letter-spacing: -1px;
+      }
       .search-box {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -113,16 +115,16 @@ const TableCompo = styled.div`
       text-align: left;
     }
     &.ip {
-      width: 223px;
+      width: 203px;
       text-align: left;
     }
     &.port {
       width: 71px;
     }
     &.description {
-      width: 258px;
+      width: 278px;
       @media screen and (max-height: 970px) {
-        width: 249px;
+        width: 269px;
       }
     }
     &.trash-icon {
@@ -204,18 +206,20 @@ const TableCompo = styled.div`
           &.address {
             width: 162px;
             text-align: left;
+            font-family: "RobotoMono-Medium" !important;
+            letter-spacing: -1px !important;
           }
           &.ip {
-            width: 223px;
+            width: 203px;
             text-align: left;
           }
           &.port {
             width: 71px;
           }
           &.description {
-            width: 258px;
+            width: 278px;
             @media screen and (max-height: 970px) {
-              width: 249px;
+              width: 269px;
             }
           }
           &.trash-icon {
@@ -433,6 +437,7 @@ const ScannerTable = ({
             <Menu.Item className="table-categorie-menu search">
               <Input
                 className="search-box"
+                id="search-input-box"
                 actionPosition="left"
                 placeholder="MAC 주소를 검색해 주세요."
                 value={

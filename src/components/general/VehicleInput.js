@@ -84,6 +84,10 @@ const InputCompo = styled.div`
         &.title {
           color: #2e2e2e;
         }
+        &.beacon {
+          font-family: "RobotoMono-Medium" !important;
+          letter-spacing: -1px;
+        }
       }
     }
   }

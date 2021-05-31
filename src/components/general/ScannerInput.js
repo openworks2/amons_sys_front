@@ -139,10 +139,10 @@ const InputCompo = styled.div`
 
   .ui.form .field .ui.input input#scn_address {
     // input 맥 어드레스 placeholder
-    font-family: "NotoSansKR-Regular" !important;
+    font-family: "RobotoMono-Medium" !important;
+    letter-spacing: -1px !important;
     font-size: 14px;
     text-align: left;
-    letter-spacing: 1.05px;
     opacity: 1;
   }
 

@@ -183,6 +183,8 @@ const TableCompo = styled.div`
           }
           &.beacon {
             width: 230px;
+            font-family: "RobotoMono-Medium" !important;
+            letter-spacing: -1px !important;
             @media screen and (max-height: 970px) {
               width: 229px;
             }

@@ -8,9 +8,13 @@ const InputCompo = styled.div`
   margin-right: 22px;
   margin-top: 5px;
   margin-bottom: 18px;
+  #bc_address {
+    font-family: "RobotoMono-Medium" !important;
+    letter-spacing: -1px !important;
+  }
   .ui.form .field > label,
   .field > label {
-    font-family: "NotoSansKR-Medium" !important;
+    font-family: "NotoSansKR-Medium";
     color: #2e2e2e;
     font-size: 14px !important;
     letter-spacing: 0px;
@@ -218,7 +222,6 @@ const BeaconInput = ({
       >
         <div className="resizable-area">
           <Form.Input
-            className="input-form"
             label="MAC 주소"
             className="input-form address"
             id="bc_address"

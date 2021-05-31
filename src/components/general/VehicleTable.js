@@ -54,7 +54,10 @@ const TableCompo = styled.div`
       width: 215px;
     }
     &.description {
-      width: 100%;
+      width: 388px;
+      @media screen and (max-height: 970px) {
+        width: 378px;
+      }
     }
     &.trash-icon {
       width: 55px !important ;
@@ -118,17 +121,11 @@ const TableCompo = styled.div`
           padding-right: 15px;
           vertical-align: middle;
           &.no {
-            width: 53px;
-            @media screen and (max-height: 970px) {
-              width: 52px;
-            }
+            width: 52px;
           }
           &.company {
-            width: 167px;
+            width: 166px;
             text-align: left;
-            @media screen and (max-height: 970px) {
-              width: 166px;
-            }
           }
           &.name {
             width: 156px;
@@ -141,6 +138,8 @@ const TableCompo = styled.div`
           &.beacon {
             width: 215px;
             text-align: left;
+            font-family: "RobotoMono-Medium" !important;
+            letter-spacing: -1px !important;
           }
           &.description {
             width: 388px;

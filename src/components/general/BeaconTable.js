@@ -117,6 +117,8 @@ const TableCompo = styled.div`
           &.address {
             width: 176px !important;
             text-align: left;
+            font-family: "RobotoMono-Medium" !important;
+            letter-spacing: -1px !important;
           }
           &.id {
             width: 81px;
@@ -604,10 +606,11 @@ const BeaconTable = ({
                 {selectedItem &&
                   `관리번호 : ${addZero(selectedItem.bc_id, 3)} `}
               </p>
-              <p className="confirm-modal text">
-                {selectedItem &&
-                  `MAC 주소 : ${splitByColon(selectedItem.bc_address)} `}
-              </p>
+              <span className="confirm-modal text">MAC 주소</span>
+              <span className="confirm-modal text beacon">
+                {selectedItem && ` : ${splitByColon(selectedItem.bc_address)} `}
+              </span>
+              <p></p>
               {selectedItem &&
               (selectedItem.wk_name || selectedItem.vh_name) ? (
                 <>
