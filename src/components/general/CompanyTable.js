@@ -185,6 +185,8 @@ const CompanyTableCompo = styled.div`
 const CompanyTable = ({
   pageInfo,
   data,
+  workerData,
+  vehicleData,
   activeHandler,
   deleteHandler,
   onPageChange,
@@ -208,6 +210,7 @@ const CompanyTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((company, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -255,7 +258,7 @@ const CompanyTable = ({
   return (
     <CompanyTableCompo className="company-table-compo">
       <p className="subtitle">소속사 목록</p>
-      <Table celled padded selectable>
+      <Table celled padded selectable unstackable>
         <Table.Header className="table-header">
           <Table.Row className="table-header-row">
             <Table.HeaderCell singleLine className="table-header no">
@@ -324,39 +327,89 @@ const CompanyTable = ({
         onOpen={() => setDeleteModalOpen(true)}
         open={deleteModalOpen}
       >
-        <Modal.Header className="confirm-modal header">삭제</Modal.Header>
+        <Modal.Header className="confirm-modal header">
+          {selectedItem &&
+          ((workerData &&
+            workerData.find((el) => el.co_id === selectedItem.co_id)) ||
+            (vehicleData &&
+              vehicleData.find((el) => el.co_id === selectedItem.co_id)))
+            ? "삭제할 수 없습니다"
+            : "삭제"}
+        </Modal.Header>
         <Modal.Content className="confirm-modal content">
           <Modal.Description className="confirm-modal description">
             <FaMinusCircle className="confirm-modal delete-icon" />
-            <p className="confirm-modal text">
-              {selectedItem && `${selectedItem.co_name}`} 소속사를
-              삭제하시겠습니까?
-            </p>
+            {selectedItem &&
+            ((workerData &&
+              workerData.find((el) => el.co_id === selectedItem.co_id)) ||
+              (vehicleData &&
+                vehicleData.find((el) => el.co_id === selectedItem.co_id))) ? (
+              <>
+                <p className="confirm-modal text">
+                  소속사 : {selectedItem && `${selectedItem.co_name}`}
+                </p>
+                <p className="confirm-modal text-info">
+                  해당 소속사에 할당된 작업자나 차량이 있어 삭제할 수 없습니다.
+                </p>
+                <p className="confirm-modal text-info">
+                  삭제하려면 먼저 할당된 작업자나 차량을 해제해 주십시오.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="confirm-modal text">
+                  소속사 : {selectedItem && `${selectedItem.co_name}`}
+                </p>
+                <p className="confirm-modal text">
+                  해당 소속사를 삭제하시겠습니까?
+                </p>
+              </>
+            )}
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions className="confirm-modal actions">
-          <Button
-            className="confirm-modal button delete"
-            color="red"
-            content="삭제"
-            labelPosition="right"
-            icon="checkmark"
-            onClick={(e) => {
-              deleteHandler(e, selectedId);
-              setDeleteModalOpen(false);
-            }}
-          />
-          <Button
-            className="confirm-modal button cancel"
-            color="black"
-            onClick={() => {
-              setDeleteModalOpen(false);
-              initFormData();
-              initActiveRow();
-            }}
-          >
-            취소
-          </Button>
+          {selectedItem &&
+          ((workerData &&
+            workerData.find((el) => el.co_id === selectedItem.co_id)) ||
+            (vehicleData &&
+              vehicleData.find((el) => el.co_id === selectedItem.co_id))) ? (
+            <Button
+              className="confirm-modal button cancel"
+              color="black"
+              onClick={() => {
+                setDeleteModalOpen(false);
+                initFormData();
+                initActiveRow();
+              }}
+            >
+              확인
+            </Button>
+          ) : (
+            <>
+              <Button
+                className="confirm-modal button delete"
+                color="red"
+                content="삭제"
+                labelPosition="right"
+                icon="checkmark"
+                onClick={(e) => {
+                  deleteHandler(e, selectedId);
+                  setDeleteModalOpen(false);
+                }}
+              />
+              <Button
+                className="confirm-modal button cancel"
+                color="black"
+                onClick={() => {
+                  setDeleteModalOpen(false);
+                  initFormData();
+                  initActiveRow();
+                }}
+              >
+                취소
+              </Button>
+            </>
+          )}
         </Modal.Actions>
       </Modal>
     </CompanyTableCompo>

@@ -107,6 +107,7 @@ const InputCompo = styled.div`
   }
 
   .input-form.description {
+    resize: none;
     height: 105px !important;
   }
   .ui.form .field .prompt.label {

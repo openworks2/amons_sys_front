@@ -70,7 +70,7 @@ const CctvContainer = () => {
   useEffect(() => {
     dispatch(getLocals());
     dispatch(getCctvs());
-  }, [dispatch]);
+  }, []);
 
   const [formData, setFormData] = useState({
     cctv_id: null,
@@ -332,23 +332,25 @@ const CctvContainer = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="input-box">
-          <CctvInput
-            className="cctv-input-box"
-            onChange={onChange}
-            onSelectChange={onSelectChange}
-            formData={formData}
-            createHandler={createHandler}
-            updateHandler={updateHandler}
-            selectedRow={selectedRow}
-            initFormData={initFormData}
-            initActiveRow={initActiveRow}
-            localList={localList}
-            localError={localError}
-            addComma={addComma}
-          />
+          {localData && (
+            <CctvInput
+              className="cctv-input-box"
+              onChange={onChange}
+              onSelectChange={onSelectChange}
+              formData={formData}
+              createHandler={createHandler}
+              updateHandler={updateHandler}
+              selectedRow={selectedRow}
+              initFormData={initFormData}
+              initActiveRow={initActiveRow}
+              localList={localList}
+              localError={localError}
+              addComma={addComma}
+            />
+          )}
         </div>
         <div className="table-box">
-          {data && (
+          {data && localData && (
             <CctvTable
               className="cctv-table-box"
               pageInfo={pageInfo}

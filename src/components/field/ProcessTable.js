@@ -273,48 +273,20 @@ const ProcessTable = ({
   initPage,
   localData,
   stateToString,
+  dateDescending,
+  onClickCategorie,
+  categorieValue,
+  currentData,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
   // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // 검색 기능 table 데이터 처리
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [currentData, setCurrentData] = useState([]);
-
-  const onClickCategorie = (e, target) => {
-    initPage();
-    if (selectedRow.selectedId) {
-      initActiveRow();
-      initFormData();
-    }
-    const _target = target.value;
-    setCategorieValue(_target);
-  };
-
-  useEffect(() => {
-    let _data = data;
-
-    let tempData = [];
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      setCurrentData(tempData);
-    }
-  }, [data, categorieValue]);
-
   // 테이블
-  function date_descending(a, b) {
-    var dateA = new Date(a["created_date"]).getTime();
-    var dateB = new Date(b["created_date"]).getTime();
-    return dateA < dateB ? 1 : -1;
-  }
-
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData
-    .sort(date_descending)
+    .sort(dateDescending)
     .slice(
       (activePage - 1) * itemsPerPage,
       (activePage - 1) * itemsPerPage + itemsPerPage
@@ -322,9 +294,7 @@ const ProcessTable = ({
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
-  // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
-    // 현재 보여지는 테이블에 들어갈 임시 배열 생성
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -336,7 +306,6 @@ const ProcessTable = ({
           active={item && index === clickedIndex}
           // onClick={item && ((e) => activeHandler(e, index, item.pcs_seq))}
         >
-          {/* 값이 있는지 없는지 판단해서 truthy 할 때 값 뿌리기. */}
           <Table.Cell className="table-cell no" name="no">
             {item ? tableNo : " "}
           </Table.Cell>
@@ -428,7 +397,7 @@ const ProcessTable = ({
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">공정상태 변경 이력</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">

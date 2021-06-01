@@ -77,9 +77,11 @@ const InputCompo = styled.div`
 
   #ann_title {
     height: 76px;
+    resize: none;
   }
   #ann_contents {
     height: 105px;
+    resize: none;
   }
 
   .label,
@@ -102,6 +104,7 @@ const InputCompo = styled.div`
   }
 
   .input-form.description {
+    resize: none;
     height: 105px !important;
   }
   .ui.form .field .prompt.label {

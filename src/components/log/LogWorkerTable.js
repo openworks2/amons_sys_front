@@ -207,14 +207,17 @@ const CategorieMenuCompo = styled.div`
   }
 
   .search-box {
-    margin-top: 2px;
+    margin-top: -2px;
     width: 222px;
-    height: 35px;
-    border-radius: 0px;
-    background-color: #f2f2f2;
-    &:hover,
-    &:focus {
-      background-color: #f1592a !important;
+    height: 40px;
+    .search-input {
+      margin: 1px;
+      height: 40px;
+      border: 1px solid #dededf !important;
+      &:hover,
+      &:focus {
+        border-color: #f1592a !important;
+      }
     }
   }
   .search-icon {
@@ -239,7 +242,7 @@ const CategorieMenuCompo = styled.div`
       text-align: left;
       cursor: pointer;
       border: 0px 0px 0px 1px solid #d8d8d8;
-      color: #d8d8d8;
+      color: #f1592a !important;
       .download-icon {
         border: 0px;
         width: 30px;
@@ -600,6 +603,7 @@ const LogWorkerTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -618,16 +622,16 @@ const LogWorkerTable = ({
                     .local_name)}
           </Table.Cell>
           <Table.Cell className="table-cell name" name="name">
-            {item && item.wk_name && item.wk_name}
+            {item && item.name && item.name}
           </Table.Cell>
           <Table.Cell className="table-cell company" name="company">
-            {item && item.wk_co_name && item.wk_co_name}
+            {item && item.co_name && item.co_name}
           </Table.Cell>
           <Table.Cell className="table-cell position" name="position">
-            {item && item.wk_position && item.wk_position}
+            {item && item.position && item.position}
           </Table.Cell>
           <Table.Cell className="table-cell nation" name="nation">
-            {item && item.wk_nation && item.wk_nation}
+            {item && item.nation && item.nation}
           </Table.Cell>
           <Table.Cell className="table-cell input-time" name="input-time">
             {item &&
@@ -915,7 +919,7 @@ const LogWorkerTable = ({
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">막장 잔류이력 : 작업자의 조회 결과</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header local">

@@ -54,7 +54,10 @@ const TableCompo = styled.div`
       width: 215px;
     }
     &.description {
-      width: 100%;
+      width: 388px;
+      @media screen and (max-height: 970px) {
+        width: 378px;
+      }
     }
     &.trash-icon {
       width: 55px !important ;
@@ -118,17 +121,11 @@ const TableCompo = styled.div`
           padding-right: 15px;
           vertical-align: middle;
           &.no {
-            width: 53px;
-            @media screen and (max-height: 970px) {
-              width: 52px;
-            }
+            width: 52px;
           }
           &.company {
-            width: 167px;
+            width: 166px;
             text-align: left;
-            @media screen and (max-height: 970px) {
-              width: 166px;
-            }
           }
           &.name {
             width: 156px;
@@ -141,6 +138,8 @@ const TableCompo = styled.div`
           &.beacon {
             width: 215px;
             text-align: left;
+            font-family: "RobotoMono-Medium" !important;
+            letter-spacing: -1px !important;
           }
           &.description {
             width: 388px;
@@ -377,6 +376,7 @@ const VehicleTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -465,7 +465,7 @@ const VehicleTable = ({
       </SearchCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">차량 목록</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">

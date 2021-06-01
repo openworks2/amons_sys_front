@@ -89,7 +89,7 @@ const AccountContatiner = () => {
 
   useEffect(() => {
     dispatch(getAccounts());
-  }, [dispatch]);
+  }, []);
 
   // [ State Area ] ======================================================
 
@@ -99,6 +99,10 @@ const AccountContatiner = () => {
   const [passwordError, setPasswordError] = useState(undefined);
   const [passwordCheckError, setPasswordCheckError] = useState(undefined);
   const [duplicationCheck, setDuplicationCheck] = useState(true);
+
+  const [categorieValue, setCategorieValue] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [currentData, setCurrentData] = useState([]);
 
   const [pageInfo, setPageInfo] = useState({
     activePage: 1, // 현재 페이지
@@ -198,6 +202,44 @@ const AccountContatiner = () => {
     }
   };
 
+  const onSearch = (e) => {
+    const _data = data;
+    let tempData = [];
+    if (!searchValue) {
+      dispatch(getAccounts());
+    }
+    if (categorieValue === null) {
+      // 전체검색
+      tempData = _data.filter((item) => item.acc_user_id.includes(searchValue));
+      setCurrentData(tempData);
+    } else {
+      // 검색
+      tempData = _data.filter((item) => item.acc_role === categorieValue);
+      tempData = tempData.filter((item) =>
+        item.acc_user_id.includes(searchValue)
+      );
+      setCurrentData(tempData);
+    }
+    initActiveRow();
+    initFormData();
+    initPage();
+  };
+
+  const roleStrReturn = (role) => {
+    let str = "";
+    if (role === 2) {
+      str = "사용자";
+    } else {
+      str = "관리자";
+    }
+    return str;
+  };
+
+  useEffect(() => {
+    let _data = data;
+    setCurrentData(_data);
+  }, [data]);
+
   // [ Change Area ] =====================================================
 
   const onChange = (e) => {
@@ -245,6 +287,15 @@ const AccountContatiner = () => {
     initFormData();
   };
 
+  const onChangeCategorie = (e, value) => {
+    const _value = value.value;
+    setCategorieValue(_value);
+  };
+
+  const onSearchChange = (e) => {
+    const _searchValue = e.target.value;
+    setSearchValue(_searchValue);
+  };
   // [ Click Area ] =====================================================
 
   const activeHandler = (e, index, selectedId) => {
@@ -377,7 +428,7 @@ const AccountContatiner = () => {
           />
         </div>
         <div className="table-box">
-          {data && (
+          {data && currentData && (
             <AccountTable
               className="account-table-box"
               pageInfo={pageInfo}
@@ -389,6 +440,13 @@ const AccountContatiner = () => {
               initFormData={initFormData}
               initActiveRow={initActiveRow}
               initPage={initPage}
+              onSearch={onSearch}
+              roleStrReturn={roleStrReturn}
+              categorieValue={categorieValue}
+              searchValue={searchValue}
+              currentData={currentData}
+              onChangeCategorie={onChangeCategorie}
+              onSearchChange={onSearchChange}
             />
           )}
         </div>

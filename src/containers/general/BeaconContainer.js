@@ -76,7 +76,7 @@ const BeaconContatiner = () => {
 
   useEffect(() => {
     dispatch(getBeacons());
-  }, [dispatch]);
+  }, []);
 
   const [formData, setFormData] = useState({
     bc_address: "",

@@ -93,14 +93,13 @@ const InputCompo = styled.div`
           margin-top: 14px;
         }
         &.description {
+          resize: none;
           height: 105px !important;
         }
         &.pos-x {
           width: 283px !important;
           margin-top: 6px;
           margin-bottom: 15px;
-        }
-        &.description {
         }
       }
     }
@@ -139,19 +138,15 @@ const InputCompo = styled.div`
 
   .ui.form .field .ui.input input#scn_address {
     // input 맥 어드레스 placeholder
-    font-family: "NotoSansKR-Regular" !important;
+    font-family: "RobotoMono-Medium" !important;
+    letter-spacing: -1px !important;
     font-size: 14px;
     text-align: left;
-    letter-spacing: 1.05px;
     opacity: 1;
   }
 
   .ui.form .required.field > label:after {
     content: "" !important;
-  }
-
-  .input-form.description {
-    height: 105px !important;
   }
 
   .submit-button {

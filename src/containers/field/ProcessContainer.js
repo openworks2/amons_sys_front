@@ -69,16 +69,56 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const ProcessContainer = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Click Area ]
+  // [ Search Categorie Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] ===============================================================
   const { data, loading, error } = useSelector(
     (state) => state.processes.processes
   );
-
   const localData = useSelector((state) => state.locals.locals.data);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getLocals());
+    dispatch(getProcesses());
+  }, []);
+
+  // [ State Area ] ===============================================================
+
   const today = new Date();
 
+  // 검색 기능 table 데이터 처리
+  const [categorieValue, setCategorieValue] = useState(null);
+  const [currentData, setCurrentData] = useState([]);
+
   const [localInfo, setLocalInfo] = useState({});
+  const [localList, setLocalList] = useState([]);
+
+  const [localError, setLocalError] = useState(undefined);
+  const [stateError, setStateError] = useState(undefined);
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
 
   const [formData, setFormData] = useState({
     pcs_seq: null,
@@ -89,16 +129,42 @@ const ProcessContainer = () => {
     local_index: null,
     pcs_description: "",
   });
-  const [localList, setLocalList] = useState([]);
 
-  useEffect(() => {
-    dispatch(getLocals());
-    dispatch(getProcesses());
-  }, [dispatch]);
+  // [ Init Area ] ======================================================================
+
+  const initActiveRow = () => {
+    setSelectedRow({
+      selectedId: null,
+      selectedItem: undefined,
+      clickedIndex: null,
+    });
+  };
+
+  const initFormData = () => {
+    setFormData({
+      ...formData,
+      pcs_seq: null,
+      created_date: null,
+      modified_date: null,
+      prev_pcs_state: null,
+      pcs_state: null,
+      local_index: null,
+      pcs_description: "",
+    });
+  };
+
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
+    });
+  };
+
+  // [ Common Logic Area ] ======================================================================
 
   useEffect(() => {
     makeLocalList(localData);
-  }, [localData, formData.local_index]);
+  }, [localData]);
 
   const makeLocalList = (data) => {
     if (data) {
@@ -114,24 +180,25 @@ const ProcessContainer = () => {
       setLocalList(_localList);
     }
   };
-
-  // radioChange event handler
-  const onRadioChange = (e, target) => {
-    let _pcs_state = target.value;
-
-    if (_pcs_state === formData.pcs_state) {
-      _pcs_state = 14;
-    }
-    setFormData({
-      ...formData,
-      pcs_state: _pcs_state,
-    });
-  };
+  // 상태 종류 / 컬러
+  // 미착공  #286e41
+  // 천공 #7c3795
+  // 장약 #636363
+  // 발파 #971717
+  // 버력처리 #375795
+  // 숏크리트 #7c4c17
+  // 강지보 #707017
+  // 격자지보 #a1922b
+  // 록볼트 #175c59
+  // 방수시트 #1b2f54
+  // 라이닝 #3c3a3a
+  // 근무교대 #407d23
+  // 장비점검 #4c7e7c
+  // 기타 #351c3e
 
   const stateToString = (value) => {
     let _value = parseInt(value);
     let str = "";
-
     switch (_value) {
       case 0:
         str = "미착공";
@@ -184,126 +251,109 @@ const ProcessContainer = () => {
     return str;
   };
 
-  function date_descending(a, b) {
-    var dateA = new Date(a["created_date"]).getTime();
-    var dateB = new Date(b["created_date"]).getTime();
-    return dateA < dateB ? 1 : -1;
-  }
-
-  // form onSelectChant Event
-  const onSelectChange = (e, seletedValue) => {
-    const name = seletedValue.name;
-    const value = seletedValue.value;
-
-    let findItem = data
-      .filter((el) => el.local_index === value)
-      .sort(date_descending)[0];
-
-    if (findItem) {
-      setFormData({
-        ...formData,
-        [name]: value,
-        prev_pcs_state: findItem.pcs_state,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-        prev_pcs_state: 1,
-      });
+  const returnColor = (pcsState) => {
+    let colorValue = "#286e41";
+    switch (pcsState) {
+      case 1: // 미착공
+        colorValue = "#286e41";
+        break;
+      case 2: // 천공
+        colorValue = "#7c3795";
+        break;
+      case 3: // 장약
+        colorValue = "#636363";
+        break;
+      case 4: // 발파
+        colorValue = "#971717";
+        break;
+      case 5: // 버력처리
+        colorValue = "#375795";
+        break;
+      case 6: // 숏크리트
+        colorValue = "#7c4c17";
+        break;
+      case 7: // 강지보
+        colorValue = "#707017";
+        break;
+      case 8: // 격자지보
+        colorValue = "#a1922b";
+        break;
+      case 9: // 록볼트
+        colorValue = "#175c59";
+        break;
+      case 10: // 방수시트
+        colorValue = "#1b2f54";
+        break;
+      case 11: //라이닝
+        colorValue = "#3c3a3a";
+        break;
+      case 12: // 근무교대
+        colorValue = "#407d23";
+        break;
+      case 13: // 장비점검
+        colorValue = "#4c7e7c";
+        break;
+      case 14: // 기타
+        colorValue = "#351c3e";
+        break;
     }
+    return colorValue;
   };
 
-  // form onChange Event
+  const colorStyle = (pcsState) => {
+    return { backgroundColor: returnColor(pcsState) };
+  };
+
+  const dateDescending = (a, b) => {
+    let dateA = new Date(a["created_date"]).getTime();
+    let dateB = new Date(b["created_date"]).getTime();
+    return dateA < dateB ? 1 : -1;
+  };
+
+  // [ Change Area ] ======================================================================
+
   const onChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    // 입력값 state 에 저장
     setFormData({
       ...formData,
       [name]: value,
     });
   };
 
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
+  const onRadioChange = (e, target) => {
+    let _pcs_state = target.value;
 
-  const initActiveRow = () => {
-    setSelectedRow({
-      selectedId: null,
-      selectedItem: undefined,
-      clickedIndex: null,
-    });
-  };
-  const initFormData = () => {
+    if (_pcs_state === formData.pcs_state) {
+      _pcs_state = 14;
+    }
     setFormData({
       ...formData,
-      pcs_seq: null,
-      created_date: null,
-      modified_date: null,
-      prev_pcs_state: null,
-      pcs_state: null,
-      local_index: null,
-      pcs_description: "",
+      pcs_state: _pcs_state,
     });
   };
 
-  // table row 클릭 핸들러
-  const activeHandler = (e, index, selectedId) => {
-    if (index === selectedRow.clickedIndex) {
-      initActiveRow();
-      initFormData();
-    } else {
-      const findItem = data.find(
-        (processLog) => processLog.pcs_seq === selectedId
-      );
+  const onSelectChange = (e, seletedValue) => {
+    const name = seletedValue.name;
+    const value = seletedValue.value;
 
-      setSelectedRow({
-        selectedId: findItem.pcs_seq,
-        selectedItem: findItem,
-        clickedIndex: index,
-      });
+    let findItem = data
+      .filter((el) => el.local_index === value)
+      .sort(dateDescending)[0];
 
+    if (findItem) {
       setFormData({
         ...formData,
-        pcs_seq: findItem.pcs_seq,
-        created_date: findItem.created_date,
-        modified_date: findItem.modified_date,
-        prev_pcs_state: findItem.prev_pcs_state,
-        pcs_state: findItem.pcs_state,
-        local_index: findItem.local_index,
-        pcs_description: findItem.pcs_description,
+        prev_pcs_state: findItem.pcs_state,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        prev_pcs_state: 1,
       });
     }
-  };
-
-  useEffect(() => {
-    // 클릭 된 열 있을 시 노선 정보 대입하기
-    if (formData.local_index === null || undefined) {
-      setLocalInfo(null);
-    } else {
-      let _localInfo = localData.find(
-        (el) => el.local_index === formData.local_index
-      );
-      setLocalInfo(_localInfo);
-    }
-  }, [activeHandler]);
-
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
-
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
+    setCategorieValue(value);
+    setFormData({ ...formData, local_index: value, pcs_state: 0 });
   };
 
   const onPageChange = (e, { activePage }) => {
@@ -314,19 +364,83 @@ const ProcessContainer = () => {
       ...PreState,
       activePage: _activePage,
     });
-    // 활성화된 로우 초기화
     initActiveRow();
     initFormData();
   };
 
-  const [localError, setLocalError] = useState(undefined);
-  const [stateError, setStateError] = useState(undefined);
+  // [ Click Area ] ======================================================================
 
-  // CREATE
+  // const activeHandler = (e, index, selectedId) => {
+  //   if (index === selectedRow.clickedIndex) {
+  //     initActiveRow();
+  //     initFormData();
+  //   } else {
+  //     const findItem = data.find(
+  //       (processLog) => processLog.pcs_seq === selectedId
+  //     );
+
+  //     setSelectedRow({
+  //       selectedId: findItem.pcs_seq,
+  //       selectedItem: findItem,
+  //       clickedIndex: index,
+  //     });
+
+  //     setFormData({
+  //       ...formData,
+  //       pcs_seq: findItem.pcs_seq,
+  //       created_date: findItem.created_date,
+  //       modified_date: findItem.modified_date,
+  //       prev_pcs_state: findItem.prev_pcs_state,
+  //       pcs_state: findItem.pcs_state,
+  //       local_index: findItem.local_index,
+  //       pcs_description: findItem.pcs_description,
+  //     });
+  //   }
+  // };
+
+  // [ Search Categorie Area ] ======================================================================
+
+  const onClickCategorie = (e, target) => {
+    initPage();
+    // initActiveRow();
+    initFormData();
+    const _target = target.value;
+    setCategorieValue(_target);
+    setFormData({
+      ...formData,
+      local_index: _target,
+      pcs_state: 0,
+      pcs_description: "",
+    });
+  };
+
+  useEffect(() => {
+    let _data = data;
+    let tempData = [];
+    if (categorieValue === null) {
+      setCurrentData(_data);
+    } else {
+      tempData = _data.filter((item) => item.local_index === categorieValue);
+      setCurrentData(tempData);
+    }
+  }, [data, categorieValue]);
+
+  // useEffect(() => {
+  //   // 클릭 시 input에 테이블에 표기할 노선 데이터 대입
+  //   if (formData.local_index === null || undefined) {
+  //     setLocalInfo(null);
+  //   } else {
+  //     let _localInfo = localData.find(
+  //       (el) => el.local_index === formData.local_index
+  //     );
+  //     setLocalInfo(_localInfo);
+  //   }
+  // }, [activeHandler]);
+
+  // [ Create Area ] ======================================================================
+
   const createHandler = (e) => {
     e.preventDefault();
-
-    // 기존 노선의 state 값 대입
 
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
@@ -355,7 +469,8 @@ const ProcessContainer = () => {
     }
   };
 
-  // UPDATE
+  // [ Update Area ] ======================================================================
+
   const updateHandler = (e) => {
     e.preventDefault();
 
@@ -367,12 +482,15 @@ const ProcessContainer = () => {
     dispatch(putProcess(newProcess.pcs_seq, newProcess));
   };
 
-  // DELETE
+  // [ Delete Area ] ======================================================================
+
   const deleteHandler = (e, pcs_seq) => {
     dispatch(deleteProcess(pcs_seq));
     initActiveRow();
     initFormData();
   };
+
+  // [ Components Area ]===================================================================
 
   if (error) {
     return (
@@ -404,15 +522,18 @@ const ProcessContainer = () => {
             stateToString={stateToString}
             stateError={stateError}
             data={data}
+            dateDescending={dateDescending}
+            colorStyle={colorStyle}
+            returnColor={returnColor}
           />
         </div>
         <div className="table-box">
-          {data && (
+          {data && currentData && (
             <ProcessTable
               className="process-table-box"
               pageInfo={pageInfo}
               data={data}
-              activeHandler={activeHandler}
+              // activeHandler={activeHandler}
               deleteHandler={deleteHandler}
               onPageChange={onPageChange}
               selectedRow={selectedRow}
@@ -421,6 +542,10 @@ const ProcessContainer = () => {
               initPage={initPage}
               localData={localData}
               stateToString={stateToString}
+              dateDescending={dateDescending}
+              onClickCategorie={onClickCategorie}
+              categorieValue={categorieValue}
+              currentData={currentData}
             />
           )}
         </div>

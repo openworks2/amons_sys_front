@@ -90,7 +90,9 @@ const InputCompo = styled.div`
           margin-top: 14px;
         }
         &.description {
+          resize: none;
           height: 105px !important;
+          resize: none;
         }
       }
     }
@@ -110,10 +112,6 @@ const InputCompo = styled.div`
 
   .ui.form .required.field > label:after {
     content: "" !important;
-  }
-
-  .input-form.description {
-    height: 105px !important;
   }
   /* 
   .submit-button {

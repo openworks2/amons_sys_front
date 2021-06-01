@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setInitSOSSituation } from "../modules/monitor";
+import { CLIENT } from "../lib/server.config";
 
 const HeaderCompo = styled.div`
   position: fixed !important;
@@ -171,6 +172,13 @@ const HeaderCompo = styled.div`
       }
     }
   }
+  a {
+    color: #fff;
+    &:hover {
+      cursor: pointer;
+      color: #72afd2;
+    }
+  }
 `;
 
 const Header = ({
@@ -186,7 +194,7 @@ const Header = ({
   const dispatch = useDispatch();
 
   // load audio file on component load
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   // set the loop of audio tune
   useEffect(() => {
@@ -277,7 +285,7 @@ const Header = ({
           </div>
           <div className="shortcut-button-box question">
             <div className="shortcut-button question">
-              <FontAwesomeIcon icon={faQuestion} />
+              <a href={`${CLIENT}/함양-합천 4공구 신원3터널_매뉴얼.pdf`} download> <FontAwesomeIcon icon={faQuestion} /></a>
             </div>
             <div className="button-name">도움말</div>
           </div>
