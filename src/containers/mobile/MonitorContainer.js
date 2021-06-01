@@ -1,8 +1,8 @@
-import { faRouter } from '@fortawesome/pro-duotone-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import LocationInfo from '../../components/mobile/LocationInfo';
+import { getMonitor, receiveMonitor } from '../../modules/monitor';
 
 const MonitorCompo = styled.div`
     width: 100%;
@@ -62,24 +62,53 @@ const MonitorCompo = styled.div`
 
 const MonitorContainer = () => {
 
-    const [locationAct, setLocationAct] = useState('loc001');
+    const { monitor, scanner, beacon } = useSelector(state => state.monitor);
 
-    const [location, setLoctaion] = useState([
-        { local_index: 'loc001', local_name: "시점 함양" },
-        { local_index: 'loc002', local_name: "종점 함양" },
-        { local_index: 'loc003', local_name: "시점 울산" },
-        { local_index: 'loc004', local_name: "종점 울산" }
-    ]);
+    const [locationAct, setLocationAct] = useState({
+        index: null,
+        item: null
+    });
+
+    const [location, setLoctaion] = useState([]);
+
+    const dispatch = useDispatch();
+    const getDispatch = useCallback(async () => {
+        dispatch(receiveMonitor());
+        dispatch(getMonitor());
+    }, [dispatch]);
+
+    useEffect(() => {
+        getDispatch();
+
+    }, [getDispatch]);
+
+    useEffect(() => {
+        if (monitor.data) {
+            console.log('-->', monitor.data)
+            setLoctaion(monitor.data);
+            setLocationAct({
+                index: monitor.data[0].local_index,
+                item: monitor.data[0]
+            });
+        }
+    }, [monitor.data]);
 
     const onChangeLocation = (e, index) => {
-        setLocationAct(index)
+
+        const findItem = location.find(item => item.local_index === index ? item : null);
+        console.log('findItemp-->', findItem)
+        setLocationAct({
+            index,
+            item: findItem
+        })
     }
 
-    const renderList = (items = []) => {
+    const renderList = useCallback((items = []) => {
         if (items.length === 0) return;
-        return items.map(item => {
+        return items.map((item, index) => {
             return <li
-                className={locationAct === item.local_index ? "loaction-item active" : "loaction-item"}
+                key={index}
+                className={locationAct.index === item.local_index ? "loaction-item active" : "loaction-item"}
                 onClick={(e) => onChangeLocation(e, item.local_index)}
             >
                 <div className="location-name">
@@ -88,19 +117,26 @@ const MonitorContainer = () => {
                 <div className="bar"></div>
             </li>
         });
-    }
+    }, [locationAct.index]);
 
     return (
         <MonitorCompo>
             <div className="list-container">
                 <ul className="location-list">
                     {
-                        renderList(location)
+                        monitor.data && renderList(monitor.data)
                     }
                 </ul>
             </div>
             <div className="contents-container">
-                <LocationInfo />
+                {
+                    locationAct.item &&
+                    <LocationInfo
+                        localData={locationAct.item}
+                        scanner={scanner}
+                        beacon={beacon}
+                    />
+                }
             </div>
         </MonitorCompo>
     );

@@ -15,6 +15,7 @@ const HomeCompo = styled.div`
     width: 100%;
     height: 100%;
     background-color: rebeccapurple;
+    min-width: 331px;
     .header-component{
         width: 100%;
         height: 8.75%;
@@ -24,14 +25,13 @@ const HomeCompo = styled.div`
         width: 100%;
         height: 82.5%;
         /* height: 83vh; */
-        background-color: gray;
     }
     .navigation{
         width: 100%;
         height: 8.75%;
         min-height: 50px;
         z-index: 900;
-        position: relative;
+        position: fixed;
         bottom: 0;
     }
 `;
