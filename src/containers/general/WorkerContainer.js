@@ -424,7 +424,13 @@ const WorkerContatiner = () => {
     }
 
     if (name === "wk_sms_yn") {
-      const sms_limit = settingsData[0].sms_limit;
+      let sms_limit = 10; // sms 수신가능 기본값 10명
+      if (
+        settingsData[0].sms_limit !== null ||
+        settingsData[0].sms_limit !== undefined
+      ) {
+        sms_limit = settingsData[0].sms_limit;
+      }
       let smsCount = 0;
       if (formData.wk_sms_yn) {
         setFormData({ ...formData, wk_sms_yn: 0 });

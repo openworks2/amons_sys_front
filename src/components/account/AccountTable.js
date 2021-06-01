@@ -11,8 +11,6 @@ import {
   Input,
 } from "semantic-ui-react";
 import { FaTrash, FaMinusCircle, FaSearch } from "react-icons/fa";
-import { getAccounts } from "../../modules/accounts";
-import { useDispatch } from "react-redux";
 
 const TableCompo = styled.div`
   margin-left: 22px;
@@ -287,6 +285,13 @@ const AccountTable = ({
   initFormData,
   initActiveRow,
   initPage,
+  onSearch,
+  roleStrReturn,
+  categorieValue,
+  searchValue,
+  currentData,
+  onChangeCategorie,
+  onSearchChange,
 }) => {
   let { activePage, itemsPerPage } = pageInfo;
 
@@ -297,62 +302,7 @@ const AccountTable = ({
     // { key: "2", value: 2, text: "사용자" },
   ];
 
-  // 삭제 모달
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  // 검색 기능 table 데이터 처리
-  // 검색하고 curreunt page 1 로 이동시켜줘야 함.
-  const [categorieValue, setCategorieValue] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentData, setCurrentData] = useState(data);
-
-  const onChangeCategorie = (e, value) => {
-    const _value = value.value;
-    setCategorieValue(_value);
-  };
-
-  // serach input 입력
-  const onSearchChange = (e) => {
-    const _searchValue = e.target.value;
-    setSearchValue(_searchValue);
-  };
-
-  const dispatch = useDispatch();
-
-  const onSearch = (e) => {
-    const _data = data;
-    let tempData = [];
-    if (!searchValue) {
-      dispatch(getAccounts());
-    }
-    if (categorieValue === null) {
-      // 전체검색
-      tempData = _data.filter((item) => item.acc_user_id.includes(searchValue));
-      setCurrentData(tempData);
-    } else {
-      // 검색
-      tempData = _data.filter((item) => item.acc_role === categorieValue);
-      tempData = tempData.filter((item) =>
-        item.acc_user_id.includes(searchValue)
-      );
-      setCurrentData(tempData);
-    }
-    initActiveRow();
-    initFormData();
-    initPage();
-  };
-
-  const roleStrReturn = (role) => {
-    let str = "";
-    if (role === 2) {
-      str = "사용자";
-    } else {
-      str = "관리자";
-    }
-    return str;
-  };
-
-  // 테이블
 
   const totalPages = Math.ceil(
     currentData.filter((el) => el.acc_role === 2).length / itemsPerPage,
@@ -370,6 +320,7 @@ const AccountTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -456,7 +407,7 @@ const AccountTable = ({
       </SearchCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">계정 목록</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header no">

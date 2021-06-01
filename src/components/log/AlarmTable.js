@@ -209,11 +209,12 @@ const CategorieMenuCompo = styled.div`
         color: #f1592a !important;
       }
     }
+
     &.download {
       text-align: left;
       cursor: pointer;
       border: 0px 0px 0px 1px solid #d8d8d8;
-      color: #d8d8d8;
+      color: #f1592a !important;
       .download-icon {
         border: 0px;
         width: 30px;
@@ -496,6 +497,7 @@ const AlarmTable = ({
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
     // 현재 보여지는 테이블에 들어갈 임시 배열 생성
+
     const tempItems = [...items, ...Array(itemsPerPage - items.length)];
     return tempItems.map((item, index) => {
       const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
@@ -538,15 +540,16 @@ const AlarmTable = ({
               moment(item.emg_start_time).format("YYYY-MM-DD HH:mm:ss")}
           </Table.Cell>
           <Table.Cell className="table-cell writer" name="writer">
-            {item && item.emg_writer && item.emg_writer}
+            {item && (item.emg_writer ? item.emg_writer : "•")}
           </Table.Cell>
           <Table.Cell className="table-cell emg-end-time" name="emg-end-time">
             {item &&
-              item.emg_end_time &&
-              moment(item.emg_end_time).format("YYYY-MM-DD HH:mm:ss")}
+              (item.emg_end_time
+                ? moment(item.emg_end_time).format("YYYY-MM-DD HH:mm:ss")
+                : "•")}
           </Table.Cell>
           <Table.Cell className="table-cell result" name="result">
-            {item && item.emg_result && item.emg_result}
+            {item && (item.emg_result ? item.emg_result : "•")}
           </Table.Cell>
         </Table.Row>
       );
@@ -841,6 +844,7 @@ const AlarmTable = ({
             {data && data.length > 0 ? (
               <Menu.Item
                 className="table-categorie-menu download"
+                id="download-button"
                 onClick={() => {
                   downloadHandler(startDate, endDate);
                 }}
@@ -859,7 +863,7 @@ const AlarmTable = ({
       </CategorieMenuCompo>
       <TableCompo className="company-table-compo">
         <p className="subtitle">알람이력 : 작업자의 조회결과</p>
-        <Table celled padded selectable>
+        <Table celled padded selectable unstackable>
           <Table.Header className="table-header">
             <Table.Row className="table-header-row">
               <Table.HeaderCell singleLine className="table-header local">

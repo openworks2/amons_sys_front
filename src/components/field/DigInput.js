@@ -247,7 +247,8 @@ const InputCompo = styled.div`
           margin-top: 14px;
         }
         &.description {
-          height: 105px !important;
+          resize: none;
+          height: 105px;
         }
         &.dig-length {
           margin-top: 2px;
@@ -255,9 +256,6 @@ const InputCompo = styled.div`
           &:disabled {
             color: #ccc !important;
           }
-        }
-        &.description {
-          height: 105px;
         }
       }
     }
@@ -312,10 +310,6 @@ const InputCompo = styled.div`
 
   .ui.form .required.field > label:after {
     content: "" !important;
-  }
-
-  .input-form.description {
-    height: 105px !important;
   }
 
   .submit-button {
@@ -500,7 +494,7 @@ const DigInput = ({
             required
           />
           {localError && <InputError>{localError}</InputError>}
-          <Table className="sub-info-table">
+          <Table className="sub-info-table" unstackable>
             <Table.Body className="sub-info-table body">
               <Table.Row className="sub-info-table row">
                 <Table.Cell className="sub-info-table header" singleLine>
@@ -548,7 +542,7 @@ const DigInput = ({
           <Table className="sub-info-table last-row">
             <Table.Body>
               <Table.Cell className="sub-info-table header" singleLine>
-                {selectedRow.selectedId ? "이력 입력일" : "최종 입력일"}
+                최종 입력일
               </Table.Cell>
               <Table.Cell className="sub-info-table date" singleLine>
                 {selectedRow.selectedId

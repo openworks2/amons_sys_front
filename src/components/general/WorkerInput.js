@@ -46,10 +46,7 @@ const InputCompo = styled.div`
   .ui.selection.active.dropdown .menu {
     border-color: #f1592a !important;
   }
-  .ui.dropdown .menu > .item {
-    /* border-color: #f1592a !important; */
-    font-family: "NotoSansKR-Regular" !important;
-  }
+
   .ui.checkbox input:focus ~ label:before {
     border-color: #f1592a !important;
     /* ui focus 색상변경 끝 */
@@ -100,7 +97,6 @@ const InputCompo = styled.div`
     }
   }
   .ui.form select {
-    font-family: "NotoSansKR-Medium";
     font-size: 14px;
     padding: 5px;
     width: 66px;
@@ -142,6 +138,14 @@ const InputCompo = styled.div`
         letter-spacing: 0px;
         color: #929292;
         opacity: 1;
+        &.beacon {
+          font-family: "RobotoMono-Medium" !important;
+          letter-spacing: -1px !important;
+        }
+        #beacon-input {
+          font-family: "RobotoMono-Medium" !important;
+          letter-spacing: -1px !important;
+        }
         &.title {
           color: #2e2e2e;
         }
@@ -281,7 +285,7 @@ const InputCompo = styled.div`
   .ui.form .field > label,
   .form-title {
     margin-left: 5px;
-    font-family: "NotoSansKR-Medium" !important;
+    font-family: "NotoSansKR-Medium";
     color: #2e2e2e;
     font-size: 14px !important;
     letter-spacing: 0px;
@@ -347,6 +351,7 @@ const InputCompo = styled.div`
     font-size: 12px;
   }
   .input-form.description {
+    resize: none;
     height: 105px !important;
   }
 
@@ -740,6 +745,7 @@ const WorkerInput = ({
           />
           <Form.Field
             className="input-form beacon"
+            id="beacon-input"
             control={Select}
             label="비콘 사용 정보"
             options={unUsedBeaconList}

@@ -80,14 +80,16 @@ const InputCompo = styled.div`
         text-align: left;
         letter-spacing: 0px;
         opacity: 1;
+        &.description {
+          resize: none;
+          height: 105px;
+        }
       }
       &.title {
         color: #2e2e2e;
         margin-top: 14px;
       }
-      &.description {
-        height: 105px !important;
-      }
+
       &.dig-length {
         margin-top: 2px;
         margin-bottom: 10px;
@@ -144,10 +146,6 @@ const InputCompo = styled.div`
     content: "" !important;
   }
 
-  .input-form.description {
-    height: 105px !important;
-  }
-
   .submit-button {
     width: 324px;
     height: 50px;
@@ -191,11 +189,11 @@ const InputCompo = styled.div`
 `;
 
 const InputError = styled.div`
-  margin-bottom: -4px;
-  margin-top: -15px;
+  margin-bottom: -29px;
+  margin-top: 10px;
   font-family: "NotoSansKR-Regular";
   font-size: 13px;
-  text-align: left;
+  text-align: right;
   letter-spacing: 0.65px;
   color: #ff0000;
   opacity: 1;
@@ -290,6 +288,10 @@ const ProcessInput = ({
   stateToString,
   stateError,
   data,
+  categorieValue,
+  dateDescending,
+  returnColor,
+  colorStyle,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -303,81 +305,6 @@ const ProcessInput = ({
     local_index,
   } = formData;
 
-  // 미착공  #286e41
-  // 천공 #7c3795
-  // 장약 #636363
-  // 발파 #971717
-  // 버력처리 #375795
-  // 숏크리트 #7c4c17
-  // 강지보 #707017
-  // 격자지보 #a1922b
-  // 록볼트 #175c59
-  // 방수시트 #1b2f54
-  // 라이닝 #3c3a3a
-  // 근무교대 #407d23
-  // 장비점검 #4c7e7c
-  // 기타 #351c3e
-
-  const returnColor = (pcsState) => {
-    let colorValue = "#286e41";
-
-    switch (pcsState) {
-      case 1: // 미착공
-        colorValue = "#286e41";
-        break;
-      case 2: // 천공
-        colorValue = "#7c3795";
-        break;
-      case 3: // 장약
-        colorValue = "#636363";
-        break;
-      case 4: // 발파
-        colorValue = "#971717";
-        break;
-      case 5: // 버력처리
-        colorValue = "#375795";
-        break;
-      case 6: // 숏크리트
-        colorValue = "#7c4c17";
-        break;
-      case 7: // 강지보
-        colorValue = "#707017";
-        break;
-      case 8: // 격자지보
-        colorValue = "#a1922b";
-        break;
-      case 9: // 록볼트
-        colorValue = "#175c59";
-        break;
-      case 10: // 방수시트
-        colorValue = "#1b2f54";
-        break;
-      case 11: //라이닝
-        colorValue = "#3c3a3a";
-        break;
-      case 12: // 근무교대
-        colorValue = "#407d23";
-        break;
-      case 13: // 장비점검
-        colorValue = "#4c7e7c";
-        break;
-      case 14: // 기타
-        colorValue = "#351c3e";
-        break;
-    }
-
-    return colorValue;
-  };
-
-  const colorStyle = (pcsState) => {
-    return { backgroundColor: returnColor(pcsState) };
-  };
-
-  function date_descending(a, b) {
-    var dateA = new Date(a["created_date"]).getTime();
-    var dateB = new Date(b["created_date"]).getTime();
-    return dateA < dateB ? 1 : -1;
-  }
   return (
     <InputCompo className="input-compo">
       <p className="subtitle">공정상태 변경</p>
@@ -399,7 +326,13 @@ const ProcessInput = ({
             placeholder="노선을 선택해주세요."
             value={local_index}
             error={localError}
-            disabled={selectedRow.selectedId ? true : false}
+            disabled={
+              selectedRow.selectedItem
+                ? true
+                : false || categorieValue
+                ? true
+                : false
+            }
             required
           />
           {localError && <InputError>{localError}</InputError>}
@@ -428,23 +361,23 @@ const ProcessInput = ({
                     style={colorStyle(
                       data
                         .filter((el) => el.local_index === formData.local_index)
-                        .sort(date_descending)[0] &&
+                        .sort(dateDescending)[0] &&
                         data
                           .filter(
                             (el) => el.local_index === formData.local_index
                           )
-                          .sort(date_descending)[0].pcs_state
+                          .sort(dateDescending)[0].pcs_state
                     )}
                   >
                     {data
                       .filter((el) => el.local_index === formData.local_index)
-                      .sort(date_descending)[0]
+                      .sort(dateDescending)[0]
                       ? stateToString(
                           data
                             .filter(
                               (el) => el.local_index === formData.local_index
                             )
-                            .sort(date_descending)[0].pcs_state
+                            .sort(dateDescending)[0].pcs_state
                         )
                       : "미착공"}
                   </div>

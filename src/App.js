@@ -31,6 +31,9 @@ const GlobalStyle = createGlobalStyle`
       .text{
         font-family: "NotoSansKR-Medium";
         font-size : 20px;
+        &.beacon{
+          font-family: "RobotoMono-Medium";
+        }
       }
       .text-info{
         font-family: "NotoSansKR-Medium";
