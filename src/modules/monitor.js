@@ -54,42 +54,40 @@ export const getBleBeacon = createPromiseThunk(
 );
 
 let socket;
-export const receiveMonitor = () => (dispatch) => {
-  if (!socket) {
-    socket = io.connect(API); //3000번 포트 사용(서버)
-    socket.emit("getData", "scanner");
-    socket.on("getData", (data) => {
-      const filterAlarm = data.beacon.filter(
-        (item) => item.bc_emergency === 2 && item.wk_id && item
-      );
 
-      if (filterAlarm.length > 0) {
-        const payload = {
-          sosSituation: true,
-          sosList: filterAlarm,
-        };
-        dispatch({ type: SET_SOS_SITUACTION, payload });
-      }
-      dispatch({ type: GET_SCANNER_SOCKET, payload: data });
-    });
-  }
-};
+export const receiveMonitor = () => dispatch => {
+    if (!socket) {
+        socket = io.connect(API);  //3000번 포트 사용(서버)
+        socket.emit('getData', 'scanner')
+        socket.on('getData', (data) => {
+            const filterAlarm = data.beacon.filter(item => item.bc_emergency === 2 && item.wk_id && item);
+            if (filterAlarm.length > 0) {
+                const payload = {
+                    sosSituation: true,
+                    sosList: filterAlarm
+                }
+                dispatch({ type: SET_SOS_SITUACTION, payload });
+            }
+            dispatch({ type: GET_SCANNER_SOCKET, payload: data })
+        });
+    }
+}
 
-export const socketDisconnet = () => (dispatch) => {
-  socket.disconnect();
-};
+export const socketDisconnet = () => dispatch => {
+    socket.disconnect();
+}
 
-export const setRatePanel = () => (dispatch) => {
-  dispatch({ type: TOGGLE_DRILLRATE_PANEL });
-};
+export const setRatePanel = () => dispatch => {
+    dispatch({ type: TOGGLE_DRILLRATE_PANEL });
+}
 
-export const setSOSSituation = (boolean) => (dispatch) => {
-  dispatch({ type: SET_SOS_SITUACTION, payload: boolean });
-};
+export const setSOSSituation = boolean => dispatch => {
+    dispatch({ type: SET_SOS_SITUACTION, payload: boolean });
+}
 
-export const setInitSOSSituation = () => (dispatch) => {
-  dispatch({ type: INIT_SOS_SITUACTION });
-};
+export const setInitSOSSituation = () => dispatch => {
+    dispatch({ type: INIT_SOS_SITUACTION });
+}
 
 export const getWeather = createPromiseThunk(
   GET_WEATHER,
@@ -139,102 +137,115 @@ const getEnvironmentReducer = handleAsyncActions(
 );
 
 export default function monitor(state = initialState, action) {
-  switch (action.type) {
-    case GET_MONITOR:
-    case GET_MONITOR_SUCCESS:
-    case GET_MONITOR_ERROR:
-      return getMonitorReducer(state, action);
-    case GET_SCANNER:
-    case GET_SCANNER_SUCCESS:
-      return {
-        ...state,
-        scanner: {
-          ...state.scanner,
-          data: action.payload,
-        },
-      };
-    case GET_SCANNER_SOCKET:
-      const { scanner, beacon } = action.payload;
-      // console.log(s)
-      const scannerList = Object.values(scanner);
-      return {
-        ...state,
-        scanner: {
-          ...state.scanner,
-          data: scannerList,
-        },
-        beacon: {
-          ...state.beacon,
-          data: beacon,
-        },
-      };
-    case GET_SCANNER_ERROR:
-      return getScannerReducer(state, action);
-    case GET_BLE_BEACON:
-      return {
-        ...state,
-        beacon: {
-          loading: true,
-          data: state.monitor.beacon ? state.monitor.beacon : null,
-          error: null,
-        },
-      };
-    case GET_BLE_BEACON_SUCCESS:
-      return {
-        ...state,
-        beacon: {
-          loading: false,
-          data: action.payload,
-          error: null,
-        },
-      };
-    case GET_BLE_BEACON_ERROR:
-      return {
-        ...state,
-        beacon: {
-          loading: false,
-          data: state.monitor.beacon ? state.monitor.beacon : null,
-          error: action.error,
-        },
-      };
-    case GET_WEATHER:
-    case GET_WEATHER_SUCCESS:
-    case GET_WEATHER_ERROR:
-      return getWeatherReducer(state, action);
-    case GET_ENVIRONMENT:
-    case GET_ENVIRONMENT_SUCCESS:
-    case GET_ENVIRONMENT_ERROR:
-      return getEnvironmentReducer(state, action);
-    case TOGGLE_DRILLRATE_PANEL:
-      return {
-        ...state,
-        ratePanel: !state.ratePanel,
-      };
-    case SET_SOS_SITUACTION:
-      return {
-        ...state,
-        alarmPanel: true,
-        sosSituation: action.payload.sosSituation,
-        sosList: [...state.sosList, ...action.payload.sosList],
-      };
-    case INIT_SOS_SITUACTION:
-      return {
-        ...state,
-        alarmPanel: state.alarmPanel ? !state.alarmPanel : state.alarmPanel,
-        sosSituation: false,
-        sosList: [],
-      };
-    case CLOSED_ALARM_PANEL:
-      return {
-        ...state,
-        alarmPanel: false,
-      };
-    case TOGGLE_CAMERA_REPOSITION:
-      return {
-        ...state,
-        repositionAction: !state.repositionAction,
-      };
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case GET_MONITOR:
+        case GET_MONITOR_SUCCESS:
+        case GET_MONITOR_ERROR:
+            return getMonitorReducer(state, action)
+        case GET_SCANNER:
+        case GET_SCANNER_SUCCESS:
+            return {
+                ...state,
+                scanner: {
+                    ...state.scanner,
+                    data: action.payload
+                }
+            }
+        case GET_SCANNER_SOCKET:
+            const { scanner, beacon } = action.payload;
+            const scannerList = Object.values(scanner);
+            return {
+                ...state,
+                scanner: {
+                    ...state.scanner,
+                    data: scannerList
+                },
+                beacon: {
+                    ...state.beacon,
+                    data: beacon,
+                }
+            }
+        case GET_SCANNER_ERROR:
+            return getScannerReducer(state, action)
+        case GET_BLE_BEACON:
+            return {
+                ...state,
+                beacon: {
+                    loading: true,
+                    data: state.monitor.beacon ? state.monitor.beacon : null,
+                    error: null
+                }
+            }
+        case GET_BLE_BEACON_SUCCESS:
+            return {
+                ...state,
+                beacon: {
+                    loading: false,
+                    data: action.payload,
+                    error: null
+                }
+            }
+        case GET_BLE_BEACON_ERROR:
+            return {
+                ...state,
+                beacon: {
+                    loading: false,
+                    data: state.monitor.beacon ? state.monitor.beacon : null,
+                    error: action.error
+                }
+            }
+        case GET_WEATHER:
+        case GET_WEATHER_SUCCESS:
+        case GET_WEATHER_ERROR:
+            return getWeatherReducer(state, action);
+        case GET_ENVIRONMENT:
+        case GET_ENVIRONMENT_SUCCESS:
+        case GET_ENVIRONMENT_ERROR:
+            return getEnvironmentReducer(state, action);
+        case TOGGLE_DRILLRATE_PANEL:
+            return {
+                ...state,
+                ratePanel: !state.ratePanel
+            };
+        case SET_SOS_SITUACTION:
+            const actionList = action.payload.sosList;
+            const stateList = state.sosList;
+            let tempList=[
+                ...actionList,
+                ...stateList
+            ];
+            const temp = tempList.reduce(function (acc, current) {
+                if (acc.findIndex(({ bc_index }) => bc_index === current.bc_index) === -1) {
+                  acc.push(current);
+                }
+                return acc;
+              }, []);
+            
+            return {
+                ...state,
+                alarmPanel: true,
+                sosSituation: action.payload.sosSituation,
+                sosList: temp
+            };
+        case INIT_SOS_SITUACTION:
+            return {
+                ...state,
+                alarmPanel: state.alarmPanel ? !state.alarmPanel : state.alarmPanel,
+                sosSituation: false,
+                sosList: []
+            };
+        case CLOSED_ALARM_PANEL:
+            return {
+                ...state,
+                alarmPanel: false,
+            }
+        case TOGGLE_CAMERA_REPOSITION:
+            return {
+                ...state,
+                repositionAction: !state.repositionAction
+            }
+        default:
+            return state;
+
+    }
 }

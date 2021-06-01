@@ -81,7 +81,11 @@ const HomeContainer = () => {
 
   const setRatePanelHandler = () => {
     // setPanelOpen(!ratePanelOpen)
-    dispatch(setRatePanel());
+    if (currentUrl === 'monitor') {
+      dispatch(setRatePanel());
+    } else {
+      return;
+    }
   };
   const setOpenAlarmModal = () => {
     dispatch(closeAlarmPanel());
