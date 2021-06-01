@@ -241,18 +241,18 @@ const DigContainer = () => {
   };
 
   const isFirstDigLog = () => {
+    // 초기값 판단
     let _data = data.filter((el) => el.local_index === formData.local_index);
-    _data = _data.find(
-      (el) =>
-        moment(el.record_date).unix() === moment(formData.record_date).unix()
-    );
+    let firstData = _data.sort(date_descending)[0];
 
     let result = false;
-    if (_data) {
-      if (_data.dig_seq < 5) {
-        return (result = true);
-      }
+    if (
+      moment(firstData.record_date).unix() ===
+      moment(formData.record_date).unix()
+    ) {
+      result = true;
     }
+
     return result;
   };
 
