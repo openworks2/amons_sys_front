@@ -360,6 +360,7 @@ const WorkerTable = ({
   const dispatch = useDispatch();
 
   const onSearch = (e) => {
+    document.getElementById("scroll0").scrollIntoView();
     const _data = data;
     let tempData = [];
     if (!searchValue) {

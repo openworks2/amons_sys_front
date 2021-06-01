@@ -204,6 +204,7 @@ const AlarmContainer = () => {
 
   // 데이터 조회 (post )
   const onSearch = (local_index, startDate, endDate) => {
+    document.getElementById("scroll0").scrollIntoView();
     let _local_index = local_index;
     let _startDate = startDate;
     let _endDate = endDate;
