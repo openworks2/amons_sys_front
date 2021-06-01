@@ -568,6 +568,9 @@ const LogVehicleTable = ({
     let day = moment.duration(_bigTime.diff(_smallTime)).days();
     let hour = moment.duration(_bigTime.diff(_smallTime)).hours();
     let minute = moment.duration(_bigTime.diff(_smallTime)).minutes();
+    let milliseconds = moment
+      .duration(_bigTime.diff(_smallTime))
+      .asMilliseconds();
 
     let str = "";
 
@@ -579,6 +582,9 @@ const LogVehicleTable = ({
     }
     if (minute > 0) {
       str += `${minute}분`;
+    }
+    if (day <= 0 && hour <= 0 && minute <= 0 && milliseconds > 0) {
+      str += `1분 미만`;
     }
 
     return str;
