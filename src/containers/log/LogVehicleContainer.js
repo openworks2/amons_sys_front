@@ -214,6 +214,7 @@ const LogVehicleContainer = () => {
 
   // 데이터 조회 (post )
   const onSearch = (startDate, endDate) => {
+    document.getElementById("scroll0").scrollIntoView();
     let _local_index = categorieValue;
 
     const searchCondition = {

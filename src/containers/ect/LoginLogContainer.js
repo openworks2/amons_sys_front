@@ -119,6 +119,7 @@ const LoginLogContainer = () => {
 
   // 데이터 조회 (post )
   const onSearch = (startDate, endDate) => {
+    document.getElementById("scroll0").scrollIntoView();
     const searchCondition = {
       from_date: moment(startDate).format("YYYY-MM-DD HH:mm:ss"),
       to_date: moment(endDate).format("YYYY-MM-DD HH:mm:ss"),

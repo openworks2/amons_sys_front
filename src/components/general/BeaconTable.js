@@ -312,6 +312,7 @@ const BeaconTable = ({
   };
 
   const onSearch = (e) => {
+    document.getElementById("scroll0").scrollIntoView();
     // 조건 usedtype
     const _data = data;
     // 작업자용
