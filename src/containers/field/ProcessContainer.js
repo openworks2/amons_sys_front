@@ -353,7 +353,12 @@ const ProcessContainer = () => {
       });
     }
     setCategorieValue(value);
-    setFormData({ ...formData, local_index: value, pcs_state: 0 });
+    setFormData({
+      ...formData,
+      local_index: value,
+      pcs_state: 0,
+      prev_pcs_state: findItem ? findItem.pcs_state : 1,
+    });
   };
 
   const onPageChange = (e, { activePage }) => {
@@ -435,7 +440,7 @@ const ProcessContainer = () => {
   //     );
   //     setLocalInfo(_localInfo);
   //   }
-  // }, [activeHandler]);
+  // }, []);
 
   // [ Create Area ] ======================================================================
 
@@ -456,7 +461,6 @@ const ProcessContainer = () => {
       let newProcess = {
         ...formData,
       };
-
       if (!formData.prev_pcs_state) {
         newProcess = {
           ...formData,
@@ -464,8 +468,17 @@ const ProcessContainer = () => {
         };
       }
       dispatch(postProcess(newProcess));
-      initActiveRow();
-      initFormData();
+      // initActiveRow();
+      // initFormData();
+      setFormData({
+        ...formData,
+        pcs_seq: null,
+        created_date: null,
+        modified_date: null,
+        prev_pcs_state: newProcess.pcs_state,
+        pcs_state: null,
+        pcs_description: "",
+      });
     }
   };
 
