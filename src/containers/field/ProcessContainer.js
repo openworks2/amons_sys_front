@@ -411,10 +411,20 @@ const ProcessContainer = () => {
     initFormData();
     const _target = target.value;
     setCategorieValue(_target);
+
+    let findItem = data
+      .filter((el) => el.local_index === _target)
+      .sort(dateDescending)[0];
+
     setFormData({
       ...formData,
       local_index: _target,
       pcs_state: 0,
+      prev_pcs_state: findItem
+        ? findItem.pcs_state
+          ? findItem.pcs_state
+          : 1
+        : 1,
       pcs_description: "",
     });
   };
