@@ -131,16 +131,16 @@ export const WebVideoCtrl = (function (e) {
 					def.resolve();
 
 				}).fail(function () {
-					var ele = document.createElement('iframe');
-					ele.src = 'CustomerWebSocketServer://' + port;
-					ele.style.display = 'none';
-					document.body.appendChild(ele);
-					// port++;
-					port =23481;
-					ele.translate = false;
-					setTimeout(function () {
-						reconnect(port, def);
-					}, 2000);
+					// var ele = document.createElement('iframe');
+					// ele.src = 'CustomerWebSocketServer://' + port;
+					// ele.style.display = 'none';
+					// document.body.appendChild(ele);
+					// // port++;
+					// port =23481;
+					// ele.translate = false;
+					// setTimeout(function () {
+					// 	reconnect(port, def);
+					// }, 2000);
 				})
 			}
 		})
