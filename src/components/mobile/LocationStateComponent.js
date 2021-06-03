@@ -1,73 +1,13 @@
-import { faRouter } from '@fortawesome/pro-duotone-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { faDigging, faUserHardHat, faTruck } from "@fortawesome/pro-duotone-svg-icons";
 import CircularProgressBar from './CircularProgressBar';
 import { Link } from 'react-router-dom';
-
-const LocationInfoCompo = styled.div`
+const LocationStateCompo = styled.div`
     width: 100%;
     height: 100%;
-    .contents-header {
-        width: 100%;
-        height: calc(100% - 362px);
-        display: flex;
-        min-height: 100px;
-        .header-left {
-            width: 66.2%;
-            height: 100%;
-            font-family: NotoSansKR-Medium;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding-left: 9.45vw;
-            p{
-                margin: 0;
-                &.location-name{
-                    font-size: 6.7vw;
-                    color: #2E2E2E;
-                }
-                &.planDrill-text{
-                    font-size: 12px;
-                    color:#7C7C7C;
-                }
-            }
-        }
-        .header-right {
-            width: 34.8%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            .nms-devcie-list{
-                display: flex;
-                .nms-status{
-                    width: 26px;
-                    text-align: center;
-                    margin-right: 13px;
-                    &.on{
-                        color:#036EB8;
-                    }
-                    &.off{
-                        color:#7C7C7C;
-                    }
-                    p{
-                        margin: 0;
-                        &.scanner-icon{
-                            font-size: 22px;
-                        }
-                        &.scanner-text{
-                            font-family: NanumSquareB;
-                            font-size: 12px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    .contents-body {
-        width: 100%;
+    width: 100%;
         height: 362px;
         padding-left: 20px;
         padding-right: 20px;
@@ -124,9 +64,15 @@ const LocationInfoCompo = styled.div`
                 height: 100px;
                 display: flex;
                 margin-bottom: 10px;
+                a{
+                    width: 48.5%;
+                    &:nth-child(2){
+                        margin-left: 10px;
+                    }
+                }
                 .ble-panel{
                     height:100%;
-                    width: 50%;
+                    width: 100%;
                     background-color: #2E2E2E;
                     border-radius: 4px;
                     position: relative;
@@ -137,7 +83,6 @@ const LocationInfoCompo = styled.div`
                     padding-bottom: 3.1%;
                     font-family: NotoSansKR-Regular;
                     &.worker{
-                        margin-right: 10px;
                         color: #A9660F;
                     }
                     &.vehicle{
@@ -225,48 +170,11 @@ const LocationInfoCompo = styled.div`
                 }
             }
         }
-    }
-
-    @media screen and (min-width:600px) {
-        p.location-name{
-            font-size: 40px !important;
-        }
-        .contents-title{
-            font-size: 25px !important;
-        }
-        .contents-box{
-            justify-content: flex-end !important;
-            padding-right: 4%;
-        }
-        .ble-panel{
-            padding-right: 17.3px !important;
-            padding-bottom: 17.3px !important;
-        }
-        .panel-icon{
-            font-size: 20px !important;
-        }
-    }
-    @media screen and (min-height:652px) and (max-height:773px) {
-        .contents-header{
-            height: calc(100% - 353px) !important;
-        }
-
-    }
-    @media screen and (min-height:774px) {
-        .contents-header{
-            height: calc(100% - 349px) !important;
-        }
-    }
 `;
 
-const LocationInfo = ({ localData, scanner, beacon }) => {
-    console.log('localData--->', localData);
-    console.log('scanner--->', scanner);
-    console.log('data--->', beacon);
-    const { local_name, plan_length, dig_length, local_process } = localData;
-    const { data:scannerData } = scanner;
-    const { data:beaconData } = beacon;
+const LocationStateComponent = ({ localData, locationAct, locBleList }) => {
 
+    const { local_index, local_name, plan_length, dig_length, local_process } = localData;
 
     const [process, setProcess] = useState({
         1: { name: '미착공', color: '#286e41' },
@@ -290,17 +198,27 @@ const LocationInfo = ({ localData, scanner, beacon }) => {
         color: '',
     })
 
+    const [bleCount, setCount] = useState({
+        worker: 0,
+        vehicle: 0
+    });
+
     useEffect(() => {
         setState({
             name: process[local_process].name,
             color: process[local_process].color,
         });
-    }, [localData]);
+    }, []);
+
+    useEffect(() => {
+        setBleCountBinding();
+        console.log('ble-->', locBleList)
+    }, [locBleList]);
 
     // 천단위 콤마
     const numberOfDigitsHandler = (number) => {
         return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-    }
+    };
 
     const percentCalc = (dig, plan) => {
         const percent = (dig / plan) * 100;
@@ -309,80 +227,76 @@ const LocationInfo = ({ localData, scanner, beacon }) => {
     };
 
 
+    const setBleCountBinding = () => {
+        let wkCount = 0;
+        let vhCount = 0;
+        locBleList.map(item => {
+            if (item.wk_id) {
+                wkCount += 1;
+            }
+            else if (item.vh_id) {
+                vhCount += 1;
+            }
+            return item;
+        });
+        setCount({
+            worker: wkCount,
+            vehicle: vhCount
+        })
+
+    }
 
     return (
-        <LocationInfoCompo>
-            <div className="contents-header">
-                <div className="header-left">
-                    <div className="location-info">
-                        <p className="location-name">{local_name}</p>
-                        <p className="planDrill-text">{`계획연장 ${numberOfDigitsHandler(plan_length)}m`}</p>
+        <LocationStateCompo className="location-state-component">
+            <div className="contents-component">
+                <div className="contents-top">
+                    <div className="contents-title">공정현황</div>
+                    <div className="contents-box">
+                        <div className="process-value" style={{ backgroundColor: currentState.color }}>{currentState.name}</div>
                     </div>
                 </div>
-                <div className="header-right">
-                    <div className="nms-devcie-list">
-                        <div className="nms-status on">
-                            <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
-                            <p className="scanner-text">ON</p>
-                        </div>
-                        <div className="nms-status off">
-                            <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
-                            <p className="scanner-text">OFF</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="contents-body">
-                <div className="contents-component">
-                    <div className="contents-top">
-                        <div className="contents-title">공정현황</div>
-                        <div className="contents-box">
-                            <div className="process-value" style={{ backgroundColor: currentState.color }}>{currentState.name}</div>
-                        </div>
-                    </div>
-                    <div className="contents-center">
+                <div className="contents-center">
+                    <Link to={`/amons/access/worker/${local_index}`}>
                         <div className="ble-panel worker">
                             <span className="panel-icon"><FontAwesomeIcon icon={faUserHardHat} /></span>
-                            <Link to="/amons/m.home/worker">
-                                <div className="panel-value-box">
-                                    <div className="ble-value">{`04명`}</div>
-                                    <div className="ble-name">막장인원</div>
-                                </div>
-                            </Link>
+                            <div className="panel-value-box">
+                                <div className="ble-value">{`${bleCount.worker < 10 ? `0${bleCount.worker}` : bleCount.worker}명`}</div>
+                                <div className="ble-name">막장인원</div>
+                            </div>
                         </div>
+                    </Link>
+                    <Link to={`/amons/access/vehicle/${local_index}`}>
                         <div className="ble-panel vehicle">
                             <span className="panel-icon"><FontAwesomeIcon icon={faTruck} /></span>
-                            <Link to="/amons/m.home/vehicle">
-                                <div className="panel-value-box">
-                                    <div className="ble-value">{`04대`}</div>
-                                    <div className="ble-name">막장차량</div>
-                                </div>
-                            </Link>
+                            <div className="panel-value-box">
+                                <div className="ble-value">{`${bleCount.vehicle < 10 ? `0${bleCount.vehicle}` : bleCount.vehicle}대`}</div>
+                                <div className="ble-name">막장차량</div>
+                            </div>
                         </div>
+                    </Link>
+                </div>
+                <div className="contents-bottom">
+                    <span className="panel-icon"><FontAwesomeIcon icon={faDigging} /></span>
+                    <div className="left-area">
+                        <CircularProgressBar
+                            sqSize={128}
+                            percentage={percentCalc(dig_length, plan_length)}
+                            strokeWidth={8}
+                        />
                     </div>
-                    <div className="contents-bottom">
-                        <span className="panel-icon"><FontAwesomeIcon icon={faDigging} /></span>
-                        <div className="left-area">
-                            <CircularProgressBar
-                                sqSize={128}
-                                percentage={percentCalc(dig_length, plan_length)}
-                                strokeWidth={8}
-                            />
-                        </div>
-                        <div className="right-area">
-                            <div className="title-box">굴진현황</div>
-                            <div className="contents-box">
-                                <div className="value-box">
-                                    <p className="plan-langth-value">{`${numberOfDigitsHandler(plan_length)}m`}</p>
-                                    <p className="dig-langth-value">{`${numberOfDigitsHandler(dig_length)}m`}</p>
-                                </div>
+                    <div className="right-area">
+                        <div className="title-box">굴진현황</div>
+                        <div className="contents-box">
+                            <div className="value-box">
+                                <p className="plan-langth-value">{`${numberOfDigitsHandler(plan_length)}m`}</p>
+                                <p className="dig-langth-value">{`${numberOfDigitsHandler(dig_length)}m`}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </LocationInfoCompo>
+        </LocationStateCompo>
     );
 };
 
-export default LocationInfo;
+export default React.memo(LocationStateComponent);

@@ -8,9 +8,9 @@ import HomePage from "./pages/HomePage";
 import MonitorPage from "./pages/MonitorPage";
 
 import { createGlobalStyle } from "styled-components";
-import MobilePage from "./pages/M_HomePage";
 import M_HomePage from "./pages/M_HomePage";
 import M_LoginPage from "./pages/M_LoginPage";
+import AccessPage from "./pages/AccessPage";
 
 const GlobalStyle = createGlobalStyle`
 .ui.modal.transition.visible.active.confirm-modal{
@@ -70,6 +70,7 @@ function App() {
       <Route path="/amons/home" component={HomePage} />
       <Route path="/amons/m.signin" component={M_LoginPage} />
       <Route path="/amons/m.home" component={M_HomePage} />
+      <Route path="/amons/access/:type/:index" component={AccessPage} />
       {/* <Route path="/amons/monitor" component={MonitorPage} /> */}
     </>
   );

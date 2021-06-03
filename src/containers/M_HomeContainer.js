@@ -14,7 +14,6 @@ import MonitorContainer from './mobile/MonitorContainer';
 const HomeCompo = styled.div`
     width: 100%;
     height: 100%;
-    background-color: rebeccapurple;
     min-width: 331px;
     .header-component{
         width: 100%;
@@ -94,6 +93,7 @@ const M_HomeContainer = () => {
             </div>
             <div className="contents-component">
                 <Route path="/amons/m.home" component={MonitorContainer} exact />
+                <Route path="/amons/m.home/:index" component={MonitorContainer} />
                 <Route path="/amons/m.home/blelog" component={BleLogContainer} />
                 <Route path="/amons/m.home/alarmlog" component={AlarmLogContainer} />
                 <Route path="/amons/m.home/drill" component={DrillComponent} />

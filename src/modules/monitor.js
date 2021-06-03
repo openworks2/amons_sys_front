@@ -62,7 +62,6 @@ export const receiveMonitor = () => dispatch => {
         socket.on('getData', (data) => {
             console.log('data-->', data)
             const filterAlarm = data.beacon.filter(item => item.bc_emergency === 2 && item.wk_id && item);
-            console.log('filterAlarm-->>>>>>>>', filterAlarm)
             if (filterAlarm.length > 0) {
                 const payload = {
                     sosSituation: true,
