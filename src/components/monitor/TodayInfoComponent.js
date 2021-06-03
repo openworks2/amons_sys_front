@@ -195,10 +195,12 @@ const TodayInfoComponent = ({ weather }) => {
   });
 
   const onWeatherBinding = (items = []) => {
+    if(items.length===0 || !items){
+      return;
+    }
     items.map((item) => {
       const _category = item.category;
       const _fcstValue = Number(item.fcstValue);
-
       switch (_category) {
         case "PTY":
           if (_fcstValue !== 0) {
