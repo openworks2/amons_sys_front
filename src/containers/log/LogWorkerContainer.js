@@ -72,11 +72,11 @@ const LogWorkerContainer = () => {
 
   useEffect(() => {
     const searchCondition = {
-      local_index: "",
-      from_date: "",
-      to_date: "",
-      name: "",
-      co_index: "",
+      local_index: null,
+      from_date: null,
+      to_date: null,
+      name: null,
+      co_index: null,
     };
     dispatch(postBleWorkersSearch(searchCondition));
   }, []);
