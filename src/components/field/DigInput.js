@@ -412,7 +412,6 @@ const DigInput = ({
   onChangeDate,
   getDigAmountPercent,
   categorieValue,
-  firstDate,
 }) => {
   const [modifyOpen, setModifyOpen] = useState(false);
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
@@ -427,6 +426,7 @@ const DigInput = ({
   } = formData;
 
   const today = new Date();
+  const firstDate = new Date(data.find((el) => el.dig_seq === 1).record_date);
 
   const years = _.range(2019, getYear(new Date()) + 3, 1); // 수정
   const months = [
@@ -445,7 +445,11 @@ const DigInput = ({
   ];
 
   const [startDate, setStartDate] = useState(
-    new Date(data.find((el) => el.dig_seq === 1).record_date)
+    new Date(
+      firstDate.getFullYear(),
+      firstDate.getMonth(),
+      firstDate.getDate() + 1
+    )
   );
 
   const [endDate, setEndDate] = useState(

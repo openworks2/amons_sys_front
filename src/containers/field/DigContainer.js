@@ -193,18 +193,17 @@ const DigContainer = () => {
   // 미터 콤마 더하기 빼기
   const addComma = (num) => {
     let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      _num = _num.substring(0, 4);
-    }
-    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
+    let parts = _num.split(".");
+    return (
+      parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      (parts[1] || parts[1] === "" ? "." + parts[1] : "")
+    );
   };
 
   const minusComma = (num) => {
     if (num) {
       let _num = num.toString();
-      _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+      _num = _num.replace(/[^0-9|^\.]/g, ""); // 입력값이 숫자가 아니면 공백
       _num = _num.replace(/,/g, ""); // , 값 공백처리
       if (_num.length > 4) {
         // 4자리 초과시 뒷자리 자르기
@@ -394,18 +393,30 @@ const DigContainer = () => {
     });
 
     if (name === "dig_length") {
-      let _value = value.toString();
-      _value = _value.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-      _value = _value.replace(/,/g, ""); // , 값 공백처리
-      if (_value.length > 4) {
-        _value = _value.substring(0, 4);
+      let _value = value.replace(/[^0-9|^\.]/g, "");
+      console.log("_value", _value);
+      let parts = _value.toString().split(".");
+      console.log("parts", parts);
+      let result = "";
+      if (parts[1] && parts[1].length > 2) {
+        parts[1] = parts[1].toString().substring(0, 2);
       }
-      setFormData({
-        ...formData,
-        dig_length: addComma(
-          _value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        ),
-      });
+      if (parts.length > 2) {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        console.log("result", result);
+
+        setFormData({
+          ...formData,
+          dig_length: result,
+        });
+      } else {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        console.log("result", result);
+        setFormData({
+          ...formData,
+          dig_length: result,
+        });
+      }
     }
   };
 
@@ -470,34 +481,43 @@ const DigContainer = () => {
 
   const createHandler = (e) => {
     e.preventDefault();
-    let _dig_length = minusComma(formData.dig_length);
-    let isAlreadyTyped_result = isAlreadyTyped();
-    let isFirstDigLog_result = isFirstDigLog();
 
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 3000);
-    } else if (_dig_length > localInfo.plan_length) {
-      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 3000);
-    } else if (isFirstDigLog_result) {
-      setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
-      setTimeout(() => {
-        setDigLengthError(undefined);
-      }, 3000);
-    } else if (isAlreadyTyped_result) {
-      //result = true (수정)
-      let condition = getConditionOnPut();
-      conditionalPut(condition, parseInt(_dig_length));
     } else {
-      //result = false (등록)
-      let condition = getConditionOnPost();
-      conditionalPost(condition, parseInt(_dig_length));
+      let _dig_length = parseFloat(formData.dig_length);
+      let isAlreadyTyped_result = isAlreadyTyped();
+      let isFirstDigLog_result = isFirstDigLog();
+
+      console.log(typeof _dig_length, "--->", _dig_length);
+      console.log(typeof localInfo.plan_length, "--->", localInfo.plan_length);
+
+      if (_dig_length > parseFloat(localInfo.plan_length)) {
+        setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
+        setTimeout(() => {
+          setLocalError(undefined);
+        }, 3000);
+      }
+      //  else if (isFirstDigLog_result) {
+      //   setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
+      //   setTimeout(() => {
+      //     setDigLengthError(undefined);
+      //   }, 3000);
+      // }
+      else if (isAlreadyTyped_result) {
+        //result = true (수정)
+        let condition = getConditionOnPut();
+        conditionalPut(condition, parseFloat(_dig_length));
+      } else {
+        //result = false (등록)
+        let condition = getConditionOnPost();
+        conditionalPost(condition, parseFloat(_dig_length));
+      }
     }
+
     initActiveRow();
     initFormData(categorieValue);
   };
@@ -507,26 +527,30 @@ const DigContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    let _dig_length = minusComma(formData.dig_length);
-
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 3000);
-    } else if (_dig_length > localInfo.plan_length) {
-      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 3000);
-    } else if (!isFirstDigLog) {
-      setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
-      setTimeout(() => {
-        setDigLengthError(undefined);
-      }, 3000);
     } else {
-      let condition = getConditionOnPut();
-      conditionalPut(condition, parseInt(_dig_length));
+      let _dig_length = parseFloat(formData.dig_length);
+
+      if (_dig_length > parseFloat(localInfo.plan_length)) {
+        setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
+        setTimeout(() => {
+          setLocalError(undefined);
+        }, 3000);
+      }
+      //  else if (!isFirstDigLog) {
+      //   setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
+      //   setTimeout(() => {
+      //     setDigLengthError(undefined);
+      //   }, 3000);
+      // }
+      else {
+        let condition = getConditionOnPut();
+        conditionalPut(condition, parseFloat(_dig_length));
+      }
     }
   };
 
