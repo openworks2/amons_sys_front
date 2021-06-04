@@ -347,18 +347,33 @@ const DigContainer = () => {
 
     if (minTestResult) {
       if (maxTestResult) {
-        let _dig_seq = data.find(
-          (el) =>
-            moment(el.record_date).unix() ===
-            moment(formData.record_date).unix()
-        ).dig_seq;
-        let newDig = {
-          ...formData,
-          dig_seq: _dig_seq,
-          modified_date: today,
-          dig_length: minusComma(_dig_length),
-        };
-        dispatch(putDig(_dig_seq, newDig));
+        if (formData.dig_seq) {
+          let newDig = {
+            ...formData,
+            modified_date: today,
+            dig_length: minusComma(_dig_length),
+          };
+          dispatch(putDig(formData.dig_seq, newDig));
+        } else {
+          let _data = data.filter(
+            (el) => el.local_index === formData.local_index
+          );
+          let _dig_seq = _data.find(
+            (el) =>
+              moment(el.record_date)
+                .format("YYYY-MM-DD")
+                .toString()
+                .substring(0, 10) ===
+              formData.record_date.toString().substring(0, 10)
+          ).dig_seq;
+          let newDig = {
+            ...formData,
+            dig_seq: _dig_seq,
+            modified_date: today,
+            dig_length: minusComma(_dig_length),
+          };
+          dispatch(putDig(_dig_seq, newDig));
+        }
       } else {
         setDigLengthError(
           `*이후 굴진량(${condition.maxLength}m)보다 작아야합니다.`
@@ -397,8 +412,8 @@ const DigContainer = () => {
       if (parts[0] && parts[0].length > 4) {
         parts[0] = parts[0].toString().substring(0, 4);
       }
-      if (parts[1] && parts[1].length > 2) {
-        parts[1] = parts[1].toString().substring(0, 2);
+      if (parts[1] && parts[1].length > 1) {
+        parts[1] = parts[1].toString().substring(0, 1);
       }
       if (parts.length > 2) {
         result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");

@@ -316,8 +316,8 @@ const ScannerContainer = () => {
       if (parts[0] && parts[0].length > 4) {
         parts[0] = parts[0].toString().substring(0, 4);
       }
-      if (parts[1] && parts[1].length > 2) {
-        parts[1] = parts[1].toString().substring(0, 2);
+      if (parts[1] && parts[1].length > 1) {
+        parts[1] = parts[1].toString().substring(0, 1);
       }
       if (parts.length > 2) {
         result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
