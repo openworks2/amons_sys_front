@@ -127,13 +127,13 @@ const DigContainer = () => {
 
   // [ Init Area ] ======================================================================
 
-  const initSeq = () => {
-    setFormData({
-      ...formData,
-      dig_seq: null,
-      record_date: moment(formData.record_date).format("YYYY-MM-DD"),
-    });
-  };
+  // const initSeq = () => {
+  //   setFormData({
+  //     ...formData,
+  //     dig_seq: null,
+  //     record_date: moment(formData.record_date).format("YYYY-MM-DD"),
+  //   });
+  // };
 
   const initActiveRow = () => {
     setSelectedRow({
@@ -205,10 +205,6 @@ const DigContainer = () => {
       let _num = num.toString();
       _num = _num.replace(/[^0-9|^\.]/g, ""); // 입력값이 숫자가 아니면 공백
       _num = _num.replace(/,/g, ""); // , 값 공백처리
-      if (_num.length > 4) {
-        // 4자리 초과시 뒷자리 자르기
-        _num = _num.substring(0, 4);
-      }
       return _num;
     }
   };
@@ -316,7 +312,7 @@ const DigContainer = () => {
       if (maxTestResult) {
         let newDig = {
           ...formData,
-          dig_length: _dig_length,
+          dig_length: minusComma(_dig_length),
         };
         dispatch(postDig(newDig));
       } else {
@@ -360,7 +356,7 @@ const DigContainer = () => {
           ...formData,
           dig_seq: _dig_seq,
           modified_date: today,
-          dig_length: _dig_length,
+          dig_length: minusComma(_dig_length),
         };
         dispatch(putDig(_dig_seq, newDig));
       } else {
@@ -394,24 +390,26 @@ const DigContainer = () => {
 
     if (name === "dig_length") {
       let _value = value.replace(/[^0-9|^\.]/g, "");
-      console.log("_value", _value);
+      // console.log("_value", _value);
       let parts = _value.toString().split(".");
-      console.log("parts", parts);
+      // console.log("parts", parts);
       let result = "";
+      if (parts[0] && parts[0].length > 4) {
+        parts[0] = parts[0].toString().substring(0, 4);
+      }
       if (parts[1] && parts[1].length > 2) {
         parts[1] = parts[1].toString().substring(0, 2);
       }
       if (parts.length > 2) {
         result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
-        console.log("result", result);
-
+        // console.log("result", result);
         setFormData({
           ...formData,
           dig_length: result,
         });
       } else {
         result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
-        console.log("result", result);
+        // console.log("result", result);
         setFormData({
           ...formData,
           dig_length: result,
@@ -492,8 +490,8 @@ const DigContainer = () => {
       let isAlreadyTyped_result = isAlreadyTyped();
       let isFirstDigLog_result = isFirstDigLog();
 
-      console.log(typeof _dig_length, "--->", _dig_length);
-      console.log(typeof localInfo.plan_length, "--->", localInfo.plan_length);
+      // console.log(typeof _dig_length, "--->", _dig_length);
+      // console.log(typeof localInfo.plan_length, "--->", localInfo.plan_length);
 
       if (_dig_length > parseFloat(localInfo.plan_length)) {
         setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");

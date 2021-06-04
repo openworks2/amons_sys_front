@@ -569,7 +569,7 @@ const DigInput = ({
               name="dig_length"
               placeholder={"누적 굴진량을 입력해주세요."}
               required
-              value={dig_length && dig_length}
+              value={dig_length && addComma(dig_length)}
               onChange={onChange}
               error={digLengthError}
               disabled={
