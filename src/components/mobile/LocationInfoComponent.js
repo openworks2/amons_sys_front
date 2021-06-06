@@ -103,14 +103,28 @@ const LocationInfoCompo = styled.div`
     }
 `;
 
-const LocationInfoComponent = ({ localData }) => {
-    console.log('localData--->', localData);
+const LocationInfoComponent = ({ localData, LocScannerList }) => {
+    console.log('LocationInfoComponent--->', LocScannerList);
+    console.log('LocationInfoComponent--->', localData);
 
     const { local_name, plan_length, dig_length, local_process } = localData;
 
+    const scannerListRender = useCallback((items = []) => {
+        console.log('scannerListRender-->',items);
+        const _Component = items.map((item) => {
+            return <div key={item.scn_id}>
+                <div className={item.scn_result === 'open' ? "nms-status on" : "nms-status off"}>
+                    <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
+                    <p className="scanner-text">{item.scn_result === 'open' ? 'ON' : 'OFF'}</p>
+                </div>
+            </div>
+        })
+        return _Component
+    },[LocScannerList]);
+
     useEffect(() => {
 
-    }, []);
+    }, [LocScannerList]);
 
 
     // 천단위 콤마
@@ -129,14 +143,17 @@ const LocationInfoComponent = ({ localData }) => {
                 </div>
                 <div className="header-right">
                     <div className="nms-devcie-list">
-                        <div className="nms-status on">
+                        {
+                            LocScannerList && scannerListRender(LocScannerList)
+                        }
+                        {/* <div className="nms-status on">
                             <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
                             <p className="scanner-text">ON</p>
                         </div>
                         <div className="nms-status off">
                             <p className="scanner-icon"><FontAwesomeIcon icon={faRouter} /></p>
                             <p className="scanner-text">OFF</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

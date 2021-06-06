@@ -89,6 +89,8 @@ const MonitorContainer = ({ match }) => {
     const [bleList, setBleList] = useState([]);
     const [locBleList, setLocBleList] = useState([]);
 
+    const [LocScannerList, setLocScannerList] = useState([]);
+
     const getDispatch = useCallback(async () => {
         dispatch(receiveMonitor());
         dispatch(getMonitor());
@@ -105,6 +107,7 @@ const MonitorContainer = ({ match }) => {
         if (beacon.data) {
             setBleList(beacon.data)
             setLocalBleList(locationAct.index);
+            setScannerList(locationAct.index)
         }
     }, [beacon.data]);
 
@@ -119,6 +122,7 @@ const MonitorContainer = ({ match }) => {
                     item: monitor.data.find(item => item.local_index === index ? item : null)
                 });
                 setLocalBleList(index);
+                setScannerList(index)
             } else {
                 setLocationAct({
                     index: monitor.data[0].local_index,
@@ -148,6 +152,16 @@ const MonitorContainer = ({ match }) => {
             setLocBleList(localBleList);
         }
     }
+    const setScannerList = (localIndex) =>{
+        if(scanner.data){
+            console.log('00.setScannerList--->',localIndex);
+            console.log('11.setScannerList--->',scanner.data);
+
+            const localScannerList = scanner.data.filter(item => item.local_index === localIndex ? item : null);
+            console.log('setScannerList--->',localScannerList);
+            setLocScannerList(localScannerList);
+        }
+    }
 
 
     const renderList = useCallback((items = []) => {
@@ -159,7 +173,7 @@ const MonitorContainer = ({ match }) => {
                     className={locationAct.index === item.local_index ? "loaction-item active" : "loaction-item"}
                 // onClick={(e) => onChangeLocation(e, item.local_index)}
                 >
-                    <Link to={`/amons/m.home/${item.local_index}`}>
+                    <Link to={`/amons/m.home/monitor/${item.local_index}`}>
                         <div className="location-name">
                             <div className="name-text">{item.local_name}</div>
                         </div>
@@ -189,7 +203,7 @@ const MonitorContainer = ({ match }) => {
                             locationAct.item &&
                             <LocationInfoComponent
                                 localData={locationAct.item}
-                                scanner={scanner}
+                                LocScannerList={LocScannerList}
                             />
                         }
                     </div>

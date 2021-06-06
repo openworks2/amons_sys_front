@@ -74,17 +74,17 @@ const Navigation = ({ navigation, onNavigation }) => {
         <NavigationCompo className="navigation-component">  
             <ul className="navigation-container">
                 <li
-                    className={navigation === "dashbord" ? "navi-list active" : "navi-list"}
+                    className={navigation === "monitor" ? "navi-list active" : "navi-list"}
                     id="navi-dashbord"
                     onClick={(e) => onNavigation(e, 'dashbord')}
                 >
-                    <Link to="/amons/m.home">
+                    <Link to="/amons/m.home/monitor">
                         <div className="contents-box">
                             <div className="contents-icon">
                                 <FontAwesomeIcon icon={faDesktop} />
                             </div>
                             <div className="contents-name">대시보드</div>
-                            <div className="tag">3</div>
+                            {/* <div className="tag">3</div> */}
                         </div>
                     </Link>
                 </li>
@@ -93,13 +93,13 @@ const Navigation = ({ navigation, onNavigation }) => {
                     id="navi-bleLog"
                     onClick={(e) => onNavigation(e, 'bleLog')}
                 >
-                    <Link to="/amons/m.home/blelog">
+                    <Link to="/amons/m.home/log/ble">
                         <div className="contents-box">
                             <div className="contents-icon">
                                 <FontAwesomeIcon icon={faCalendarAlt} />
                             </div>
                             <div className="contents-name">잔류이력</div>
-                            <div className="tag">88</div>
+                            {/* <div className="tag">88</div> */}
                         </div>
                     </Link>
                 </li>
@@ -108,7 +108,7 @@ const Navigation = ({ navigation, onNavigation }) => {
                     id="navi-alarmLog"
                     onClick={(e) => onNavigation(e, 'alarmLog')}
                 >
-                    <Link to="/amons/m.home/alarmlog">
+                    <Link to="/amons/m.home/log/alarm">
                         <div className="contents-box">
                             <div className="contents-icon">
                                 <FontAwesomeIcon icon={faHistory} />
@@ -123,7 +123,7 @@ const Navigation = ({ navigation, onNavigation }) => {
                     id="navi-drillSettig"
                     onClick={(e) => onNavigation(e, 'drillSettig')}
                 >
-                    <Link to="/amons/m.home/drill">
+                    <Link to="/amons/m.home/setting/drill">
                         <div className="contents-box">
                             <div className="contents-icon">
                                 <FontAwesomeIcon icon={faPen} />

@@ -172,7 +172,7 @@ const M_LoginContainer = () => {
         dispatch(loginAsync(reqData));
     }
     
-    if (storage.get("user")) return <Redirect to="/amons/m.home" />;
+    if (storage.get("user")) return <Redirect to="/amons/m.home/monitor" />;
 
     return (
         <LoginCompo className="mobile-loginCompo">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
 import styled from 'styled-components';
@@ -23,6 +23,14 @@ const HeaderCompo = styled.div`
             .site-name{
                 height: 53%;
                 color: #FFFFFF;
+                display: flex;
+                div#division-bar {
+                    height: 13px;
+                    border-left: 2px solid #fff;
+                    margin-left: 5px;
+                    margin-right: 5px;
+                    margin-top: 10px;
+                }
             }
             .tunnel-name{
                 height: 53%;
@@ -43,15 +51,43 @@ const HeaderCompo = styled.div`
     }
 `;
 
-const Header = ({ onLogout }) => {
+const Header = ({ onLogout, curruntPage }) => {
+
+    const onChangeHeader = useCallback((path) => {
+        if (path === 'ble') {
+            return <div className="title-box">
+                <div className="site-name">막장 잔류이력</div>
+            </div>
+        }
+        else if (path === 'alarm') {
+            return <div className="title-box">
+                <div className="site-name">비상알람 이력</div>
+            </div>
+        }
+        else if (path === 'drill') {
+            return <div className="title-box">
+                <div className="site-name">공정 <div id="division-bar"></div> 굴진 입력</div>
+            </div>
+        }
+        else {
+            return <div className="title-box">
+                <div className="site-name">함양-울산선 제4공구</div>
+                    &nbsp;
+                <div className="tunnel-name">신원3터널</div>
+            </div>
+        }
+    }, [curruntPage]);
+
+
     return (
         <HeaderCompo>
             <div className="system-title-container">
-                <div className="title-box">
+                {/* <div className="title-box">
                     <div className="site-name">함양-울산선 제4공구</div>
                         &nbsp;
                         <div className="tunnel-name">신원3터널</div>
-                </div>
+                </div> */}
+                {onChangeHeader(curruntPage)}
             </div>
             <div className="logout-btn">
                 <div className="logout-icon" onClick={onLogout}>

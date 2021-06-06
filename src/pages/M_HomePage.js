@@ -1,10 +1,10 @@
 import React from 'react';
 import HomeContainer from '../containers/M_HomeContainer';
 
-const M_HomePage = () => {
+const M_HomePage = ({ match, history }) => {
     return (
         <>
-            <HomeContainer/>
+            <HomeContainer match={match} history={history} />
         </>
     );
 };

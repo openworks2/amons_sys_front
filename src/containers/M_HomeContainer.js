@@ -36,7 +36,7 @@ const HomeCompo = styled.div`
 `;
 
 
-const M_HomeContainer = () => {
+const M_HomeContainer = ({ match, history }) => {
 
     const {
         data: user,
@@ -46,11 +46,12 @@ const M_HomeContainer = () => {
 
     const dispatch = useDispatch();
 
-    const [navigation, setNavigation] = useState('dashbord');
+    const [navigation, setNavigation] = useState(null);
 
     const onNavigation = (e, name) => {
         setNavigation(name);
     }
+
 
     const initialUserInfo = useCallback(async () => {
         const loginedInfo = storage.get("user"); // 로그인 정보를 로컬스코리지에서 가져오기
@@ -71,9 +72,37 @@ const M_HomeContainer = () => {
     useEffect(() => {
         console.log('login--->>', user)
         initialUserInfo();
-        if (user) return <Redirect to="/amons/m.home" />
-
+        if (user) return <Redirect to="/amons/m.home/monitor" />
     }, []);
+
+    const [curruntPage, setCurrentPage] = useState(null);
+
+    useEffect(() => {
+        console.log('match-->', match)
+        console.log('history-->', history)
+        console.log(history.location.pathname)
+        const pathName = history.location.pathname;
+        const splitPath = pathName.split('/');
+        const currentPath = splitPath[splitPath.length - 1];
+        setCurrentPage(currentPath);
+
+        if (currentPath === 'ble') {
+            setNavigation('bleLog')
+        }
+        else if (currentPath === 'alarm') {
+            setNavigation('alarmLog')
+
+        }
+        else if (currentPath === 'drill') {
+            setNavigation('drillSettig')
+
+        }
+        else {
+            setNavigation('monitor')
+        }
+
+    }, [match, history]);
+
 
     const onLogout = async () => {
         try {
@@ -89,17 +118,21 @@ const M_HomeContainer = () => {
     return (
         <HomeCompo className="home-component">
             <div className="header-component">
-                <Header onLogout={onLogout} />
+                <Header onLogout={onLogout} curruntPage={curruntPage} />
             </div>
             <div className="contents-component">
-                <Route path="/amons/m.home" component={MonitorContainer} exact />
-                <Route path="/amons/m.home/:index" component={MonitorContainer} />
-                <Route path="/amons/m.home/blelog" component={BleLogContainer} />
-                <Route path="/amons/m.home/alarmlog" component={AlarmLogContainer} />
-                <Route path="/amons/m.home/drill" component={DrillComponent} />
+                <Route path="/amons/m.home/monitor" component={MonitorContainer} exact />
+                <Route path="/amons/m.home/monitor/:index" component={MonitorContainer} />
+                <Route path="/amons/m.home/log/ble" component={BleLogContainer} />
+                <Route path="/amons/m.home/log/alarm" component={AlarmLogContainer} />
+                <Route path="/amons/m.home/setting/drill" component={DrillComponent} />
             </div>
             <div className="navigation">
-                <Navigation navigation={navigation} onNavigation={onNavigation} />
+                <Navigation
+                    navigation={navigation}
+                    onNavigation={onNavigation}
+                    curruntPage={curruntPage}
+                />
             </div>
         </HomeCompo>
     );
