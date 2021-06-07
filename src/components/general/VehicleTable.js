@@ -350,7 +350,7 @@ const VehicleTable = ({
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData
     .sort(function (a, b) {
-      return a.vh_name < b.vh_name ? -1 : a.vh_name > b.vh_name ? 1 : 0;
+      return a.vh_name < b.vh_name ? -1 : 1;
     })
     .slice(
       (activePage - 1) * itemsPerPage,

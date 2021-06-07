@@ -393,7 +393,7 @@ const WorkerTable = ({
   const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
   const viewItems = currentData
     .sort(function (a, b) {
-      return a.wk_name < b.wk_name ? -1 : a.wk_name > b.wk_name ? 1 : 0;
+      return a.wk_name < b.wk_name ? -1 : 1;
     })
     .slice(
       (activePage - 1) * itemsPerPage,
