@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faDigging, faUserHardHat, faTruck, faRouter, faGameConsoleHandheld } from "@fortawesome/pro-duotone-svg-icons"
+import { faDigging, faUserHardHat, faTruck, faRouter } from "@fortawesome/pro-duotone-svg-icons"
 
 
 const LocStatusCompo = styled.div`
@@ -199,7 +199,6 @@ const LocStatusComponent = ({ processCode, planLength, digLength, bleData, scann
     }
 
     useEffect(() => {
-        console.log(scanner)
     }, [scanner]);
 
 

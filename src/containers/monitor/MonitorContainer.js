@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import AlarmModal from '../../components/monitor/AlarmModal';
 import CctvComponent from '../../components/monitor/CctvComponent';
 import DrillMapComponent from '../../components/monitor/DrillMapComponent';
 import ExpandMapComponent from '../../components/monitor/ExpandMapComponent';
@@ -224,7 +223,6 @@ const MonitorContainer = () => {
     document.addEventListener('mousedown', targetClick)
 
     window.onkeydown = (e) => {
-        console.log(e)
         // if(e.key==='F11'){
         //     setFullScreen(true);
         //     e.preventDefault();
