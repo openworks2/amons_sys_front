@@ -180,6 +180,7 @@ const TodayInfoCompo = styled.div`
 `;
 
 const TodayInfoComponent = ({ weather }) => {
+
   const [weatherItem, setWeather] = useState({
     category: "",
     code: undefined,
@@ -194,81 +195,66 @@ const TodayInfoComponent = ({ weather }) => {
     VVV: 0, //풍속(남북성분
   });
 
-  const onWeatherBinding = (items = []) => {
-    if(items.length===0 || !items){
+  const onWeatherBinding = (items = {}) => {
+    if (items.length === 0 || !items) {
       return;
     }
-    items.map((item) => {
-      const _category = item.category;
-      const _fcstValue = Number(item.fcstValue);
-      switch (_category) {
-        case "PTY":
-          if (_fcstValue !== 0) {
-            setPTYNSKY(item);
+
+    for (let key in items) {
+      console.log(items[key]);
+      console.log(key);
+      const _category = key;
+      const _fcstValue = items[key];
+      if (_category === 'SKY' || _category === 'PTY') {
+        let icon = null;
+        let name = "";
+        if (items['PTY'] === 0) {
+          switch (_fcstValue) {
+            case 1:
+              icon = faSun;
+              name = "맑음";
+              break;
+            case 3:
+              icon = faCloudSun;
+              name = "구름많음";
+              break;
+            case 4:
+              icon = faCloud;
+              name = "흐림";
+              break;
+            default:
+              break;
           }
-          break;
-        case "SKY":
-          setPTYNSKY(item);
-          break;
-        case "T3H":
-          setTemperature(_fcstValue);
-          break;
-        case "REH":
-          setHumidity(_fcstValue);
-          break;
-        case "VEC":
-          let position = "";
-          if (_fcstValue >= 0 && _fcstValue < 90) {
-            position = "북동풍";
-          } else if (_fcstValue >= 90 && _fcstValue < 180) {
-            position = "남동풍";
-          } else if (_fcstValue >= 180 && _fcstValue < 270) {
-            position = "남서풍";
-          } else if (_fcstValue >= 270 && _fcstValue < 360) {
-            position = "북서풍";
+        } else {
+          switch (_fcstValue) {
+            case 1:
+              icon = faCloudShowers;
+              name = "비";
+              break;
+            case 2:
+              icon = faCloudSleet;
+              name = "비/눈";
+              break;
+            case 3:
+              icon = faCloudSnow;
+              name = "눈";
+              break;
+            case 4:
+              icon = faCloudShowersHeavy;
+              name = "소나기";
+              break;
+            case 5:
+              icon = faCloudRain;
+              name = "빗방울";
+              break;
+            case 7:
+              icon = faCloudSnow;
+              name = "눈날림";
+              break;
+            default:
+              break;
           }
-          setDirection(position);
-          break;
-        case "UUU":
-          setSpeed({
-            ...windSpeed,
-            UUU: _fcstValue,
-          });
-          break;
-        case "VVV":
-          setSpeed({
-            ...windSpeed,
-            VVV: _fcstValue,
-          });
-          break;
-        default:
-          return item;
-      }
-    });
-  };
-  const setPTYNSKY = (item) => {
-    const _category = item.category;
-    const _fcstValue = Number(item.fcstValue);
-    let icon = null;
-    let name = "";
-    if (_category === "SKY") {
-      switch (_fcstValue) {
-        case 1:
-          icon = faSun;
-          name = "맑음";
-          break;
-        case 3:
-          icon = faCloudSun;
-          name = "구름많음";
-          break;
-        case 4:
-          icon = faCloud;
-          name = "흐림";
-          break;
-        default:
-          break;
-      }
-      if (weatherItem.code === 0) {
+        }
         setWeather({
           category: _category,
           code: _fcstValue,
@@ -276,50 +262,47 @@ const TodayInfoComponent = ({ weather }) => {
           name,
         });
       }
-    } else {
-      switch (_fcstValue) {
-        case 1:
-          icon = faCloudShowers;
-          name = "비";
-          break;
-        case 2:
-          icon = faCloudSleet;
-          name = "비/눈";
-          break;
-        case 3:
-          icon = faCloudSnow;
-          name = "눈";
-          break;
-        case 4:
-          icon = faCloudShowersHeavy;
-          name = "소나기";
-          break;
-        case 5:
-          icon = faCloudRain;
-          name = "빗방울";
-          break;
-        case 7:
-          icon = faCloudSnow;
-          name = "눈날림";
-          break;
-        default:
-          break;
+      else if (key === 'T3H') {
+        setTemperature(_fcstValue);
       }
-      setWeather({
-        category: _category,
-        code: _fcstValue,
-        icon,
-        name,
-      });
+      else if (key === 'REH') {
+        setHumidity(_fcstValue);
+      }
+      else if (key === 'VEC') {
+        let position = "";
+        if (_fcstValue >= 0 && _fcstValue < 90) {
+          position = "북동풍";
+        } else if (_fcstValue >= 90 && _fcstValue < 180) {
+          position = "남동풍";
+        } else if (_fcstValue >= 180 && _fcstValue < 270) {
+          position = "남서풍";
+        } else if (_fcstValue >= 270 && _fcstValue < 360) {
+          position = "북서풍";
+        }
+        setDirection(position);
+      }
+      else if (key === 'UUU') {
+        setSpeed({
+          ...windSpeed,
+          UUU: _fcstValue,
+        });
+      }
+      else if (key === 'VVV') {
+        setSpeed({
+          ...windSpeed,
+          VVV: _fcstValue,
+        });
+      }
     }
   };
-
+  
   useEffect(() => {
     analog.init("canvas_clock");
     digital.init("digitalClock");
-    if (weather.data.body) {
-      onWeatherBinding(weather.data.body);
+    if (weather) {
+      onWeatherBinding(weather);
     }
+
   }, [weather]);
 
   return (
