@@ -208,6 +208,7 @@ const LoginContainer = () => {
                 placeholder="아이디"
                 value={loginForm.userId}
                 onChange={onChange}
+                autocomplete="new-password"
                 required
               />
               <Form.Field
@@ -217,6 +218,7 @@ const LoginContainer = () => {
                 placeholder="비밀번호"
                 value={loginForm.password}
                 onChange={onChange}
+                autocomplete="new-password"
                 required
               />
               <Button type="submit" id="login-btn">

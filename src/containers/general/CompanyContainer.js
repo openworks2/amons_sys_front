@@ -66,6 +66,20 @@ const ErrMsg = styled.div`
 // ***********************************Logic Area*****************************************
 
 const CompanyContatiner = () => {
+  // 목차
+  // [ Redux Area ]
+  // [ State Area ]
+  // [ Init Area ]
+  // [ Common Logic Area ]
+  // [ Change Area ]
+  // [ Click Area ]
+  // [ Search Categorie Area ]
+  // [ Create Area ]
+  // [ Update Area ]
+  // [ Delete Area ]
+  // [ Components Area ]
+
+  // [ Redux Area ] ===============================================================
   const { data, loading, error } = useSelector(
     (state) => state.companies.companies
   );
@@ -81,6 +95,19 @@ const CompanyContatiner = () => {
     dispatch(getWorkers());
   }, []);
 
+  // [ State Area ] ===============================================================
+
+  const [pageInfo, setPageInfo] = useState({
+    activePage: 1, // 현재 페이지
+    itemsPerPage: 14, // 페이지 당 item 수
+  });
+
+  const [selectedRow, setSelectedRow] = useState({
+    selectedId: null,
+    selectedItem: undefined,
+    clickedIndex: null,
+  });
+
   const [formData, setFormData] = useState({
     co_id: undefined,
     co_index: undefined,
@@ -88,20 +115,13 @@ const CompanyContatiner = () => {
     co_sectors: "",
     description: "",
   });
-  // 클릭된 row의 데이터
-  const [selectedRow, setSelectedRow] = useState({
-    selectedId: null,
-    selectedItem: undefined,
-    clickedIndex: null,
-  });
-  // form onChange Event
-  const onChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    // 입력값 state 에 저장
-    setFormData({
-      ...formData,
-      [name]: value,
+
+  // [ Init Area ] ======================================================================
+
+  const initPage = () => {
+    setPageInfo({
+      activePage: 1,
+      itemsPerPage: 14,
     });
   };
 
@@ -122,7 +142,31 @@ const CompanyContatiner = () => {
     });
   };
 
-  // table row 클릭 핸들러
+  // [ Change Area ] ======================================================================
+
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const onPageChange = (e, { activePage }) => {
+    e.preventDefault();
+    let _activePage = Math.ceil(activePage);
+    const PreState = pageInfo;
+    setPageInfo({
+      ...PreState,
+      activePage: _activePage,
+    });
+    initActiveRow();
+    initFormData();
+  };
+
+  // [ Click Area] ======================================================================
+
   const activeHandler = (e, index, selectedId) => {
     if (index === selectedRow.clickedIndex) {
       initActiveRow();
@@ -147,33 +191,8 @@ const CompanyContatiner = () => {
     }
   };
 
-  // 페이지 네이션
-  const [pageInfo, setPageInfo] = useState({
-    activePage: 1, // 현재 페이지
-    itemsPerPage: 14, // 페이지 당 item 수
-  });
+  // [ Create Area ] ======================================================================
 
-  const initPage = () => {
-    setPageInfo({
-      activePage: 1,
-      itemsPerPage: 14,
-    });
-  };
-
-  const onPageChange = (e, { activePage }) => {
-    e.preventDefault();
-    let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
-      ...PreState,
-      activePage: _activePage,
-    });
-    // 활성화된 로우 초기화
-    initActiveRow();
-    initFormData();
-  };
-
-  // CREATE
   const createHandler = (e) => {
     e.preventDefault();
     let newCompany = { ...formData };
@@ -182,17 +201,23 @@ const CompanyContatiner = () => {
     initFormData();
   };
 
-  // UPDATE
+  // [ Update Area ] ======================================================================
+
   const updateHandler = (e) => {
     let modifyItem = { ...formData };
     dispatch(putCompany(modifyItem.co_index, modifyItem));
   };
+
+  // [ Delete Area ] ======================================================================
 
   const deleteHandler = (e, co_id) => {
     dispatch(deleteCompany(co_id));
     initActiveRow();
     initFormData();
   };
+
+  // [ Components Area ]===================================================================
+
   if (error) {
     return (
       <ErrMsg className="err-msg">
