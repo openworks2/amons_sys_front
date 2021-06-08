@@ -324,6 +324,7 @@ const AccountInput = ({
             required
             value={acc_name && acc_name}
             onChange={onChange}
+            autocomplete="name"
           />
           <div className="id-area">
             {duplicationCheck ? (
@@ -373,6 +374,7 @@ const AccountInput = ({
             required
             value={acc_password && acc_password}
             onChange={onChange}
+            autocomplete="new-password"
           />
           {passwordError && <InputError>{passwordError}</InputError>}
           <Form.Input
@@ -385,6 +387,7 @@ const AccountInput = ({
             required
             value={acc_password_check && acc_password_check}
             onChange={onChange}
+            autocomplete="new-password"
           />
           {passwordCheckError && <InputError>{passwordCheckError}</InputError>}
           <div className="phone-area">
