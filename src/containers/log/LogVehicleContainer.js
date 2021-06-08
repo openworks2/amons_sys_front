@@ -71,17 +71,6 @@ const LogVehicleContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const searchCondition = {
-      local_index: null,
-      from_date: null,
-      to_date: null,
-      name: null,
-      co_index: null,
-    };
-    dispatch(postBleVehiclesSearch(searchCondition));
-  }, []);
-
-  useEffect(() => {
     dispatch(getLocals());
     dispatch(getCompanies());
   }, [dispatch]);
@@ -230,16 +219,22 @@ const LogVehicleContainer = () => {
 
   useEffect(() => {
     // 카테고리 바뀔 때 마다 데이터 전환.
-    const _data = data;
-    setCurrentData(_data);
-    let tempData = [];
+    try {
+      if (data) {
+        const _data = data;
+        setCurrentData(_data);
+        let tempData = [];
 
-    if (categorieValue === null) {
-      setCurrentData(_data);
-    } else {
-      tempData = _data.filter((item) => item.local_index === categorieValue);
-      setCurrentData(tempData);
-    }
+        if (categorieValue === null) {
+          setCurrentData(_data);
+        } else {
+          tempData = _data.filter(
+            (item) => item.local_index === categorieValue
+          );
+          setCurrentData(tempData);
+        }
+      }
+    } catch (e) {}
   }, [data, categorieValue]);
 
   if (error) {
@@ -254,7 +249,7 @@ const LogVehicleContainer = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="table-box">
-          {currentData && localData && (
+          {localData && (
             <LogVehicleTable
               className="logvehicle-table-box"
               pageInfo={pageInfo}
