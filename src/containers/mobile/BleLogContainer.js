@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import moment from 'moment';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import styled from 'styled-components';
+import SearchForm from '../../components/mobile/bleLog/SearchForm';
+import TypeSelect from '../../components/mobile/bleLog/TypeSelect';
+import { createPromiseThunkOfPost } from '../../lib/asyncUtils';
+import { getCompanies } from '../../modules/companies';
+import { getLocals } from '../../modules/locals';
 
 const BleLogCompo = styled.div`
     width: 100%;
     height: 100%;
-    background-color: gray;
     .top-component{
         width: 100%;
         height: 48px;
@@ -17,143 +23,148 @@ const BleLogCompo = styled.div`
     }
 `;
 
-const TypeSelectCompo = styled.div`
-    width: 100%;
-    height: 100%;
-    background-color: inherit;
-    .type-list-box{
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        display: flex;
-        color: #FFFFFF;
-        font-size: 16px;
-        font-family: NotoSansKR-Medium;
-        font-weight: 100;
-        li.type-item{
-            width: 50%;
-            height: 100%;
-            &.active{
-                .active-bar{
-                    background-color: #F1592A;
-                }
-            }
-            .item-name{
-                width: 100%;
-                height: 44px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .active-bar{
-                width: 100%;
-                height: 4px;
-            }
-        }
+const initialState = {
+    formData: {
+        local_index: null,
+        from_date: moment().format('YYYY-MM-DD'),
+        to_date: moment().add(1, 'days').format('YYYY-MM-DD'),
+        name: null,
+        co_index: null
     }
-`;
-
-const SearchFormCompo = styled.div`
-    width: 100%;
-    height: 100%;
-    background-color: aquamarine;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
-    padding-top:26px;
-    .search-form {
-        width: 100%;
-        height: 100%;
-        font-family: NotoSansKR-Medium;
-        font-weight: 100;
-        .field>div{
-                height: 46px;
-            }
-        .field{
-            margin-bottom: 17px;
-            .ui.selection.dropdown {
-                padding-top: 15px;
-            }
-        }
-        .field-group{
-            margin-bottom: 17px;
-            .field{
-                width: 47.4%;
-            }
-            #tilde{
-                margin-right: 3px;
-                margin-left: 3px;
-                display: flex;
-                justify-content: center;
-                padding-top: 33px;
-            }
-        }
-        .submit-button{
-            position: fixed;
-            bottom: 74px;
-            width: calc(100% - 43px);
-            button {
-                width: 100%;
-                height: 55px;
-                background-color: #F1592A;
-                font-family: NotoSansKR-Medium;
-                font-weight: 100;
-                color: #fff;
-                font-size: 18px;
-            }
-        }
-    }
-`;
+}
 
 const BleLogContainer = () => {
 
+    const { locals, companies } = useSelector(state => {
+        return {
+            locals: state.locals.locals,
+            companies: state.companies.companies
+        }
+    });
+
+    const [formData, setFormData] = useState(initialState.formData);
+
+    const dispatch = useDispatch();
+
     const [selectType, setSelectType] = useState('worker');
+
+    const [options, setOptions] = useState({
+        locals: [],
+        companies: []
+    })
+
+    useEffect(() => {
+        getDispatch();
+    }, []);
+
+    useEffect(() => {
+        if (locals.data) {
+            onSetOptions(locals.data, 'locals');
+        }
+    }, [locals.data]);
+
+    useEffect(() => {
+        if (companies.data) {
+            onSetOptions(companies.data, 'companies');
+        }
+    }, [companies.data]);
+
+
+    const getDispatch = () => {
+        dispatch(getLocals());
+        dispatch(getCompanies());
+
+    };
 
     const onSelectType = (type) => {
         setSelectType(type)
+        setFormData(initialState.formData)
     }
-    const options = [
-        { key: 'm', text: 'Male', value: 'male' },
-        { key: 'f', text: 'Female', value: 'female' },
-        { key: 'o', text: 'Other', value: 'other' },
-    ]
+
+    const onSetOptions = useCallback((items = [], key) => {
+        if (items.length === 0) {
+            return;
+        }
+        let tempArr = [
+            { key: 0, text: '전체', value: null },
+        ];
+        if (key === 'locals') {
+            items.map(item => {
+                const optionObj = {};
+                optionObj.key = item.local_index;
+                optionObj.text = item.local_name;
+                optionObj.value = item.local_index;
+
+                tempArr.push(optionObj)
+                return item;
+            });
+        }
+        else if (key === 'companies') {
+            items.map(item => {
+                const optionObj = {};
+                optionObj.key = item.co_index;
+                optionObj.text = item.co_name;
+                optionObj.value = item.co_index;
+
+                tempArr.push(optionObj)
+                return item;
+            });
+        }
+        setOptions({
+            ...options,
+            [key]: tempArr
+        });
+    }, [options]);
+
+
+    const onChange = (e) => {
+        console.log(e.target)
+        const { name, value } = e.target;
+        console.log('name=>', name)
+        console.log('value=>', value)
+
+        setFormData({
+            ...formData,
+            [name]: value
+        })
+    }
+
+    const onSelectItem = (e, key, index) => {
+        setFormData({
+            ...formData,
+            [key]: index
+        })
+    }
+
+    const onChangeDate = (key, value) => {
+        console.log('key=>', key)
+        console.log('value=>', value)
+        setFormData({
+            ...formData,
+            [key]: value
+        })
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData)
+    }
 
     return (
         <BleLogCompo className="blelog-container">
             <div className="top-component">
-                <TypeSelectCompo className="type-select-component">
-                    <ul className="type-list-box">
-                        <li
-                            className={`type-item ${selectType === 'worker' && 'active'}`}
-                            onClick={() => onSelectType('worker')}
-                        >
-                            <div className="item-name">작업자</div>
-                            <div className="active-bar"></div>
-                        </li>
-                        <li
-                            className={`type-item ${selectType === 'vehicle' && 'active'}`}
-                            onClick={() => onSelectType('vehicle')}
-                        >
-                            <div className="item-name">차량</div>
-                            <div className="active-bar"></div>
-                        </li>
-                    </ul>
-                </TypeSelectCompo>
+                <TypeSelect selectType={selectType} onSelectType={onSelectType} />
             </div>
             <div className="bottom-component">
-                <SearchFormCompo className="search-form-component">
-                    <Form className="search-form">
-                        <Form.Group className="field-group">
-                            <Form.Input className="fromDate-input" fluid label='시작일' icon='users' iconPosition='left' />
-                            <div id="tilde">~</div>
-                            <Form.Input className="toDate-input" fluid label='종료일' icon='users' iconPosition='left' />
-                        </Form.Group>
-                        <Form.Select className="location-select" options={options} label='노선' placeholder='Gender' />
-                        <Form.Select className="company-select" options={options} label='소속사' placeholder='Gender' />
-                        <Form.Input className="name-input" fluid label='작업자' />
-                        <Form.Button className="submit-button">조회</Form.Button>
-                    </Form>
-                </SearchFormCompo>
+                <SearchForm
+                    selectType={selectType}
+                    formData={formData}
+                    options={options}
+                    onChange={onChange}
+                    onSelectItem={onSelectItem}
+                    onChangeDate={onChangeDate}
+                    onSubmit={onSubmit}
+                />
             </div>
         </BleLogCompo>
     );
