@@ -5,7 +5,6 @@ import "semantic-ui-css/semantic.min.css";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
-import MonitorPage from "./pages/MonitorPage";
 
 import { createGlobalStyle } from "styled-components";
 import M_HomePage from "./pages/M_HomePage";
@@ -71,7 +70,7 @@ function App() {
       <Route path="/amons/m.signin" component={M_LoginPage} />
       <Route path="/amons/m.home" component={M_HomePage} />
       <Route path="/amons/access/:type/:index" component={AccessPage} />
-      {/* <Route path="/amons/monitor" component={MonitorPage} /> */}
+
     </>
   );
 }

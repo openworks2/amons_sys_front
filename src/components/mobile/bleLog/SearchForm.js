@@ -31,6 +31,14 @@ const SearchFormCompo = styled.div`
                     font-size: 20px;
                 }
             }
+            &.error.fromDate-input::after {
+                content: '**종료일은 시작일 이후 일자만 조회 가능합니다.';
+                font-size: 12px;
+                position: absolute;
+                left: 34px;
+                color: #ff0000;
+                top: 70px;
+            }
             
         }
         .field-group{
@@ -93,12 +101,14 @@ const SearchForm = ({
     onChangeDate,
     onSubmit
 }) => {
+    const { from_date, to_date, local_index, co_index, name } = formData
 
     const [openCalendar, setOpen] = useState({
         key: null,   // 'fromDate' or 'toDate'
         open: false
     });
-    // const [date, setDate] = useState(null)
+
+    const [btnEnable, setBtnEnable] = useState(false);
 
     useEffect(() => {
 
@@ -117,14 +127,21 @@ const SearchForm = ({
             open: false
         })
     }
+    useEffect(() => {
+        const isDate = (moment(to_date).isBefore(from_date) && true);
+        setBtnEnable(isDate)
+    }, [formData]);
 
-    const handleSelect = (_date) => {
-        console.log(_date); // native Date object     
+    console.log('searchForm-->', formData);
+
+    const handleSelect = (date) => {
+        console.log(date); // native Date object     
         console.log(openCalendar.key); // native Date object     
         // setDate(_date);
-        const _formatDate = moment(_date).format('YYYY-MM-DD')
+        const _date = moment(date).format('YYYY-MM-DD')
         // console.log(_formatDate)
-        onChangeDate(openCalendar.key, _formatDate);
+
+        onChangeDate(openCalendar.key, _date);
         onCalendarClose()
     }
 
@@ -141,7 +158,10 @@ const SearchForm = ({
                         color='black'
                         iconPosition='left'
                         onClick={() => onCalendarOpen('from_date')}
-                        value={formData.from_date ? formData.from_date : ''}
+                        value={from_date ? from_date : ''}
+                        // error={(moment(to_date).isBefore(from_date) && true)}
+                        error={btnEnable}
+                        readOnly
                     />
                     <div id="tilde">~</div>
                     <Form.Input
@@ -152,7 +172,10 @@ const SearchForm = ({
                         icon='calendar alternate outline'
                         iconPosition='left'
                         onClick={() => onCalendarOpen('to_date')}
-                        value={formData.to_date ? formData.to_date : ''}
+                        value={to_date ? to_date : ''}
+                        // error={(moment(to_date).isBefore(from_date) && true)}
+                        error={btnEnable}
+                        readOnly
                     />
                 </Form.Group>
                 <Form.Select
@@ -163,7 +186,7 @@ const SearchForm = ({
                     placeholder='전체'
                     icon={'caret down'}
                     onChange={(e, { value }) => onSelectItem(e, 'local_index', value)}
-                    value={formData.local_index ? formData.local_index : ''}
+                    value={local_index ? local_index : ''}
                 />
                 <Form.Select
                     className="company-select"
@@ -173,7 +196,7 @@ const SearchForm = ({
                     placeholder='전체'
                     icon={'caret down'}
                     onChange={(e, { value }) => onSelectItem(e, 'co_index', value)}
-                    value={formData.co_index ? formData.co_index : ''}
+                    value={co_index ? co_index : ''}
                 />
                 <Form.Input
                     className="name-input"
@@ -181,9 +204,12 @@ const SearchForm = ({
                     label={selectType === 'worker' ? '작업자' : '차량종류'}
                     name='name'
                     onChange={onChange}
-                    value={formData.name ? formData.name : ''}
+                    value={name ? name : ''}
                 />
-                <Form.Button className="submit-button">조회</Form.Button>
+                <Form.Button
+                    className="submit-button"
+                    disabled={btnEnable}
+                >조회</Form.Button>
             </Form>
             {openCalendar.open
                 && <CalendarComponent

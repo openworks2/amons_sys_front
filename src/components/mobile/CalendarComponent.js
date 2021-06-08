@@ -40,6 +40,7 @@ const CalendarComponent = ({ key, handleSelect }) => {
 
   const [date, setDate] = useState(null)
 
+  console.log('key-->', key)
 
   const onRangeChange = (ranges) => {
     console.log(ranges); // native Date object
@@ -50,11 +51,11 @@ const CalendarComponent = ({ key, handleSelect }) => {
     });
   }
 
-//   const handleSelect = (_date) => {
-//     console.log(_date); // native Date object     
-//     setDate(_date);
-//     onCalendarClose()
-//   }
+  //   const handleSelect = (_date) => {
+  //     console.log(_date); // native Date object     
+  //     setDate(_date);
+  //     onCalendarClose()
+  //   }
 
   return (
     <CalendarCompo>
@@ -71,6 +72,8 @@ const CalendarComponent = ({ key, handleSelect }) => {
           className="calendar-wrapper"
           startDate={new Date()}
           // endDate={PropTypes.object}
+          minDate={new Date('2021-01-01')}
+          maxDate={new Date('2031-12-31')}
           date={date}
           onChange={handleSelect}
           locale={ko}

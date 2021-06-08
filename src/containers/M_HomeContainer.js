@@ -10,6 +10,7 @@ import AlarmLogContainer from './mobile/AlarmLogContainer';
 import BleLogContainer from './mobile/BleLogContainer';
 import DrillComponent from './mobile/DrillComponent';
 import MonitorContainer from './mobile/MonitorContainer';
+import SearchResultContainer from './mobile/SearchResultContainer';
 
 const HomeCompo = styled.div`
     width: 100%;
@@ -97,6 +98,9 @@ const M_HomeContainer = ({ match, history }) => {
             setNavigation('drillSettig')
 
         }
+        else if (currentPath === 'result') {
+            return;
+        }
         else {
             setNavigation('monitor')
         }
@@ -114,26 +118,38 @@ const M_HomeContainer = ({ match, history }) => {
         }
     }
 
+    const onGoBack = () => {
+        history.goBack();
+    }
+
 
     return (
         <HomeCompo className="home-component">
             <div className="header-component">
-                <Header onLogout={onLogout} curruntPage={curruntPage} />
+                <Header
+                    onLogout={onLogout}
+                    curruntPage={curruntPage}
+                    onGoBack={onGoBack}
+                />
             </div>
             <div className="contents-component">
                 <Route path="/amons/m.home/monitor" component={MonitorContainer} exact />
                 <Route path="/amons/m.home/monitor/:index" component={MonitorContainer} />
-                <Route path="/amons/m.home/log/ble" component={BleLogContainer} />
+                <Route path="/amons/m.home/log/ble" component={BleLogContainer} exact />
+                <Route path="/amons/m.home/log/ble/:type/result" component={SearchResultContainer} />
                 <Route path="/amons/m.home/log/alarm" component={AlarmLogContainer} />
                 <Route path="/amons/m.home/setting/drill" component={DrillComponent} />
             </div>
-            <div className="navigation">
-                <Navigation
-                    navigation={navigation}
-                    onNavigation={onNavigation}
-                    curruntPage={curruntPage}
-                />
-            </div>
+            {
+                curruntPage === 'result' ||
+                <div className="navigation">
+                    <Navigation
+                        navigation={navigation}
+                        onNavigation={onNavigation}
+                        curruntPage={curruntPage}
+                    />
+                </div>
+            }
         </HomeCompo>
     );
 };

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
+import { faArrowLeft, faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
 import styled from 'styled-components';
 
 const HeaderCompo = styled.div`
@@ -24,6 +24,7 @@ const HeaderCompo = styled.div`
                 height: 53%;
                 color: #FFFFFF;
                 display: flex;
+                align-items: center;
                 div#division-bar {
                     height: 13px;
                     border-left: 2px solid #fff;
@@ -31,6 +32,10 @@ const HeaderCompo = styled.div`
                     margin-right: 5px;
                     margin-top: 10px;
                 }
+            }
+            .icon-box {
+                color: #fff;
+                margin-right: 10px;
             }
             .tunnel-name{
                 height: 53%;
@@ -51,7 +56,7 @@ const HeaderCompo = styled.div`
     }
 `;
 
-const Header = ({ onLogout, curruntPage }) => {
+const Header = ({ onLogout, curruntPage, onGoBack }) => {
 
     const onChangeHeader = useCallback((path) => {
         if (path === 'ble') {
@@ -67,6 +72,12 @@ const Header = ({ onLogout, curruntPage }) => {
         else if (path === 'drill') {
             return <div className="title-box">
                 <div className="site-name">공정 <div id="division-bar"></div> 굴진 입력</div>
+            </div>
+        }
+        else if (path === 'result') {
+            return <div className="title-box">
+                <div className="icon-box" onClick={onGoBack}><FontAwesomeIcon icon={faArrowLeft} /></div>
+                <div className="site-name">조회결과</div>
             </div>
         }
         else {
@@ -89,11 +100,14 @@ const Header = ({ onLogout, curruntPage }) => {
                 </div> */}
                 {onChangeHeader(curruntPage)}
             </div>
-            <div className="logout-btn">
-                <div className="logout-icon" onClick={onLogout}>
-                    <FontAwesomeIcon icon={faSignOutAlt} />
+            {
+                curruntPage === 'result' ||
+                <div className="logout-btn">
+                    <div className="logout-icon" onClick={onLogout}>
+                        <FontAwesomeIcon icon={faSignOutAlt} />
+                    </div>
                 </div>
-            </div>
+            }
         </HeaderCompo>
     );
 };
