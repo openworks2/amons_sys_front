@@ -341,7 +341,7 @@ const MonitorContainer = () => {
                         <div className="top-panel">
                             {
                                 weather.data &&
-                                <TodayInfoComponent weather={weather} />
+                                <TodayInfoComponent weather={environment.data && environment.data[0]} />
                             }
                         </div>
                         <div className="cctv-panel">

@@ -129,23 +129,20 @@ const CctvContainer = () => {
 
   const addComma = (num) => {
     let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      _num = _num.substring(0, 4);
-    }
-    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
+    let parts = _num.split(".");
+    return (
+      parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      (parts[1] || parts[1] === "" ? "." + parts[1] : "")
+    );
   };
 
   const minusComma = (num) => {
-    let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      // 4자리 초과시 뒷자리 자르기
-      _num = _num.substring(0, 4);
+    if (num) {
+      let _num = num.toString();
+      _num = _num.replace(/[^0-9|^\.]/g, ""); // 입력값이 숫자가 아니면 공백
+      _num = _num.replace(/,/g, ""); // , 값 공백처리
+      return _num;
     }
-    return _num;
   };
 
   // form onChange Event
@@ -157,6 +154,35 @@ const CctvContainer = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === "cctv_pos_x") {
+      let _value = value.replace(/[^0-9|^\.]/g, "");
+      // console.log("_value", _value);
+      let parts = _value.toString().split(".");
+      // console.log("parts", parts);
+      let result = "";
+      if (parts[0] && parts[0].length > 4) {
+        parts[0] = parts[0].toString().substring(0, 4);
+      }
+      if (parts[1] && parts[1].length > 1) {
+        parts[1] = parts[1].toString().substring(0, 1);
+      }
+      if (parts.length > 2) {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        // console.log("result", result);
+        setFormData({
+          ...formData,
+          cctv_pos_x: result,
+        });
+      } else {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        // console.log("result", result);
+        setFormData({
+          ...formData,
+          cctv_pos_x: result,
+        });
+      }
+    }
   };
 
   // form onSelectChant Event
@@ -267,7 +293,7 @@ const CctvContainer = () => {
   const createHandler = (e) => {
     e.preventDefault();
 
-    let _cctv_pos_x = minusComma(formData.cctv_pos_x);
+    let _cctv_pos_x = parseFloat(minusComma(formData.cctv_pos_x));
 
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
@@ -289,7 +315,7 @@ const CctvContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    let _cctv_pos_x = minusComma(formData.cctv_pos_x);
+    let _cctv_pos_x = parseFloat(minusComma(formData.cctv_pos_x));
 
     if (!formData.local_index) {
       setLocalError({

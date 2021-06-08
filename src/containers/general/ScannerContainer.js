@@ -232,23 +232,20 @@ const ScannerContainer = () => {
   // 미터 콤마 더하기 빼기
   const addComma = (num) => {
     let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      _num = _num.substring(0, 4);
-    }
-    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
+    let parts = _num.split(".");
+    return (
+      parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      (parts[1] || parts[1] === "" ? "." + parts[1] : "")
+    );
   };
 
   const minusComma = (num) => {
-    let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      // 4자리 초과시 뒷자리 자르기
-      _num = _num.substring(0, 4);
+    if (num) {
+      let _num = num.toString();
+      _num = _num.replace(/[^0-9|^\.]/g, ""); // 입력값이 숫자가 아니면 공백
+      _num = _num.replace(/,/g, ""); // , 값 공백처리
+      return _num;
     }
-    return _num;
   };
 
   // 그룹 2자리 제한
@@ -309,6 +306,36 @@ const ScannerContainer = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === "scn_pos_x") {
+      let _value = value.replace(/[^0-9|^\.]/g, "");
+      // console.log("_value", _value);
+      let parts = _value.toString().split(".");
+      // console.log("parts", parts);
+      let result = "";
+      if (parts[0] && parts[0].length > 4) {
+        parts[0] = parts[0].toString().substring(0, 4);
+      }
+      if (parts[1] && parts[1].length > 1) {
+        parts[1] = parts[1].toString().substring(0, 1);
+      }
+      if (parts.length > 2) {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        // console.log("result", result);
+
+        setFormData({
+          ...formData,
+          scn_pos_x: result,
+        });
+      } else {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        // console.log("result", result);
+        setFormData({
+          ...formData,
+          scn_pos_x: result,
+        });
+      }
+    }
   };
 
   const onSelectChange = (e, seletedValue) => {
@@ -438,7 +465,7 @@ const ScannerContainer = () => {
     e.preventDefault();
     let _scn_address = formData.scn_address.replace(/\:/g, "").toUpperCase();
     _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
-    let _scn_pos_x = minusComma(formData.scn_pos_x);
+    let _scn_pos_x = parseFloat(minusComma(formData.scn_pos_x));
     let _scn_group = formData.scn_group.substring(0, 2); // 입력된 글자수 맞추기
 
     if (_scn_address.length !== 12) {
@@ -477,7 +504,7 @@ const ScannerContainer = () => {
 
     let _scn_address = formData.scn_address.replace(/\:/g, "").toUpperCase();
     _scn_address = _scn_address.substring(0, 12); // 입력된 글자수 10자리 맞추기
-    let _scn_pos_x = minusComma(formData.scn_pos_x);
+    let _scn_pos_x = parseFloat(minusComma(formData.scn_pos_x));
     let _scn_group = formData.scn_group.substring(0, 2); // 입력된 글자수 맞추기
 
     if (_scn_address.length !== 12) {

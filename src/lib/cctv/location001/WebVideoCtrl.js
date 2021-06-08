@@ -147,7 +147,8 @@ export const WebVideoCtrl = (function (e) {
 	}
 
 	var reconnect = function (port, def) {
-		if (port > 23482) {
+
+		if (port > 23481) {
 			disConnect();
 			return def.reject();
 		}

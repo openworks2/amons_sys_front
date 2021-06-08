@@ -127,13 +127,13 @@ const DigContainer = () => {
 
   // [ Init Area ] ======================================================================
 
-  const initSeq = () => {
-    setFormData({
-      ...formData,
-      dig_seq: null,
-      record_date: moment(formData.record_date).format("YYYY-MM-DD"),
-    });
-  };
+  // const initSeq = () => {
+  //   setFormData({
+  //     ...formData,
+  //     dig_seq: null,
+  //     record_date: moment(formData.record_date).format("YYYY-MM-DD"),
+  //   });
+  // };
 
   const initActiveRow = () => {
     setSelectedRow({
@@ -193,23 +193,18 @@ const DigContainer = () => {
   // 미터 콤마 더하기 빼기
   const addComma = (num) => {
     let _num = num.toString();
-    _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-    _num = _num.replace(/,/g, ""); // , 값 공백처리
-    if (_num.length > 4) {
-      _num = _num.substring(0, 4);
-    }
-    return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 정규식을 이용해서 3자리 마다 , 추가
+    let parts = _num.split(".");
+    return (
+      parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      (parts[1] || parts[1] === "" ? "." + parts[1] : "")
+    );
   };
 
   const minusComma = (num) => {
     if (num) {
       let _num = num.toString();
-      _num = _num.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+      _num = _num.replace(/[^0-9|^\.]/g, ""); // 입력값이 숫자가 아니면 공백
       _num = _num.replace(/,/g, ""); // , 값 공백처리
-      if (_num.length > 4) {
-        // 4자리 초과시 뒷자리 자르기
-        _num = _num.substring(0, 4);
-      }
       return _num;
     }
   };
@@ -317,7 +312,7 @@ const DigContainer = () => {
       if (maxTestResult) {
         let newDig = {
           ...formData,
-          dig_length: _dig_length,
+          dig_length: minusComma(_dig_length),
         };
         dispatch(postDig(newDig));
       } else {
@@ -352,18 +347,33 @@ const DigContainer = () => {
 
     if (minTestResult) {
       if (maxTestResult) {
-        let _dig_seq = data.find(
-          (el) =>
-            moment(el.record_date).unix() ===
-            moment(formData.record_date).unix()
-        ).dig_seq;
-        let newDig = {
-          ...formData,
-          dig_seq: _dig_seq,
-          modified_date: today,
-          dig_length: _dig_length,
-        };
-        dispatch(putDig(_dig_seq, newDig));
+        if (formData.dig_seq) {
+          let newDig = {
+            ...formData,
+            modified_date: today,
+            dig_length: minusComma(_dig_length),
+          };
+          dispatch(putDig(formData.dig_seq, newDig));
+        } else {
+          let _data = data.filter(
+            (el) => el.local_index === formData.local_index
+          );
+          let _dig_seq = _data.find(
+            (el) =>
+              moment(el.record_date)
+                .format("YYYY-MM-DD")
+                .toString()
+                .substring(0, 10) ===
+              formData.record_date.toString().substring(0, 10)
+          ).dig_seq;
+          let newDig = {
+            ...formData,
+            dig_seq: _dig_seq,
+            modified_date: today,
+            dig_length: minusComma(_dig_length),
+          };
+          dispatch(putDig(_dig_seq, newDig));
+        }
       } else {
         setDigLengthError(
           `*이후 굴진량(${condition.maxLength}m)보다 작아야합니다.`
@@ -394,18 +404,32 @@ const DigContainer = () => {
     });
 
     if (name === "dig_length") {
-      let _value = value.toString();
-      _value = _value.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
-      _value = _value.replace(/,/g, ""); // , 값 공백처리
-      if (_value.length > 4) {
-        _value = _value.substring(0, 4);
+      let _value = value.replace(/[^0-9|^\.]/g, "");
+      // console.log("_value", _value);
+      let parts = _value.toString().split(".");
+      // console.log("parts", parts);
+      let result = "";
+      if (parts[0] && parts[0].length > 4) {
+        parts[0] = parts[0].toString().substring(0, 4);
       }
-      setFormData({
-        ...formData,
-        dig_length: addComma(
-          _value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        ),
-      });
+      if (parts[1] && parts[1].length > 1) {
+        parts[1] = parts[1].toString().substring(0, 1);
+      }
+      if (parts.length > 2) {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        // console.log("result", result);
+        setFormData({
+          ...formData,
+          dig_length: result,
+        });
+      } else {
+        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+        // console.log("result", result);
+        setFormData({
+          ...formData,
+          dig_length: result,
+        });
+      }
     }
   };
 
@@ -470,34 +494,43 @@ const DigContainer = () => {
 
   const createHandler = (e) => {
     e.preventDefault();
-    let _dig_length = minusComma(formData.dig_length);
-    let isAlreadyTyped_result = isAlreadyTyped();
-    let isFirstDigLog_result = isFirstDigLog();
 
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 3000);
-    } else if (_dig_length > localInfo.plan_length) {
-      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 3000);
-    } else if (isFirstDigLog_result) {
-      setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
-      setTimeout(() => {
-        setDigLengthError(undefined);
-      }, 3000);
-    } else if (isAlreadyTyped_result) {
-      //result = true (수정)
-      let condition = getConditionOnPut();
-      conditionalPut(condition, parseInt(_dig_length));
     } else {
-      //result = false (등록)
-      let condition = getConditionOnPost();
-      conditionalPost(condition, parseInt(_dig_length));
+      let _dig_length = parseFloat(formData.dig_length);
+      let isAlreadyTyped_result = isAlreadyTyped();
+      let isFirstDigLog_result = isFirstDigLog();
+
+      // console.log(typeof _dig_length, "--->", _dig_length);
+      // console.log(typeof localInfo.plan_length, "--->", localInfo.plan_length);
+
+      if (_dig_length > parseFloat(localInfo.plan_length)) {
+        setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
+        setTimeout(() => {
+          setLocalError(undefined);
+        }, 3000);
+      }
+      //  else if (isFirstDigLog_result) {
+      //   setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
+      //   setTimeout(() => {
+      //     setDigLengthError(undefined);
+      //   }, 3000);
+      // }
+      else if (isAlreadyTyped_result) {
+        //result = true (수정)
+        let condition = getConditionOnPut();
+        conditionalPut(condition, parseFloat(_dig_length));
+      } else {
+        //result = false (등록)
+        let condition = getConditionOnPost();
+        conditionalPost(condition, parseFloat(_dig_length));
+      }
     }
+
     initActiveRow();
     initFormData(categorieValue);
   };
@@ -507,26 +540,30 @@ const DigContainer = () => {
   const updateHandler = (e) => {
     e.preventDefault();
 
-    let _dig_length = minusComma(formData.dig_length);
-
     if (!formData.local_index) {
       setLocalError("*노선을 선택해 주세요.");
       setTimeout(() => {
         setLocalError(undefined);
       }, 3000);
-    } else if (_dig_length > localInfo.plan_length) {
-      setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 3000);
-    } else if (!isFirstDigLog) {
-      setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
-      setTimeout(() => {
-        setDigLengthError(undefined);
-      }, 3000);
     } else {
-      let condition = getConditionOnPut();
-      conditionalPut(condition, parseInt(_dig_length));
+      let _dig_length = parseFloat(formData.dig_length);
+
+      if (_dig_length > parseFloat(localInfo.plan_length)) {
+        setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
+        setTimeout(() => {
+          setLocalError(undefined);
+        }, 3000);
+      }
+      //  else if (!isFirstDigLog) {
+      //   setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
+      //   setTimeout(() => {
+      //     setDigLengthError(undefined);
+      //   }, 3000);
+      // }
+      else {
+        let condition = getConditionOnPut();
+        conditionalPut(condition, parseFloat(_dig_length));
+      }
     }
   };
 

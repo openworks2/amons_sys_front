@@ -599,12 +599,16 @@ const LogWorkerTable = ({
     return str;
   };
 
+  let totalPages = 0;
+  let viewItems = [];
   // 테이블
-  const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData.slice(
-    (activePage - 1) * itemsPerPage,
-    (activePage - 1) * itemsPerPage + itemsPerPage
-  );
+  if (currentData) {
+    totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
+    viewItems = currentData.slice(
+      (activePage - 1) * itemsPerPage,
+      (activePage - 1) * itemsPerPage + itemsPerPage
+    );
+  }
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
