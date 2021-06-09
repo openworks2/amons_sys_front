@@ -108,7 +108,6 @@ const SearchResultContainer = ({ match, history }) => {
             item && <ResultItem type={type} item={item} />
         );
     }
-     
     return (
         <SearchResultCompo>
             <div className="top-container">

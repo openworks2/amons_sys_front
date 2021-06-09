@@ -290,6 +290,7 @@ export const handleAsyncActionsOfPostOrderByTime = (type, key, keepData) => {
  */
 export const handleAsyncActionsOfPut = (type, key, index, keepData) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
+
   return (state, action) => {
     switch (action.type) {
       case type:
