@@ -23,7 +23,7 @@ const DrillMapCompo = styled.div`
     .progress-right {
       right: 23px;
       top: 78px;
-      width: 231px;
+      width: 712px;
       height: 6px;
     }
   }
@@ -38,7 +38,7 @@ const DrillMapCompo = styled.div`
     .progress-right {
       top: 82px;
       right: 23px;
-      width: 229px;
+      width: 714px;
       height: 6px;
     }
   }
@@ -104,7 +104,7 @@ const DrillMapCompo = styled.div`
     }
   }
   .progress-left {
-    width: 718px;
+    width: 235px;
     height: 20px;
     position: absolute;
     height: 6px;
