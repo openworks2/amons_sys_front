@@ -7,6 +7,7 @@ import LocationInfoComponent from '../../components/mobile/LocationInfoComponent
 import LocationStateComponent from '../../components/mobile/LocationStateComponent';
 import WorkerAccessComponent from './AccessContainer';
 import { getMonitor, receiveMonitor, socketDisconnet } from '../../modules/monitor';
+import { getAlarmsLimit } from '../../modules/alarms';
 
 const MonitorCompo = styled.div`
     width: 100%;
@@ -94,6 +95,7 @@ const MonitorContainer = ({ match }) => {
     const getDispatch = useCallback(async () => {
         dispatch(receiveMonitor());
         dispatch(getMonitor());
+
     }, [dispatch]);
 
     useEffect(() => {

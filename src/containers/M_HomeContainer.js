@@ -1,10 +1,12 @@
+import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router';
-import styled from 'styled-components';
+import styled from 'styled-components'
 import Header from '../components/mobile/Header';
 import Navigation from '../components/mobile/Navigation';
 import storage from '../lib/starage';
+import { getAlarmsLimit } from '../modules/alarms';
 import { loginCheckAsync, logOutAsync } from '../modules/login';
 import AlarmLogContainer from './mobile/AlarmLogContainer';
 import BleLogContainer from './mobile/BleLogContainer';
@@ -45,9 +47,16 @@ const M_HomeContainer = ({ match, history }) => {
         validated
     } = useSelector((state) => state.login.login);
 
+    const { data: alarmList } = useSelector(state => state.alarms.alarms);
+
     const dispatch = useDispatch();
 
     const [navigation, setNavigation] = useState(null);
+
+    const [curruntPage, setCurrentPage] = useState(null);
+
+    const [toDayAlarm, setToDayAlarmCount] = useState([]);
+
 
     const onNavigation = (e, name) => {
         setNavigation(name);
@@ -65,22 +74,20 @@ const M_HomeContainer = ({ match, history }) => {
         try {
             await dispatch(loginCheckAsync());
             // dispatch(setLogindInfoAsync(loginedInfo))
+            dispatch(getAlarmsLimit())
+
         } catch (e) {
             storage.remove("user");
         }
     }, []);
 
     useEffect(() => {
-        console.log('login--->>', user)
         initialUserInfo();
         if (user) return <Redirect to="/amons/m.home/monitor" />
     }, []);
 
-    const [curruntPage, setCurrentPage] = useState(null);
 
     useEffect(() => {
-        console.log('match-->', match)
-        console.log('history-->', history)
         console.log(history.location.pathname)
         const pathName = history.location.pathname;
         const splitPath = pathName.split('/');
@@ -107,6 +114,23 @@ const M_HomeContainer = ({ match, history }) => {
 
     }, [match, history]);
 
+    useEffect(() => {
+        if (alarmList) {
+            let tempList =[];
+            alarmList.map((item) => {
+                const _fromDate = moment(item.emg_start_time);
+                const _toDate = moment();
+
+                const _days = moment.duration(_toDate.diff(_fromDate)).days();
+                if (_days === 0) {
+                    tempList.push(item);
+                }
+                return item;
+            });
+            setToDayAlarmCount(tempList)
+        }
+
+    }, [alarmList]);
 
     const onLogout = async () => {
         try {
@@ -147,6 +171,7 @@ const M_HomeContainer = ({ match, history }) => {
                         navigation={navigation}
                         onNavigation={onNavigation}
                         curruntPage={curruntPage}
+                        toDayAlarm={toDayAlarm}
                     />
                 </div>
             }

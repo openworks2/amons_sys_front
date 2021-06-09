@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/pro-regular-svg-icons';
@@ -69,9 +69,14 @@ const NavigationCompo = styled.div`
     }
 `;
 
-const Navigation = ({ navigation, onNavigation }) => {
+const Navigation = ({ navigation, onNavigation, toDayAlarm }) => {
+
+    useEffect(() => {
+        console.log('Navigation--->>>',toDayAlarm)
+    }, [toDayAlarm]);
+
     return (
-        <NavigationCompo className="navigation-component">  
+        <NavigationCompo className="navigation-component">
             <ul className="navigation-container">
                 <li
                     className={navigation === "monitor" ? "navi-list active" : "navi-list"}
@@ -114,7 +119,10 @@ const Navigation = ({ navigation, onNavigation }) => {
                                 <FontAwesomeIcon icon={faHistory} />
                             </div>
                             <div className="contents-name">알람내역</div>
-                            <div className="tag">3</div>
+                            {
+                                toDayAlarm.length > 0 &&
+                                <div className="tag">{toDayAlarm.length}</div>
+                            }
                         </div>
                     </Link>
                 </li>
@@ -129,7 +137,7 @@ const Navigation = ({ navigation, onNavigation }) => {
                                 <FontAwesomeIcon icon={faPen} />
                             </div>
                             <div className="contents-name">공정/굴진</div>
-                            <div className="tag">3</div>
+                            {/* <div className="tag">3</div> */}
                         </div>
                     </Link>
                 </li>

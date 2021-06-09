@@ -61,6 +61,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+  alert(12312312);
   return (
     <>
       <GlobalStyle className="App"></GlobalStyle>
