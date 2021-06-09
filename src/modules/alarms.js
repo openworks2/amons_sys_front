@@ -12,6 +12,11 @@ const GET_ALARMS = "alarm/GET_ALARMS";
 const GET_ALARMS_SUCCESS = "alarm/GET_ALARMS_SUCCESS";
 const GET_ALARMS_ERROR = "alarm/GET_ALARMS_ERROR";
 
+const GET_ALARMS_LIMIT = "alarm/GET_ALARMS_LIMIT";
+const GET_ALARMS_LIMIT_SUCCESS = "alarm/GET_ALARMS_LIMIT_SUCCESS";
+const GET_ALARMS_LIMIT_ERROR = "alarm/GET_ALARMS_LIMIT_ERROR";
+
+
 const POST_ALARMSEARCH = "alarm/POST_ALARMSEARCH";
 const POST_ALARMSEARCH_SUCCESS = "alarm/POST_ALARMSEARCH_SUCCESS";
 const POST_ALARMSEARCH_ERROR = "alarm/POST_ALARMSEARCH_ERROR";
@@ -23,6 +28,8 @@ const PUT_ALARM_ERROR = "alarm/PUT_ALARM_ERROR";
 const CLEAR_ALARM = "alarm/CLEAR_ALARM";
 
 export const getAlarms = createPromiseThunk(GET_ALARMS, alarmsAPI.getAlarms);
+
+export const getAlarmsLimit = createPromiseThunk(GET_ALARMS_LIMIT, alarmsAPI.getAlarmsLimit)
 
 export const postAlarmSearch = createPromiseThunkOfPost(
   POST_ALARMSEARCH,
@@ -36,6 +43,7 @@ const initialState = {
 };
 
 const getAlarmsReducer = handleAsyncActions(GET_ALARMS, "alarms", true);
+const getAlarmsLimitReducer = handleAsyncActions(GET_ALARMS_LIMIT, "alarms", true);
 const postAlarmSearchReducer = handleAsyncActionsOfPostGet(
   POST_ALARMSEARCH,
   "alarms",
@@ -48,6 +56,10 @@ export default function alarms(state = initialState, action) {
     case GET_ALARMS_SUCCESS:
     case GET_ALARMS_ERROR:
       return getAlarmsReducer(state, action);
+    case GET_ALARMS_LIMIT:
+    case GET_ALARMS_LIMIT_SUCCESS:
+    case GET_ALARMS_LIMIT_ERROR:
+      return getAlarmsLimitReducer(state, action);
     case POST_ALARMSEARCH:
     case POST_ALARMSEARCH_SUCCESS:
     case POST_ALARMSEARCH_ERROR:

@@ -7,6 +7,12 @@ export const getAlarms = async () => {
   return response.data;
 };
 
+//  SOS 알람 갯수 제한 조회 (최근순)
+export const getAlarmsLimit = async () => {
+  const response = await axios.get(`${API}/api/alarm/alarms/limit/20`);
+  return response.data;
+};
+
 // SOS 알람 검색
 export const postAlarmSearch = async (data) => {
   const response = await axios.post(`${API}/api/alarm/alarms/search`, data);
