@@ -10,6 +10,7 @@ import M_HomePage from "./pages/M_HomePage";
 import HomePage from "./pages/HomePage";
 
 import styled from "styled-components";
+import AccessPage from "./pages/AccessPage";
 
 
 const GlobalStyle = styled.div`
@@ -77,6 +78,8 @@ function App() {
       <Route path="/amons/m.signin" component={M_LoginPage} />
       <Route path="/amons/m.home" component={M_HomePage} />
       <Route path="/amons/home" component={HomePage} />
+      <Route path="/amons/access/:type/:index" component={AccessPage} />
+
     </GlobalStyle>
   );
 }

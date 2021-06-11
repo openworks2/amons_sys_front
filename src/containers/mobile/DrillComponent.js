@@ -201,6 +201,14 @@ const DrillComponent = () => {
     }
     const onTextChange = (e) => {
         const { name, value } = e.target;
+        if (name === 'dig_length') {
+            const _number = Number(value);
+            console.log(_number)
+            if (isNaN(_number)) {
+                return
+            }
+        }
+
         setDrillRateFormData({
             ...drillRateFormData,
             [name]: value

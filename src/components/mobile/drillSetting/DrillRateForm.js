@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Input, TextArea } from 'semantic-ui-react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import CircularProgressBar from '../CircularProgressBar';
 import { DateRange, Calendar } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file 
@@ -28,6 +28,11 @@ const DrillRateCompo = styled.div`
             i.caret.down.icon {
                 position: absolute;
                 right: 10px;
+            }
+            &.error::after {
+                content: "**굴진량은 0~100m 사이의 값을 입력하세요.";
+                color: #ff0000;
+                font-size: 12px;    
             }
         }
         .location-info-container{
@@ -122,7 +127,7 @@ const DrillRateForm = ({
     /**
      * @description 캘린더 외 영역 클릭시 캘린더 닫기 이벤트 핸들러
      */
-    const onPanelClick = (e)=>{
+    const onPanelClick = (e) => {
         if (e.target !== e.currentTarget) return;
         setCalendarOpen(false)
     }
@@ -189,7 +194,10 @@ const DrillRateForm = ({
                             </div>
                         </div>
                     </Form.Field>
-                    <Form.Field error={dig_length && (dig_length < minLength || dig_length > maxLength)}>
+                    <Form.Field error={
+                        dig_length === undefined || dig_length === ''
+                        || (dig_length < minLength || dig_length > maxLength)
+                    }>
                         <label>누적 굴진량</label>
                         <Input
                             placeholder='누적 굴진량을 입력해 주세요.'
@@ -229,7 +237,7 @@ const DrillRateForm = ({
             {
                 calendarOpen &&
                 <DrillCalendar
-                    date={record_date}    
+                    date={record_date}
                     handleSelect={handleSelect}
                     onPanelClick={onPanelClick}
                 />
