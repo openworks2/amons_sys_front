@@ -96,11 +96,12 @@ const LocationStateCompo = styled.div`
                     }
                     .panel-value-box {
                         width: 70px;
-                        height: 63px;
+                        height: 45px;
                         text-align: center;
                         .ble-value{
                             font-size: 28px;
                             color: #FFFFFF;
+                            margin-bottom: 5px;
                         }
                         .ble-name{
                             font-size: 15px;
@@ -217,7 +218,20 @@ const LocationStateComponent = ({ localData, locationAct, locBleList }) => {
 
     // 천단위 콤마
     const numberOfDigitsHandler = (number) => {
-        return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+        var len, point, str; 
+       
+        number = number + ""; 
+        point = number.length % 3 ;
+        len = number.length; 
+       
+        str = number.substring(0, point); 
+        while (point < len) { 
+            if (str !== "") str += ","; 
+            str += number.substring(point, point + 3); 
+            point += 3; 
+        } 
+         
+        return str;
     };
 
     const percentCalc = (dig, plan) => {

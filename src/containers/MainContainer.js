@@ -3,10 +3,7 @@ import { Redirect } from "react-router";
 import styled from "styled-components";
 import {
   isBrowser,
-  isMobile,
-  isAndroid,
-  isIOS,
-  isChrome
+  isMobile
 } from "react-device-detect";
 
 const MainComo = styled.div`
@@ -15,12 +12,6 @@ const MainComo = styled.div`
 `;
 
 const MainContainer = () => {
-  console.log('isBrowser--->', isBrowser)
-  console.log('isMobile--->', isMobile)
-  console.log('isAndroid--->', isAndroid)
-  console.log('isIOS--->', isIOS)
-  console.log('isChrome--->', isChrome)
-  alert('isIOS--->'+isIOS)
   // debugger;
   return (
     <MainComo className="main-component">
@@ -30,10 +21,6 @@ const MainContainer = () => {
       {
         isMobile && <Redirect to="/amons/m.signin" />
       }
-      {
-        isIOS && <Redirect to="/amons/m.signin" />
-      }
-
     </MainComo>
   );
 };

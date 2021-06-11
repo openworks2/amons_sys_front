@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateRange, Calendar } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file 
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -7,21 +7,25 @@ import styled from 'styled-components';
 
 const CalendarCompo = styled.div`
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background-color: rgba(94,94,94,0.5);
     position: absolute;
     z-index: 999;
-    display: flex;
+     display: flex; 
     justify-content: center;
+    /* align-items: center;        */
     top: 0px;
     left: 0px;
     justify-content: center;
-    align-items: center;      
     .calendar-container{
         width: 92%;
         height: 49%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
         .calendar-wrapper{
             border-radius: 10px;
+            max-height: 332px;
             button{
                 font-family: NotoSansKR-Regular;
             }
@@ -30,7 +34,7 @@ const CalendarCompo = styled.div`
 
 `;
 
-const CalendarComponent = ({ key, handleSelect }) => {
+const DrillCalendar = ({ date, handleSelect, onPanelClick }) => {
 
   //   const [date, setDate] = useState({
   //     startDate: new Date(),
@@ -38,16 +42,7 @@ const CalendarComponent = ({ key, handleSelect }) => {
   //     key: 'selection'
   //   });
 
-  const [date, setDate] = useState(null)
-
-  const onRangeChange = (ranges) => {
-    console.log(ranges); // native Date object
-    setDate({
-      startDate: ranges['selection'].startDate,
-      endDate: ranges['selection'].endDate,
-      key: ranges['selection'].key,
-    });
-  }
+  // const [date, setDate] = useState(null)
 
   //   const handleSelect = (_date) => {
   //     console.log(_date); // native Date object     
@@ -55,33 +50,34 @@ const CalendarComponent = ({ key, handleSelect }) => {
   //     onCalendarClose()
   //   }
 
+  useEffect(() => {
+    const perentTarget = document.getElementsByClassName('bottom-component')[0];
+    const target = document.getElementsByClassName('calendar-container')[0];
+    const scrollTop = perentTarget.scrollTop;
+    perentTarget.style.overflow = 'hidden';
+    target.style.top = `${scrollTop + 50}px`;
+
+    return () => {
+      perentTarget.style.overflow = 'auto';
+    }
+  }, []);
+
   return (
-    <CalendarCompo>
-      {/* <DateRange
-        className='date-range'
-        editableDateInputs={true}
-        onChange={onRangeChange}
-        moveRangeOnFirstSelection={false}
-        ranges={[date]}
-        locale={ko}
-      /> */}
+    <CalendarCompo className="calendar-component" onClick={onPanelClick}>
       <div className="calendar-container">
         <Calendar
           className="calendar-wrapper"
-          // shownDate={new Date('2021-06-05')}
           startDate={new Date()}
-          // endDate={PropTypes.object}
           minDate={new Date('2021-01-01')}
           maxDate={new Date('2031-12-31')}
-          date={date}
+          date={new Date(date)}
           onChange={handleSelect}
           locale={ko}
           color={'#F1592A'}
-        // scroll={{ enabled: true }}
         />
       </div>
     </CalendarCompo>
   );
 };
 
-export default CalendarComponent;
+export default DrillCalendar;

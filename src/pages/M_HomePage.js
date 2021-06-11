@@ -3,9 +3,7 @@ import HomeContainer from '../containers/M_HomeContainer';
 
 const M_HomePage = ({ match, history }) => {
     return (
-        <>
-            <HomeContainer match={match} history={history} />
-        </>
+        <HomeContainer match={match} history={history} />
     );
 };
 

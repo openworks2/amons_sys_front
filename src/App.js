@@ -1,17 +1,18 @@
-import { Route } from "react-router";
 
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
+import M_LoginPage from "./pages/M_LoginPage";
+import { Route } from "react-router";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
+import M_HomePage from "./pages/M_HomePage";
+
 import HomePage from "./pages/HomePage";
 
-import { createGlobalStyle } from "styled-components";
-import M_HomePage from "./pages/M_HomePage";
-import M_LoginPage from "./pages/M_LoginPage";
-import AccessPage from "./pages/AccessPage";
+import styled from "styled-components";
 
-const GlobalStyle = createGlobalStyle`
+
+const GlobalStyle = styled.div`
 .ui.modal.transition.visible.active.confirm-modal{
       width : 500px;
       height: auto;
@@ -69,18 +70,14 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  alert(12312312);
   return (
-    <>
-      <GlobalStyle className="App"></GlobalStyle>
+    <GlobalStyle className="App">
       <Route path="/" component={MainPage} exact />
       <Route path="/amons/signin" component={LoginPage} />
-      <Route path="/amons/home" component={HomePage} />
       <Route path="/amons/m.signin" component={M_LoginPage} />
       <Route path="/amons/m.home" component={M_HomePage} />
-      <Route path="/amons/access/:type/:index" component={AccessPage} />
-
-    </>
+      <Route path="/amons/home" component={HomePage} />
+    </GlobalStyle>
   );
 }
 

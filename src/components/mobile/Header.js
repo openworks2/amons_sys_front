@@ -40,6 +40,8 @@ const HeaderCompo = styled.div`
             .tunnel-name{
                 height: 53%;
                 color: #F1592A;
+                display: flex;
+                align-items: center;
             }
         }
     }
