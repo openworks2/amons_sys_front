@@ -1,0 +1,46 @@
+/* ModalComponent.js */
+.modal-container{
+    font-family: NotoSansKR-Regular;
+}
+.ui.header {
+    font-family: NotoSansKR-Medium !important;
+}
+.positive-button{
+    background-color: #F1592A !important;
+    color: #fff !important;
+}
+.cancle-button{
+    background-color: #bfbfbf !important;
+}
+.modal-container .modal-title {
+    background-color: #F1592A !important;
+    color: #fff !important;
+    padding-left: 20px !important;
+    /* letter-spacing: 10px; */
+}
+.action-text {
+    color: #F1592A;
+}
+
+.modal-description {
+    height: 25px;
+    font-size: 17px;
+    margin-bottom: 5px;
+    /* font-weight: 600; */
+    display: flex;
+}
+span.modal-value {
+    font-weight: 600;
+}
+span#description-value{
+    overflow: auto;
+    height: 46px;
+    width: 216px;
+}
+
+@media only screen and (min-width: 413px){
+    .ui.mini.modal {
+        width: 72%;
+        margin: 0;
+    }
+}

@@ -34,7 +34,7 @@ const CalendarCompo = styled.div`
 
 `;
 
-const DrillCalendar = ({ date, handleSelect, onPanelClick }) => {
+const DrillCalendar = ({ date, handleSelect, onPanelClick, minDate }) => {
 
   //   const [date, setDate] = useState({
   //     startDate: new Date(),
@@ -57,6 +57,8 @@ const DrillCalendar = ({ date, handleSelect, onPanelClick }) => {
     perentTarget.style.overflow = 'hidden';
     target.style.top = `${scrollTop + 50}px`;
 
+    console.log('minDate--->', minDate)
+
     return () => {
       perentTarget.style.overflow = 'auto';
     }
@@ -68,7 +70,7 @@ const DrillCalendar = ({ date, handleSelect, onPanelClick }) => {
         <Calendar
           className="calendar-wrapper"
           startDate={new Date()}
-          minDate={new Date('2021-01-01')}
+          minDate={minDate ? new Date(minDate) : new Date('2021-01-01')}
           maxDate={new Date('2031-12-31')}
           date={new Date(date)}
           onChange={handleSelect}

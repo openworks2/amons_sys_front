@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, TextArea } from 'semantic-ui-react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import CircularProgressBar from '../CircularProgressBar';
-import { DateRange, Calendar } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file 
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import { ko } from 'date-fns/locale'
 import moment from 'moment';
-import CalendarComponent from '../CalendarComponent';
 import DrillCalendar from './DrillCalendar';
 
 const DrillRateCompo = styled.div`
@@ -29,10 +26,19 @@ const DrillRateCompo = styled.div`
                 position: absolute;
                 right: 10px;
             }
-            &.error::after {
-                content: "**굴진량은 0~100m 사이의 값을 입력하세요.";
-                color: #ff0000;
-                font-size: 12px;    
+            &.dig-length-field{
+                &::after {
+                    /* content: "**굴진량은 0~100m 사이의 값을 입력하세요."; */
+                    content: ${props => (props.dig_length === 0
+        ? `"**굴진량은 0 이상의 값을 입력하세요."`
+        : `"**굴진량은 ${props.digRange.minLength} ~ ${props.digRange.maxLength}m 사이의 값을 입력하세요."`) 
+        || "**굴진량은 0~100m 사이의 값을 입력하세요."};
+                    color: rgba(46, 46, 46, 0.5);
+                    font-size: 12px;  
+                }
+                &.error::after{
+                    color: #ff0000;
+                }  
             }
         }
         .location-info-container{
@@ -84,6 +90,9 @@ const DrillRateCompo = styled.div`
                 font-size: 18px;
             }
         }
+        textarea{
+            resize: none;
+        }
     }
 `;
 
@@ -93,9 +102,10 @@ const DrillRateForm = ({
     digRange,
     onSelectItem,
     onChangeDate,
-    onTextChange
+    onTextChange,
+    onSubmit,
+    minDate
 }) => {
-
     const {
         local_index,
         plan_length,
@@ -114,7 +124,6 @@ const DrillRateForm = ({
 
 
     useEffect(() => {
-
     }, []);
 
     const onOpenCalendar = () => {
@@ -166,9 +175,9 @@ const DrillRateForm = ({
 
 
     return (
-        <DrillRateCompo>
+        <DrillRateCompo digRange={digRange} dig_length={dig_length}>
             <div className="form-container">
-                <Form className="drillRate-form">
+                <Form className="drillRate-form" onSubmit={onSubmit}>
                     <Form.Select
                         className="location-select"
                         options={options.locals}
@@ -194,10 +203,13 @@ const DrillRateForm = ({
                             </div>
                         </div>
                     </Form.Field>
-                    <Form.Field error={
-                        dig_length === undefined || dig_length === ''
-                        || (dig_length < minLength || dig_length > maxLength)
-                    }>
+                    <Form.Field
+                        className="dig-length-field"
+                        error={
+                            dig_length === undefined || dig_length === ''
+                            || (dig_length < minLength || dig_length > maxLength)
+                            || dig_length === 0
+                        }>
                         <label>누적 굴진량</label>
                         <Input
                             placeholder='누적 굴진량을 입력해 주세요.'
@@ -206,6 +218,7 @@ const DrillRateForm = ({
                             name="dig_length"
                             onChange={onTextChange}
                             value={dig_length || dig_length === 0 ? dig_length : ""}
+                            // readOnly={dig_length === 0}
                         />
                     </Form.Field>
                     <Form.Input
@@ -227,10 +240,16 @@ const DrillRateForm = ({
                         placeholder='비고 입력란'
                         name='description'
                         onChange={onTextChange}
-                        value={description}
+                        value={description !== null ? description : ""}
+                        readOnly={dig_length === 0}
                     />
                     <Form.Button
                         className="submit-button"
+                        disabled={
+                            dig_length === undefined || dig_length === ''
+                            || (dig_length < minLength || dig_length > maxLength)
+                            || dig_length === 0
+                        }
                     >{dig_seq ? '수정' : '등록'}</Form.Button>
                 </Form>
             </div>
@@ -240,6 +259,7 @@ const DrillRateForm = ({
                     date={record_date}
                     handleSelect={handleSelect}
                     onPanelClick={onPanelClick}
+                    minDate={minDate}
                 />
             }
         </DrillRateCompo>

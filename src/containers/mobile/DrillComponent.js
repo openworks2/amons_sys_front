@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import DrillRateForm from '../../components/mobile/drillSetting/DrillRateForm';
 import DrillWorkSelect from '../../components/mobile/drillSetting/DrillWorkSelect';
+import ModalComponent from '../../components/mobile/drillSetting/ModalComponent';
 import ProcessForm from '../../components/mobile/drillSetting/ProcessForm';
-import { getDigs } from '../../modules/digs';
+import { getDigs, postDig, putDig } from '../../modules/digs';
 import { getLocals } from '../../modules/locals';
 import { postProcess } from '../../modules/processes';
 
@@ -98,6 +99,15 @@ const DrillComponent = () => {
     const [options, setOptions] = useState({
         locals: []
     })
+    const [openModal, setOpenModal] = useState(false)
+    const [modalObj, setModalObj] = useState({
+        action: 'insert', //or update
+        local: null,
+        record_date: null,
+        length: 0,
+        description: null
+    })
+
 
     useEffect(() => {
         getDispatch();
@@ -126,6 +136,7 @@ const DrillComponent = () => {
                 ...processFormData,
                 local_index: locals[0].local_index,
                 plan_length: locals[0].plan_length,
+                local_name: locals[0].local_name,
                 dig_seq: locals[0].dig_seq,
                 record_date: moment(locals[0].record_date).format('YYYY-MM-DD'),
                 curr_dig_length: locals[0].dig_length,
@@ -175,6 +186,7 @@ const DrillComponent = () => {
             setDrillRateFormData({
                 ...drillRateFormData,
                 local_index: findItem.local_index,
+                local_name: findItem.local_name,
                 plan_length: findItem.plan_length,
                 record_date: moment(findItem.record_date).format('YYYY-MM-DD'),
                 curr_dig_length: findItem.dig_length,
@@ -186,6 +198,7 @@ const DrillComponent = () => {
                 minLength: findItem.dig_length,
                 maxLength: findItem.plan_length
             });
+
             setLocalDigList({
                 local_index: findItem.local_index,
                 items: digs.filter(item => item.local_index === findItem.local_index ? item : null)
@@ -200,15 +213,16 @@ const DrillComponent = () => {
         })
     }
     const onTextChange = (e) => {
-        const { name, value } = e.target;
+        const name = e.target.name;
+        let value = e.target.value;
         if (name === 'dig_length') {
             const _number = Number(value);
             console.log(_number)
             if (isNaN(_number)) {
                 return
             }
+            value = _number
         }
-
         setDrillRateFormData({
             ...drillRateFormData,
             [name]: value
@@ -239,8 +253,9 @@ const DrillComponent = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(processFormData);
+        console.log(e.target)
         if (workType === 'process') {
+            console.log(processFormData);
             dispatch(postProcess(processFormData));
             const updateLocals = localList.map(item =>
             (item.local_index === processFormData.local_index
@@ -254,6 +269,64 @@ const DrillComponent = () => {
             })
             setLocalList(updateLocals);
         }
+        else if (workType === 'drillRate') {
+            console.log('drilLRate --->', drillRateFormData)
+            const { dig_seq, record_date, dig_length, local_index, description, local_name } = drillRateFormData;
+            if (dig_seq) {
+                setModalObj({
+                    action: 'update', //or update
+                    record_date,
+                    local: local_name,
+                    length: dig_length,
+                    description
+                })
+
+            } else {
+                setModalObj({
+                    action: 'insert', //or update
+                    record_date,
+                    local: local_name,
+                    length: dig_length,
+                    description
+                })
+
+            }
+            setOpenModal(true)
+        }
+    }
+
+    const onDispatchByDrillRate = async () => {
+        console.log('onDispatchByDrillRate-->', drillRateFormData);
+        const { dig_seq, record_date, dig_length, local_index, description } = drillRateFormData;
+        if (dig_seq) {
+            //update
+            const updateData = {
+                record_date,
+                dig_length,
+                local_index,
+                dig_seq,
+                description
+            }
+            console.log('updateData --->', updateData)
+            await dispatch(putDig(dig_seq, updateData))
+        } else {
+            //insert
+            const insertData = {
+                record_date,
+                dig_length,
+                local_index,
+                description
+            };
+            console.log('insertData --->', insertData)
+            await dispatch(postDig(insertData));
+        }
+        setOpenModal(false);
+        const findLocalItem = localList.find(item => item.local_index === local_index && moment(record_date).isSame(item.record_date) ? item : null);
+        console.log('findLocalItem->', findLocalItem)
+        setDrillRateFormData({
+            ...drillRateFormData,
+            curr_dig_length: findLocalItem ? dig_length : drillRateFormData.curr_dig_length
+        })
     }
 
     const onChangeDate = (date) => {
@@ -275,19 +348,28 @@ const DrillComponent = () => {
             }
             return null
         });
+        console.log('minDateArr->',minDateArr);
+        console.log('maxDateArr->',maxDateArr);
 
+        const _minLength = minDateArr.length !== 0 ? minDateArr[minDateArr.length - 1].dig_length : 0
+        const _maxLength = maxDateArr.length !== 0 ? maxDateArr[0].dig_length : drillRateFormData.plan_length
         setDigRange({
-            minLength: minDateArr.length !== 0 ? minDateArr[minDateArr.length - 1].dig_length : 0,
-            maxLength: maxDateArr.length !== 0 ? maxDateArr[0].dig_length : drillRateFormData.plan_length
+            minLength: _minLength,
+            maxLength: _maxLength
         });
 
+        console.log('findDIg-->', findDig)
         setDrillRateFormData({
             ...drillRateFormData,
             record_date: date,
-            dig_seq: findDig ? findDig.seq : null,
+            dig_seq: findDig ? findDig.dig_seq : null,
             dig_length: findDig ? findDig.dig_length : null,
-            description: '모바일 등록'
+            description: findDig ? findDig.description : null
         })
+    }
+
+    const onModalClose = () => {
+        setOpenModal(false)
     }
 
     return (
@@ -313,9 +395,17 @@ const DrillComponent = () => {
                             onSelectItem={onSelectItem}
                             onChangeDate={onChangeDate}
                             onTextChange={onTextChange}
+                            onSubmit={onSubmit}
+                            minDate={localDig.items.length && localDig.items[0].record_date}
                         />
                 }
             </div>
+            <ModalComponent
+                open={openModal}
+                onModalClose={onModalClose}
+                modalObj={modalObj}
+                onDispatchByDrillRate={onDispatchByDrillRate}
+            />
         </DrillCompo>
     );
 };
