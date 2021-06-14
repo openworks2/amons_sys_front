@@ -36,20 +36,6 @@ const CalendarCompo = styled.div`
 
 const DrillCalendar = ({ date, handleSelect, onPanelClick, minDate }) => {
 
-  //   const [date, setDate] = useState({
-  //     startDate: new Date(),
-  //     endDate: new Date(),
-  //     key: 'selection'
-  //   });
-
-  // const [date, setDate] = useState(null)
-
-  //   const handleSelect = (_date) => {
-  //     console.log(_date); // native Date object     
-  //     setDate(_date);
-  //     onCalendarClose()
-  //   }
-
   useEffect(() => {
     const perentTarget = document.getElementsByClassName('bottom-component')[0];
     const target = document.getElementsByClassName('calendar-container')[0];
@@ -57,7 +43,6 @@ const DrillCalendar = ({ date, handleSelect, onPanelClick, minDate }) => {
     perentTarget.style.overflow = 'hidden';
     target.style.top = `${scrollTop + 50}px`;
 
-    console.log('minDate--->', minDate)
 
     return () => {
       perentTarget.style.overflow = 'auto';

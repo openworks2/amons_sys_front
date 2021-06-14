@@ -82,7 +82,6 @@ const ProcessForm = ({
 
     }, []);
 
-    console.log('prev_pcs_state-->', prev_pcs_state)
     return (
         <ProcessFormCompo className="processForm-component">
             <div className="form-container">

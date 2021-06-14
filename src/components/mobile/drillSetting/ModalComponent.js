@@ -1,17 +1,10 @@
-import moment from 'moment';
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Header, Modal } from 'semantic-ui-react';
 import '../../../css/ModalComponent.css'
 
 
 const ModalComponent = ({ open, onModalClose, modalObj, onDispatchByDrillRate }) => {
 
-    // const modalObj = {
-    //     content: "수정", // OR 등록
-    //     local: '함양 시점',
-    //     record_date: moment().format('YYYY-MM-DD'),
-    //     length: 333
-    // }
     const { action, record_date, local, length, description } = modalObj;
 
     // 천단위 콤마

@@ -172,8 +172,6 @@ const DrillComponent = () => {
 
     const onSelectItem = (e, key, index) => {
         const findItem = localList.find(item => item.local_index === index);
-        console.log(findItem)
-        console.log(workType)
         if (workType === 'process') {
             setProcessFormData({
                 ...processFormData,
@@ -182,7 +180,6 @@ const DrillComponent = () => {
                 prev_pcs_state: findItem.pcs_state,
             })
         } else if (workType === 'drillRate') {
-            console.log('drillRate->', findItem)
             setDrillRateFormData({
                 ...drillRateFormData,
                 local_index: findItem.local_index,
@@ -217,7 +214,6 @@ const DrillComponent = () => {
         let value = e.target.value;
         if (name === 'dig_length') {
             const _number = Number(value);
-            console.log(_number)
             if (isNaN(_number)) {
                 return
             }
@@ -253,9 +249,7 @@ const DrillComponent = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(e.target)
         if (workType === 'process') {
-            console.log(processFormData);
             dispatch(postProcess(processFormData));
             const updateLocals = localList.map(item =>
             (item.local_index === processFormData.local_index
@@ -270,8 +264,7 @@ const DrillComponent = () => {
             setLocalList(updateLocals);
         }
         else if (workType === 'drillRate') {
-            console.log('drilLRate --->', drillRateFormData)
-            const { dig_seq, record_date, dig_length, local_index, description, local_name } = drillRateFormData;
+            const { dig_seq, record_date, dig_length, description, local_name } = drillRateFormData;
             if (dig_seq) {
                 setModalObj({
                     action: 'update', //or update
@@ -296,7 +289,6 @@ const DrillComponent = () => {
     }
 
     const onDispatchByDrillRate = async () => {
-        console.log('onDispatchByDrillRate-->', drillRateFormData);
         const { dig_seq, record_date, dig_length, local_index, description } = drillRateFormData;
         if (dig_seq) {
             //update
@@ -307,7 +299,6 @@ const DrillComponent = () => {
                 dig_seq,
                 description
             }
-            console.log('updateData --->', updateData)
             await dispatch(putDig(dig_seq, updateData))
         } else {
             //insert
@@ -317,12 +308,10 @@ const DrillComponent = () => {
                 local_index,
                 description
             };
-            console.log('insertData --->', insertData)
             await dispatch(postDig(insertData));
         }
         setOpenModal(false);
         const findLocalItem = localList.find(item => item.local_index === local_index && moment(record_date).isSame(item.record_date) ? item : null);
-        console.log('findLocalItem->', findLocalItem)
         setDrillRateFormData({
             ...drillRateFormData,
             curr_dig_length: findLocalItem ? dig_length : drillRateFormData.curr_dig_length
@@ -348,8 +337,6 @@ const DrillComponent = () => {
             }
             return null
         });
-        console.log('minDateArr->',minDateArr);
-        console.log('maxDateArr->',maxDateArr);
 
         const _minLength = minDateArr.length !== 0 ? minDateArr[minDateArr.length - 1].dig_length : 0
         const _maxLength = maxDateArr.length !== 0 ? maxDateArr[0].dig_length : drillRateFormData.plan_length
@@ -358,7 +345,6 @@ const DrillComponent = () => {
             maxLength: _maxLength
         });
 
-        console.log('findDIg-->', findDig)
         setDrillRateFormData({
             ...drillRateFormData,
             record_date: date,
