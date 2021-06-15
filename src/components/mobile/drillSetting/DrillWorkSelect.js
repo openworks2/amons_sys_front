@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TypeSelectCompo = styled.div`
+const DrillWorkSelectCompo = styled.div`
     width: 100%;
     height: 100%;
     background-color: inherit;
@@ -10,7 +10,7 @@ const TypeSelectCompo = styled.div`
         margin: 0;
         list-style: none;
         display: flex;
-        color: #FFFFFF;
+        color: rgba(255, 255, 255, 0.3);
         font-size: 16px;
         font-family: NotoSansKR-Medium;
         font-weight: 100;
@@ -18,6 +18,9 @@ const TypeSelectCompo = styled.div`
             width: 50%;
             height: 100%;
             &.active{
+                .item-name{
+                    color: rgba(255, 255, 255, 1);
+                }
                 .active-bar{
                     background-color: #F1592A;
                 }
@@ -37,33 +40,27 @@ const TypeSelectCompo = styled.div`
     }
 `;
 
-
-const TypeSelect = ({ selectType, onSelectType }) => {
+const DrillWorkSelect = ({ workType, onSelectType }) => {
     return (
-        <TypeSelectCompo className="type-select-component">
+        <DrillWorkSelectCompo>
             <ul className="type-list-box">
                 <li
-                    className={`type-item ${selectType === 'worker' && 'active'}`}
-                    onClick={() => onSelectType('worker')}
+                    className={`type-item ${workType === 'process' && 'active'}`}
+                    onClick={() => onSelectType('process')}
                 >
-                    <div className="item-name">작업자</div>
+                    <div className="item-name">공정상태</div>
                     <div className="active-bar"></div>
                 </li>
                 <li
-                    className={`type-item ${selectType === 'vehicle' && 'active'}`}
-                    onClick={() => onSelectType('vehicle')}
+                    className={`type-item ${workType === 'drillRate' && 'active'}`}
+                    onClick={() => onSelectType('drillRate')}
                 >
-                    <div className="item-name">차량</div>
+                    <div className="item-name">굴진량</div>
                     <div className="active-bar"></div>
                 </li>
             </ul>
-        </TypeSelectCompo>
+        </DrillWorkSelectCompo>
     );
 };
 
-
-TypeSelect.defaultProps = {
-    selectType: 'worker'
-}
-
-export default TypeSelect;
+export default DrillWorkSelect;

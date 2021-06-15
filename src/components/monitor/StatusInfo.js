@@ -146,7 +146,20 @@ const StatusInfo = ({ localInfo, bleData }) => {
 
   // 천단위 콤마
   const numberOfDigitsHandler = (number) => {
-    return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    var len, point, str;
+
+    number = number + "";
+    point = number.length % 3;
+    len = number.length;
+
+    str = number.substring(0, point);
+    while (point < len) {
+      if (str !== "") str += ",";
+      str += number.substring(point, point + 3);
+      point += 3;
+    }
+
+    return str;
   };
 
   const binding = () => {

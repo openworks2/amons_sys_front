@@ -36,6 +36,11 @@ const HomeCompo = styled.div`
         position: fixed;
         bottom: 0;
     }
+    /* @media screen and (max-width:412px){   
+        .header-component{
+            position: fixed;
+        }    
+    } */
 `;
 
 

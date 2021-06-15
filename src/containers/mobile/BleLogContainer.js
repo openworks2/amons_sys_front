@@ -61,8 +61,6 @@ const BleLogContainer = ({ match, history }) => {
 
     useEffect(() => {
         getDispatch();
-        console.log('history-->', history)
-
     }, []);
 
     useEffect(() => {
@@ -126,10 +124,7 @@ const BleLogContainer = ({ match, history }) => {
 
 
     const onChange = (e) => {
-        console.log(e.target)
         const { name, value } = e.target;
-        console.log('name=>', name)
-        console.log('value=>', value)
 
         setFormData({
             ...formData,
@@ -145,8 +140,6 @@ const BleLogContainer = ({ match, history }) => {
     }
 
     const onChangeDate = (key, value) => {
-        console.log('key=>', key)
-        console.log('value=>', value)
 
         if (key === 'from_date') {
             setFormData({
@@ -164,7 +157,6 @@ const BleLogContainer = ({ match, history }) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(formData)
         const { from_date, to_date, local_index, co_index, name } = formData;
 
         if (selectType === 'worker') {
@@ -175,7 +167,6 @@ const BleLogContainer = ({ match, history }) => {
                 local_index,
                 wk_co_index: co_index
             }
-            console.log('reqObj->', reqObj)
             dispatch(postRemainWorkersSearch(reqObj));
         }
         else if (selectType === 'vehicle') {

@@ -30,7 +30,7 @@ const HeaderCompo = styled.div`
                     border-left: 2px solid #fff;
                     margin-left: 5px;
                     margin-right: 5px;
-                    margin-top: 10px;
+                    margin-top: 2px;
                 }
             }
             .icon-box {
@@ -40,6 +40,8 @@ const HeaderCompo = styled.div`
             .tunnel-name{
                 height: 53%;
                 color: #F1592A;
+                display: flex;
+                align-items: center;
             }
         }
     }

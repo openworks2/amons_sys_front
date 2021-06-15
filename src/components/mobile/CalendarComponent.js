@@ -40,8 +40,6 @@ const CalendarComponent = ({ key, handleSelect }) => {
 
   const [date, setDate] = useState(null)
 
-  console.log('key-->', key)
-
   const onRangeChange = (ranges) => {
     console.log(ranges); // native Date object
     setDate({
@@ -70,6 +68,7 @@ const CalendarComponent = ({ key, handleSelect }) => {
       <div className="calendar-container">
         <Calendar
           className="calendar-wrapper"
+          // shownDate={new Date('2021-06-05')}
           startDate={new Date()}
           // endDate={PropTypes.object}
           minDate={new Date('2021-01-01')}
