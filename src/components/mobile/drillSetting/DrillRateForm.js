@@ -29,17 +29,17 @@ const DrillRateCompo = styled.div`
             &.dig-length-field{
                 &::after {
                     /* content: "**굴진량은 0~100m 사이의 값을 입력하세요."; */
-                    content: ${props => (props.dig_length === 0
-        ? `"**굴진량은 0 이상의 값을 입력하세요."`
-        : `"**굴진량은 ${props.digRange.minLength} ~ ${props.digRange.maxLength}m 사이의 값을 입력하세요."`) 
-        || "**굴진량은 0~100m 사이의 값을 입력하세요."};
-                    color: rgba(46, 46, 46, 0.5);
-                    font-size: 12px;  
                 }
                 &.error::after{
+                    content:${props => `"*이전 입력일에 입력 된 굴진량(${props.digRange.minLength}m)보다 커야합니다."`};
+                    /* color: rgba(46, 46, 46, 0.5); */
+                    font-size: 12px;  
                     color: #ff0000;
                 }  
             }
+        }
+        .visible.menu.transition {
+            min-height: 150px !important;
         }
         .location-info-container{
             width: 100%;
@@ -66,12 +66,22 @@ const DrillRateCompo = styled.div`
                 justify-content: center;
                 .info-box{
                     font-family: NotoSansKR-Regular;
-                    .plan-length-value{
-                        color:#7C7C7C;
+                    .location-info-box{
+                        display: flex;
+                        .info-title{
+                            color:#7C7C7C;
+                            width: 65px;
+                            text-align: end;
+                            margin-right: 10px;
+                        }
+                        .info-value{
+                            color:#2E2E2E;
+                            font-family: NotoSansKR-Medium;
+                        }
                     }
-                    .drill-length-value{
-                        color:#2E2E2E;
-                    }
+                }
+                .info-box > div{
+                    height: 23px;
                 }
             }
         }
@@ -112,11 +122,10 @@ const DrillRateForm = ({
         dig_seq,
         dig_length,
         record_date,
-        curr_dig_length,
+        prev_dig_length,
+        prev_record_date,
         description
     } = formData;
-
-    const { minLength, maxLength } = digRange;
 
     const [date, setDate] = useState(null)
 
@@ -192,24 +201,30 @@ const DrillRateForm = ({
                         <div className="progress-area">
                             <CircularProgressBar
                                 sqSize={128}
-                                percentage={percentCalc(curr_dig_length, plan_length)}
+                                percentage={percentCalc(prev_dig_length, plan_length)}
                                 strokeWidth={8}
                             />
                         </div>
                         <div className="drill-info-area">
                             <div className="info-box">
-                                <div className="plan-length-value">{`계획연장 ${numberOfDigitsHandler(plan_length)}m`}</div>
-                                <div className="drill-length-value">{`누적굴진 ${numberOfDigitsHandler(curr_dig_length)}m`}</div>
+                                <div className="location-info-box plan-length-value">
+                                    <div className="info-title">계획연장</div>
+                                    <div className="info-value">{`${numberOfDigitsHandler(plan_length)}m`}</div>
+                                </div>
+                                <div className="location-info-box drill-length-value">
+                                    <div className="info-title">누적굴진</div>
+                                    <div className="info-value">{`${numberOfDigitsHandler(prev_dig_length)}m`}</div>
+                                </div>
+                                <div className="location-info-box drill-recordDate-value">
+                                    <div className="info-title">입력일</div>
+                                    <div className="info-value"> {`${(prev_record_date)}`}</div>
+                                </div>
                             </div>
                         </div>
                     </Form.Field>
                     <Form.Field
                         className="dig-length-field"
-                        error={
-                            dig_length === undefined || dig_length === ''
-                            || (dig_length < minLength || dig_length > maxLength)
-                            || dig_length === 0
-                        }>
+                        error={dig_length !== "" && dig_length < digRange.minLength}>
                         <label>누적 굴진량</label>
                         <Input
                             placeholder='누적 굴진량을 입력해 주세요.'
@@ -218,10 +233,11 @@ const DrillRateForm = ({
                             name="dig_length"
                             onChange={onTextChange}
                             value={dig_length || dig_length === 0 ? dig_length : ""}
-                            // readOnly={dig_length === 0}
+                        // type="number"
+                        // readOnly={dig_length === 0}
                         />
                     </Form.Field>
-                    <Form.Input
+                    {/* <Form.Input
                         className="toDate-input"
                         fluid
                         label='입력일'
@@ -233,7 +249,7 @@ const DrillRateForm = ({
                         // error={(moment(to_date).isBefore(from_date) && true)}
                         // error={btnEnable}
                         readOnly
-                    />
+                    /> */}
                     <Form.Field
                         control={TextArea}
                         label='비고'
@@ -245,16 +261,13 @@ const DrillRateForm = ({
                     />
                     <Form.Button
                         className="submit-button"
-                        disabled={
-                            dig_length === undefined || dig_length === ''
-                            || (dig_length < minLength || dig_length > maxLength)
-                            || dig_length === 0
-                        }
+                        disabled={dig_length < digRange.minLength}
                     >{dig_seq ? '수정' : '등록'}</Form.Button>
                 </Form>
             </div>
             {
-                calendarOpen &&
+                // calendarOpen &&
+                false &&
                 <DrillCalendar
                     date={record_date}
                     handleSelect={handleSelect}

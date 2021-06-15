@@ -17,6 +17,9 @@ const ProcessFormCompo = styled.div`
             font-family: NotoSansKR-Regular;
             font-size: 14px;
         }
+        .visible.menu.transition {
+            min-height: 150px !important;
+        }
         .grouped.fields > label{
             font-family: NotoSansKR-Medium;
 
