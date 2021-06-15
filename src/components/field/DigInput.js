@@ -482,7 +482,7 @@ const DigInput = ({
     try {
       if (selectedRow && selectedRow.selectedId !== (null || undefined)) {
         if (dig_length !== (null || undefined)) {
-          return addComma(dig_length) + "m";
+          return addComma(dig_length) && addComma(dig_length) + "m";
         }
       } else if (
         currentLatestDigInfo &&
@@ -540,6 +540,48 @@ const DigInput = ({
       console.log("<printLastDate Error>", e);
     }
   }, [currentLatestDigInfo, record_date, selectedRow.selectedId]);
+
+  const buttonRender = useCallback(() => {
+    if (dig_seq && dig_seq < 5) {
+      return (
+        <Button className="first-log-button">
+          초기 데이터는 수정할 수 없습니다.
+        </Button>
+      );
+    } else if (digLengthError) {
+      if (selectedItem) {
+        return (
+          <Button className="modify-button" disabled>
+            수정
+          </Button>
+        );
+      } else {
+        return (
+          <Button className="modify-button" disabled>
+            입력
+          </Button>
+        );
+      }
+    } else if (selectedItem) {
+      return (
+        <Button
+          className="modify-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setModifyOpen(true);
+          }}
+        >
+          수정
+        </Button>
+      );
+    } else {
+      return (
+        <Button className="submit-button" type="submit">
+          입력
+        </Button>
+      );
+    }
+  }, [digLengthError, dig_seq, selectedItem]);
 
   return (
     <InputCompo className="input-compo">
@@ -737,27 +779,7 @@ const DigInput = ({
             />
           </Form.Field>
         </div>
-        {selectedItem ? (
-          dig_seq < 5 ? (
-            <Button className="first-log-button">
-              초기 데이터는 수정할 수 없습니다.
-            </Button>
-          ) : (
-            <Button
-              className="modify-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setModifyOpen(true);
-              }}
-            >
-              수정
-            </Button>
-          )
-        ) : (
-          <Button className="submit-button" type="submit">
-            입력
-          </Button>
-        )}
+        {buttonRender()}
       </Form>
       <Modal
         className="confirm-modal"

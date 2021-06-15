@@ -11,6 +11,7 @@ import {
   minusComma,
   getDigAmountPercent,
   makeLocalList,
+  descByDate,
 } from "../../lib/admin/commonLogics";
 import moment from "moment";
 import "moment/locale/ko";
@@ -143,16 +144,26 @@ const DigContainer = () => {
   const [maxLength, setMaxLength] = useState(null);
   const [minLength, setMinLength] = useState(null);
 
-  // useEffect(() => {
-  //   let _data = data.filter((el) => el.local_index === formData.local_index);
-  //   _data = _data.sort(date_descending);
-  //   let _index = _data.findIndex(
-  //     (el) =>
-  //       moment(el.record_date).unix() === moment(formData.record_date).unix()
-  //   );
-  //   setMaxLength(_data[_index - 1] && _data[_index - 1].dig_length);
-  //   setMinLength(_data[_index + 1] && _data[_index + 1].dig_length);
-  // }, [data, formData.local_index, formData.record_date]);
+  //최소값 최대값 구하기 useEffect
+  useEffect(() => {
+    if (data) {
+      try {
+        let _data = data.filter(
+          (el) => el.local_index === formData.local_index
+        );
+        _data = descByDate(_data, "record_date");
+        let _index = _data.findIndex(
+          (el) =>
+            moment(el.record_date).unix() ===
+            moment(formData.record_date).unix()
+        );
+        setMaxLength(_data[_index - 1] && _data[_index - 1].dig_length);
+        setMinLength(_data[_index + 1] && _data[_index + 1].dig_length);
+      } catch (e) {
+        console.log("<최소값 최대값 구하기 useEffect Error>", e);
+      }
+    }
+  }, [data, formData.local_index, formData.record_date]);
 
   // [ Init Area ] ======================================================================
 
@@ -178,6 +189,7 @@ const DigContainer = () => {
         ...defaultFormData,
         local_index: local_index,
       });
+      setDigLengthError(undefined);
     },
     [defaultFormData]
   );
@@ -205,6 +217,13 @@ const DigContainer = () => {
     let dateB = new Date(b["record_date"]).getTime();
     return dateA < dateB ? 1 : -1;
   };
+
+  const getLengthCondition = useCallback(() => {
+    try {
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
 
   const isAlreadyTyped = useCallback(() => {
     // 현재 입력하려는 record_date 와 일치하는 데이터가 이미 있는지
@@ -337,6 +356,7 @@ const DigContainer = () => {
           setDigLengthError(
             `*이후 굴진량(${condition.maxLength}m)보다 작아야합니다.`
           );
+
           setTimeout(() => {
             setDigLengthError(undefined);
           }, errMsgTime);
@@ -394,9 +414,32 @@ const DigContainer = () => {
             dig_length: result,
           });
         }
+        if (
+          localInfo &&
+          localInfo.plan_length &&
+          parseFloat(value) > localInfo.plan_length
+        ) {
+          setDigLengthError(
+            "*계획 연장 거리를 초과하였습니다. 다시 입력해주세요."
+          );
+        } else if (
+          localInfo &&
+          minLength &&
+          parseFloat(minusComma(value)) < parseFloat(minLength)
+        ) {
+          setDigLengthError(`*이전 굴진량(${minLength}m)보다 커야합니다.`);
+        } else if (
+          localInfo &&
+          maxLength &&
+          parseFloat(minusComma(value)) > parseFloat(maxLength)
+        ) {
+          setDigLengthError(`*이후 굴진량(${maxLength}m)보다 작아야합니다.`);
+        } else {
+          setDigLengthError(undefined);
+        }
       }
     },
-    [formData]
+    [errMsgTime, formData, localInfo, maxLength, minLength]
   );
 
   const onSelectChange = useCallback(
