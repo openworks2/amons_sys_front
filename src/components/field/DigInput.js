@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled, { css } from "styled-components";
 import { Form, Button, Select, Modal, Input, Table } from "semantic-ui-react";
 import { FaExclamationCircle } from "react-icons/fa";
@@ -428,7 +428,7 @@ const DigInput = ({
   const today = new Date();
   const firstDate = new Date(data.find((el) => el.dig_seq === 1).record_date);
 
-  const years = _.range(2019, getYear(new Date()) + 3, 1); // 수정
+  const years = _.range(2020, getYear(new Date()) + 3, 1); // 수정
   const months = [
     "1월",
     "2월",
@@ -457,15 +457,89 @@ const DigInput = ({
   );
 
   // 요일 반환
-  const getDayName = (date) => {
+  const getDayName = useCallback((date) => {
     return date.toLocaleDateString("ko-KR", { weekday: "long" }).substr(0, 1);
-  };
+  }, []);
+
   // 날짜 비교시 년 월 일까지만 비교하게끔
-  const createDate = (date) => {
+  const createDate = useCallback((date) => {
     return new Date(
       new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
     );
-  };
+  }, []);
+  // input table 계획연장
+  const printPlanLength = useCallback(() => {
+    if (localInfo && localInfo.plan_length !== (null || undefined)) {
+      try {
+        return addComma(localInfo.plan_length) + "m";
+      } catch (e) {
+        console.log("<printPlanLength Error>", e);
+      }
+    }
+  }, [addComma, localInfo]);
+  // input table 누적굴진 row 누적 굴진 미터
+  const printAmount = useCallback(() => {
+    try {
+      if (selectedRow && selectedRow.selectedId !== (null || undefined)) {
+        if (dig_length !== (null || undefined)) {
+          return addComma(dig_length) + "m";
+        }
+      } else if (
+        currentLatestDigInfo &&
+        currentLatestDigInfo.dig_length !== (null || undefined)
+      ) {
+        return addComma(currentLatestDigInfo.dig_length) + "m";
+      }
+    } catch (e) {
+      console.log("<printAmount Error>", e);
+    }
+  }, [addComma, currentLatestDigInfo, dig_length, selectedRow]);
+
+  // input table 누적굴진 row 퍼센트
+  const printPercent = useCallback(() => {
+    try {
+      if (localInfo && localInfo.plan_length) {
+        if (
+          selectedRow &&
+          selectedRow.selectedId !== (null || undefined) &&
+          minusComma(dig_length) > 0
+        ) {
+          return getDigAmountPercent(localInfo.plan_length, dig_length);
+        } else if (
+          currentLatestDigInfo &&
+          currentLatestDigInfo.dig_length &&
+          currentLatestDigInfo.dig_length > 0
+        ) {
+          return getDigAmountPercent(
+            localInfo.plan_length,
+            currentLatestDigInfo.dig_length
+          );
+        }
+      }
+    } catch (e) {
+      console.log("<printPercent Error>", e);
+    }
+  }, [
+    currentLatestDigInfo,
+    dig_length,
+    getDigAmountPercent,
+    localInfo,
+    minusComma,
+    selectedRow,
+  ]);
+
+  //최종 입력일
+  const printLastDate = useCallback(() => {
+    try {
+      if (selectedRow.selectedId) {
+        return moment(record_date).format("YYYY-MM-DD");
+      } else if (currentLatestDigInfo && currentLatestDigInfo.record_date) {
+        return moment(currentLatestDigInfo.record_date).format("YYYY-MM-DD");
+      }
+    } catch (e) {
+      console.log("<printLastDate Error>", e);
+    }
+  }, [currentLatestDigInfo, record_date, selectedRow.selectedId]);
 
   return (
     <InputCompo className="input-compo">
@@ -505,9 +579,7 @@ const DigInput = ({
                   계획연장
                 </Table.Cell>
                 <Table.Cell className="sub-info-table origin" singleLine>
-                  {localInfo &&
-                    localInfo.plan_length &&
-                    addComma(localInfo.plan_length) + "m"}
+                  {printPlanLength()}
                 </Table.Cell>
                 <Table.Cell className="sub-info-table origin" singleLine>
                   {localInfo && "100%"}
@@ -518,27 +590,10 @@ const DigInput = ({
                   누적굴진
                 </Table.Cell>
                 <Table.Cell className="sub-info-table cell" singleLine>
-                  {selectedRow.selectedId
-                    ? dig_length && addComma(dig_length) + "m"
-                    : currentLatestDigInfo &&
-                      currentLatestDigInfo.dig_length &&
-                      addComma(currentLatestDigInfo.dig_length) + "m"}
+                  {printAmount()}
                 </Table.Cell>
                 <Table.Cell className="sub-info-table cell" singleLine>
-                  {selectedRow.selectedId
-                    ? localInfo &&
-                      localInfo.plan_length &&
-                      minusComma(dig_length) > 0 &&
-                      getDigAmountPercent(localInfo.plan_length, dig_length)
-                    : localInfo &&
-                      localInfo.plan_length &&
-                      currentLatestDigInfo &&
-                      currentLatestDigInfo.dig_length &&
-                      currentLatestDigInfo.dig_length > 0 &&
-                      getDigAmountPercent(
-                        localInfo.plan_length,
-                        currentLatestDigInfo.dig_length
-                      )}
+                  {printPercent()}
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
@@ -549,13 +604,7 @@ const DigInput = ({
                 최종 입력일
               </Table.Cell>
               <Table.Cell className="sub-info-table date" singleLine>
-                {selectedRow.selectedId
-                  ? moment(record_date).format("YYYY-MM-DD")
-                  : currentLatestDigInfo &&
-                    currentLatestDigInfo.record_date &&
-                    moment(currentLatestDigInfo.record_date).format(
-                      "YYYY-MM-DD"
-                    )}
+                {printLastDate()}
               </Table.Cell>
             </Table.Body>
           </Table>

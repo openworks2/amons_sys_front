@@ -258,7 +258,7 @@ const VehicleContainer = () => {
     if (data) {
       let _unUsedBeaconList = [];
       _unUsedBeaconList.push({
-        key: "unUsedBeaconList0",
+        key: "unUsedBeaconList" + "vehicle",
         text: "할당 없음",
         value: null,
       });
