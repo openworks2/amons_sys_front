@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   Button,
@@ -281,125 +281,221 @@ const DigTable = ({
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // 테이블
-  const dateAndLocalDescending = (a, b) => {
+  const dateAndLocalDescending = useCallback((a, b) => {
     let dateA = new Date(a["record_date"]).getTime();
     let dateB = new Date(b["record_date"]).getTime();
     let indexA = a["local_index"];
     let indexB = b["local_index"];
     return dateA > dateB ? -1 : indexA > indexB ? 0 : 1;
-  };
+  }, []);
 
-  const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData
-    .sort(dateAndLocalDescending)
-    .slice(
-      (activePage - 1) * itemsPerPage,
-      (activePage - 1) * itemsPerPage + itemsPerPage
-    );
+  // [ Table Info Area ] =======================================================
 
-  const tableRender = (items = []) => {
-    const tempItems = [...items, ...Array(itemsPerPage - items.length)];
-    return tempItems.map((item, index) => {
-      const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
-      return (
-        <Table.Row
-          className={item ? "table-row clickable" : "table-row"}
-          key={"tableRowKey" + index}
-          id={"scroll" + index}
-          active={item && index === clickedIndex}
-          onClick={item && ((e) => activeHandler(e, index, item.dig_seq))}
-        >
-          <Table.Cell className="table-cell no" name="no">
-            {item ? tableNo : " "}
-          </Table.Cell>
-          <Table.Cell className="table-cell local" name="local">
-            {item &&
-              item.local_index &&
-              localData.find((el) => el.local_index === item.local_index) &&
-              (localData.find((el) => el.local_index === item.local_index)
-                .local_used === 0
-                ? localData.find((el) => el.local_index === item.local_index)
-                    .local_name + `(삭제됨)`
-                : localData.find((el) => el.local_index === item.local_index)
-                    .local_name)}
-          </Table.Cell>
-          <Table.Cell className="table-cell plan" name="plan">
-            {item &&
-              localData.find((el) => el.local_index === item.local_index) &&
-              addComma(
-                addZero(
-                  localData.find((el) => el.local_index === item.local_index)
-                    .plan_length,
-                  3
-                )
-              ) + "m"}
-          </Table.Cell>
-          <Table.Cell className="table-cell amount" name="amount">
-            {item && item.dig_length && addComma(item.dig_length) + "m"}
-          </Table.Cell>
-          <Table.Cell className="table-cell percent" name="percent">
-            {item &&
-              item.dig_length &&
-              localData.find((el) => el.local_index === item.local_index) &&
-              getDigAmountPercent(
-                localData.find((el) => el.local_index === item.local_index)
-                  .plan_length,
-                item.dig_length
-              )}
-          </Table.Cell>
-          <Table.Cell className="table-cell date" name="date">
-            {item &&
-              item.record_date &&
-              moment(item.record_date).format("YYYY-MM-DD")}
-          </Table.Cell>
-          <Table.Cell className="table-cell description" name="description">
-            {item && item.description && item.description}
-          </Table.Cell>
-          <Table.Cell className="table-cell trash-icon">
-            {item &&
-              selectedId &&
-              item.dig_seq > 4 &&
-              item.dig_seq === selectedId && (
-                <Button
-                  className="trash-icon-button"
-                  onClick={(e) => {
-                    // 상위 테이블 로우에 걸어줬던 버튼 떄문에 이벤트 버블링 생긴다.
-                    // 버블링 막고 독립적인 버튼으로 만들어 주기.
-                    e.stopPropagation();
-                    setDeleteModalOpen(true);
-                  }}
-                >
-                  <FaTrash />
-                </Button>
-              )}
-          </Table.Cell>
-        </Table.Row>
-      );
-    });
-  };
-
-  const TopMenuRender = (localData = []) => {
-    if (!localData) {
-      localData = [];
+  const getTotalPages = useCallback(() => {
+    try {
+      return Math.ceil(currentData.length / itemsPerPage, 1);
+    } catch (e) {
+      console.log("<getTotalPages Error>", e);
     }
-    let _localData = localData.filter((el) => el.local_used !== 0);
-    _localData = _localData.slice(0, 4);
-    return _localData.map((item, index) => {
-      return (
-        <Menu.Item
-          className="table-categorie-menu categorie"
-          name={item.local_name && item.local_name}
-          active={categorieValue === item.local_index}
-          value={item.local_index && item.local_index}
-          onClick={(e, value) => {
-            onClickCategorie(e, value);
-            document.getElementById("scroll0").scrollIntoView();
-          }}
-        />
-      );
-    });
-  };
+  }, [currentData, itemsPerPage]);
+
+  const cutViewItems = useCallback(() => {
+    try {
+      return currentData
+        .sort(dateAndLocalDescending)
+        .slice(
+          (activePage - 1) * itemsPerPage,
+          (activePage - 1) * itemsPerPage + itemsPerPage
+        );
+    } catch (e) {
+      console.log("<cutViewItems Error>", e);
+    }
+  }, [activePage, currentData, dateAndLocalDescending, itemsPerPage]);
+
+  const totalPages = getTotalPages();
+  const viewItems = cutViewItems();
+
+  // [ Table Cell Area ] =======================================================
+
+  const printLocal = useCallback((item, matchedLocalInfo) => {
+    try {
+      if (matchedLocalInfo && item && item.local_index) {
+        if (matchedLocalInfo.local_used === 1) {
+          return matchedLocalInfo.local_name;
+        } else {
+          return matchedLocalInfo.local_name + `(삭제됨)`;
+        }
+      }
+    } catch (e) {
+      console.log("<printLocal Error>", e);
+    }
+  }, []);
+
+  const printPlanLength = useCallback(
+    (item, matchedLocalInfo) => {
+      if (
+        matchedLocalInfo &&
+        matchedLocalInfo.plan_length !== (null || undefined) &&
+        item
+      ) {
+        try {
+          return addComma(addZero(matchedLocalInfo.plan_length, 3)) + "m";
+        } catch (e) {
+          console.log("<printPlanLength Error>", e);
+        }
+      }
+    },
+    [addComma, addZero]
+  );
+
+  const printAmount = useCallback(
+    (item) => {
+      if (item && item.dig_length !== (null || undefined)) {
+        try {
+          return addComma(item.dig_length) + "m";
+        } catch (e) {
+          console.log("<printAmount Error>", e);
+        }
+      }
+    },
+    [addComma]
+  );
+
+  const printPercent = useCallback(
+    (item, matchedLocalInfo) => {
+      if (item && item.dig_length !== (null || undefined) && matchedLocalInfo) {
+        try {
+          return getDigAmountPercent(
+            matchedLocalInfo.plan_length,
+            item.dig_length
+          );
+        } catch (e) {
+          console.log("<printAmount Error>", e);
+        }
+      }
+    },
+    [getDigAmountPercent]
+  );
+
+  const printTrashCan = useCallback(
+    (item) => {
+      if (
+        item &&
+        item.dig_seq &&
+        item.dig_seq > 4 &&
+        selectedId &&
+        selectedId === item.dig_seq
+      ) {
+        try {
+          return (
+            <Button
+              className="trash-icon-button"
+              onClick={(e) => {
+                // 상위 테이블 로우에 걸어줬던 버튼 떄문에 이벤트 버블링 생긴다.
+                // 버블링 막고 독립적인 버튼으로 만들어 주기.
+                e.stopPropagation();
+                setDeleteModalOpen(true);
+              }}
+            >
+              <FaTrash />
+            </Button>
+          );
+        } catch (e) {
+          console.log("<printTrashCan Error>", e);
+        }
+      }
+    },
+    [selectedId]
+  );
+
+  // [ Table Render Area ] =======================================================
+
+  const tableRender = useCallback(
+    (items = []) => {
+      const tempItems = [...items, ...Array(itemsPerPage - items.length)];
+      return tempItems.map((item, index) => {
+        let matchedLocalInfo = item
+          ? localData.find((el) => el.local_index === item.local_index)
+          : null;
+        const tableNo = index + 1 + (activePage - 1) * itemsPerPage;
+        return (
+          <Table.Row
+            className={item ? "table-row clickable" : "table-row non-clickable"}
+            key={"tableRowKey" + index}
+            id={"scroll" + index}
+            active={item && index === clickedIndex}
+            onClick={item && ((e) => activeHandler(e, index, item.dig_seq))}
+          >
+            <Table.Cell className="table-cell no" name="no">
+              {item ? tableNo : " "}
+            </Table.Cell>
+            <Table.Cell className="table-cell local" name="local">
+              {printLocal(item, matchedLocalInfo)}
+            </Table.Cell>
+            <Table.Cell className="table-cell plan" name="plan">
+              {printPlanLength(item, matchedLocalInfo)}
+            </Table.Cell>
+            <Table.Cell className="table-cell amount" name="amount">
+              {printAmount(item)}
+            </Table.Cell>
+            <Table.Cell className="table-cell percent" name="percent">
+              {printPercent(item, matchedLocalInfo)}
+            </Table.Cell>
+            <Table.Cell className="table-cell date" name="date">
+              {item &&
+                item.record_date &&
+                moment(item.record_date).format("YYYY-MM-DD")}
+            </Table.Cell>
+            <Table.Cell className="table-cell description" name="description">
+              {item && item.description && item.description}
+            </Table.Cell>
+            <Table.Cell className="table-cell trash-icon">
+              {printTrashCan(item)}
+            </Table.Cell>
+          </Table.Row>
+        );
+      });
+    },
+    [
+      activeHandler,
+      activePage,
+      clickedIndex,
+      itemsPerPage,
+      localData,
+      printAmount,
+      printLocal,
+      printPercent,
+      printPlanLength,
+      printTrashCan,
+    ]
+  );
+
+  const TopMenuRender = useCallback(
+    (localData = []) => {
+      try {
+        let _localData = localData.filter((el) => el.local_used !== 0);
+        _localData = _localData.slice(0, 4);
+        return _localData.map((item, index) => {
+          return (
+            <Menu.Item
+              className="table-categorie-menu categorie"
+              name={item.local_name && item.local_name}
+              active={categorieValue === item.local_index}
+              value={item.local_index && item.local_index}
+              onClick={(e, value) => {
+                onClickCategorie(e, value);
+                document.getElementById("scroll0").scrollIntoView();
+              }}
+              key={"topMenu" + item.local_index && item.local_index}
+            />
+          );
+        });
+      } catch (e) {
+        console.log("<TopMenuRender Error>", e);
+      }
+    },
+    [categorieValue, onClickCategorie]
+  );
 
   return (
     <>

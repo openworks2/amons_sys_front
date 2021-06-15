@@ -74,18 +74,8 @@ const AlarmContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(getAlarms());
-    const searchCondition = {
-      local_index: null,
-      from_date: "",
-      to_date: "",
-    };
-    dispatch(postAlarmSearch(searchCondition));
-  }, []);
-
-  useEffect(() => {
     dispatch(getLocals());
-  }, []);
+  }, [dispatch]);
 
   const [formData, setFormData] = useState({
     emg_seq: null,
@@ -297,7 +287,7 @@ const AlarmContainer = () => {
           />
         </div>
         <div className="table-box">
-          {data && (
+          {
             <AlarmTable
               className="alarm-table-box"
               pageInfo={pageInfo}
@@ -313,7 +303,7 @@ const AlarmContainer = () => {
               onSearch={onSearch}
               downloadHandler={downloadHandler}
             />
-          )}
+          }
         </div>
       </ContentsBodyCompo>
     </ContentsCompo>

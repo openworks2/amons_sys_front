@@ -85,7 +85,7 @@ const KickOutWorkerContainer = () => {
     dispatch(getRemainWorkers());
     dispatch(getLocals());
     dispatch(getCompanies());
-  }, []);
+  }, [dispatch]);
 
   // [ State Area ] ======================================================
 
