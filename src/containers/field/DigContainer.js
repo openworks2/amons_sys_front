@@ -1,12 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import DigInput from "../../components/field/DigInput";
 import DigTable from "../../components/field/DigTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocals } from "../../modules/locals";
 import { getDigs, postDig, putDig, deleteDig } from "../../modules/digs";
+import {
+  addZero,
+  addComma,
+  minusComma,
+  getDigAmountPercent,
+  makeLocalList,
+} from "../../lib/admin/commonLogics";
 import moment from "moment";
 import "moment/locale/ko";
+import { id } from "date-fns/locale";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
@@ -72,6 +80,7 @@ const DigContainer = () => {
   // [ Change Area ]
   // [ Click Area ]
   // [ Search Categorie Area ]
+  // [ Validation Area ]
   // [ Create Area ]
   // [ Update Area ]
   // [ Delete Area ]
@@ -87,11 +96,13 @@ const DigContainer = () => {
   useEffect(() => {
     dispatch(getLocals());
     dispatch(getDigs());
-  }, []);
+  }, [dispatch]);
 
   // [ State Area ] ===============================================================
 
-  const today = new Date();
+  const today = useMemo(() => {
+    new Date();
+  }, []);
 
   const [currentData, setCurrentData] = useState([]);
   const [categorieValue, setCategorieValue] = useState(null);
@@ -115,15 +126,33 @@ const DigContainer = () => {
     clickedIndex: null,
   });
 
-  const [formData, setFormData] = useState({
+  const [defaultFormData, setDefaultFormData] = useState({
     dig_seq: null,
     created_date: null,
     modified_date: null,
     record_date: moment(today).format("YYYY-MM-DD"),
-    dig_length: null,
+    dig_length: "",
     description: "",
     local_index: null,
   });
+
+  const [formData, setFormData] = useState(defaultFormData);
+
+  const [errMsgTime, setErrMsgTime] = useState(4000);
+
+  const [maxLength, setMaxLength] = useState(null);
+  const [minLength, setMinLength] = useState(null);
+
+  // useEffect(() => {
+  //   let _data = data.filter((el) => el.local_index === formData.local_index);
+  //   _data = _data.sort(date_descending);
+  //   let _index = _data.findIndex(
+  //     (el) =>
+  //       moment(el.record_date).unix() === moment(formData.record_date).unix()
+  //   );
+  //   setMaxLength(_data[_index - 1] && _data[_index - 1].dig_length);
+  //   setMinLength(_data[_index + 1] && _data[_index + 1].dig_length);
+  // }, [data, formData.local_index, formData.record_date]);
 
   // [ Init Area ] ======================================================================
 
@@ -135,99 +164,41 @@ const DigContainer = () => {
   //   });
   // };
 
-  const initActiveRow = () => {
+  const initActiveRow = useCallback(() => {
     setSelectedRow({
       selectedId: null,
       selectedItem: undefined,
       clickedIndex: null,
     });
-  };
+  }, []);
 
-  const initFormData = (local_index = null) => {
-    setFormData({
-      ...formData,
-      dig_seq: null,
-      created_date: null,
-      modified_date: null,
-      record_date: moment(today).format("YYYY-MM-DD"),
-      dig_length: "",
-      description: "",
-      local_index: local_index,
-    });
-  };
+  const initFormData = useCallback(
+    (local_index = null) => {
+      setFormData({
+        ...defaultFormData,
+        local_index: local_index,
+      });
+    },
+    [defaultFormData]
+  );
 
-  const initPage = () => {
+  const initPage = useCallback(() => {
     setPageInfo({
       activePage: 1,
       itemsPerPage: 14,
     });
-  };
+  }, []);
+
+  // const initLengthInfo = () => {
+  //   setMaxLength(null);
+  //   setMinLength(null);
+  // };
 
   // [ Common Logic Area ] ======================================================================
 
-  // 누적 굴진율 퍼센트 구하기
-  const getDigAmountPercent = (plan_length, dig_length) => {
-    let _percent = ((minusComma(dig_length) / plan_length) * 100).toFixed(1);
-
-    if (_percent > 100) {
-      return "거리초과";
-    } else {
-      return _percent + "%";
-    }
-  };
-
-  // 0 추가
-  const addZero = (str, digit) => {
-    if (str.length >= digit) {
-      return str;
-    } else {
-      let _str = str.toString();
-      let zeros = "";
-      for (let i = 0; i < digit - _str.length; i++) {
-        zeros = zeros + "0";
-      }
-      return zeros + _str;
-    }
-  };
-
-  // 미터 콤마 더하기 빼기
-  const addComma = (num) => {
-    let _num = num.toString();
-    let parts = _num.split(".");
-    return (
-      parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-      (parts[1] || parts[1] === "" ? "." + parts[1] : "")
-    );
-  };
-
-  const minusComma = (num) => {
-    if (num) {
-      let _num = num.toString();
-      _num = _num.replace(/[^0-9|^\.]/g, ""); // 입력값이 숫자가 아니면 공백
-      _num = _num.replace(/,/g, ""); // , 값 공백처리
-      return _num;
-    }
-  };
-
   useEffect(() => {
-    makeLocalList(localData);
+    setLocalList(makeLocalList(localData));
   }, [localData]);
-
-  const makeLocalList = (data) => {
-    if (data) {
-      let _localList = [];
-      const _data = data.filter((el) => el.local_used !== 0);
-      _data.map((item, index) => {
-        _localList.push({
-          key: index,
-          text: item.local_name,
-          value: item.local_index,
-          name: item.local_name,
-        });
-      });
-      setLocalList(_localList);
-    }
-  };
 
   const date_descending = (a, b) => {
     let dateA = new Date(a["record_date"]).getTime();
@@ -235,23 +206,7 @@ const DigContainer = () => {
     return dateA < dateB ? 1 : -1;
   };
 
-  const isFirstDigLog = () => {
-    // 초기값 판단
-    let _data = data.filter((el) => el.local_index === formData.local_index);
-    let firstData = _data.sort(date_descending)[0];
-
-    let result = false;
-    if (
-      moment(firstData.record_date).unix() ===
-      moment(formData.record_date).unix()
-    ) {
-      result = true;
-    }
-
-    return result;
-  };
-
-  const isAlreadyTyped = () => {
+  const isAlreadyTyped = useCallback(() => {
     // 현재 입력하려는 record_date 와 일치하는 데이터가 이미 있는지
     // true : 있음 (수정).
     // false : 없음 (등록).
@@ -267,9 +222,9 @@ const DigContainer = () => {
         return false;
       }
     }
-  };
+  }, [data, formData.local_index, formData.record_date]);
 
-  const getConditionOnPost = () => {
+  const getConditionOnPost = useCallback(() => {
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data.push(formData);
     _data = _data.sort(date_descending);
@@ -281,9 +236,9 @@ const DigContainer = () => {
       maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
       minLength: _data[_index + 1] && _data[_index + 1].dig_length,
     };
-  };
+  }, [data, formData]);
 
-  const getConditionOnPut = () => {
+  const getConditionOnPut = useCallback(() => {
     let _data = data.filter((el) => el.local_index === formData.local_index);
     _data = _data.sort(date_descending);
     let _index = _data.findIndex(
@@ -294,190 +249,213 @@ const DigContainer = () => {
       maxLength: _data[_index - 1] && _data[_index - 1].dig_length,
       minLength: _data[_index + 1] && _data[_index + 1].dig_length,
     };
-  };
+  }, [data, formData.local_index, formData.record_date]);
 
-  const conditionalPost = (condition, _dig_length) => {
-    let maxTestResult = condition.maxLength
-      ? _dig_length < condition.maxLength
-        ? true
-        : false
-      : true;
-    let minTestResult = condition.minLength
-      ? _dig_length > condition.minLength
-        ? true
-        : false
-      : true;
+  const conditionalPost = useCallback(
+    (condition, _dig_length) => {
+      let maxTestResult = condition.maxLength
+        ? _dig_length < condition.maxLength
+          ? true
+          : false
+        : true;
+      let minTestResult = condition.minLength
+        ? _dig_length > condition.minLength
+          ? true
+          : false
+        : true;
 
-    if (minTestResult) {
-      if (maxTestResult) {
-        let newDig = {
-          ...formData,
-          dig_length: minusComma(_dig_length),
-        };
-        dispatch(postDig(newDig));
-      } else {
-        setDigLengthError(
-          `*이후 입력일에 입력된굴진량(${condition.maxLength}m)보다 작아야합니다.`
-        );
-        setTimeout(() => {
-          setDigLengthError(undefined);
-        }, 3000);
-      }
-    } else {
-      setDigLengthError(
-        `*이전 입력일에 입력된굴진량(${condition.minLength}m)보다 커야합니다.`
-      );
-      setTimeout(() => {
-        setDigLengthError(undefined);
-      }, 3000);
-    }
-  };
-
-  const conditionalPut = (condition, _dig_length) => {
-    let maxTestResult = condition.maxLength
-      ? _dig_length < condition.maxLength
-        ? true
-        : false
-      : true;
-    let minTestResult = condition.minLength
-      ? _dig_length > condition.minLength
-        ? true
-        : false
-      : true;
-
-    if (minTestResult) {
-      if (maxTestResult) {
-        if (formData.dig_seq) {
+      if (minTestResult) {
+        if (maxTestResult) {
           let newDig = {
             ...formData,
-            modified_date: today,
             dig_length: minusComma(_dig_length),
           };
-          dispatch(putDig(formData.dig_seq, newDig));
+          dispatch(postDig(newDig));
         } else {
-          let _data = data.filter(
-            (el) => el.local_index === formData.local_index
+          setDigLengthError(
+            `*이후 굴진량(${condition.maxLength}m)보다 작아야합니다.`
           );
-          let _dig_seq = _data.find(
-            (el) =>
-              moment(el.record_date)
-                .format("YYYY-MM-DD")
-                .toString()
-                .substring(0, 10) ===
-              formData.record_date.toString().substring(0, 10)
-          ).dig_seq;
-          let newDig = {
-            ...formData,
-            dig_seq: _dig_seq,
-            modified_date: today,
-            dig_length: minusComma(_dig_length),
-          };
-          dispatch(putDig(_dig_seq, newDig));
+          setTimeout(() => {
+            setDigLengthError(undefined);
+          }, errMsgTime);
         }
       } else {
         setDigLengthError(
-          `*이후 굴진량(${condition.maxLength}m)보다 작아야합니다.`
+          `*이전 굴진량(${condition.minLength}m)보다 커야합니다.`
         );
         setTimeout(() => {
           setDigLengthError(undefined);
-        }, 3000);
+        }, errMsgTime);
       }
-    } else {
-      setDigLengthError(
-        `*이전 굴진량(${condition.minLength}m)보다 커야합니다.`
-      );
-      setTimeout(() => {
-        setDigLengthError(undefined);
-      }, 3000);
-    }
-  };
+    },
+    [dispatch, errMsgTime, formData]
+  );
+
+  const conditionalPut = useCallback(
+    (condition, _dig_length) => {
+      let maxTestResult = condition.maxLength
+        ? _dig_length < condition.maxLength
+          ? true
+          : false
+        : true;
+      let minTestResult = condition.minLength
+        ? _dig_length > condition.minLength
+          ? true
+          : false
+        : true;
+
+      if (minTestResult) {
+        if (maxTestResult) {
+          if (formData.dig_seq) {
+            let newDig = {
+              ...formData,
+              modified_date: today,
+              dig_length: minusComma(_dig_length),
+            };
+            dispatch(putDig(formData.dig_seq, newDig));
+          } else {
+            let _data = data.filter(
+              (el) => el.local_index === formData.local_index
+            );
+            let _dig_seq = _data.find(
+              (el) =>
+                moment(el.record_date)
+                  .format("YYYY-MM-DD")
+                  .toString()
+                  .substring(0, 10) ===
+                formData.record_date.toString().substring(0, 10)
+            ).dig_seq;
+            let newDig = {
+              ...formData,
+              dig_seq: _dig_seq,
+              modified_date: today,
+              dig_length: minusComma(_dig_length),
+            };
+            dispatch(putDig(_dig_seq, newDig));
+          }
+        } else {
+          setDigLengthError(
+            `*이후 굴진량(${condition.maxLength}m)보다 작아야합니다.`
+          );
+          setTimeout(() => {
+            setDigLengthError(undefined);
+          }, errMsgTime);
+        }
+      } else {
+        setDigLengthError(
+          `*이전 굴진량(${condition.minLength}m)보다 커야합니다.`
+        );
+        setTimeout(() => {
+          setDigLengthError(undefined);
+        }, errMsgTime);
+      }
+    },
+    [data, dispatch, errMsgTime, formData, today]
+  );
 
   // [ Change Area ] ======================================================================
 
-  const onChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    // 입력값 state 에 저장
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const onChange = useCallback(
+    (e) => {
+      const name = e.target.name;
+      const value = e.target.value;
+      // 입력값 state 에 저장
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
 
-    if (name === "dig_length") {
-      let _value = value.replace(/[^0-9|^\.]/g, "");
-      // console.log("_value", _value);
-      let parts = _value.toString().split(".");
-      // console.log("parts", parts);
-      let result = "";
-      if (parts[0] && parts[0].length > 4) {
-        parts[0] = parts[0].toString().substring(0, 4);
+      if (name === "dig_length") {
+        let _value = value.replace(/[^0-9|^\.]/g, "");
+        // console.log("_value", _value);
+        let parts = _value.toString().split(".");
+        // console.log("parts", parts);
+        let result = "";
+        if (parts[0] && parts[0].length > 4) {
+          parts[0] = parts[0].toString().substring(0, 4);
+        }
+        if (parts[1] && parts[1].length > 1) {
+          parts[1] = parts[1].toString().substring(0, 1);
+        }
+        if (parts.length > 2) {
+          result =
+            parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+          // console.log("result", result);
+          setFormData({
+            ...formData,
+            dig_length: result,
+          });
+        } else {
+          result =
+            parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
+          // console.log("result", result);
+          setFormData({
+            ...formData,
+            dig_length: result,
+          });
+        }
       }
-      if (parts[1] && parts[1].length > 1) {
-        parts[1] = parts[1].toString().substring(0, 1);
+    },
+    [formData]
+  );
+
+  const onSelectChange = useCallback(
+    (e, seletedValue) => {
+      const name = seletedValue.name;
+      const value = seletedValue.value;
+
+      setFormData({
+        ...formData,
+        [name]: value,
+        dig_length: "",
+      });
+
+      setCategorieValue(value);
+    },
+    [formData]
+  );
+
+  const onChangeDate = useCallback(
+    (date) => {
+      let _date = date;
+      if (_date === null || undefined) {
+        _date = today;
       }
-      if (parts.length > 2) {
-        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
-        // console.log("result", result);
-        setFormData({
-          ...formData,
-          dig_length: result,
-        });
-      } else {
-        result = parts[0] + (parts[1] || parts[1] === "" ? "." + parts[1] : "");
-        // console.log("result", result);
-        setFormData({
-          ...formData,
-          dig_length: result,
-        });
-      }
-    }
-  };
+      setFormData({
+        ...formData,
+        record_date: moment(_date).format("YYYY-MM-DD"),
+      });
+    },
+    [formData, today]
+  );
 
-  const onSelectChange = (e, seletedValue) => {
-    const name = seletedValue.name;
-    const value = seletedValue.value;
-
-    setFormData({
-      ...formData,
-      [name]: value,
-      dig_length: "",
-    });
-
-    setCategorieValue(value);
-  };
-
-  const onChangeDate = (date) => {
-    let _date = date;
-    if (_date === null || undefined) {
-      _date = today;
-    }
-    setFormData({
-      ...formData,
-      record_date: moment(_date).format("YYYY-MM-DD"),
-    });
-  };
-
-  const onPageChange = (e, { activePage }) => {
-    e.preventDefault();
-    let _activePage = Math.ceil(activePage);
-    const PreState = pageInfo;
-    setPageInfo({
-      ...PreState,
-      activePage: _activePage,
-    });
-    initActiveRow();
-    initFormData();
-  };
+  const onPageChange = useCallback(
+    (e, { activePage }) => {
+      e.preventDefault();
+      let _activePage = Math.ceil(activePage);
+      const PreState = pageInfo;
+      setPageInfo({
+        ...PreState,
+        activePage: _activePage,
+      });
+      initActiveRow();
+      initFormData();
+    },
+    [initActiveRow, initFormData, pageInfo]
+  );
 
   // [ Search Categorie Area ] ======================================================================
 
-  const onClickCategorie = (e, value) => {
-    initActiveRow();
-    initPage();
-    const _value = value.value;
-    setCategorieValue(_value);
-    initFormData(_value);
-  };
+  const onClickCategorie = useCallback(
+    (e, value) => {
+      initActiveRow();
+      initPage();
+      const _value = value.value;
+      setCategorieValue(_value);
+      initFormData(_value);
+    },
+    [initActiveRow, initFormData, initPage]
+  );
 
   useEffect(() => {
     let _data = data;
@@ -490,118 +468,146 @@ const DigContainer = () => {
     }
   }, [data, categorieValue]);
 
+  // [ Validation Area ] ======================================================================
+
+  const showLocalError = useCallback(() => {
+    setLocalError("*노선을 선택해 주세요.");
+    setTimeout(() => {
+      setLocalError(undefined);
+    }, errMsgTime);
+  }, [errMsgTime]);
+
+  const showPlanLengthError = useCallback(() => {
+    setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
+    setTimeout(() => {
+      setLocalError(undefined);
+    }, errMsgTime);
+  }, [errMsgTime]);
+
+  const checkLocal = useCallback(() => {
+    try {
+      if (formData.local_index) {
+        return true;
+      } else {
+        showLocalError();
+        return false;
+      }
+    } catch (e) {
+      showLocalError();
+      return false;
+    }
+  }, [formData.local_index, showLocalError]);
+
+  const checkPlanLength = useCallback(() => {
+    try {
+      let _dig_length = parseFloat(formData.dig_length);
+      if (_dig_length < parseFloat(localInfo.plan_length)) {
+        return true;
+      } else {
+        showPlanLengthError();
+        return false;
+      }
+    } catch (e) {
+      showPlanLengthError();
+      return false;
+    }
+  }, [formData, localInfo, showPlanLengthError]);
+
   // [ Create Area ] ======================================================================
 
-  const createHandler = (e) => {
-    e.preventDefault();
-
-    if (!formData.local_index) {
-      setLocalError("*노선을 선택해 주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 3000);
-    } else {
-      let _dig_length = parseFloat(formData.dig_length);
-      let isAlreadyTyped_result = isAlreadyTyped();
-      let isFirstDigLog_result = isFirstDigLog();
-
-      // console.log(typeof _dig_length, "--->", _dig_length);
-      // console.log(typeof localInfo.plan_length, "--->", localInfo.plan_length);
-
-      if (_dig_length > parseFloat(localInfo.plan_length)) {
-        setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
-        setTimeout(() => {
-          setLocalError(undefined);
-        }, 3000);
+  const createHandler = useCallback(
+    (e) => {
+      e.preventDefault();
+      const isAlreadyTyped_result = isAlreadyTyped();
+      const _dig_length = parseFloat(formData.dig_length);
+      const _checkLocal = checkLocal();
+      const _checkPlanLength = checkPlanLength();
+      if (_checkLocal && _checkPlanLength) {
+        if (isAlreadyTyped_result) {
+          //result = true (수정)
+          let condition = getConditionOnPut();
+          conditionalPut(condition, parseFloat(_dig_length));
+        } else {
+          //result = false (등록)
+          let condition = getConditionOnPost();
+          conditionalPost(condition, parseFloat(_dig_length));
+        }
       }
-      //  else if (isFirstDigLog_result) {
-      //   setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
-      //   setTimeout(() => {
-      //     setDigLengthError(undefined);
-      //   }, 3000);
-      // }
-      else if (isAlreadyTyped_result) {
-        //result = true (수정)
-        let condition = getConditionOnPut();
-        conditionalPut(condition, parseFloat(_dig_length));
-      } else {
-        //result = false (등록)
-        let condition = getConditionOnPost();
-        conditionalPost(condition, parseFloat(_dig_length));
-      }
-    }
-
-    initActiveRow();
-    initFormData(categorieValue);
-  };
+      initActiveRow();
+      initFormData(categorieValue);
+    },
+    [
+      categorieValue,
+      checkLocal,
+      checkPlanLength,
+      conditionalPost,
+      conditionalPut,
+      formData,
+      getConditionOnPost,
+      getConditionOnPut,
+      initActiveRow,
+      initFormData,
+      isAlreadyTyped,
+    ]
+  );
 
   // [ Update Area ] ======================================================================
 
-  const updateHandler = (e) => {
-    e.preventDefault();
-
-    if (!formData.local_index) {
-      setLocalError("*노선을 선택해 주세요.");
-      setTimeout(() => {
-        setLocalError(undefined);
-      }, 3000);
-    } else {
-      let _dig_length = parseFloat(formData.dig_length);
-
-      if (_dig_length > parseFloat(localInfo.plan_length)) {
-        setLocalError("*계획 연장 거리를 초과하였습니다. 다시 입력해주세요.");
-        setTimeout(() => {
-          setLocalError(undefined);
-        }, 3000);
-      }
-      //  else if (!isFirstDigLog) {
-      //   setDigLengthError(`*초기 데이터는 수정할 수 없습니다.`);
-      //   setTimeout(() => {
-      //     setDigLengthError(undefined);
-      //   }, 3000);
-      // }
-      else {
+  const updateHandler = useCallback(
+    (e) => {
+      e.preventDefault();
+      const _dig_length = parseFloat(formData.dig_length);
+      const _checkLocal = checkLocal();
+      const _checkPlanLength = checkPlanLength();
+      if (_checkLocal && _checkPlanLength) {
         let condition = getConditionOnPut();
         conditionalPut(condition, parseFloat(_dig_length));
       }
-    }
-  };
+    },
+    [checkLocal, checkPlanLength, conditionalPut, formData, getConditionOnPut]
+  );
 
   // [ Delete Area ] ======================================================================
 
-  const deleteHandler = (e, dig_seq) => {
-    dispatch(deleteDig(dig_seq));
-    initActiveRow();
-    initFormData(categorieValue);
-  };
-
-  // [ Click Area ] ======================================================================
-
-  const activeHandler = (e, index, selectedId) => {
-    if (index === selectedRow.clickedIndex) {
+  const deleteHandler = useCallback(
+    (e, dig_seq) => {
+      dispatch(deleteDig(dig_seq));
       initActiveRow();
       initFormData(categorieValue);
-    } else {
-      const findItem = data.find((digLog) => digLog.dig_seq === selectedId);
+    },
+    [categorieValue, dispatch, initActiveRow, initFormData]
+  );
+  // [ Click Area ] ======================================================================
 
-      setSelectedRow({
-        selectedId: findItem.dig_seq,
-        selectedItem: findItem,
-        clickedIndex: index,
-      });
+  const activeHandler = useCallback(
+    (e, index, selectedId) => {
+      if (index === selectedRow.clickedIndex) {
+        initActiveRow();
+        initFormData(categorieValue);
+      } else {
+        const findItem = data.find((digLog) => digLog.dig_seq === selectedId);
 
-      setFormData({
-        ...formData,
-        dig_seq: findItem.dig_seq,
-        created_date: findItem.created_date,
-        modified_date: findItem.modified_date,
-        record_date: findItem.record_date,
-        dig_length: findItem.dig_length,
-        description: findItem.description,
-        local_index: findItem.local_index,
-      });
-    }
-  };
+        setSelectedRow({
+          selectedId: findItem.dig_seq,
+          selectedItem: findItem,
+          clickedIndex: index,
+        });
+
+        setFormData({
+          ...formData,
+          ...findItem,
+        });
+      }
+    },
+    [
+      categorieValue,
+      data,
+      formData,
+      initActiveRow,
+      initFormData,
+      selectedRow.clickedIndex,
+    ]
+  );
 
   useEffect(() => {
     // 노선 정보가 있을 때 input 안의 테이블에 넣을 노선 정보 최신화 하기
@@ -627,6 +633,8 @@ const DigContainer = () => {
     createHandler,
     updateHandler,
     deleteHandler,
+    localData,
+    data,
   ]);
 
   // [ Components Area ]===================================================================

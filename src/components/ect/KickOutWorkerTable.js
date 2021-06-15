@@ -712,6 +712,7 @@ const KickOutWorkerTable = ({
             onClickCategorie(e, value);
             document.getElementById("scroll0").scrollIntoView();
           }}
+          key={"topMenu" + item.local_index && item.local_index}
         />
       );
     });

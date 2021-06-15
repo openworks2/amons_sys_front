@@ -88,7 +88,7 @@ const KickOutVehicleContainer = () => {
     dispatch(getRemainVehicles());
     dispatch(getLocals());
     dispatch(getCompanies());
-  }, []);
+  }, [dispatch]);
 
   // [ State Area ] ======================================================
 

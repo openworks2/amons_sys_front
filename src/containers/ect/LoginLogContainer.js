@@ -66,15 +66,15 @@ const LoginLogContainer = () => {
   );
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const searchCondition = {
-      from_date: 0,
-      to_date: 0,
-      ip: null,
-    };
-    // 최초 get 안해옴.
-    dispatch(postLoginRecordsSearch(searchCondition));
-  }, []);
+  // useEffect(() => {
+  //   const searchCondition = {
+  //     from_date: 0,
+  //     to_date: 0,
+  //     ip: null,
+  //   };
+  //   // 최초 get 안해옴.
+  //   dispatch(postLoginRecordsSearch(searchCondition));
+  // }, []);
 
   useEffect(() => {
     let _data = data;
@@ -143,7 +143,7 @@ const LoginLogContainer = () => {
     <ContentsCompo className="contents-compo">
       <ContentsBodyCompo className="contents-body-compo">
         <div className="table-box">
-          {currentData && (
+          {
             <LoginLogTable
               className="loginlog-table-box"
               pageInfo={pageInfo}
@@ -153,7 +153,7 @@ const LoginLogContainer = () => {
               onSearchChange={onSearchChange}
               onSearch={onSearch}
             />
-          )}
+          }
         </div>
       </ContentsBodyCompo>
     </ContentsCompo>

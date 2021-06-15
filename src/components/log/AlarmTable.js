@@ -464,6 +464,7 @@ const AlarmTable = ({
     let tempData = [];
     if (categorieValue === null) {
       setCurrentData(_data);
+    } else if (!_data) {
     } else {
       tempData = _data.filter((item) => item.local_index === categorieValue);
       setCurrentData(tempData);
@@ -484,13 +485,27 @@ const AlarmTable = ({
   }
   // 테이블
 
-  const totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-  const viewItems = currentData
-    .sort(date_descending)
-    .slice(
-      (activePage - 1) * itemsPerPage,
-      (activePage - 1) * itemsPerPage + itemsPerPage
-    );
+  const getTotalPages = () => {
+    if (currentData) {
+      return Math.ceil(currentData.length / itemsPerPage, 1);
+    } else {
+      return 0;
+    }
+  };
+
+  const cutViewItems = () => {
+    if (currentData) {
+      return currentData.slice(
+        (activePage - 1) * itemsPerPage,
+        (activePage - 1) * itemsPerPage + itemsPerPage
+      );
+    } else {
+      return [];
+    }
+  };
+
+  const totalPages = getTotalPages();
+  const viewItems = cutViewItems();
 
   const { selectedId, selectedItem, clickedIndex } = selectedRow;
 
@@ -572,6 +587,7 @@ const AlarmTable = ({
             onClickCategorie(e, value);
             document.getElementById("scroll0").scrollIntoView();
           }}
+          key={"topMenu" + item.local_index && item.local_index}
         />
       );
     });
@@ -660,7 +676,6 @@ const AlarmTable = ({
             }}
           />
           {TopMenuRender(localData)}
-
           <Menu.Menu>
             <Menu.Item className="table-categorie-menu datepicker-start">
               <FaRegCalendarAlt className="cal-icon" />

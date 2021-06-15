@@ -590,16 +590,27 @@ const LogVehicleTable = ({
     return str;
   };
 
-  let totalPages = 0;
-  let viewItems = [];
-  // 테이블
-  if (currentData) {
-    totalPages = Math.ceil(currentData.length / itemsPerPage, 1);
-    viewItems = currentData.slice(
-      (activePage - 1) * itemsPerPage,
-      (activePage - 1) * itemsPerPage + itemsPerPage
-    );
-  }
+  const getTotalPages = () => {
+    if (currentData) {
+      return Math.ceil(currentData.length / itemsPerPage, 1);
+    } else {
+      return 0;
+    }
+  };
+
+  const cutViewItems = () => {
+    if (currentData) {
+      return currentData.slice(
+        (activePage - 1) * itemsPerPage,
+        (activePage - 1) * itemsPerPage + itemsPerPage
+      );
+    } else {
+      return [];
+    }
+  };
+
+  const totalPages = getTotalPages();
+  const viewItems = cutViewItems();
 
   // 데이터가 null 이나 undefined 이면 오류 발생하므로 빈 배열값 기본값으로 할당
   const tableRender = (items = []) => {
@@ -670,6 +681,7 @@ const LogVehicleTable = ({
             onClickCategorie(e, value);
             document.getElementById("scroll0").scrollIntoView();
           }}
+          key={"topMenu" + item.local_index && item.local_index}
         />
       );
     });
