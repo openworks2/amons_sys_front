@@ -538,14 +538,14 @@ export const processStateToColor = (pcsState) => {
 // 3. 낮은 순서 대로 정렬된 값을 리턴 합니다.
 // * return : array
 // --------------------------------------------------
-export const byAscending = (data, key) => {
+export const ascByKey = (data, key) => {
   if (data && key) {
     try {
       let _data = data;
       _data.sort((a, b) => (a[key] < b[key] ? -1 : 1));
       return _data;
     } catch (e) {
-      showError && console.log("<byAscending Error>", e);
+      showError && console.log("<ascByKey Error>", e);
     }
   }
 };
@@ -557,14 +557,14 @@ export const byAscending = (data, key) => {
 // 3. 높은 순서 대로 정렬된 값을 리턴 합니다.
 // * return : array
 // --------------------------------------------------
-export const byDescending = (data, key) => {
+export const descByKey = (data, key) => {
   if (data && key) {
     try {
       let _data = data;
       _data.sort((a, b) => (a[key] < b[key] ? 1 : -1));
       return _data;
     } catch (e) {
-      showError && console.log("<byDescending Error>", e);
+      showError && console.log("<descByKey Error>", e);
     }
   }
 };
@@ -576,7 +576,7 @@ export const byDescending = (data, key) => {
 // 3. 낮은 순서 대로 정렬된 값을 리턴 합니다.
 // * return : array
 // --------------------------------------------------
-export const dateByAscending = (data, key) => {
+export const ascByDate = (data, key) => {
   if (data && key) {
     try {
       let _data = data;
@@ -585,8 +585,9 @@ export const dateByAscending = (data, key) => {
         let dateB = new Date(b[key]).getTime();
         return dateA < dateB ? -1 : 1;
       });
+      return _data;
     } catch (e) {
-      showError && console.log("<dateByAscending Error>", e);
+      showError && console.log("<ascByDate Error>", e);
     }
   }
 };
@@ -599,7 +600,7 @@ export const dateByAscending = (data, key) => {
 // * return : array.
 
 // --------------------------------------------------
-export const dateByDescending = (data, key) => {
+export const descByDate = (data, key) => {
   if (data && key) {
     try {
       let _data = data;
@@ -608,8 +609,9 @@ export const dateByDescending = (data, key) => {
         let dateB = new Date(b[key]).getTime();
         return dateA < dateB ? 1 : -1;
       });
+      return _data;
     } catch (e) {
-      showError && console.log("<dateByDescending Error>", e);
+      showError && console.log("<descByDate Error>", e);
     }
   }
 };
