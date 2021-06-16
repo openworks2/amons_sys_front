@@ -141,30 +141,6 @@ const DigContainer = () => {
 
   const [errMsgTime, setErrMsgTime] = useState(4000);
 
-  const [maxLength, setMaxLength] = useState(null);
-  const [minLength, setMinLength] = useState(null);
-
-  //최소값 최대값 구하기 useEffect
-  useEffect(() => {
-    if (data) {
-      try {
-        let _data = data.filter(
-          (el) => el.local_index === formData.local_index
-        );
-        _data = descByDate(_data, "record_date");
-        let _index = _data.findIndex(
-          (el) =>
-            moment(el.record_date).unix() ===
-            moment(formData.record_date).unix()
-        );
-        setMaxLength(_data[_index - 1] && _data[_index - 1].dig_length);
-        setMinLength(_data[_index + 1] && _data[_index + 1].dig_length);
-      } catch (e) {
-        console.log("<최소값 최대값 구하기 useEffect Error>", e);
-      }
-    }
-  }, [data, formData.local_index, formData.record_date]);
-
   // [ Init Area ] ======================================================================
 
   // const initSeq = () => {
@@ -212,18 +188,72 @@ const DigContainer = () => {
     setLocalList(makeLocalList(localData));
   }, [localData]);
 
+  const getConditionOnChange = useCallback(
+    (value) => {
+      if (data && formData.local_index && value) {
+        try {
+          let _index = null;
+          let _data = data.filter(
+            (el) => el.local_index === formData.local_index
+          );
+          const isAlreadyExist = _data.find(
+            (el) =>
+              moment(el.record_date).unix() ===
+              moment(formData.record_date).unix()
+          )
+            ? true
+            : false;
+
+          if (!isAlreadyExist) {
+            // 해당 날짜의 데이터가 없을 경우
+            _data.push(formData);
+          }
+          _data = descByDate(_data, "record_date");
+          _index = _data.findIndex(
+            (el) =>
+              moment(el.record_date).unix() ===
+              moment(formData.record_date).unix()
+          );
+          const maxLength =
+            _data[_index - 1] && _data[_index - 1].dig_length
+              ? _data[_index - 1].dig_length
+              : undefined;
+          const minLength =
+            _data[_index + 1] && _data[_index + 1].dig_length
+              ? _data[_index + 1].dig_length
+              : undefined;
+          // console.log("_data ==> ", _data);
+          // console.log("_index ==> ", _index);
+          // console.log("maxLength ==> ", maxLength);
+          // console.log("minLength ==> ", minLength);
+          if (
+            localInfo &&
+            localInfo.plan_length &&
+            parseFloat(value) > localInfo.plan_length
+          ) {
+            setDigLengthError(
+              "*계획 연장 거리를 초과하였습니다. 다시 입력해주세요."
+            );
+          } else if (localInfo && minLength && value < parseFloat(minLength)) {
+            setDigLengthError(`*이전 굴진량(${minLength}m)보다 커야합니다.`);
+          } else if (localInfo && maxLength && value > parseFloat(maxLength)) {
+            setDigLengthError(`*이후 굴진량(${maxLength}m)보다 작아야합니다.`);
+          } else {
+            setDigLengthError(undefined);
+          }
+        } catch (e) {
+          console.log("< 최소값 최대값 구하기 useEffect Error>", e);
+        }
+      }
+    },
+    [data, formData, localInfo]
+  );
+
   const date_descending = (a, b) => {
     let dateA = new Date(a["record_date"]).getTime();
     let dateB = new Date(b["record_date"]).getTime();
     return dateA < dateB ? 1 : -1;
   };
-
-  const getLengthCondition = useCallback(() => {
-    try {
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
 
   const isAlreadyTyped = useCallback(() => {
     // 현재 입력하려는 record_date 와 일치하는 데이터가 이미 있는지
@@ -414,32 +444,10 @@ const DigContainer = () => {
             dig_length: result,
           });
         }
-        if (
-          localInfo &&
-          localInfo.plan_length &&
-          parseFloat(value) > localInfo.plan_length
-        ) {
-          setDigLengthError(
-            "*계획 연장 거리를 초과하였습니다. 다시 입력해주세요."
-          );
-        } else if (
-          localInfo &&
-          minLength &&
-          parseFloat(minusComma(value)) < parseFloat(minLength)
-        ) {
-          setDigLengthError(`*이전 굴진량(${minLength}m)보다 커야합니다.`);
-        } else if (
-          localInfo &&
-          maxLength &&
-          parseFloat(minusComma(value)) > parseFloat(maxLength)
-        ) {
-          setDigLengthError(`*이후 굴진량(${maxLength}m)보다 작아야합니다.`);
-        } else {
-          setDigLengthError(undefined);
-        }
+        getConditionOnChange(parseFloat(minusComma(value)));
       }
     },
-    [errMsgTime, formData, localInfo, maxLength, minLength]
+    [formData, getConditionOnChange]
   );
 
   const onSelectChange = useCallback(
@@ -460,14 +468,21 @@ const DigContainer = () => {
 
   const onChangeDate = useCallback(
     (date) => {
-      let _date = date;
-      if (_date === null || undefined) {
-        _date = today;
+      try {
+        let _date = date;
+        if (_date === null || undefined) {
+          _date = today;
+        }
+        setFormData({
+          ...formData,
+          record_date: moment(_date).format("YYYY-MM-DD"),
+          dig_length: "",
+        });
+        setDigLengthError(undefined);
+        // 설정한 날짜에 따라 새로운 최댓값 최솟값 구하기
+      } catch (e) {
+        console.log("<onChangeDate Error>", e);
       }
-      setFormData({
-        ...formData,
-        record_date: moment(_date).format("YYYY-MM-DD"),
-      });
     },
     [formData, today]
   );
