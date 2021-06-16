@@ -8,12 +8,12 @@ import LoginPage from "./pages/LoginPage";
 import M_HomePage from "./pages/M_HomePage";
 
 import HomePage from "./pages/HomePage";
-
-import styled from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import AccessPage from "./pages/AccessPage";
 
 
-const GlobalStyle = styled.div`
+
+const GlobalStyle = createGlobalStyle`
 .ui.modal.transition.visible.active.confirm-modal{
       width : 500px;
       height: auto;
@@ -72,15 +72,15 @@ const GlobalStyle = styled.div`
 
 function App() {
   return (
-    <GlobalStyle className="App">
+    <>
+      <GlobalStyle className="App"></GlobalStyle>
       <Route path="/" component={MainPage} exact />
       <Route path="/amons/signin" component={LoginPage} />
       <Route path="/amons/m.signin" component={M_LoginPage} />
       <Route path="/amons/m.home" component={M_HomePage} />
       <Route path="/amons/home" component={HomePage} />
       <Route path="/amons/access/:type/:index" component={AccessPage} />
-
-    </GlobalStyle>
+    </>
   );
 }
 
