@@ -177,6 +177,7 @@ const LocationStateComponent = ({ localData, locationAct, locBleList }) => {
 
     const { local_index, local_name, plan_length, dig_length, local_process } = localData;
 
+
     const [process, setProcess] = useState({
         1: { name: '미착공', color: '#286e41' },
         2: { name: '천공', color: '#7c3795' },
@@ -209,11 +210,11 @@ const LocationStateComponent = ({ localData, locationAct, locBleList }) => {
             name: process[local_process].name,
             color: process[local_process].color,
         });
-    }, []);
+    }, [localData]);
 
+    
     useEffect(() => {
         setBleCountBinding();
-        console.log('ble-->', locBleList)
     }, [locBleList]);
 
     // 천단위 콤마
@@ -267,6 +268,7 @@ const LocationStateComponent = ({ localData, locationAct, locBleList }) => {
                     <div className="contents-title">공정현황</div>
                     <div className="contents-box">
                         <div className="process-value" style={{ backgroundColor: currentState.color }}>{currentState.name}</div>
+                        {/* <div className="process-value" style={{ backgroundColor: currentState.color }}>{process[local_process]}</div> */}
                     </div>
                 </div>
                 <div className="contents-center">

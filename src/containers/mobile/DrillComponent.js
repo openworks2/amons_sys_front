@@ -85,7 +85,7 @@ const DrillComponent = () => {
 
     const [drillRateFormData, setDrillRateFormData] = useState(initialState.formData.drillRate);
 
-    const [workType, setWorkType] = useState('drillRate'); // 공정상태: process /  굴진량: drillRate
+    const [workType, setWorkType] = useState('process'); // 공정상태: process /  굴진량: drillRate
 
     const [localList, setLocalList] = useState([]);
     const [digList, setDigList] = useState([]);
@@ -269,10 +269,9 @@ const DrillComponent = () => {
     }
 
     const onRadioChange = (e) => {
-
         setProcessFormData({
             ...processFormData,
-            pcs_state: e.currentTarget.name
+            pcs_state: Number(e.currentTarget.name)
         })
     }
     const onTextChange = (e) => {
@@ -283,7 +282,6 @@ const DrillComponent = () => {
             if (isNaN(_number)) {
                 return
             }
-            const { minLength, maxLength } = digRange;
             if (value>9999) {
                 return;
             }

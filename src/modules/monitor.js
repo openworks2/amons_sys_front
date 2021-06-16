@@ -56,12 +56,10 @@ export const getBleBeacon = createPromiseThunk(
 let socket;
 
 export const receiveMonitor = () => dispatch => {
-    console.log('socket->',socket)
     if (!socket) {
         socket = io.connect(API);  //3000번 포트 사용(서버)
         socket.emit('getData', 'scanner')
         socket.on('getData', (data) => {
-            console.log('socket-->',data)
             const filterAlarm = data.beacon.filter(item => item.bc_emergency === 2 && item.wk_id && item);
             if (filterAlarm.length > 0) {
                 const payload = {
