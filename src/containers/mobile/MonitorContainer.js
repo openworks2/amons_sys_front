@@ -107,6 +107,7 @@ const MonitorContainer = ({ match }) => {
 
     useEffect(() => {
         if (beacon.data) {
+            console.log('---->',beacon.data)
             setBleList(beacon.data)
             setLocalBleList(locationAct.index);
             setScannerList(locationAct.index)

@@ -50,7 +50,7 @@ const WorkerItemCompo = styled.div`
             padding-left: 8px;
             padding-top: 5px;
             .worker-info{
-                width: 60%;
+                width: 68%;
                 height: 100%;
                 .info-top{
                     font-family: NotoSansKR-Medium;

@@ -158,25 +158,26 @@ const BleLogContainer = ({ match, history }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         const { from_date, to_date, local_index, co_index, name } = formData;
-
         if (selectType === 'worker') {
             const reqObj = {
                 from_date: `${from_date} 00:00:00`,
                 to_date: `${to_date} 23:59:59`,
-                wk_name: name,
+                wname: name,
                 local_index,
-                wk_co_index: co_index
+                co_index: co_index
             }
+            
             dispatch(postRemainWorkersSearch(reqObj));
         }
-        else if (selectType === 'vehicle') {
+        if (selectType === 'vehicle') {
             const reqObj = {
                 from_date: `${from_date} 00:00:00`,
                 to_date: `${to_date} 23:59:59`,
-                vh_name: name,
+                name: name,
                 local_index,
-                vh_co_index: co_index
+                co_index: co_index
             }
+            // debugger
             dispatch(postRemainVehiclesSearch(reqObj));
         }
 

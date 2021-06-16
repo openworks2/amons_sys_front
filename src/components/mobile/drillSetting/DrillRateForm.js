@@ -124,7 +124,8 @@ const DrillRateForm = ({
         record_date,
         prev_dig_length,
         prev_record_date,
-        description
+        description,
+        action
     } = formData;
 
     const [date, setDate] = useState(null)
@@ -224,7 +225,7 @@ const DrillRateForm = ({
                     </Form.Field>
                     <Form.Field
                         className="dig-length-field"
-                        error={dig_length !== "" && dig_length < digRange.minLength}>
+                        error={dig_length && (dig_length < digRange.minLength || dig_length > digRange.maxLength)}>
                         <label>누적 굴진량</label>
                         <Input
                             placeholder='누적 굴진량을 입력해 주세요.'
@@ -261,8 +262,8 @@ const DrillRateForm = ({
                     />
                     <Form.Button
                         className="submit-button"
-                        disabled={dig_length < digRange.minLength}
-                    >{dig_seq ? '수정' : '등록'}</Form.Button>
+                        disabled={dig_length < digRange.minLength || dig_length > digRange.maxLength}
+                    >{action === 'update' ? '수정' : '등록'}</Form.Button>
                 </Form>
             </div>
             {

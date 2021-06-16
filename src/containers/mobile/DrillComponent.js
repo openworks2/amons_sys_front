@@ -25,6 +25,7 @@ const DrillCompo = styled.div`
         height: calc(100% - 48px);
         /* min-height: 509px; */
         overflow: auto;
+        /* min-height: 425px; */
     }
     @media screen and (max-width:412px){   
        /*  .top-conponent{
@@ -283,9 +284,10 @@ const DrillComponent = () => {
                 return
             }
             const { minLength, maxLength } = digRange;
-            if (value < minLength || value > maxLength) {
+            if (value>9999) {
                 return;
             }
+            console.log(_number)
             const DigiLeng = value.split('.')[1] && value.split('.')[1].length;
             if (DigiLeng >= 2) {
                 return;
