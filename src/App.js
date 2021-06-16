@@ -9,7 +9,7 @@ import M_HomePage from "./pages/M_HomePage";
 
 import HomePage from "./pages/HomePage";
 
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import AccessPage from "./pages/AccessPage";
 
 
@@ -70,10 +70,11 @@ const GlobalStyle = createGlobalStyle`
       }
 }
 `;
+
 function App() {
   return (
     <>
-    <GlobalStyle className="App"></GlobalStyle>
+      <GlobalStyle className="App"></GlobalStyle>
       <Route path="/" component={MainPage} exact />
       <Route path="/amons/signin" component={LoginPage} />
       <Route path="/amons/m.signin" component={M_LoginPage} />
@@ -81,7 +82,6 @@ function App() {
       <Route path="/amons/home" component={HomePage} />
       <Route path="/amons/access/:type/:index" component={AccessPage} />
     </>
-
   );
 }
 
