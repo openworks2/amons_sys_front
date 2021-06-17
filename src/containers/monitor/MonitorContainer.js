@@ -192,7 +192,7 @@ const MonitorContainer = () => {
         getDispatch();
 
         return () => {
-            dispatch(socketDisconnet());
+            // dispatch(socketDisconnet());
         }
     }, [dispatch]);
 
