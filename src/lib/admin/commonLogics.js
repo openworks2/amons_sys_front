@@ -38,7 +38,7 @@ export const printErrorLog = (name, event) => {
       );
       console.error(event);
     } catch (e) {
-      console.log("showError Error ==>", e);
+      console.log(`${name} printErrorLog Error ==>`, e);
     }
   }
 };

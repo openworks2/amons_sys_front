@@ -14,7 +14,6 @@ import {
 } from "../../modules/workers";
 import moment, { now } from "moment";
 import "moment/locale/ko";
-import Compressor from "compressorjs";
 
 const ContentsCompo = styled.div`
   min-width: 1680px !important;
