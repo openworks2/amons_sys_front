@@ -26,8 +26,22 @@ import "moment/locale/ko";
 // ==================================================
 const today = new Date();
 // --------------------------------------------------
-// 콘솔 에러 메시지 출력 제어값
-const showError = true;
+// 콘솔 에러 메시지 출력
+export const printErrorLog = (name, event) => {
+  const showError = false;
+  if (showError) {
+    try {
+      console.log(
+        "%c%s",
+        "color: red; background: yellow; font-size: 15px;",
+        `< ${name} Error >`
+      );
+      console.error(event);
+    } catch (e) {
+      console.log("showError Error ==>", e);
+    }
+  }
+};
 // --------------------------------------------------
 // [글자수제한]
 // * 설명
@@ -44,7 +58,7 @@ export const limitDigit = (str, digit) => {
       }
       return result;
     } catch (e) {
-      showError && console.log("<limitDigit Error>", e);
+      printErrorLog("limitDigit", e);
     }
   }
 };
@@ -66,7 +80,7 @@ export const addComma = (num) => {
         (parts[1] || parts[1] === "" ? "." + parts[1] : "")
       );
     } catch (e) {
-      showError && console.log("<addComma Error>", e);
+      printErrorLog("addComma", e);
     }
   }
 };
@@ -85,7 +99,7 @@ export const minusComma = (num) => {
       _num = _num.replace(/,/g, ""); // , 값 공백처리
       return _num;
     } catch (e) {
-      showError && console.log("<minusComma Error>", e);
+      printErrorLog("minusComma", e);
     }
   }
 };
@@ -120,7 +134,7 @@ export const addZero = (str, digit) => {
       }
       return zeros + _str;
     } catch (e) {
-      showError && console.log("<addZero Error>", e);
+      printErrorLog("addZero", e);
     }
   }
 };
@@ -140,7 +154,7 @@ export const groupLimit = (scn_group) => {
       _scn_group = limitDigit(_scn_group, 2); // 2자리 제한
       return _scn_group;
     } catch (e) {
-      showError && console.log("<groupLimit Error>", e);
+      printErrorLog("groupLimit", e);
     }
   }
 };
@@ -168,7 +182,7 @@ export const scnKindToString = (kind) => {
       }
       return str;
     } catch (e) {
-      showError && console.log("<scnKindToString Error>", e);
+      printErrorLog("scnKindToString", e);
     }
   }
 };
@@ -197,7 +211,7 @@ export const macAddressSplitByColon = (str) => {
       splitedStr = splitedStr.toUpperCase(); // 대문자로 변환해 반환합니다.
       return splitedStr;
     } catch (e) {
-      showError && console.log("<macAddressSplitByColon Error>", e);
+      printErrorLog("macAddressSplitByColon", e);
     }
   }
 };
@@ -233,7 +247,7 @@ export const makeCompanyList = (companyData, addAllOption) => {
       });
       return companyList;
     } catch (e) {
-      showError && console.log("<makeCompanyList Error>", e);
+      printErrorLog("makeCompanyList", e);
     }
   }
 };
@@ -275,7 +289,7 @@ export const makeBeaconList = (beaconData, addNullOption) => {
       });
       return beaconList;
     } catch (e) {
-      showError && console.log("<makeBeaconList Error>", e);
+      printErrorLog("makeBeaconList", e);
     }
   }
 };
@@ -307,7 +321,7 @@ export const makeLocalList = (localData) => {
       });
       return localList;
     } catch (e) {
-      showError && console.log("<makeLocalList Error>", e);
+      printErrorLog("makeLocalList", e);
     }
   }
 };
@@ -345,7 +359,7 @@ export const sidoParser = (sido) => {
       }
       return str;
     } catch (e) {
-      showError && console.log("<sidoParser Error>", e);
+      printErrorLog("sidoParser", e);
     }
   }
 };
@@ -364,7 +378,7 @@ export const calAge = (birth) => {
       let age = currentYear - birth.substring(0, 4) + 1;
       return age;
     } catch (e) {
-      showError && console.log("<calAge Error>", e);
+      printErrorLog("calAge", e);
     }
   }
 };
@@ -446,7 +460,7 @@ export const processStateToString = (pcsState) => {
       }
       return str;
     } catch (e) {
-      showError && console.log("<calAge Error>", e);
+      printErrorLog("processStateToString", e);
     }
   }
 };
@@ -526,7 +540,7 @@ export const processStateToColor = (pcsState) => {
       }
       return colorValue;
     } catch (e) {
-      showError && console.log("<calAge Error>", e);
+      printErrorLog("processStateToColor", e);
     }
   }
 };
@@ -545,7 +559,7 @@ export const ascByKey = (data, key) => {
       _data.sort((a, b) => (a[key] < b[key] ? -1 : 1));
       return _data;
     } catch (e) {
-      showError && console.log("<ascByKey Error>", e);
+      printErrorLog("ascByKey", e);
     }
   }
 };
@@ -564,7 +578,7 @@ export const descByKey = (data, key) => {
       _data.sort((a, b) => (a[key] < b[key] ? 1 : -1));
       return _data;
     } catch (e) {
-      showError && console.log("<descByKey Error>", e);
+      printErrorLog("descByKey", e);
     }
   }
 };
@@ -587,7 +601,7 @@ export const ascByDate = (data, key) => {
       });
       return _data;
     } catch (e) {
-      showError && console.log("<ascByDate Error>", e);
+      printErrorLog("ascByDate", e);
     }
   }
 };
@@ -611,7 +625,7 @@ export const descByDate = (data, key) => {
       });
       return _data;
     } catch (e) {
-      showError && console.log("<descByDate Error>", e);
+      printErrorLog("descByDate", e);
     }
   }
 };
@@ -637,7 +651,7 @@ export const getDigAmountPercent = (plan_length, dig_length) => {
         }
       }
     } catch (e) {
-      showError && console.log("<calAge Error>", e);
+      printErrorLog("getDigAmountPercent", e);
     }
   }
 };
@@ -658,7 +672,7 @@ export const roleStrReturn = (role) => {
       }
       return str;
     } catch (e) {
-      showError && console.log("<roleStrReturn Error>", e);
+      printErrorLog("roleStrReturn", e);
     }
   }
 };
@@ -714,7 +728,7 @@ export const bloodReturn = (type, group) => {
       }
       return result;
     } catch (e) {
-      showError && console.log("<bloodReturn Error>", e);
+      printErrorLog("bloodReturn", e);
     }
   }
 };
@@ -753,10 +767,17 @@ export const getDiffTime = (bigTime, smallTime) => {
       }
       return str;
     } catch (e) {
-      showError && console.log("<getDiffTime Error>", e);
+      printErrorLog("getDiffTime", e);
     }
   }
 };
+
+// export const imgUploadHandler = (orginalFile) => {
+//   try {
+//   } catch (e) {
+//     printErrorLog("imgUploadHandler", e);
+//   }
+// };
 
 // CLAEN CODE
 // 1. 객체의 생성에도 유의미한 이름을 사용하라.

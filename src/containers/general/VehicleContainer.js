@@ -125,7 +125,7 @@ const VehicleContainer = () => {
     clickedIndex: null,
   });
 
-  const [formData, setFormData] = useState({
+  const [defaultFormData, setDefaultFormData] = useState({
     vh_id: null,
     vh_index: null,
     created_date: null,
@@ -142,47 +142,37 @@ const VehicleContainer = () => {
     bc_address: null,
   });
 
+  const [formData, setFormData] = useState(defaultFormData);
+
   // [ Init Area ] ======================================================================
 
-  const initPage = () => {
+  const initPage = useCallback(() => {
     setPageInfo({
       activePage: 1,
       itemsPerPage: 14,
     });
-  };
+  }, []);
 
-  const initFiles = () => {
+  const initFiles = useCallback(() => {
     setFiles({
       selectFile: null,
     });
-  };
+  }, []);
 
-  const initActiveRow = () => {
+  const initActiveRow = useCallback(() => {
     setSelectedRow({
       selectedId: null,
       selectedItem: undefined,
       clickedIndex: null,
     });
-  };
-  const initFormData = () => {
+  }, []);
+
+  const initFormData = useCallback(() => {
     setFormData({
       ...formData,
-      vh_id: null,
-      vh_index: null,
-      created_date: null,
-      modified_date: null,
-      vh_name: "",
-      vh_number: "",
-      description: "",
-      vh_image: "",
-      vh_io_state: null,
-      co_id: null,
-      co_index: null,
-      co_name: null,
-      bc_index: null,
-      bc_address: null,
+      defaultFormData,
     });
-  };
+  }, [defaultFormData, formData]);
 
   // [ Common Logic Area ] ======================================================================
 
@@ -435,69 +425,101 @@ const VehicleContainer = () => {
 
   // [ Click Area ] ======================================================================
 
-  const activeHandler = (e, index, selectedId) => {
-    if (index === selectedRow.clickedIndex) {
-      initActiveRow();
-      initFormData();
-      initFiles();
-      setImagePreview(null);
-      setPreviewOpen(false);
-    } else {
-      setImagePreview(null);
-      setPreviewOpen(false);
+  const activeHandler = useCallback(
+    (e, index, selectedId) => {
+      if (index === selectedRow.clickedIndex) {
+        initActiveRow();
+        initFormData();
+        initFiles();
+        setImagePreview(null);
+        setPreviewOpen(false);
+      } else {
+        setImagePreview(null);
+        setPreviewOpen(false);
 
-      const findItem = data.find((vehicle) => vehicle.vh_id === selectedId);
+        const findItem = data.find((vehicle) => vehicle.vh_id === selectedId);
 
-      setSelectedRow({
-        selectedId: findItem.vh_id,
-        selectedItem: findItem,
-        clickedIndex: index,
-      });
+        setSelectedRow({
+          selectedId: findItem.vh_id,
+          selectedItem: findItem,
+          clickedIndex: index,
+        });
 
-      setFormData({
-        ...formData,
-        vh_id: findItem.vh_id,
-        vh_index: findItem.vh_index,
-        vh_name: findItem.vh_name,
-        vh_number: findItem.vh_number,
-        vh_image: findItem.vh_image,
-        co_id: findItem.co_id,
-        co_index: findItem.co_index,
-        co_name: findItem.co_name,
-        bc_id: findItem.bc_id,
-        bc_index: findItem.bc_index,
-        bc_address: findItem.bc_address,
-        description: findItem.description,
-      });
-    }
-  };
+        setFormData({
+          ...formData,
+          ...findItem,
+        });
+      }
+    },
+    [
+      data,
+      formData,
+      initActiveRow,
+      initFiles,
+      initFormData,
+      selectedRow.clickedIndex,
+    ]
+  );
 
   // [ File Upload Area ] ======================================================================
 
-  const handleFileInputChange = (e) => {
-    let deletedImageForm = {
-      ...formData,
-      vh_image: null,
-    };
-    setFormData(deletedImageForm);
-    setFiles({
-      selectFile: e.target.files[0],
-    });
-    const {
-      target: { files },
-    } = e;
-    const theFile = files[0];
-    if (theFile) {
-      const reader = new FileReader();
-      reader.readAsDataURL(theFile);
-      reader.onloadend = (finishedEvent) => {
-        const {
-          currentTarget: { result },
-        } = finishedEvent;
-        setImagePreview(result);
-      };
-    }
-  };
+  const handleFileInputChange = useCallback(
+    (e) => {
+      try {
+        let deletedImageForm = {
+          ...formData,
+          vh_image: null,
+        };
+        setFormData(deletedImageForm);
+        let uploadImg = e.target.files[0];
+        const isImg = () => {
+          let type = uploadImg.type.toString();
+          if (type.includes("image")) {
+            return true;
+          } else {
+            alert("*이미지 파일만 등록할 수 있습니다.");
+            return false;
+          }
+        };
+        if (uploadImg && isImg()) {
+          const resizedImg = document.createElement("img");
+          resizedImg.src = URL.createObjectURL(uploadImg);
+          // 이미지가 로드되면 canvas를 원하는 크기로 만들고 이미지를 그에 맞춰 그립니다.
+          resizedImg.onload = () => {
+            URL.revokeObjectURL(resizedImg.src);
+            const per_width = (resizedImg.width / resizedImg.height) * 125;
+            const canvas = document.createElement("canvas");
+            canvas.width = per_width;
+            canvas.height = 125;
+            const context = canvas.getContext("2d");
+            context.drawImage(resizedImg, 0, 0, per_width, 125);
+            // canvas에 그려진 이미지를 Blob으로 만들고 다시 File로 만들어 배열에 저장합니다.
+            context.canvas.toBlob(
+              (newImageBlob) => {
+                setFiles({
+                  selectFile: new File([newImageBlob], uploadImg.name),
+                });
+              },
+              "image/png",
+              0.5
+            );
+            //미리보기
+            const reader = new FileReader();
+            reader.readAsDataURL(uploadImg);
+            reader.onloadend = (finishedEvent) => {
+              const {
+                currentTarget: { result },
+              } = finishedEvent;
+              setImagePreview(result);
+            };
+          };
+        }
+      } catch (e) {
+        console.log("handleFileInputChange", e);
+      }
+    },
+    [formData]
+  );
 
   const imageDeleteHandler = (e) => {
     e.stopPropagation();
@@ -526,7 +548,7 @@ const VehicleContainer = () => {
     } else {
       setFileName(null);
     }
-  }, [handleFileInputChange, activeHandler, files]);
+  }, [handleFileInputChange, activeHandler, files, formData.vh_image]);
 
   // [ Create Area ] ======================================================================
 
