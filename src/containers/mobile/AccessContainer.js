@@ -81,29 +81,32 @@ const AccessContainer = ({ match, history }) => {
         console.log('match--->', match)
         console.log('history--->', history)
         setLocalBleList(index);
-        dispatch(receiveMonitor());
-        return ()=>{
-            dispatch(socketDisconnet());
-        }
 
     }, [beacon.data]);
+
+    useEffect(() => {
+        dispatch(receiveMonitor());
+        return () => {
+            dispatch(socketDisconnet());
+        }
+    }, []);
 
     const onGoBack = () => {
         history.goBack();
     }
 
     const workerListRender = (items = []) => {
-        return items.map(item => <WorkerItemComponent item={item}/>)
+        return items.map(item => <WorkerItemComponent item={item} />)
     }
 
     const vehicleListRender = (items = []) => {
-        return items.map(item => <VehicleItemComponent item={item}/>)
+        return items.map(item => <VehicleItemComponent item={item} />)
     }
 
     const setLocalBleList = (localIndex) => {
         if (beacon.data) {
             const conditionInt = type === 'worker' ? 1 : 2;
-            const filterList = beacon.data.filter(item => 
+            const filterList = beacon.data.filter(item =>
                 item.local_index === localIndex && item.bc_used_type === conditionInt ? item : null
             );
             setBleList(filterList);
