@@ -136,7 +136,7 @@ const WorkerItemComponent = ({ item }) => {
                     <div className="image-box">
                         {
                             item.wk_image ?
-                                <img src={`${API}/upload/${item.wk_image}`} alt="이미지" />
+                                <img src={`${API}/uploads/${item.wk_image}`} alt="이미지" />
                                 : <div className="empty-image-box"><FontAwesomeIcon icon={faUserHardHat}/></div>
 
                         }

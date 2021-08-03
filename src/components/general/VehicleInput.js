@@ -416,7 +416,7 @@ const VehicleInput = ({
                   <Image src={imagePreview} centered className="profile-img" />
                 ) : (
                   <Image
-                    src={`${API}/upload/${vh_image}`}
+                    src={`${API}/uploads/${vh_image}`}
                     centered
                     className="profile-img"
                   />
