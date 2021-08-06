@@ -796,7 +796,7 @@ const WorkerInput = ({
                   <Image src={imagePreview} centered className="profile-img" />
                 ) : (
                   <Image
-                    src={`${API}/upload/${wk_image}`}
+                    src={`${API}/uploads/${wk_image}`}
                     centered
                     className="profile-img"
                   />

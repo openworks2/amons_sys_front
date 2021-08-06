@@ -108,7 +108,7 @@ const VehicleItemComponent = ({ item }) => {
                     <div className="image-box">
                         {
                             item.vh_image ?
-                                <img src={`${API}/upload/${item.vh_image}`} alt="이미지" />
+                                <img src={`${API}/uploads/${item.vh_image}`} alt="이미지" />
                                 : <div className="empty-image-box"><FontAwesomeIcon icon={faTruck} /></div>
 
                         }
