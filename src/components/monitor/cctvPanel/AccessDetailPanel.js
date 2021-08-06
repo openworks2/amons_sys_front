@@ -5,7 +5,7 @@ import WorkerDetailComponent from "./WorkerDetailComponent";
 import Moment from "react-moment";
 
 const AccessDetailCompo = styled.div`
-  width: 834px;
+  width: 850px;
   height: 262px;
   background-color: #000000;
   display: flex;
@@ -16,15 +16,15 @@ const AccessDetailCompo = styled.div`
   padding-bottom: 3px;
   z-index: 101;
   top: -451px;
-  right: 834px;
+  right: 850px;
 
   .left-area {
-    width: 49.6%;
+    width: 50%;
     height: 100%;
     margin-right: 2px;
   }
   .right-area {
-    width: 50.4%;
+    width: 50%;
     height: 100%;
     background-color: yellow;
   }
@@ -77,6 +77,7 @@ const AccessDetailCompo = styled.div`
       table.table {
         width: 100%;
         height: 100%;
+        display: block;
         .table-header-row {
           background-color: #2b2b2b;
           /* width: 408px; */
@@ -91,6 +92,20 @@ const AccessDetailCompo = styled.div`
           }
           td {
             padding-left: 6px;
+            &:nth-child(n-1) {
+                width: 93px;
+            }
+            &:last-child{
+              width: 136px;
+            }
+          }
+        }
+        .table-tbody {
+          display: block;
+          height: 12.2em;
+          overflow: auto;
+          &::-webkit-scrollbar{
+            width: 4px;
           }
         }
         .table-item {
@@ -102,6 +117,19 @@ const AccessDetailCompo = styled.div`
             padding-left: 6px;
             padding-top: 6px;
             padding-bottom: 0px;
+            padding-right: 6px;
+            &:nth-child(n-1){
+              width: 93px;
+            }
+            &:last-child{
+              width: 138px;
+            }
+            .contents-value {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              width: 74px;
+            }
           }
           &:hover {
             background-color: #7c7c7c;
@@ -178,9 +206,9 @@ const AccessDetailPanel = ({ bleData, localName }) => {
             {item ? (
               item.wk_id ? (
                 <>
-                  <td>{item && item.wk_co_name}</td>
-                  <td>{item && item.wk_name}</td>
-                  <td>{item && item.wk_position}</td>
+                  <td><div className="contents-value">{item && item.wk_co_name}</div></td>
+                  <td><div className="contents-value">{item && item.wk_name}</div></td>
+                  <td><div className="contents-value">{item && item.wk_position}</div></td>
                   <td>
                     {item && (
                       <Moment format="YYYY-MM-DD HH:mm:ss">
@@ -205,9 +233,9 @@ const AccessDetailPanel = ({ bleData, localName }) => {
               )
             ) : (
               <>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td><div className="contents-value"></div></td>
+                <td><div className="contents-value"></div></td>
+                <td><div className="contents-value"></div></td>
                 <td></td>
               </>
             )}
@@ -236,7 +264,7 @@ const AccessDetailPanel = ({ bleData, localName }) => {
                   <td>진입 일시</td>
                 </tr>
               </thead>
-              <tbody>{tableRender(bleList.worker)}</tbody>
+              <tbody className="table-tbody">{tableRender(bleList.worker)}</tbody>
             </table>
           </div>
         </div>
@@ -258,7 +286,7 @@ const AccessDetailPanel = ({ bleData, localName }) => {
                   <td>진입 일시</td>
                 </tr>
               </thead>
-              <tbody>{tableRender(bleList.vehicle)}</tbody>
+              <tbody className="table-tbody">{tableRender(bleList.vehicle)}</tbody>
             </table>
           </div>
         </div>

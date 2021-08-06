@@ -124,7 +124,6 @@ const MonitorContainer = () => {
         if (ctrlPanel === id) {
             setOpenCtrlPanel(null);
         } else {
-            console.log(id)
             setOpenCtrlPanel(id);
             setOpenAccessPanel(null);
         }
@@ -234,14 +233,11 @@ const MonitorContainer = () => {
     const timeout = useRef(null);
     const [scrollAct, setScrollAct] = useState(false);
     window.onscroll = e => {
-        console.log(e);
         if(timeout.current){
-            console.log(timeout.current)
             setScrollAct(false);
         } else {
             timeout.current = setTimeout(()=>{
                 timeout.current=null;
-                console.log('after--->>>>>',timeout.current)
                 setScrollAct(true)
             }, 1000)
             
