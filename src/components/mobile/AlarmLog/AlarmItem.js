@@ -167,10 +167,10 @@ const AlarmItem = ({ item }) => {
                         <span>{`${TransBloodType(item.wk_blood_type)} ${item.wk_blood_group === 0 ? 'RH+' : 'RH-'}`}</span>
                     </div>
                     <div className="company-info-box">
-                        <span>한국도로공사</span>
+                        <span>{`${wk_co_name}`}</span>
                     </div>
                     <div className="number-info-box">
-                        <span>010-1111-0000</span>
+                        <span>{`${wk_phone}`}</span>
                     </div>
                     <div className="days">{getDiffTime(emg_start_time)}</div>
                 </div>

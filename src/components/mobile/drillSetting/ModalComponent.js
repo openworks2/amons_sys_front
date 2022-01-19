@@ -55,7 +55,7 @@ const ModalComponent = ({ open, onModalClose, modalObj, onDispatchByDrillRate })
                         <span className="modal-value" id="description-value">{description}</span>
                     </div>
                     <Header>
-                        위에 정보를&nbsp;<span className="action-text">{action === 'insert' ? '등록' : '수정'}</span>&nbsp;하시겠습니까?
+                        위 정보를&nbsp;<span className="action-text">{action === 'insert' ? '등록' : '수정'}</span>&nbsp;하시겠습니까?
                     </Header>
                 </Modal.Description>
             </Modal.Content>
